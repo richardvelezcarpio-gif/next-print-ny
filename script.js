@@ -8,6 +8,7 @@ const uploadFile = document.querySelector("#uploadFile");
 const uploadStatus = document.querySelector("#uploadStatus");
 const languageButtons = document.querySelectorAll("[data-lang]");
 const maxUploadSize = 4 * 1024 * 1024;
+const memoryKey = "nextPrintCustomerMemory";
 
 const translations = {
   es: {
@@ -93,11 +94,15 @@ const translations = {
     "chat.title": "Chat con IA",
     "chat.identity": "Identidad: Next Print NY",
     "chat.welcome":
-      "Hola, soy el asistente de Next Print NY. Puedo ayudarte con impresión, DMV, E-ZPass, pagos, traducciones y cotizaciones.",
+      "Hola, soy el asistente de Next Print NY. ¿Cuál es tu nombre y prefieres español o inglés?",
     "chat.label": "Escribe tu pregunta",
     "chat.placeholder": "Pregunta ahora...",
     "chat.send": "Enviar",
     "chat.loading": "Escribiendo respuesta...",
+    "chat.returning":
+      "Hola de nuevo, {name}. Recuerdo tu preferencia de idioma y puedo ayudarte con impresión, DMV, E-ZPass, documentos, pagos, traducciones y pedidos anteriores.",
+    "chat.nameSaved": "Mucho gusto, {name}. Ya guardé tu nombre para la próxima visita. ¿Cómo puedo ayudarte hoy?",
+    "chat.askName": "Para atenderte mejor, dime tu nombre por favor.",
     "contact.eyebrow": "Estamos aquí para ayudarte",
     "contact.title": "Ahorra tiempo. Ahorra dinero. Obtén resultados.",
     "contact.telegram": "💬 Chat en Telegram",
@@ -190,11 +195,15 @@ const translations = {
     "chat.title": "Chat with AI",
     "chat.identity": "Identity: Next Print NY",
     "chat.welcome":
-      "Hi, I am the Next Print NY assistant. I can help with printing, DMV, E-ZPass, payments, translations and quotes.",
+      "Hi, I am the Next Print NY assistant. What is your name, and do you prefer English or Spanish?",
     "chat.label": "Type your question",
     "chat.placeholder": "Ask now...",
     "chat.send": "Send",
     "chat.loading": "Writing response...",
+    "chat.returning":
+      "Welcome back, {name}. I remember your language preference and can help with printing, DMV, E-ZPass, documents, payments, translations and previous orders.",
+    "chat.nameSaved": "Nice to meet you, {name}. I saved your name for next time. How can I help today?",
+    "chat.askName": "To help you better, please tell me your name.",
     "contact.eyebrow": "We are here to help",
     "contact.title": "Save time. Save money. Get results.",
     "contact.telegram": "💬 Chat on Telegram",
@@ -254,14 +263,87 @@ const fallbackAnswers = {
 };
 
 let currentLanguage = localStorage.getItem("preferredLanguage") || "es";
+let customerMemory = loadCustomerMemory();
 
 function t(key) {
   return translations[currentLanguage][key] || translations.es[key] || key;
 }
 
+function formatText(key, values = {}) {
+  return t(key).replace(/\{(\w+)\}/g, (_, valueKey) => values[valueKey] || "");
+}
+
+function loadCustomerMemory() {
+  try {
+    const savedMemory = JSON.parse(localStorage.getItem(memoryKey) || "{}");
+    return {
+      name: savedMemory.name || "",
+      language: savedMemory.language || currentLanguage,
+      orders: Array.isArray(savedMemory.orders) ? savedMemory.orders.slice(0, 5) : [],
+    };
+  } catch {
+    return { name: "", language: currentLanguage, orders: [] };
+  }
+}
+
+function saveCustomerMemory() {
+  customerMemory.language = currentLanguage;
+  localStorage.setItem(memoryKey, JSON.stringify(customerMemory));
+}
+
+function sanitizeName(value) {
+  return String(value || "")
+    .replace(/[^a-zA-ZÀ-ÿñÑ\s'-]/g, "")
+    .trim()
+    .split(/\s+/)
+    .slice(0, 3)
+    .join(" ");
+}
+
+function looksLikeName(value) {
+  const name = sanitizeName(value);
+  const words = name.split(/\s+/).filter(Boolean);
+  const serviceWords = [
+    "imprimir",
+    "impresion",
+    "impresión",
+    "print",
+    "printing",
+    "dmv",
+    "ezpass",
+    "e-zpass",
+    "ticket",
+    "traduccion",
+    "translation",
+    "cotizacion",
+    "quote",
+    "precio",
+    "price",
+  ];
+
+  return (
+    name.length >= 2 &&
+    name.length <= 40 &&
+    words.length <= 3 &&
+    !serviceWords.some((word) => value.toLowerCase().includes(word))
+  );
+}
+
+function updateChatWelcome() {
+  const welcome = chatMessages?.querySelector("[data-i18n='chat.welcome']");
+
+  if (!welcome) return;
+
+  welcome.textContent = customerMemory.name
+    ? formatText("chat.returning", { name: customerMemory.name })
+    : t("chat.welcome");
+}
+
 function applyLanguage(language) {
   currentLanguage = translations[language] ? language : "es";
   localStorage.setItem("preferredLanguage", currentLanguage);
+  customerMemory.language = currentLanguage;
+  saveCustomerMemory();
   document.documentElement.lang = currentLanguage;
 
   document.querySelectorAll("[data-i18n]").forEach((element) => {
@@ -279,6 +361,8 @@ function applyLanguage(language) {
     button.classList.toggle("active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
   });
+
+  updateChatWelcome();
 }
 
 menuToggle?.addEventListener("click", () => {
@@ -320,12 +404,28 @@ function localReply(text) {
   );
 }
 
+function buildMemorySummary() {
+  const orders = customerMemory.orders
+    .slice(0, 3)
+    .map((order) => `${order.date}: ${order.fileName}${order.notes ? ` - ${order.notes}` : ""}`);
+
+  return {
+    name: customerMemory.name,
+    language: currentLanguage,
+    recentOrders: orders,
+  };
+}
+
 async function askAssistant(message) {
   try {
     const response = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, language: currentLanguage }),
+      body: JSON.stringify({
+        message,
+        language: currentLanguage,
+        customer: buildMemorySummary(),
+      }),
     });
 
     if (!response.ok) {
@@ -348,6 +448,20 @@ chatForm?.addEventListener("submit", async (event) => {
   addMessage(message, "user");
   chatInput.value = "";
   chatInput.disabled = true;
+
+  if (!customerMemory.name) {
+    if (looksLikeName(message)) {
+      customerMemory.name = sanitizeName(message);
+      saveCustomerMemory();
+      addMessage(formatText("chat.nameSaved", { name: customerMemory.name }), "bot");
+    } else {
+      addMessage(t("chat.askName"), "bot");
+    }
+
+    chatInput.disabled = false;
+    chatInput.focus();
+    return;
+  }
 
   addMessage(t("chat.loading"), "bot");
   const loadingMessage = chatMessages.lastElementChild;
@@ -440,6 +554,16 @@ uploadForm?.addEventListener("submit", async (event) => {
     }
 
     uploadForm.reset();
+    customerMemory.name = sanitizeName(formData.get("name")) || customerMemory.name;
+    customerMemory.orders = [
+      {
+        date: new Date().toLocaleDateString(currentLanguage === "en" ? "en-US" : "es-US"),
+        fileName: file.name,
+        notes: String(formData.get("notes") || "").slice(0, 140),
+      },
+      ...customerMemory.orders,
+    ].slice(0, 5);
+    saveCustomerMemory();
     setUploadStatus(t("upload.success"), "success");
   } catch (error) {
     const message =

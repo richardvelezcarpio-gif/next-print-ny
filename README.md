@@ -54,6 +54,10 @@ OPENAI_MODEL=gpt-4.1-mini
 
 Después vuelve a desplegar. El asistente responderá con la identidad de Next Print NY.
 
+## Memoria de la IA
+
+El chat recuerda nombre, idioma preferido y pedidos enviados usando el navegador del cliente (`localStorage`). Si el cliente vuelve desde el mismo dispositivo, la IA puede saludarlo y recordar pedidos recientes. Para memoria entre diferentes dispositivos se necesitaría agregar una base de datos.
+
 ## Activar subida de archivos por email
 
 El formulario "Upload your files" envía los archivos a:

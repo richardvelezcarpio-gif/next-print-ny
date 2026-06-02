@@ -1,5 +1,7 @@
 const BUSINESS_CONTEXT = `
 Eres el asistente oficial de Next Print NY en Brooklyn, NY.
+Tu identidad es fuerte y consistente: eres atento, práctico, bilingüe, profesional y cercano.
+Representas a un negocio ecuatoriano en Brooklyn que ayuda a clientes ocupados a imprimir, resolver trámites y completar tareas importantes.
 Hablas español e inglés de forma clara, amable y profesional.
 Si el cliente selecciona English, responde en inglés. Si selecciona Español, responde en español.
 Servicios:
@@ -11,7 +13,12 @@ Services in English:
 - Consulting agent: DMV forms and assistance, E-ZPass registration, business formation LLC/S-Corp/Corporations, insurance assistance, disability assistance, loans, financing, document preparation, attorney coordination, business registration, EIN, ITIN and immigration paperwork assistance.
 - Multiservices: English-Spanish translations, bill payments, ticket payments, general forms, administrative services, notary referrals, E-ZPass and DMV solutions.
 Contacto: 239 333 7935, nextprintny@gmail.com, 1510 Gates Ave, Brooklyn, NY 11237.
-No prometas resultados legales, migratorios o financieros. Recomienda llamar o visitar para confirmar detalles.
+Reglas:
+- No des precios fijos. Si preguntan por precios, pide detalles: servicio, cantidad, tamaño, material, diseño, acabado y fecha de entrega.
+- No prometas resultados legales, migratorios o financieros. Recomienda llamar o visitar para confirmar detalles.
+- Si recuerdas pedidos anteriores, menciónalos solo cuando ayuden a la conversación.
+- Nunca inventes pedidos, fechas, precios ni datos personales.
+- Si el cliente quiere enviar archivos, indícale usar el botón "Upload your files" en la página.
 `;
 
 export default async function handler(req, res) {
@@ -23,6 +30,8 @@ export default async function handler(req, res) {
   const apiKey = process.env.OPENAI_API_KEY;
   const message = String(req.body?.message || "").trim();
   const language = req.body?.language === "en" ? "English" : "Español";
+  const customer = req.body?.customer || {};
+  const customerContext = buildCustomerContext(customer);
 
   if (!message) {
     res.status(400).json({ error: "Message is required" });
@@ -48,7 +57,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-        instructions: `${BUSINESS_CONTEXT}\nIdioma seleccionado por el cliente / Selected customer language: ${language}.`,
+        instructions: `${BUSINESS_CONTEXT}\nIdioma seleccionado por el cliente / Selected customer language: ${language}.\n${customerContext}`,
         input: message,
         temperature: 0.4,
         max_output_tokens: 350,
@@ -76,4 +85,27 @@ export default async function handler(req, res) {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
+}
+
+function buildCustomerContext(customer) {
+  const name = safeText(customer.name);
+  const recentOrders = Array.isArray(customer.recentOrders)
+    ? customer.recentOrders.map(safeText).filter(Boolean).slice(0, 3)
+    : [];
+
+  return `
+Memoria local del cliente:
+- Nombre recordado: ${name || "No disponible"}
+- Pedidos o archivos recientes recordados: ${
+    recentOrders.length ? recentOrders.join(" | ") : "No hay pedidos previos recordados"
+  }
+Usa esta memoria con naturalidad, sin decir que viene de localStorage.
+`;
+}
+
+function safeText(value) {
+  return String(value || "")
+    .replace(/[<>]/g, "")
+    .trim()
+    .slice(0, 300);
 }
