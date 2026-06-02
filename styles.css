@@ -540,13 +540,6 @@ a {
   cursor: pointer;
 }
 
-.chat-disclaimer {
-  margin: 0;
-  padding: 0 14px 14px;
-  color: var(--muted);
-  font-size: 0.84rem;
-}
-
 .contact-section {
   padding: 48px 0;
   background: #fff;
