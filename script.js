@@ -102,6 +102,9 @@ const translations = {
     "contact.title": "Ahorra tiempo. Ahorra dinero. Obtén resultados.",
     "contact.telegram": "💬 Chat en Telegram",
     "contact.ai": "🤖 Chat con IA",
+    "map.eyebrow": "Visítanos",
+    "map.title": "Encuéntranos en Google Maps",
+    "map.button": "Cómo llegar",
     "footer.tagline": "Impresiones de calidad. A tiempo. Siempre.",
   },
   en: {
@@ -196,6 +199,9 @@ const translations = {
     "contact.title": "Save time. Save money. Get results.",
     "contact.telegram": "💬 Chat on Telegram",
     "contact.ai": "🤖 Chat with AI",
+    "map.eyebrow": "Visit us",
+    "map.title": "Find us on Google Maps",
+    "map.button": "Get directions",
     "footer.tagline": "Quality prints. On time. Always.",
   },
 };
