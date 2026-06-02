@@ -56,7 +56,7 @@ Después vuelve a desplegar. El asistente responderá con la identidad de Next P
 
 ## Memoria de la IA
 
-El chat recuerda nombre, idioma preferido y pedidos enviados usando el navegador del cliente (`localStorage`). Si el cliente vuelve desde el mismo dispositivo, la IA puede saludarlo y recordar pedidos recientes. Para memoria entre diferentes dispositivos se necesitaría agregar una base de datos.
+El chat recuerda nombre, idioma preferido, pedidos enviados y conversación reciente usando el navegador del cliente (`localStorage`). Si el cliente vuelve desde el mismo dispositivo, la IA puede saludarlo, recordar pedidos recientes y continuar el hilo de conversación. Para memoria entre diferentes dispositivos se necesitaría agregar una base de datos.
 
 ## Activar subida de archivos por email
 

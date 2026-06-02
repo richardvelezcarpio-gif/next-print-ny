@@ -31,6 +31,7 @@ export default async function handler(req, res) {
   const message = String(req.body?.message || "").trim();
   const language = req.body?.language === "en" ? "English" : "Español";
   const customer = req.body?.customer || {};
+  const conversation = buildConversationInput(req.body?.conversation, message);
   const customerContext = buildCustomerContext(customer);
 
   if (!message) {
@@ -58,7 +59,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4.1-mini",
         instructions: `${BUSINESS_CONTEXT}\nIdioma seleccionado por el cliente / Selected customer language: ${language}.\n${customerContext}`,
-        input: message,
+        input: conversation,
         temperature: 0.4,
         max_output_tokens: 350,
       }),
@@ -101,6 +102,28 @@ Memoria local del cliente:
   }
 Usa esta memoria con naturalidad, sin decir que viene de localStorage.
 `;
+}
+
+function buildConversationInput(conversation, message) {
+  const messages = Array.isArray(conversation)
+    ? conversation
+        .map((item) => ({
+          role: item.role === "assistant" ? "assistant" : "user",
+          content: safeText(item.content),
+        }))
+        .filter((item) => item.content)
+        .slice(-10)
+    : [];
+
+  const lastMessage = messages.at(-1);
+  if (!lastMessage || lastMessage.role !== "user" || lastMessage.content !== message) {
+    messages.push({ role: "user", content: safeText(message) });
+  }
+
+  return messages.map((item) => ({
+    role: item.role,
+    content: item.content,
+  }));
 }
 
 function safeText(value) {

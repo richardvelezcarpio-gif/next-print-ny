@@ -9,6 +9,8 @@ const uploadStatus = document.querySelector("#uploadStatus");
 const languageButtons = document.querySelectorAll("[data-lang]");
 const maxUploadSize = 4 * 1024 * 1024;
 const memoryKey = "nextPrintCustomerMemory";
+const conversationKey = "nextPrintConversation";
+const maxConversationMessages = 16;
 
 const translations = {
   es: {
@@ -264,6 +266,7 @@ const fallbackAnswers = {
 
 let currentLanguage = localStorage.getItem("preferredLanguage") || "es";
 let customerMemory = loadCustomerMemory();
+let conversationHistory = loadConversationHistory();
 
 function t(key) {
   return translations[currentLanguage][key] || translations.es[key] || key;
@@ -289,6 +292,20 @@ function loadCustomerMemory() {
 function saveCustomerMemory() {
   customerMemory.language = currentLanguage;
   localStorage.setItem(memoryKey, JSON.stringify(customerMemory));
+}
+
+function loadConversationHistory() {
+  try {
+    const savedConversation = JSON.parse(localStorage.getItem(conversationKey) || "[]");
+    return Array.isArray(savedConversation) ? savedConversation.slice(-maxConversationMessages) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveConversationHistory() {
+  conversationHistory = conversationHistory.slice(-maxConversationMessages);
+  localStorage.setItem(conversationKey, JSON.stringify(conversationHistory));
 }
 
 function sanitizeName(value) {
@@ -339,6 +356,18 @@ function updateChatWelcome() {
     : t("chat.welcome");
 }
 
+function renderConversationHistory() {
+  if (!chatMessages || conversationHistory.length === 0) return;
+
+  const welcome = chatMessages.querySelector("[data-i18n='chat.welcome']");
+  chatMessages.innerHTML = "";
+  if (welcome) chatMessages.appendChild(welcome);
+
+  conversationHistory.forEach((item) => {
+    addMessage(item.content, item.role === "assistant" ? "bot" : "user", false);
+  });
+}
+
 function applyLanguage(language) {
   currentLanguage = translations[language] ? language : "es";
   localStorage.setItem("preferredLanguage", currentLanguage);
@@ -381,12 +410,20 @@ languageButtons.forEach((button) => {
   button.addEventListener("click", () => applyLanguage(button.dataset.lang));
 });
 
-function addMessage(text, type) {
+function addMessage(text, type, shouldSave = true) {
   const message = document.createElement("div");
   message.className = `message ${type}`;
   message.textContent = text;
   chatMessages.appendChild(message);
   chatMessages.scrollTop = chatMessages.scrollHeight;
+
+  if (shouldSave && (type === "user" || type === "bot")) {
+    conversationHistory.push({
+      role: type === "user" ? "user" : "assistant",
+      content: text,
+    });
+    saveConversationHistory();
+  }
 }
 
 function localReply(text) {
@@ -425,6 +462,7 @@ async function askAssistant(message) {
         message,
         language: currentLanguage,
         customer: buildMemorySummary(),
+        conversation: conversationHistory.slice(-10),
       }),
     });
 
@@ -465,8 +503,12 @@ chatForm?.addEventListener("submit", async (event) => {
 
   addMessage(t("chat.loading"), "bot");
   const loadingMessage = chatMessages.lastElementChild;
+  conversationHistory.pop();
+  saveConversationHistory();
   const reply = await askAssistant(message);
   loadingMessage.textContent = reply;
+  conversationHistory.push({ role: "assistant", content: reply });
+  saveConversationHistory();
 
   chatInput.disabled = false;
   chatInput.focus();
@@ -577,4 +619,5 @@ uploadForm?.addEventListener("submit", async (event) => {
   }
 });
 
-applyLanguage(currentLanguage);
+applyLanguage(customerMemory.language || currentLanguage);
+renderConversationHistory();
