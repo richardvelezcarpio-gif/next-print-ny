@@ -3,7 +3,11 @@ const menu = document.querySelector("#menu");
 const chatForm = document.querySelector("#chatForm");
 const chatInput = document.querySelector("#chatInput");
 const chatMessages = document.querySelector("#chatMessages");
+const uploadForm = document.querySelector("#uploadForm");
+const uploadFile = document.querySelector("#uploadFile");
+const uploadStatus = document.querySelector("#uploadStatus");
 const languageButtons = document.querySelectorAll("[data-lang]");
+const maxUploadSize = 4 * 1024 * 1024;
 
 const translations = {
   es: {
@@ -22,6 +26,22 @@ const translations = {
     "hero.fast": "Entrega rápida",
     "hero.prices": "Precios excelentes",
     "hero.bilingual": "Bilingüe ES / EN",
+    "upload.eyebrow": "Ordena tus copias",
+    "upload.title": "Sube tus archivos",
+    "upload.subtitle": "Full color / blanco y negro",
+    "upload.name": "Nombre",
+    "upload.email": "Email",
+    "upload.phone": "Teléfono",
+    "upload.notes": "Detalles del pedido",
+    "upload.notesPlaceholder": "Cantidad, tamaño, color, fecha...",
+    "upload.choose": "Escoger archivo",
+    "upload.button": "Upload your files",
+    "upload.selected": "Archivo seleccionado:",
+    "upload.sending": "Enviando archivo...",
+    "upload.success": "Listo. Tu archivo fue enviado a Next Print NY.",
+    "upload.error": "No se pudo enviar. Llama al 239 333 7935 o intenta de nuevo.",
+    "upload.configError": "El formulario está listo, pero falta configurar RESEND_API_KEY en Vercel.",
+    "upload.sizeError": "El archivo debe pesar menos de 4 MB.",
     "tabs.print": "🖨️ Impresión",
     "tabs.consultant": "🤝 Agente consultor",
     "tabs.multi": "👥 Multiservicios",
@@ -100,6 +120,22 @@ const translations = {
     "hero.fast": "Fast delivery",
     "hero.prices": "Excellent prices",
     "hero.bilingual": "Bilingual ES / EN",
+    "upload.eyebrow": "Order your copies",
+    "upload.title": "Upload your files",
+    "upload.subtitle": "Full color / black and white",
+    "upload.name": "Name",
+    "upload.email": "Email",
+    "upload.phone": "Phone",
+    "upload.notes": "Order details",
+    "upload.notesPlaceholder": "Quantity, size, color, date...",
+    "upload.choose": "Choose file",
+    "upload.button": "Upload your files",
+    "upload.selected": "Selected file:",
+    "upload.sending": "Sending file...",
+    "upload.success": "Done. Your file was sent to Next Print NY.",
+    "upload.error": "Could not send. Call 239 333 7935 or try again.",
+    "upload.configError": "The form is ready, but RESEND_API_KEY must be configured in Vercel.",
+    "upload.sizeError": "The file must be under 4 MB.",
     "tabs.print": "🖨️ Printing",
     "tabs.consultant": "🤝 Consulting agent",
     "tabs.multi": "👥 Multiservices",
@@ -314,6 +350,101 @@ chatForm?.addEventListener("submit", async (event) => {
 
   chatInput.disabled = false;
   chatInput.focus();
+});
+
+function setUploadStatus(text, type = "") {
+  if (!uploadStatus) return;
+  uploadStatus.textContent = text;
+  uploadStatus.className = `upload-status ${type}`.trim();
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      resolve(result.split(",")[1] || "");
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+uploadFile?.addEventListener("change", () => {
+  const file = uploadFile.files?.[0];
+
+  if (!file) {
+    setUploadStatus("");
+    return;
+  }
+
+  if (file.size > maxUploadSize) {
+    uploadFile.value = "";
+    setUploadStatus(t("upload.sizeError"), "error");
+    return;
+  }
+
+  setUploadStatus(`${t("upload.selected")} ${file.name}`);
+});
+
+uploadForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const file = uploadFile.files?.[0];
+
+  if (!file) return;
+
+  if (file.size > maxUploadSize) {
+    setUploadStatus(t("upload.sizeError"), "error");
+    return;
+  }
+
+  const formData = new FormData(uploadForm);
+  const submitButtonText = uploadForm.querySelector(".upload-submit");
+  const originalButtonText = submitButtonText?.textContent || t("upload.button");
+
+  setUploadStatus(t("upload.sending"));
+  uploadForm.querySelectorAll("input, textarea").forEach((field) => {
+    field.disabled = true;
+  });
+  if (submitButtonText) submitButtonText.textContent = t("upload.sending");
+
+  try {
+    const fileContent = await fileToBase64(file);
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        language: currentLanguage,
+        name: formData.get("name"),
+        email: formData.get("email"),
+        phone: formData.get("phone"),
+        notes: formData.get("notes"),
+        file: {
+          name: file.name,
+          type: file.type || "application/octet-stream",
+          content: fileContent,
+        },
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Upload failed");
+    }
+
+    uploadForm.reset();
+    setUploadStatus(t("upload.success"), "success");
+  } catch (error) {
+    const message =
+      error.message === "RESEND_API_KEY missing" ? t("upload.configError") : t("upload.error");
+    setUploadStatus(message, "error");
+  } finally {
+    uploadForm.querySelectorAll("input, textarea").forEach((field) => {
+      field.disabled = false;
+    });
+    if (submitButtonText) submitButtonText.textContent = originalButtonText;
+  }
 });
 
 applyLanguage(currentLanguage);

@@ -53,3 +53,20 @@ OPENAI_MODEL=gpt-4.1-mini
 ```
 
 Después vuelve a desplegar. El asistente responderá con la identidad de Next Print NY.
+
+## Activar subida de archivos por email
+
+El formulario "Upload your files" envía los archivos a:
+
+```text
+nextprintny@gmail.com
+```
+
+En Vercel agrega:
+
+```text
+RESEND_API_KEY=tu_clave_de_resend
+RESEND_FROM_EMAIL=Next Print NY <tu-email-verificado@tu-dominio.com>
+```
+
+Si no configuras `RESEND_FROM_EMAIL`, se usa `Next Print NY <onboarding@resend.dev>`.

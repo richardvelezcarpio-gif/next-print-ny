@@ -60,6 +60,37 @@
             <div class="panel-line" data-i18n="hero.fast">Entrega rápida</div>
             <div class="panel-line" data-i18n="hero.prices">Precios excelentes</div>
             <div class="panel-line accent" data-i18n="hero.bilingual">Bilingüe ES / EN</div>
+            <form id="uploadForm" class="upload-card">
+              <div class="upload-title">
+                <span data-i18n="upload.eyebrow">Ordena tus copias</span>
+                <strong data-i18n="upload.title">Sube tus archivos</strong>
+                <small data-i18n="upload.subtitle">Full color / blanco y negro</small>
+              </div>
+              <div class="upload-fields">
+                <label>
+                  <span data-i18n="upload.name">Nombre</span>
+                  <input type="text" name="name" autocomplete="name" required />
+                </label>
+                <label>
+                  <span data-i18n="upload.email">Email</span>
+                  <input type="email" name="email" autocomplete="email" required />
+                </label>
+                <label>
+                  <span data-i18n="upload.phone">Teléfono</span>
+                  <input type="tel" name="phone" autocomplete="tel" />
+                </label>
+                <label>
+                  <span data-i18n="upload.notes">Detalles del pedido</span>
+                  <textarea name="notes" rows="3" data-i18n-placeholder="upload.notesPlaceholder" placeholder="Cantidad, tamaño, color, fecha..."></textarea>
+                </label>
+              </div>
+              <label class="upload-file">
+                <input id="uploadFile" type="file" name="file" required />
+                <span data-i18n="upload.choose">Escoger archivo</span>
+              </label>
+              <button class="upload-submit" type="submit" data-i18n="upload.button">Upload your files</button>
+              <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
+            </form>
           </div>
         </div>
       </section>
