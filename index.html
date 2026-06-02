@@ -24,11 +24,15 @@
           <span></span>
         </button>
         <div id="menu" class="menu">
-          <a href="#impresion">Impresión</a>
-          <a href="#consultor">Agente consultor</a>
-          <a href="#multiservicios">Multiservicios</a>
-          <a href="#ia">Asistente IA</a>
-          <a class="nav-cta" href="#contacto">Contáctanos</a>
+          <a href="#impresion" data-i18n="nav.print">Impresión</a>
+          <a href="#consultor" data-i18n="nav.consultant">Agente consultor</a>
+          <a href="#multiservicios" data-i18n="nav.multi">Multiservicios</a>
+          <a href="#ia" data-i18n="nav.ai">Asistente IA</a>
+          <a class="nav-cta" href="#contacto" data-i18n="nav.contact">Contáctanos</a>
+          <div class="language-switch" aria-label="Cambiar idioma">
+            <button type="button" class="active" data-lang="es">ES</button>
+            <button type="button" data-lang="en">EN</button>
+          </div>
         </div>
       </nav>
     </header>
@@ -39,94 +43,94 @@
           <div class="hero-copy">
             <div class="country-badge">
               <span class="flag-mini" aria-hidden="true"></span>
-              Orgullosamente ecuatorianos
+              <span data-i18n="hero.badge">Orgullosamente ecuatorianos</span>
             </div>
-            <h1>Imprimimos. Te ayudamos. Hacemos que las cosas sucedan.</h1>
-            <p>
+            <h1 data-i18n="hero.title">Imprimimos. Te ayudamos. Hacemos que las cosas sucedan.</h1>
+            <p data-i18n="hero.copy">
               Servicios de impresión, trámites, DMV, E-ZPass, documentos,
               pagos, traducciones y asistencia personalizada en Brooklyn.
             </p>
             <div class="hero-actions">
-              <a class="button primary" href="tel:+12393337935">Llamar ahora</a>
-              <a class="button secondary" href="#ia">Preguntar a la IA</a>
+              <a class="button primary" href="tel:+12393337935" data-i18n="hero.call">Llamar ahora</a>
+              <a class="button secondary" href="#ia" data-i18n="hero.ask">Preguntar a la IA</a>
             </div>
           </div>
           <div class="hero-panel" aria-label="Resumen de servicios">
-            <div class="panel-line">Alta calidad</div>
-            <div class="panel-line">Entrega rápida</div>
-            <div class="panel-line">Precios excelentes</div>
-            <div class="panel-line accent">Bilingüe ES / EN</div>
+            <div class="panel-line" data-i18n="hero.quality">Alta calidad</div>
+            <div class="panel-line" data-i18n="hero.fast">Entrega rápida</div>
+            <div class="panel-line" data-i18n="hero.prices">Precios excelentes</div>
+            <div class="panel-line accent" data-i18n="hero.bilingual">Bilingüe ES / EN</div>
           </div>
         </div>
       </section>
 
       <section class="service-tabs" aria-label="Categorías principales">
-        <a href="#impresion">🖨️ Impresión</a>
-        <a href="#consultor">🤝 Agente consultor</a>
-        <a href="#multiservicios">👥 Multiservicios</a>
+        <a href="#impresion" data-i18n="tabs.print">🖨️ Impresión</a>
+        <a href="#consultor" data-i18n="tabs.consultant">🤝 Agente consultor</a>
+        <a href="#multiservicios" data-i18n="tabs.multi">👥 Multiservicios</a>
       </section>
 
       <section class="container services-section">
         <div class="section-heading">
-          <p>Todo en un solo lugar</p>
-          <h2>Servicios principales</h2>
+          <p data-i18n="services.eyebrow">Todo en un solo lugar</p>
+          <h2 data-i18n="services.title">Servicios principales</h2>
         </div>
 
         <div class="services-grid">
           <article id="impresion" class="service-card">
             <div class="card-title">
               <span>🖨️</span>
-              <h3>Servicios de impresión</h3>
+              <h3 data-i18n="print.title">Servicios de impresión</h3>
             </div>
             <ul>
-              <li>Tarjetas de presentación</li>
-              <li>Volantes, postales y banners</li>
-              <li>Perchas para puertas y stickers</li>
-              <li>Letreros, afiches y menús</li>
-              <li>Rotulación de vehículos</li>
-              <li>Letreros para autos y jardín</li>
-              <li>Impresión en camisetas</li>
-              <li>Bordados, folletos y facturas</li>
+              <li data-i18n="print.item1">Tarjetas de presentación</li>
+              <li data-i18n="print.item2">Volantes, postales y banners</li>
+              <li data-i18n="print.item3">Perchas para puertas y stickers</li>
+              <li data-i18n="print.item4">Letreros, afiches y menús</li>
+              <li data-i18n="print.item5">Rotulación de vehículos</li>
+              <li data-i18n="print.item6">Letreros para autos y jardín</li>
+              <li data-i18n="print.item7">Impresión en camisetas</li>
+              <li data-i18n="print.item8">Bordados, folletos y facturas</li>
             </ul>
-            <p class="card-note">Alta calidad, entrega rápida, precios excelentes.</p>
+            <p class="card-note" data-i18n="print.note">Alta calidad, entrega rápida, precios excelentes.</p>
           </article>
 
           <article id="consultor" class="service-card">
             <div class="card-title">
               <span>🤝</span>
-              <h3>Servicios de agente consultor</h3>
+              <h3 data-i18n="consultant.title">Servicios de agente consultor</h3>
             </div>
             <ul>
-              <li>Formularios y asistencia del DMV</li>
-              <li>Registro de E-ZPass</li>
-              <li>Formación de empresas LLC, S-Corp y Corporaciones</li>
-              <li>Asistencia de seguros</li>
-              <li>Orientación de préstamos y financiamiento</li>
-              <li>Preparación de documentos</li>
-              <li>Coordinación con abogados</li>
-              <li>Registro de negocio, EIN e ITIN</li>
-              <li>Asistencia con trámites de inmigración</li>
+              <li data-i18n="consultant.item1">Formularios y asistencia del DMV</li>
+              <li data-i18n="consultant.item2">Registro de E-ZPass</li>
+              <li data-i18n="consultant.item3">Formación de empresas LLC, S-Corp y Corporaciones</li>
+              <li data-i18n="consultant.item4">Asistencia de seguros</li>
+              <li data-i18n="consultant.item5">Orientación de préstamos y financiamiento</li>
+              <li data-i18n="consultant.item6">Preparación de documentos</li>
+              <li data-i18n="consultant.item7">Coordinación con abogados</li>
+              <li data-i18n="consultant.item8">Registro de negocio, EIN e ITIN</li>
+              <li data-i18n="consultant.item9">Asistencia con trámites de inmigración</li>
             </ul>
           </article>
 
           <article id="multiservicios" class="service-card">
             <div class="card-title">
               <span>👥</span>
-              <h3>Multiservicios</h3>
+              <h3 data-i18n="multi.title">Multiservicios</h3>
             </div>
             <ul>
-              <li>Traducciones inglés - español</li>
-              <li>Pago de facturas</li>
-              <li>Pago de tickets de tránsito y estacionamiento</li>
-              <li>Asistencia con formularios generales</li>
-              <li>Servicios administrativos</li>
-              <li>Referencias a notaría</li>
-              <li>Soluciones de E-ZPass y DMV</li>
-              <li>Y mucho más</li>
+              <li data-i18n="multi.item1">Traducciones inglés - español</li>
+              <li data-i18n="multi.item2">Pago de facturas</li>
+              <li data-i18n="multi.item3">Pago de tickets de tránsito y estacionamiento</li>
+              <li data-i18n="multi.item4">Asistencia con formularios generales</li>
+              <li data-i18n="multi.item5">Servicios administrativos</li>
+              <li data-i18n="multi.item6">Referencias a notaría</li>
+              <li data-i18n="multi.item7">Soluciones de E-ZPass y DMV</li>
+              <li data-i18n="multi.item8">Y mucho más</li>
             </ul>
             <p class="ecuador-note">
               <span class="flag-mini" aria-hidden="true"></span>
-              Sirviendo con calidad y compromiso.
+              <span data-i18n="multi.note">Sirviendo con calidad y compromiso.</span>
             </p>
           </article>
         </div>
@@ -137,22 +141,22 @@
           <div>
             <span>🏢</span>
             <strong>DMV y E-ZPass</strong>
-            <p>Asistencia para formularios, pagos y orientación.</p>
+            <p data-i18n="support.dmv">Asistencia para formularios, pagos y orientación.</p>
           </div>
           <div>
             <span>🛡️</span>
-            <strong>Seguros</strong>
-            <p>Compensación laboral y responsabilidad civil.</p>
+            <strong data-i18n="support.insuranceTitle">Seguros</strong>
+            <p data-i18n="support.insurance">Compensación laboral y responsabilidad civil.</p>
           </div>
           <div>
             <span>🏠</span>
-            <strong>Servicios de vivienda</strong>
-            <p>Compramos casas en efectivo y vendemos casas.</p>
+            <strong data-i18n="support.housingTitle">Servicios de vivienda</strong>
+            <p data-i18n="support.housing">Compramos casas en efectivo y vendemos casas.</p>
           </div>
           <div>
             <span>💰</span>
-            <strong>Préstamos y financiamiento</strong>
-            <p>Te guiamos para obtener el financiamiento que necesitas.</p>
+            <strong data-i18n="support.loansTitle">Préstamos y financiamiento</strong>
+            <p data-i18n="support.loans">Te guiamos para obtener el financiamiento que necesitas.</p>
           </div>
         </div>
       </section>
@@ -160,13 +164,13 @@
       <section id="ia" class="ai-section">
         <div class="container ai-grid">
           <div class="ai-copy">
-            <p>Asistente IA</p>
-            <h2>Pregunta lo que necesites</h2>
+            <p data-i18n="ai.eyebrow">Asistente IA</p>
+            <h2 data-i18n="ai.title">Pregunta lo que necesites</h2>
             <ul>
-              <li>Respuestas rápidas sobre servicios</li>
-              <li>Soporte 24/7 cuando esté conectado a Vercel</li>
-              <li>Bilingüe español e inglés</li>
-              <li>Cotizaciones iniciales al instante</li>
+              <li data-i18n="ai.item1">Respuestas rápidas sobre servicios</li>
+              <li data-i18n="ai.item2">Soporte 24/7 cuando esté conectado a Vercel</li>
+              <li data-i18n="ai.item3">Bilingüe español e inglés</li>
+              <li data-i18n="ai.item4">Cotizaciones iniciales al instante</li>
             </ul>
           </div>
 
@@ -174,29 +178,30 @@
             <div class="chat-header">
               <div class="bot-avatar">AI</div>
               <div>
-                <strong>Chat con IA</strong>
-                <span>Identidad: Next Print NY</span>
+                <strong data-i18n="chat.title">Chat con IA</strong>
+                <span data-i18n="chat.identity">Identidad: Next Print NY</span>
               </div>
             </div>
             <div id="chatMessages" class="chat-messages" aria-live="polite">
-              <div class="message bot">
+              <div class="message bot" data-i18n="chat.welcome">
                 Hola, soy el asistente de Next Print NY. Puedo ayudarte con impresión,
                 DMV, E-ZPass, pagos, traducciones y cotizaciones.
               </div>
             </div>
             <form id="chatForm" class="chat-form">
-              <label class="sr-only" for="chatInput">Escribe tu pregunta</label>
+              <label class="sr-only" for="chatInput" data-i18n="chat.label">Escribe tu pregunta</label>
               <input
                 id="chatInput"
                 name="message"
                 type="text"
                 autocomplete="off"
                 placeholder="Pregunta ahora..."
+                data-i18n-placeholder="chat.placeholder"
                 required
               />
-              <button type="submit">Enviar</button>
+              <button type="submit" data-i18n="chat.send">Enviar</button>
             </form>
-            <p class="chat-disclaimer">
+            <p class="chat-disclaimer" data-i18n="chat.disclaimer">
               Para activar IA real en Vercel, agrega la variable OPENAI_API_KEY.
             </p>
           </div>
@@ -206,8 +211,8 @@
       <section id="contacto" class="contact-section">
         <div class="container contact-grid">
           <div>
-            <p>Estamos aquí para ayudarte</p>
-            <h2>Ahorra tiempo. Ahorra dinero. Obtén resultados.</h2>
+            <p data-i18n="contact.eyebrow">Estamos aquí para ayudarte</p>
+            <h2 data-i18n="contact.title">Ahorra tiempo. Ahorra dinero. Obtén resultados.</h2>
           </div>
           <div class="contact-card">
             <a href="tel:+12393337935">📞 239 333 7935</a>
@@ -221,8 +226,8 @@
             </a>
           </div>
           <div class="contact-card">
-            <a href="https://t.me/" target="_blank" rel="noreferrer">💬 Chat en Telegram</a>
-            <a href="#ia">🤖 Chat con IA</a>
+            <a href="https://t.me/" target="_blank" rel="noreferrer" data-i18n="contact.telegram">💬 Chat en Telegram</a>
+            <a href="#ia" data-i18n="contact.ai">🤖 Chat con IA</a>
           </div>
         </div>
       </section>
@@ -231,7 +236,7 @@
     <footer class="footer">
       <div class="container footer-grid">
         <img src="assets/logo.svg" alt="Next Print NY" />
-        <p>Impresiones de calidad. A tiempo. Siempre.</p>
+        <p data-i18n="footer.tagline">Impresiones de calidad. A tiempo. Siempre.</p>
       </div>
     </footer>
 

@@ -7,6 +7,7 @@ Sitio web listo para abrir en Visual Studio Code, subir a GitHub y publicar en V
 - `index.html`: contenido de la página.
 - `styles.css`: colores, diseño responsive y apariencia de marca.
 - `script.js`: menú móvil y chat en la página.
+- Selector de idioma ES/EN: la página cambia entre español e inglés sin recargar.
 - `api/chat.js`: función serverless para conectar IA en Vercel.
 - `assets/logo.svg`: logo editable inspirado en la identidad de la imagen.
 

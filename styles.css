@@ -98,6 +98,34 @@ a {
   background: var(--blue-900);
 }
 
+.language-switch {
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #eef5ff;
+}
+
+.language-switch button {
+  min-width: 42px;
+  height: 34px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--blue-950);
+  background: transparent;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.language-switch button.active {
+  color: #fff;
+  background: var(--blue-900);
+}
+
 .menu-toggle {
   display: none;
   width: 44px;
@@ -602,6 +630,10 @@ a {
 
   .menu.open {
     display: flex;
+  }
+
+  .language-switch {
+    width: 100%;
   }
 
   .hero-grid,
