@@ -61,7 +61,7 @@ a {
 }
 
 .nav {
-  min-height: 88px;
+  min-height: 132px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -70,7 +70,7 @@ a {
 
 .brand img {
   display: block;
-  width: clamp(220px, 34vw, 430px);
+  width: clamp(230px, 24vw, 300px);
   height: auto;
 }
 
@@ -587,9 +587,11 @@ a {
 }
 
 .footer img {
-  width: 220px;
+  width: 240px;
   max-width: 52vw;
-  filter: brightness(0) invert(1);
+  padding: 6px;
+  border-radius: 8px;
+  background: #fff;
 }
 
 .footer p {
@@ -617,7 +619,7 @@ a {
 
   .menu {
     position: absolute;
-    top: 106px;
+    top: 150px;
     left: 0;
     right: 0;
     display: none;
@@ -655,15 +657,15 @@ a {
 
 @media (max-width: 640px) {
   .nav {
-    min-height: 76px;
+    min-height: 118px;
   }
 
   .brand img {
-    width: min(230px, 68vw);
+    width: min(215px, 66vw);
   }
 
   .menu {
-    top: 94px;
+    top: 136px;
   }
 
   .service-tabs,
