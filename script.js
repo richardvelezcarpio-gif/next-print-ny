@@ -362,14 +362,29 @@ function looksLikeName(value) {
   );
 }
 
+function renderMessageText(message, text, type) {
+  message.textContent = "";
+  const body = document.createElement("span");
+  body.textContent = text;
+  message.appendChild(body);
+
+  if (type === "bot") {
+    const signature = document.createElement("small");
+    signature.className = "message-signature";
+    signature.textContent = "Richard Velez consultor";
+    message.appendChild(signature);
+  }
+}
+
 function updateChatWelcome() {
   const welcome = chatMessages?.querySelector("[data-i18n='chat.welcome']");
 
   if (!welcome) return;
 
-  welcome.textContent = customerMemory.name
+  const welcomeText = customerMemory.name
     ? formatText("chat.returning", { name: customerMemory.name })
     : t("chat.welcome");
+  renderMessageText(welcome, welcomeText, "bot");
 }
 
 function renderConversationHistory() {
@@ -429,7 +444,7 @@ languageButtons.forEach((button) => {
 function addMessage(text, type, shouldSave = true) {
   const message = document.createElement("div");
   message.className = `message ${type}`;
-  message.textContent = text;
+  renderMessageText(message, text, type);
   chatMessages.appendChild(message);
   chatMessages.scrollTop = chatMessages.scrollHeight;
 
@@ -522,7 +537,7 @@ chatForm?.addEventListener("submit", async (event) => {
   conversationHistory.pop();
   saveConversationHistory();
   const reply = await askAssistant(message);
-  loadingMessage.textContent = reply;
+  renderMessageText(loadingMessage, reply, "bot");
   conversationHistory.push({ role: "assistant", content: reply });
   saveConversationHistory();
 

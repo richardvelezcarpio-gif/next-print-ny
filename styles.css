@@ -718,6 +718,14 @@ a {
   line-height: 1.45;
 }
 
+.message-signature {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
 .message.bot {
   color: var(--ink);
   background: #fff;
