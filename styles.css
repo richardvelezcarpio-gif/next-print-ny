@@ -182,12 +182,12 @@ textarea {
 .hero-flag {
   position: absolute;
   z-index: 1;
-  top: -14px;
-  right: -8px;
-  width: 260px;
+  top: 36px;
+  right: 10px;
+  width: 190px;
   height: auto;
-  transform: rotate(10deg);
-  filter: drop-shadow(0 18px 22px rgba(0, 0, 0, 0.32));
+  transform: rotate(8deg);
+  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.35));
 }
 
 .hero::before {
@@ -211,7 +211,8 @@ textarea {
 }
 
 .hero h1 {
-  margin: 0;
+  width: min(760px, 100%);
+  margin: 0 auto;
   color: #fff;
   font-size: clamp(2rem, 3.7vw, 3.05rem);
   line-height: 0.98;
@@ -891,6 +892,13 @@ textarea {
     justify-content: space-between;
   }
 
+  .hero-flag {
+    top: 54px;
+    right: 18px;
+    width: 128px;
+    opacity: 0.72;
+  }
+
   .service-showcase,
   .tools-grid,
   .visit-grid {
@@ -932,6 +940,10 @@ textarea {
 
   .hero h1 {
     font-size: 2rem;
+  }
+
+  .hero-flag {
+    display: none;
   }
 
   .footer {
