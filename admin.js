@@ -54,7 +54,7 @@ loginForm?.addEventListener("submit", async (event) => {
     });
 
     if (!response.ok) throw new Error(data.error || "No se pudo entrar");
-    await showDashboard(data.email);
+    showDashboard(data.email);
   } catch (error) {
     setStatus(loginStatus, error.message, "error");
   } finally {
@@ -125,7 +125,7 @@ async function init() {
     const { data } = await fetchJson("/api/admin-login");
 
     if (data.authenticated) {
-      await showDashboard(data.email);
+      showDashboard(data.email);
     } else {
       loginView.hidden = false;
       dashboardView.hidden = true;
@@ -136,11 +136,12 @@ async function init() {
   }
 }
 
-async function showDashboard(email) {
+function showDashboard(email) {
   loginView.hidden = true;
   dashboardView.hidden = false;
   sessionEmail.textContent = email ? `Sesión: ${email}` : "Sesión privada";
-  await loadRecords();
+  setStatus(recordStatus, "Cargando registros...", "");
+  loadRecords();
 }
 
 async function loadRecords() {
