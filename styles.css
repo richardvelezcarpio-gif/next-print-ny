@@ -448,9 +448,11 @@ textarea {
   display: grid;
   align-content: center;
   gap: 12px;
+  justify-items: center;
   background:
     linear-gradient(135deg, rgba(3, 191, 231, 0.16), rgba(255, 255, 255, 0.96)),
     #fff;
+  text-align: center;
 }
 
 .hero .start-order-card {
@@ -462,6 +464,10 @@ textarea {
 
 .start-order-card .action-gradient {
   justify-self: center;
+}
+
+.start-order-card p {
+  max-width: 760px;
 }
 
 .upload-hero {
