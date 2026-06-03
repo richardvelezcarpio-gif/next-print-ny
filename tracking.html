@@ -1,5 +1,124 @@
 <!doctype html>
 <html lang="en">
-  <head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Real-Time Tracking | Next Print NY</title><link rel="icon" href="assets/logo.png" /><link rel="stylesheet" href="styles.css" /></head>
-  <body><div class="page-shell"><header class="top-nav"><a class="brand" href="index.html"><img src="assets/logo.png" alt="Next Print NY" /></a><nav class="menu open"><a href="index.html">Home</a><a class="active" href="tracking.html">Tracking</a></nav></header><main class="placeholder-page"><article><h1>Real-Time Tracking</h1><p>This page is ready to track customer requests and orders.</p><a class="action-gradient" href="index.html">Back Home</a></article></main></div></body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Track your Next Print NY order status by order number." />
+    <title>Track Order | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="top-nav">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="order.html" data-i18n="order.nav">Start Order</a>
+          <a class="active" href="tracking.html" data-i18n="tracking.nav">Track Order</a>
+          <a href="printing.html" data-i18n="nav.print">Printing</a>
+          <a href="multiservices.html" data-i18n="nav.multi">Multiservices</a>
+          <a href="consulting-agent.html" data-i18n="nav.consultant">Consulting Agent</a>
+          <a href="contact.html" data-i18n="home.nav.contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="tracking-page">
+        <section class="tracking-hero">
+          <span data-i18n="tracking.kicker">Order tracking</span>
+          <h1 data-i18n="tracking.title">Check your order status.</h1>
+          <p data-i18n="tracking.copy">Enter your order number to see the latest status and next step.</p>
+        </section>
+
+        <section class="tracking-workspace">
+          <form id="trackingForm" class="tracking-form">
+            <label>
+              <span data-i18n="tracking.label">Order number</span>
+              <input
+                id="trackingInput"
+                name="order"
+                type="text"
+                autocomplete="off"
+                required
+                placeholder="NP-260603-123456"
+                data-i18n-placeholder="tracking.placeholder"
+              />
+            </label>
+            <button class="action-gradient" type="submit" data-i18n="tracking.button">Track order</button>
+            <p id="trackingStatus" class="tracking-status" aria-live="polite"></p>
+          </form>
+
+          <section id="trackingResult" class="tracking-result" hidden>
+            <div class="tracking-summary">
+              <span data-i18n="tracking.resultKicker">Current status</span>
+              <h2 id="trackingOrderTitle">NP-000000</h2>
+              <p>
+                <span data-i18n="tracking.customer">Customer</span>:
+                <strong id="trackingCustomer">-</strong>
+              </p>
+              <p>
+                <span data-i18n="tracking.updated">Last updated</span>:
+                <strong id="trackingUpdated">-</strong>
+              </p>
+            </div>
+
+            <div class="tracking-timeline" aria-label="Order status timeline">
+              <div data-status-step="new">
+                <strong>1</strong>
+                <span data-i18n="tracking.status.new">Received</span>
+              </div>
+              <div data-status-step="in_progress">
+                <strong>2</strong>
+                <span data-i18n="tracking.status.in_progress">In review</span>
+              </div>
+              <div data-status-step="waiting">
+                <strong>3</strong>
+                <span data-i18n="tracking.status.waiting">Waiting</span>
+              </div>
+              <div data-status-step="paid">
+                <strong>4</strong>
+                <span data-i18n="tracking.status.paid">Payment received</span>
+              </div>
+              <div data-status-step="completed">
+                <strong>5</strong>
+                <span data-i18n="tracking.status.completed">Completed</span>
+              </div>
+            </div>
+
+            <div class="service-actions">
+              <a id="trackingWhatsapp" class="action-gradient" href="https://wa.me/12393337935" target="_blank" rel="noreferrer" data-i18n="tracking.whatsapp">
+                Ask on WhatsApp
+              </a>
+              <a class="outline-button" href="order.html" data-i18n="order.nav">Start Order</a>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <img src="assets/logo.png" alt="Next Print NY" />
+        <p data-i18n="home.footer.rights">© 2026 Next Print NY. All rights reserved.</p>
+        <div>
+          <a href="privacy.html" data-i18n="home.footer.privacy">Privacy</a>
+          <a href="terms.html" data-i18n="home.footer.terms">Terms</a>
+        </div>
+      </footer>
+    </div>
+    <script src="script.js?v=20260603-1710"></script>
+    <script src="tracking.js?v=20260603-1710"></script>
+  </body>
 </html>

@@ -5,6 +5,7 @@ const orderStatus = document.querySelector("#orderStatus");
 const orderSuccess = document.querySelector("#orderSuccess");
 const orderNumber = document.querySelector("#orderNumber");
 const orderWhatsapp = document.querySelector("#orderWhatsapp");
+const orderTrackLink = document.querySelector("#orderTrackLink");
 const orderMaxFileSize = 4 * 1024 * 1024;
 
 orderFile?.addEventListener("change", () => {
@@ -64,6 +65,9 @@ smartOrderForm?.addEventListener("submit", async (event) => {
 
     orderNumber.textContent = data.orderNumber;
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
+    if (orderTrackLink) {
+      orderTrackLink.href = `tracking.html?order=${encodeURIComponent(data.orderNumber)}`;
+    }
     orderSuccess.hidden = false;
     smartOrderForm.reset();
     orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design file. Optional.");
