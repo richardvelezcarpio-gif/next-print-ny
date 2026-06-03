@@ -120,6 +120,13 @@ recordsList?.addEventListener("click", async (event) => {
   }
 });
 
+recordsList?.addEventListener("change", async (event) => {
+  const select = event.target.closest("select[data-action='status']");
+  if (!select) return;
+
+  await updateRecord(select.dataset.id, { status: select.value });
+});
+
 async function init() {
   try {
     const { data } = await fetchJson("/api/admin-login");
@@ -238,6 +245,9 @@ function renderRecord(record) {
   const fileLink = record.file_url
     ? `<a href="${escapeAttribute(record.file_url)}" target="_blank" rel="noreferrer">Abrir archivo</a>`
     : "";
+  const statusOptions = Object.entries(statusLabels)
+    .map(([value, label]) => `<option value="${value}" ${record.status === value ? "selected" : ""}>${label}</option>`)
+    .join("");
 
   return `
     <article class="record-card">
@@ -256,6 +266,12 @@ function renderRecord(record) {
       </div>
       ${record.description ? `<p class="record-description">${escapeHtml(record.description)}</p>` : ""}
       <p class="record-meta">${createdAt}</p>
+      <label class="status-editor">
+        Estado de tracking
+        <select data-action="status" data-id="${escapeAttribute(record.id)}">
+          ${statusOptions}
+        </select>
+      </label>
       <div class="record-actions">
         <button class="complete-button" type="button" data-action="complete" data-id="${escapeAttribute(record.id)}">Completar</button>
         ${fileLink}

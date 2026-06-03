@@ -316,6 +316,21 @@ textarea {
   gap: 8px;
 }
 
+.status-editor {
+  max-width: 260px;
+  gap: 6px;
+}
+
+.status-editor select {
+  min-height: 38px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--navy);
+  font-weight: 800;
+}
+
 .record-actions button,
 .record-actions a {
   display: inline-flex;
