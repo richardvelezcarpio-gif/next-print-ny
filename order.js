@@ -7,6 +7,7 @@ const orderNumber = document.querySelector("#orderNumber");
 const orderWhatsapp = document.querySelector("#orderWhatsapp");
 const orderTrackLink = document.querySelector("#orderTrackLink");
 const orderMaxFileSize = 4 * 1024 * 1024;
+const localOrdersKey = "nextPrintRecentOrders";
 
 orderFile?.addEventListener("change", () => {
   const file = orderFile.files?.[0];
@@ -63,6 +64,13 @@ smartOrderForm?.addEventListener("submit", async (event) => {
 
     if (!response.ok) throw new Error(data.error || "Order failed");
 
+    rememberLocalOrder({
+      orderNumber: data.orderNumber,
+      service: payload.service,
+      name: payload.name,
+      dueDate: payload.dueDate,
+    });
+
     orderNumber.textContent = data.orderNumber;
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
@@ -113,6 +121,28 @@ function getOrderText(key, fallback) {
   };
 
   return dictionary[language]?.[key] || dictionary.en[key] || fallback;
+}
+
+function rememberLocalOrder(order) {
+  try {
+    const savedOrders = JSON.parse(localStorage.getItem(localOrdersKey) || "[]");
+    const localOrder = {
+      orderNumber: order.orderNumber,
+      title: `${order.orderNumber} - ${order.service}`,
+      status: "new",
+      customerName: String(order.name || "").trim().split(/\s+/)[0] || "",
+      dueDate: order.dueDate || "",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    const nextOrders = [
+      localOrder,
+      ...savedOrders.filter((item) => item.orderNumber !== order.orderNumber),
+    ].slice(0, 10);
+    localStorage.setItem(localOrdersKey, JSON.stringify(nextOrders));
+  } catch {
+    // Local fallback is helpful but not required for submitting the order.
+  }
 }
 
 function fileToBase64(file) {

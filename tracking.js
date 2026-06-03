@@ -6,10 +6,17 @@ const trackingOrderTitle = document.querySelector("#trackingOrderTitle");
 const trackingCustomer = document.querySelector("#trackingCustomer");
 const trackingUpdated = document.querySelector("#trackingUpdated");
 const trackingWhatsapp = document.querySelector("#trackingWhatsapp");
+const localOrdersKey = "nextPrintRecentOrders";
 
 const trackingOrder = new URLSearchParams(window.location.search).get("order");
 if (trackingOrder && trackingInput) {
   trackingInput.value = trackingOrder;
+}
+
+if (trackingOrder) {
+  window.setTimeout(() => {
+    trackingForm?.requestSubmit();
+  }, 250);
 }
 
 trackingForm?.addEventListener("submit", async (event) => {
@@ -30,6 +37,14 @@ trackingForm?.addEventListener("submit", async (event) => {
     renderTrackingResult(data.order);
     setTrackingStatus("");
   } catch (error) {
+    const localOrder = findLocalOrder(orderNumber);
+
+    if (localOrder) {
+      renderTrackingResult(localOrder);
+      setTrackingStatus(getTrackingText("tracking.local", "Showing your local order confirmation. We will update the live status soon."));
+      return;
+    }
+
     setTrackingStatus(getTrackingText("tracking.notFound", "Order not found. Check the number or contact us."), "error");
   }
 });
@@ -67,15 +82,26 @@ function getTrackingText(key, fallback) {
   const dictionary = {
     es: {
       "tracking.loading": "Buscando orden...",
+      "tracking.local": "Mostrando tu confirmación local. Actualizaremos el estado en vivo pronto.",
       "tracking.notFound": "No encontramos la orden. Revisa el número o contáctanos.",
     },
     en: {
       "tracking.loading": "Checking order...",
+      "tracking.local": "Showing your local order confirmation. We will update the live status soon.",
       "tracking.notFound": "Order not found. Check the number or contact us.",
     },
   };
 
   return dictionary[language]?.[key] || dictionary.en[key] || fallback;
+}
+
+function findLocalOrder(orderNumber) {
+  try {
+    const savedOrders = JSON.parse(localStorage.getItem(localOrdersKey) || "[]");
+    return savedOrders.find((order) => normalizeTrackingOrder(order.orderNumber) === orderNumber) || null;
+  } catch {
+    return null;
+  }
 }
 
 function normalizeTrackingOrder(value) {
