@@ -115,10 +115,7 @@
 
             <div class="tools-grid" aria-label="Customer tools">
               <form id="uploadForm" class="tool-card upload-card">
-                <input type="hidden" name="name" value="" />
                 <input type="hidden" name="email" value="" />
-                <input type="hidden" name="phone" value="" />
-                <input type="hidden" name="notes" value="Website file upload" />
                 <div class="upload-hero">
                   <label class="drop-zone">
                     <input id="uploadFile" type="file" name="file" required />
@@ -133,6 +130,11 @@
                       <li><strong>Fast Processing</strong><span>We handle your documents quickly</span></li>
                       <li><strong>Easy & Convenient</strong><span>Upload from any device, anytime</span></li>
                     </ul>
+                    <div class="upload-mini-fields">
+                      <input type="text" name="name" autocomplete="name" placeholder="Name" />
+                      <input type="tel" name="phone" autocomplete="tel" placeholder="Phone" />
+                      <textarea name="notes" rows="2" placeholder="Notes: what do you need?"></textarea>
+                    </div>
                     <button id="uploadTrigger" class="upload-submit action-gradient" type="button">Choose files to upload</button>
                     <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
                   </div>

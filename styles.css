@@ -445,7 +445,7 @@ textarea {
 .drop-zone {
   display: grid;
   place-items: center;
-  min-height: 210px;
+  min-height: 198px;
   border: 0;
   border-radius: 18px;
   background: transparent;
@@ -461,15 +461,15 @@ textarea {
 }
 
 .cloud {
-  width: 144px;
-  height: 110px;
+  width: 132px;
+  height: 100px;
   display: grid;
   place-items: center;
   border: 12px solid #fff;
   border-top-width: 18px;
   border-radius: 54px;
   color: var(--cyan);
-  font-size: 5.6rem;
+  font-size: 5rem;
   font-weight: 900;
   line-height: 0.7;
 }
@@ -499,13 +499,13 @@ textarea {
 .upload-copy h2 {
   margin: 0;
   color: var(--cyan);
-  font-size: 1.6rem;
+  font-size: 1.48rem;
   text-align: left;
   text-transform: uppercase;
 }
 
 .upload-copy p {
-  margin: 4px 0 18px;
+  margin: 3px 0 10px;
   color: #fff;
   font-size: 1.08rem;
   font-weight: 800;
@@ -514,26 +514,26 @@ textarea {
 
 .upload-copy ul {
   display: grid;
-  gap: 12px;
-  margin: 0 0 16px;
+  gap: 7px;
+  margin: 0 0 10px;
   padding: 0;
   list-style: none;
 }
 
 .upload-copy li {
   display: grid;
-  grid-template-columns: 30px 1fr;
+  grid-template-columns: 24px 1fr;
   gap: 8px;
   color: #d9f6ff;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
 }
 
 .upload-copy li::before {
   content: "♢";
   display: grid;
   place-items: center;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border: 1px solid var(--cyan);
   border-radius: 50%;
   color: var(--cyan);
@@ -549,9 +549,45 @@ textarea {
   color: #fff;
 }
 
+.upload-mini-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  margin: 0 0 10px;
+}
+
+.upload-mini-fields input,
+.upload-mini-fields textarea {
+  width: 100%;
+  border: 1px solid rgba(95, 218, 242, 0.55);
+  border-radius: 7px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.upload-mini-fields input {
+  height: 34px;
+  padding: 0 10px;
+}
+
+.upload-mini-fields textarea {
+  grid-column: 1 / -1;
+  min-height: 44px;
+  max-height: 54px;
+  resize: vertical;
+  padding: 8px 10px;
+}
+
+.upload-mini-fields input::placeholder,
+.upload-mini-fields textarea::placeholder {
+  color: rgba(226, 246, 255, 0.72);
+}
+
 .upload-submit {
   width: 100%;
-  margin-top: 12px;
+  margin-top: 0;
 }
 
 .upload-status {
