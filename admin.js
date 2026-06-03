@@ -47,12 +47,11 @@ loginForm?.addEventListener("submit", async (event) => {
 
   try {
     const body = Object.fromEntries(new FormData(loginForm));
-    const response = await fetch("/api/admin-login", {
+    const { response, data } = await fetchJson("/api/admin-login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
 
     if (!response.ok) throw new Error(data.error || "No se pudo entrar");
     await showDashboard(data.email);
@@ -72,12 +71,11 @@ recordForm?.addEventListener("submit", async (event) => {
 
   try {
     const body = Object.fromEntries(new FormData(recordForm));
-    const response = await fetch("/api/business-records", {
+    const { response, data } = await fetchJson("/api/business-records", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
-    const data = await response.json();
 
     if (!response.ok) throw new Error(data.error || "No se pudo guardar");
     recordForm.reset();
@@ -124,8 +122,7 @@ recordsList?.addEventListener("click", async (event) => {
 
 async function init() {
   try {
-    const response = await fetch("/api/admin-login");
-    const data = await response.json();
+    const { data } = await fetchJson("/api/admin-login");
 
     if (data.authenticated) {
       await showDashboard(data.email);
@@ -150,8 +147,7 @@ async function loadRecords() {
   refreshButton.disabled = true;
 
   try {
-    const response = await fetch("/api/business-records");
-    const data = await response.json();
+    const { response, data } = await fetchJson("/api/business-records");
 
     if (!response.ok) throw new Error(data.error || "No se pudieron cargar los registros");
     records = Array.isArray(data.records) ? data.records : [];
@@ -167,12 +163,11 @@ async function loadRecords() {
 }
 
 async function updateRecord(id, changes) {
-  const response = await fetch("/api/business-records", {
+  const { response, data } = await fetchJson("/api/business-records", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, ...changes }),
   });
-  const data = await response.json();
 
   if (!response.ok) {
     setStatus(recordStatus, data.error || "No se pudo actualizar", "error");
@@ -183,10 +178,9 @@ async function updateRecord(id, changes) {
 }
 
 async function deleteRecord(id) {
-  const response = await fetch(`/api/business-records?id=${encodeURIComponent(id)}`, {
+  const { response, data } = await fetchJson(`/api/business-records?id=${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
-  const data = await response.json();
 
   if (!response.ok) {
     setStatus(recordStatus, data.error || "No se pudo borrar", "error");
@@ -194,6 +188,30 @@ async function deleteRecord(id) {
   }
 
   await loadRecords();
+}
+
+async function fetchJson(url, options = {}) {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      cache: "no-store",
+      signal: controller.signal,
+    });
+    const text = await response.text();
+    const data = text ? JSON.parse(text) : {};
+    return { response, data };
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error("El servidor tardó demasiado. Refresca la página e intenta otra vez.");
+    }
+
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
+  }
 }
 
 function renderRecords() {
