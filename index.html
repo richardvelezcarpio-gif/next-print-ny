@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -44,7 +44,7 @@
 
       <main>
         <section class="hero">
-          <div class="hero-bg" aria-hidden="true"></div>
+          <img class="hero-flag" src="assets/ecuador-flag.png" alt="Ecuador flag" />
           <div class="hero-content">
             <h1>
               Everything your business needs
@@ -121,93 +121,66 @@
             <div class="feature-row" aria-label="Business features">
               <div><strong>Fast Response</strong><span>Quotes in minutes</span></div>
               <div><strong>100% Secure</strong><span>Your data is protected</span></div>
-              <div><strong>Instant Quotes</strong><span>Get prices in seconds</span></div>
               <div><strong>Technology & AI</strong><span>Smart solutions 24/7</span></div>
+              <div><strong>Proudly Ecuadorian</strong><span>We speak your language</span></div>
+            </div>
+
+            <div class="tools-grid" aria-label="Customer tools">
+              <form id="uploadForm" class="tool-card upload-card">
+                <input type="hidden" name="name" value="" />
+                <input type="hidden" name="email" value="" />
+                <input type="hidden" name="phone" value="" />
+                <input type="hidden" name="notes" value="Website file upload" />
+                <div class="upload-hero">
+                  <label class="drop-zone">
+                    <input id="uploadFile" type="file" name="file" required />
+                    <span class="cloud">↑</span>
+                    <small>PDF, JPG, PNG (Max. 4MB each)</small>
+                  </label>
+                  <div class="upload-copy">
+                    <h2>Upload your documents</h2>
+                    <p>Share your files securely</p>
+                    <ul>
+                      <li><strong>Safe & Secure</strong><span>Your privacy is our priority</span></li>
+                      <li><strong>Fast Processing</strong><span>We handle your documents quickly</span></li>
+                      <li><strong>Easy & Convenient</strong><span>Upload from any device, anytime</span></li>
+                    </ul>
+                    <button class="upload-submit action-gradient" type="submit">Choose files to upload</button>
+                    <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
+                  </div>
+                </div>
+              </form>
+
+              <section id="ia" class="tool-card chat-card" aria-label="AI Chat Assistant">
+                <div class="chat-mini-header">
+                  <div class="bot-avatar">AI</div>
+                  <div>
+                    <h2>AI Chat Assistant</h2>
+                    <span>Online 24/7</span>
+                  </div>
+                </div>
+                <p>Get answers, recommendations and personalized help 24/7.</p>
+                <div id="chatMessages" class="chat-messages" aria-live="polite">
+                  <div class="message bot" data-i18n="chat.welcome">
+                    Hi, I am the Next Print NY assistant. What is your name, and do you prefer English or Spanish?
+                  </div>
+                </div>
+                <form id="chatForm" class="chat-form">
+                  <label class="sr-only" for="chatInput">Type your question</label>
+                  <input
+                    id="chatInput"
+                    name="message"
+                    type="text"
+                    autocomplete="off"
+                    placeholder="Ask now..."
+                    required
+                  />
+                  <button type="submit">Chat Now</button>
+                </form>
+                <small>Powered by Next Print AI</small>
+              </section>
             </div>
           </div>
-        </section>
-
-        <section class="tools-grid" aria-label="Customer tools">
-          <form id="uploadForm" class="tool-card upload-card">
-            <h2>Upload your documents</h2>
-            <p>Share your documents securely</p>
-            <div class="compact-fields">
-              <label>
-                <span>Name</span>
-                <input type="text" name="name" autocomplete="name" required />
-              </label>
-              <label>
-                <span>Email</span>
-                <input type="email" name="email" autocomplete="email" required />
-              </label>
-              <label>
-                <span>Phone</span>
-                <input type="tel" name="phone" autocomplete="tel" />
-              </label>
-              <label>
-                <span>Order details</span>
-                <textarea name="notes" rows="2" placeholder="Quantity, size, color, date..."></textarea>
-              </label>
-            </div>
-            <label class="drop-zone">
-              <input id="uploadFile" type="file" name="file" required />
-              <span class="cloud">☁</span>
-              <strong>Drag & drop files here</strong>
-              <small>or click to upload</small>
-              <em>Allowed formats: PDF, JPG, PNG (Max. 4MB)</em>
-            </label>
-            <button class="upload-submit action-gradient" type="submit">Upload your files</button>
-            <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
-          </form>
-
-          <article class="tool-card quote-card">
-            <h2>Instant Quote</h2>
-            <p>Get prices instantly for selected services</p>
-            <select aria-label="Select a service">
-              <option>Select a service</option>
-              <option>Business cards</option>
-              <option>Flyers</option>
-              <option>Banners</option>
-              <option>DMV assistance</option>
-            </select>
-            <select aria-label="Select an option">
-              <option>Select an option</option>
-              <option>Standard</option>
-              <option>Rush order</option>
-              <option>Custom request</option>
-            </select>
-            <a class="action-gradient" href="quote.html">Calculate Price</a>
-            <small>Immediate response • No commitment</small>
-          </article>
-
-          <section id="ia" class="tool-card chat-card" aria-label="AI Chat Assistant">
-            <div class="chat-mini-header">
-              <div class="bot-avatar">AI</div>
-              <div>
-                <h2>AI Chat Assistant</h2>
-                <span>Online 24/7</span>
-              </div>
-            </div>
-            <p>Get answers, recommendations and personalized help 24/7.</p>
-            <div id="chatMessages" class="chat-messages" aria-live="polite">
-              <div class="message bot" data-i18n="chat.welcome">
-                Hi, I am the Next Print NY assistant. What is your name, and do you prefer English or Spanish?
-              </div>
-            </div>
-            <form id="chatForm" class="chat-form">
-              <label class="sr-only" for="chatInput">Type your question</label>
-              <input
-                id="chatInput"
-                name="message"
-                type="text"
-                autocomplete="off"
-                placeholder="Ask now..."
-                required
-              />
-              <button type="submit">Chat Now</button>
-            </form>
-            <small>Powered by Next Print AI</small>
-          </section>
         </section>
 
         <section class="visit-grid" aria-label="Visit and contact">

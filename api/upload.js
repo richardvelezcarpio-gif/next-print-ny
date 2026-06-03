@@ -16,13 +16,13 @@ export default async function handler(req, res) {
   }
 
   const { language, name, email, phone, notes, file } = req.body || {};
-  const customerName = String(name || "").trim();
+  const customerName = String(name || "").trim() || "Website visitor";
   const customerEmail = String(email || "").trim();
   const customerPhone = String(phone || "").trim();
   const orderNotes = String(notes || "").trim();
   const selectedLanguage = language === "en" ? "English" : "Español";
 
-  if (!customerName || !customerEmail || !file?.name || !file?.content) {
+  if (!file?.name || !file?.content) {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         from: process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
         to: TO_EMAIL,
-        reply_to: customerEmail,
+        ...(customerEmail ? { reply_to: customerEmail } : {}),
         subject: `Archivo para imprimir - ${customerName}`,
         html,
         attachments: [

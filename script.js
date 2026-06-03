@@ -671,7 +671,10 @@ uploadForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   const file = uploadFile.files?.[0];
 
-  if (!file) return;
+  if (!file) {
+    uploadFile.click();
+    return;
+  }
 
   if (file.size > maxUploadSize) {
     setUploadStatus(t("upload.sizeError"), "error");
