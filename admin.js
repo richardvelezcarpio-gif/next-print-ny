@@ -54,7 +54,7 @@ loginForm?.addEventListener("submit", async (event) => {
     });
 
     if (!response.ok) throw new Error(data.error || "No se pudo entrar");
-    showDashboard(data.email);
+    window.location.href = `/admin.html?session=ok&t=${Date.now()}`;
   } catch (error) {
     setStatus(loginStatus, error.message, "error");
   } finally {
