@@ -5,316 +5,220 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Next Print NY: impresión, agente consultor, multiservicios y asistente IA bilingüe en Brooklyn, NY."
+      content="Next Print NY: printing, multiservices, consulting agent, uploads, instant quote and AI assistant in Brooklyn, NY."
     />
-    <title>Next Print NY | Impresión, Consultoría y Multiservicios</title>
+    <title>Next Print NY | Printing, Multiservices & Consulting Agent</title>
     <link rel="icon" href="assets/logo.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <header class="site-header">
-      <div class="header-contact">
-        <div class="container contact-bar">
-          <div class="contact-links">
-            <a href="tel:+12393337935">☎ 239 333 7935</a>
-            <a href="mailto:nextprintny@gmail.com">✉ nextprintny@gmail.com</a>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=1510+Gates+Ave+Brooklyn+NY+11237"
-              target="_blank"
-              rel="noreferrer"
-            >
-              📍 Brooklyn, NY
-            </a>
-          </div>
-          <div class="social-links" aria-label="Redes sociales">
-            <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">f</a>
-            <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">◎</a>
-          </div>
-        </div>
-      </div>
+    <div class="page-shell">
+      <header class="top-nav">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
 
-      <div class="brand-stage">
-        <div class="container brand-grid">
-          <img class="flag-large" src="assets/ecuador-flag.png" alt="Bandera de Ecuador" />
-          <a class="brand" href="index.html" aria-label="Next Print NY inicio">
-            <img src="assets/logo.png" alt="Next Print NY" />
-          </a>
-          <img class="flag-large" src="assets/ecuador-flag.png" alt="Bandera de Ecuador" />
-        </div>
-        <div class="container header-categories" aria-label="Categorías principales">
-          <a href="#impresion"><span>🖨️</span><strong data-i18n="nav.print">Impresión</strong></a>
-          <a href="#consultor"><span>🤝</span><strong data-i18n="nav.consultant">Agente consultor</strong></a>
-          <a href="#multiservicios"><span>👥</span><strong data-i18n="nav.multi">Multiservicios</strong></a>
-        </div>
-      </div>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
 
-      <nav class="nav-shell" aria-label="Navegación principal">
-        <div class="container nav">
-          <button class="menu-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-          <div id="menu" class="menu">
-            <a href="#inicio" data-i18n="nav.home">Inicio</a>
-            <a href="#contacto" data-i18n="nav.about">Nosotros</a>
-            <a href="#impresion" data-i18n="nav.services">Servicios</a>
-            <a href="#multiservicios" data-i18n="nav.gallery">Galería</a>
-            <a href="#ia" data-i18n="nav.testimonials">Testimonios</a>
-            <a href="#ia" data-i18n="nav.faq">FAQ</a>
-            <a href="#contacto" data-i18n="nav.contact">Contáctanos</a>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a class="active" href="index.html">Home</a>
+          <a href="services.html">Services</a>
+          <a href="about.html">About Us</a>
+          <a href="testimonials.html">Testimonials</a>
+          <a href="blog.html">Blog</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" class="active" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
           </div>
-          <div class="nav-actions">
-            <a class="action-button" href="#ia">🤖 <span data-i18n="nav.aiButton">Chat con IA</span></a>
-            <a class="action-button" href="https://t.me/" target="_blank" rel="noreferrer">✈ <span data-i18n="nav.telegram">Chat en Telegram</span></a>
-            <div class="language-switch" aria-label="Cambiar idioma">
-              <button type="button" class="active" data-lang="es">ES</button>
-              <button type="button" data-lang="en">EN</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="hero">
+          <div class="hero-bg" aria-hidden="true"></div>
+          <div class="hero-content">
+            <h1>
+              Everything your business needs
+              <span>in one place</span>
+            </h1>
+            <p>High quality printing, essential services and professional advice to grow your business in USA.</p>
+
+            <div class="service-showcase">
+              <article class="showcase-card printing-card">
+                <div class="service-icon">▣</div>
+                <div class="visual print-visual" aria-hidden="true">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <div class="showcase-body">
+                  <h2>Printing</h2>
+                  <ul>
+                    <li>Business Cards</li>
+                    <li>Flyers & Brochures</li>
+                    <li>Banners & Signs</li>
+                    <li>Window Vinyl</li>
+                    <li>Car Wraps</li>
+                    <li>T-Shirts & More</li>
+                  </ul>
+                  <a class="mini-button" href="printing.html">View Services <span>→</span></a>
+                </div>
+              </article>
+
+              <article class="showcase-card light-card">
+                <div class="service-icon">□</div>
+                <div class="visual document-visual" aria-hidden="true">
+                  <span class="paper"></span>
+                  <span class="card-pass">EZPass</span>
+                  <span class="pen"></span>
+                </div>
+                <div class="showcase-body">
+                  <h2>Multiservices</h2>
+                  <ul>
+                    <li>EZ Pass Setup</li>
+                    <li>LLC Formation</li>
+                    <li>DMV Assistance</li>
+                    <li>Ticket Payments</li>
+                    <li>Notary Services</li>
+                    <li>Permit Renewals</li>
+                    <li>And More...</li>
+                  </ul>
+                  <a class="mini-button dark" href="multiservices.html">View Services <span>→</span></a>
+                </div>
+              </article>
+
+              <article class="showcase-card consulting-card">
+                <div class="service-icon">○</div>
+                <div class="visual consultant-visual" aria-hidden="true">
+                  <span class="person one"></span>
+                  <span class="person two"></span>
+                  <span class="table-line"></span>
+                </div>
+                <div class="showcase-body">
+                  <h2>Consulting Agent</h2>
+                  <ul>
+                    <li>Business Consulting</li>
+                    <li>Growth Strategies</li>
+                    <li>AI Automation</li>
+                    <li>Digital Marketing</li>
+                    <li>Business Plans</li>
+                    <li>Customized Solutions</li>
+                  </ul>
+                  <a class="mini-button" href="consulting-agent.html">View Services <span>→</span></a>
+                </div>
+              </article>
+            </div>
+
+            <div class="feature-row" aria-label="Business features">
+              <div><strong>Fast Response</strong><span>Quotes in minutes</span></div>
+              <div><strong>100% Secure</strong><span>Your data is protected</span></div>
+              <div><strong>Instant Quotes</strong><span>Get prices in seconds</span></div>
+              <div><strong>Technology & AI</strong><span>Smart solutions 24/7</span></div>
             </div>
           </div>
-        </div>
-      </nav>
-    </header>
+        </section>
 
-    <main id="inicio">
-      <section class="hero">
-        <div class="container hero-grid">
-          <div class="hero-copy">
-            <div class="country-badge">
-              <span class="flag-mini" aria-hidden="true"></span>
-              <span data-i18n="hero.badge">Orgullosamente ecuatorianos</span>
-            </div>
-            <h1 data-i18n="hero.title">Imprimimos. Te ayudamos. Hacemos que las cosas sucedan.</h1>
-            <p data-i18n="hero.copy">
-              Servicios de impresión, trámites, DMV, E-ZPass, documentos,
-              pagos, traducciones y asistencia personalizada en Brooklyn.
-            </p>
-            <div class="hero-actions">
-              <a class="button primary" href="tel:+12393337935" data-i18n="hero.call">Llamar ahora</a>
-              <a class="button secondary" href="#ia" data-i18n="hero.ask">Preguntar a la IA</a>
-            </div>
-          </div>
-          <div class="hero-panel" aria-label="Resumen de servicios">
-            <div class="panel-line" data-i18n="hero.quality">Alta calidad</div>
-            <div class="panel-line" data-i18n="hero.fast">Entrega rápida</div>
-            <div class="panel-line" data-i18n="hero.prices">Precios excelentes</div>
-            <div class="panel-line accent" data-i18n="hero.bilingual">Bilingüe ES / EN</div>
-            <form id="uploadForm" class="upload-card">
-              <div class="upload-title">
-                <span data-i18n="upload.eyebrow">Ordena tus copias</span>
-                <strong data-i18n="upload.title">Sube tus archivos</strong>
-                <small data-i18n="upload.subtitle">Full color / blanco y negro</small>
-              </div>
-              <div class="upload-fields">
-                <label>
-                  <span data-i18n="upload.name">Nombre</span>
-                  <input type="text" name="name" autocomplete="name" required />
-                </label>
-                <label>
-                  <span data-i18n="upload.email">Email</span>
-                  <input type="email" name="email" autocomplete="email" required />
-                </label>
-                <label>
-                  <span data-i18n="upload.phone">Teléfono</span>
-                  <input type="tel" name="phone" autocomplete="tel" />
-                </label>
-                <label>
-                  <span data-i18n="upload.notes">Detalles del pedido</span>
-                  <textarea name="notes" rows="3" data-i18n-placeholder="upload.notesPlaceholder" placeholder="Cantidad, tamaño, color, fecha..."></textarea>
-                </label>
-              </div>
-              <label class="upload-file">
-                <input id="uploadFile" type="file" name="file" required />
-                <span data-i18n="upload.choose">Escoger archivo</span>
+        <section class="tools-grid" aria-label="Customer tools">
+          <form id="uploadForm" class="tool-card upload-card">
+            <h2>Upload your documents</h2>
+            <p>Share your documents securely</p>
+            <div class="compact-fields">
+              <label>
+                <span>Name</span>
+                <input type="text" name="name" autocomplete="name" required />
               </label>
-              <button class="upload-submit" type="submit" data-i18n="upload.button">Upload your files</button>
-              <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
-            </form>
-          </div>
-        </div>
-      </section>
-
-      <section class="service-tabs" aria-label="Categorías principales">
-        <a href="#impresion" data-i18n="tabs.print">🖨️ Impresión</a>
-        <a href="#consultor" data-i18n="tabs.consultant">🤝 Agente consultor</a>
-        <a href="#multiservicios" data-i18n="tabs.multi">👥 Multiservicios</a>
-      </section>
-
-      <section class="container services-section">
-        <div class="section-heading">
-          <p data-i18n="services.eyebrow">Todo en un solo lugar</p>
-          <h2 data-i18n="services.title">Servicios principales</h2>
-        </div>
-
-        <div class="services-grid">
-          <article id="impresion" class="service-card">
-            <div class="card-title">
-              <span>🖨️</span>
-              <h3 data-i18n="print.title">Servicios de impresión</h3>
+              <label>
+                <span>Email</span>
+                <input type="email" name="email" autocomplete="email" required />
+              </label>
+              <label>
+                <span>Phone</span>
+                <input type="tel" name="phone" autocomplete="tel" />
+              </label>
+              <label>
+                <span>Order details</span>
+                <textarea name="notes" rows="2" placeholder="Quantity, size, color, date..."></textarea>
+              </label>
             </div>
-            <ul>
-              <li data-i18n="print.item1">Tarjetas de presentación</li>
-              <li data-i18n="print.item2">Volantes, postales y banners</li>
-              <li data-i18n="print.item3">Perchas para puertas y stickers</li>
-              <li data-i18n="print.item4">Letreros, afiches y menús</li>
-              <li data-i18n="print.item5">Rotulación de vehículos</li>
-              <li data-i18n="print.item6">Letreros para autos y jardín</li>
-              <li data-i18n="print.item7">Impresión en camisetas</li>
-              <li data-i18n="print.item8">Bordados, folletos y facturas</li>
-            </ul>
-            <p class="card-note" data-i18n="print.note">Alta calidad, entrega rápida, precios excelentes.</p>
+            <label class="drop-zone">
+              <input id="uploadFile" type="file" name="file" required />
+              <span class="cloud">☁</span>
+              <strong>Drag & drop files here</strong>
+              <small>or click to upload</small>
+              <em>Allowed formats: PDF, JPG, PNG (Max. 4MB)</em>
+            </label>
+            <button class="upload-submit action-gradient" type="submit">Upload your files</button>
+            <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
+          </form>
+
+          <article class="tool-card quote-card">
+            <h2>Instant Quote</h2>
+            <p>Get prices instantly for selected services</p>
+            <select aria-label="Select a service">
+              <option>Select a service</option>
+              <option>Business cards</option>
+              <option>Flyers</option>
+              <option>Banners</option>
+              <option>DMV assistance</option>
+            </select>
+            <select aria-label="Select an option">
+              <option>Select an option</option>
+              <option>Standard</option>
+              <option>Rush order</option>
+              <option>Custom request</option>
+            </select>
+            <a class="action-gradient" href="quote.html">Calculate Price</a>
+            <small>Immediate response • No commitment</small>
           </article>
 
-          <article id="consultor" class="service-card">
-            <div class="card-title">
-              <span>🤝</span>
-              <h3 data-i18n="consultant.title">Servicios de agente consultor</h3>
-            </div>
-            <ul>
-              <li data-i18n="consultant.item1">Formularios y asistencia del DMV</li>
-              <li data-i18n="consultant.item2">Registro de E-ZPass</li>
-              <li data-i18n="consultant.item3">Formación de empresas LLC, S-Corp y Corporaciones</li>
-              <li data-i18n="consultant.item4">Asistencia de seguros</li>
-              <li data-i18n="consultant.item5">Orientación de préstamos y financiamiento</li>
-              <li data-i18n="consultant.item6">Preparación de documentos</li>
-              <li data-i18n="consultant.item7">Coordinación con abogados</li>
-              <li data-i18n="consultant.item8">Registro de negocio, EIN e ITIN</li>
-              <li data-i18n="consultant.item9">Asistencia con trámites de inmigración</li>
-            </ul>
-          </article>
-
-          <article id="multiservicios" class="service-card">
-            <div class="card-title">
-              <span>👥</span>
-              <h3 data-i18n="multi.title">Multiservicios</h3>
-            </div>
-            <ul>
-              <li data-i18n="multi.item1">Traducciones inglés - español</li>
-              <li data-i18n="multi.item2">Pago de facturas</li>
-              <li data-i18n="multi.item3">Pago de tickets de tránsito y estacionamiento</li>
-              <li data-i18n="multi.item4">Asistencia con formularios generales</li>
-              <li data-i18n="multi.item5">Servicios administrativos</li>
-              <li data-i18n="multi.item6">Referencias a notaría</li>
-              <li data-i18n="multi.item7">Soluciones de E-ZPass y DMV</li>
-              <li data-i18n="multi.item8">Y mucho más</li>
-            </ul>
-            <p class="ecuador-note">
-              <span class="flag-mini" aria-hidden="true"></span>
-              <span data-i18n="multi.note">Sirviendo con calidad y compromiso.</span>
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section class="support-band">
-        <div class="container support-grid">
-          <div>
-            <span>🏢</span>
-            <strong>DMV y E-ZPass</strong>
-            <p data-i18n="support.dmv">Asistencia para formularios, pagos y orientación.</p>
-          </div>
-          <div>
-            <span>🛡️</span>
-            <strong data-i18n="support.insuranceTitle">Seguros</strong>
-            <p data-i18n="support.insurance">Compensación laboral y responsabilidad civil.</p>
-          </div>
-          <div>
-            <span>🏠</span>
-            <strong data-i18n="support.housingTitle">Servicios de vivienda</strong>
-            <p data-i18n="support.housing">Compramos casas en efectivo y vendemos casas.</p>
-          </div>
-          <div>
-            <span>💰</span>
-            <strong data-i18n="support.loansTitle">Préstamos y financiamiento</strong>
-            <p data-i18n="support.loans">Te guiamos para obtener el financiamiento que necesitas.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="ia" class="ai-section">
-        <div class="container ai-grid">
-          <div class="ai-copy">
-            <p data-i18n="ai.eyebrow">Asistente IA</p>
-            <h2 data-i18n="ai.title">Pregunta lo que necesites</h2>
-            <ul>
-              <li data-i18n="ai.item1">Respuestas rápidas sobre servicios</li>
-              <li data-i18n="ai.item2">Soporte 24/7 cuando esté conectado a Vercel</li>
-              <li data-i18n="ai.item3">Bilingüe español e inglés</li>
-              <li data-i18n="ai.item4">Cotizaciones iniciales al instante</li>
-            </ul>
-          </div>
-
-          <div class="chat-card" aria-label="Chat con asistente de Next Print NY">
-            <div class="chat-header">
+          <section id="ia" class="tool-card chat-card" aria-label="AI Chat Assistant">
+            <div class="chat-mini-header">
               <div class="bot-avatar">AI</div>
               <div>
-                <strong data-i18n="chat.title">Chat con IA</strong>
-                <span data-i18n="chat.identity">Identidad: Next Print NY</span>
+                <h2>AI Chat Assistant</h2>
+                <span>Online 24/7</span>
               </div>
             </div>
+            <p>Get answers, recommendations and personalized help 24/7.</p>
             <div id="chatMessages" class="chat-messages" aria-live="polite">
               <div class="message bot" data-i18n="chat.welcome">
-                Hola, soy el asistente de Next Print NY. Puedo ayudarte con impresión,
-                DMV, E-ZPass, pagos, traducciones y cotizaciones.
+                Hi, I am the Next Print NY assistant. What is your name, and do you prefer English or Spanish?
               </div>
             </div>
             <form id="chatForm" class="chat-form">
-              <label class="sr-only" for="chatInput" data-i18n="chat.label">Escribe tu pregunta</label>
+              <label class="sr-only" for="chatInput">Type your question</label>
               <input
                 id="chatInput"
                 name="message"
                 type="text"
                 autocomplete="off"
-                placeholder="Pregunta ahora..."
-                data-i18n-placeholder="chat.placeholder"
+                placeholder="Ask now..."
                 required
               />
-              <button type="submit" data-i18n="chat.send">Enviar</button>
+              <button type="submit">Chat Now</button>
             </form>
-          </div>
-        </div>
-      </section>
+            <small>Powered by Next Print AI</small>
+          </section>
+        </section>
 
-      <section id="contacto" class="contact-section">
-        <div class="container contact-grid">
-          <div>
-            <p data-i18n="contact.eyebrow">Estamos aquí para ayudarte</p>
-            <h2 data-i18n="contact.title">Ahorra tiempo. Ahorra dinero. Obtén resultados.</h2>
-          </div>
-          <div class="contact-card">
-            <a href="tel:+12393337935">📞 239 333 7935</a>
-            <a href="mailto:nextprintny@gmail.com">✉️ nextprintny@gmail.com</a>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=1510+Gates+Ave+Brooklyn+NY+11237"
-              target="_blank"
-              rel="noreferrer"
-            >
-              📍 1510 Gates Ave, Brooklyn, NY 11237
-            </a>
-          </div>
-          <div class="contact-card">
-            <a href="https://t.me/" target="_blank" rel="noreferrer" data-i18n="contact.telegram">💬 Chat en Telegram</a>
-            <a href="#ia" data-i18n="contact.ai">🤖 Chat con IA</a>
-          </div>
-        </div>
-      </section>
+        <section class="visit-grid" aria-label="Visit and contact">
+          <article class="tool-card visit-card">
+            <h2>Visit Us</h2>
+            <p><strong>Next Print NY</strong><br />1510 Gates Ave,<br />Brooklyn, NY 11237</p>
+            <p><strong>Mon - Sat:</strong> 9:00 AM - 7:00 PM<br /><strong>Sunday:</strong> Closed</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=1510+Gates+Ave+Brooklyn+NY+11237" target="_blank" rel="noreferrer">View on Google Maps</a>
+            <a href="https://www.google.com/maps/dir/?api=1&destination=1510+Gates+Ave+Brooklyn+NY+11237" target="_blank" rel="noreferrer">Get Directions</a>
+          </article>
 
-      <section class="map-section" aria-label="Ubicación de Next Print NY">
-        <div class="container map-grid">
-          <div class="map-copy">
-            <p data-i18n="map.eyebrow">Visítanos</p>
-            <h2 data-i18n="map.title">Encuéntranos en Google Maps</h2>
-            <address>1510 Gates Ave, Brooklyn, NY 11237</address>
-            <a
-              class="button primary"
-              href="https://www.google.com/maps/search/?api=1&query=1510+Gates+Ave+Brooklyn+NY+11237"
-              target="_blank"
-              rel="noreferrer"
-              data-i18n="map.button"
-            >
-              Cómo llegar
-            </a>
-          </div>
           <iframe
             class="map-frame"
             title="1510 Gates Ave, Brooklyn, NY 11237"
@@ -322,16 +226,41 @@
             referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=1510%20Gates%20Ave%20Brooklyn%20NY%2011237&output=embed"
           ></iframe>
-        </div>
-      </section>
-    </main>
 
-    <footer class="footer">
-      <div class="container footer-grid">
+          <article class="tool-card contact-card">
+            <h2>Contact Us</h2>
+            <a href="tel:+12393337935">239 333 7935</a>
+            <a href="mailto:nextprintny@gmail.com">nextprintny@gmail.com</a>
+            <a class="whatsapp" href="https://wa.me/12393337935" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a class="telegram" href="https://t.me/" target="_blank" rel="noreferrer">Telegram</a>
+            <div class="social-row">
+              <span>Follow Us</span>
+              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer">f</a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">◎</a>
+              <a href="https://www.google.com/search?q=Next+Print+NY" target="_blank" rel="noreferrer">G</a>
+            </div>
+          </article>
+        </section>
+
+        <section class="mini-services" aria-label="Additional services">
+          <a href="payments.html"><strong>Online Payments</strong><span>Secure payments</span></a>
+          <a href="digital-signature.html"><strong>Digital Signature</strong><span>Documents online</span></a>
+          <a href="tracking.html"><strong>Real-Time Tracking</strong><span>Track your requests</span></a>
+          <a href="alerts.html"><strong>Email & SMS Alerts</strong><span>Updates instantly</span></a>
+          <a href="support.html"><strong>Multilingual Support</strong><span>We speak your language</span></a>
+        </section>
+      </main>
+
+      <footer class="footer">
         <img src="assets/logo.png" alt="Next Print NY" />
-        <p data-i18n="footer.tagline">Impresiones de calidad. A tiempo. Siempre.</p>
-      </div>
-    </footer>
+        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <div>
+          <a href="privacy.html">Privacy Policy</a>
+          <span>|</span>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+      </footer>
+    </div>
 
     <script src="script.js"></script>
   </body>

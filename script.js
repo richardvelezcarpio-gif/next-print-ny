@@ -281,7 +281,7 @@ const fallbackAnswers = {
   ],
 };
 
-let currentLanguage = localStorage.getItem("preferredLanguage") || "es";
+let currentLanguage = localStorage.getItem("preferredLanguage") || "en";
 let customerMemory = loadCustomerMemory();
 let conversationHistory = loadConversationHistory();
 
