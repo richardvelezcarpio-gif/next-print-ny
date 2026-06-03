@@ -5,6 +5,15 @@
     },
     "api/upload.js": {
       "maxDuration": 10
+    },
+    "api/admin-login.js": {
+      "maxDuration": 10
+    },
+    "api/admin-logout.js": {
+      "maxDuration": 10
+    },
+    "api/business-records.js": {
+      "maxDuration": 10
     }
   }
 }
