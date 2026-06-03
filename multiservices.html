@@ -23,30 +23,34 @@
           <span></span>
         </button>
         <nav id="menu" class="menu" aria-label="Main navigation">
-          <a href="index.html">Home</a>
-          <a href="services.html">Services</a>
-          <a href="printing.html">Printing</a>
-          <a class="active" href="multiservices.html">Multiservices</a>
-          <a href="consulting-agent.html">Consulting Agent</a>
-          <a href="contact.html">Contact</a>
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="services.html" data-i18n="home.nav.services">Services</a>
+          <a href="printing.html" data-i18n="nav.print">Printing</a>
+          <a class="active" href="multiservices.html" data-i18n="nav.multi">Multiservices</a>
+          <a href="consulting-agent.html" data-i18n="nav.consultant">Consulting Agent</a>
+          <a href="contact.html" data-i18n="home.nav.contact">Contact</a>
         </nav>
         <div class="nav-actions">
           <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
         </div>
       </header>
 
       <main class="service-detail-page multiservices-detail">
         <section class="service-hero">
           <div class="service-hero-copy">
-            <span class="service-kicker">Multiservices Desk</span>
-            <h1>One place for the errands that slow your day down.</h1>
-            <p>
+            <span class="service-kicker" data-i18n="multiPage.kicker">Multiservices Desk</span>
+            <h1 data-i18n="multiPage.heroTitle">One place for the errands that slow your day down.</h1>
+            <p data-i18n="multiPage.heroCopy">
               We help with practical paperwork, payments, forms, translations and service requests
               so customers can move faster and avoid confusion.
             </p>
             <div class="service-actions">
-              <a class="action-gradient" href="contact.html">Ask for help</a>
-              <a class="outline-button" href="tel:+12393337935">Call now</a>
+              <a class="action-gradient" href="contact.html" data-i18n="multiPage.help">Ask for help</a>
+              <a class="outline-button" href="tel:+12393337935" data-i18n="hero.call">Call now</a>
             </div>
           </div>
           <div class="service-hero-media">
@@ -56,65 +60,65 @@
 
         <section class="service-band">
           <div class="section-heading">
-            <span>How we help</span>
-            <h2>Daily services for busy people and businesses</h2>
+            <span data-i18n="multiPage.sectionKicker">How we help</span>
+            <h2 data-i18n="multiPage.sectionTitle">Daily services for busy people and businesses</h2>
           </div>
           <div class="service-card-grid">
             <article>
-              <h3>DMV and E-ZPass</h3>
+              <h3 data-i18n="multiPage.card1Title">DMV and E-ZPass</h3>
               <ul>
-                <li>DMV forms and assistance</li>
-                <li>E-ZPass registration support</li>
-                <li>Permit renewal guidance</li>
-                <li>General transportation forms</li>
+                <li data-i18n="multiPage.card1Item1">DMV forms and assistance</li>
+                <li data-i18n="multiPage.card1Item2">E-ZPass registration support</li>
+                <li data-i18n="multiPage.card1Item3">Permit renewal guidance</li>
+                <li data-i18n="multiPage.card1Item4">General transportation forms</li>
               </ul>
             </article>
             <article>
-              <h3>Payments and Tickets</h3>
+              <h3 data-i18n="multiPage.card2Title">Payments and Tickets</h3>
               <ul>
-                <li>Bill payment assistance</li>
-                <li>Traffic ticket support</li>
-                <li>Parking ticket support</li>
-                <li>Receipt organization</li>
+                <li data-i18n="multiPage.card2Item1">Bill payment assistance</li>
+                <li data-i18n="multiPage.card2Item2">Traffic ticket support</li>
+                <li data-i18n="multiPage.card2Item3">Parking ticket support</li>
+                <li data-i18n="multiPage.card2Item4">Receipt organization</li>
               </ul>
             </article>
             <article>
-              <h3>Documents</h3>
+              <h3 data-i18n="multiPage.card3Title">Documents</h3>
               <ul>
-                <li>English-Spanish translations</li>
-                <li>Administrative forms</li>
-                <li>Notary referrals</li>
-                <li>Document preparation support</li>
+                <li data-i18n="multiPage.card3Item1">English-Spanish translations</li>
+                <li data-i18n="multiPage.card3Item2">Administrative forms</li>
+                <li data-i18n="multiPage.card3Item3">Notary referrals</li>
+                <li data-i18n="multiPage.card3Item4">Document preparation support</li>
               </ul>
             </article>
           </div>
         </section>
 
         <section class="process-strip" aria-label="Multiservices process">
-          <div><strong>1</strong><span>Tell us what you need</span></div>
-          <div><strong>2</strong><span>Bring or upload documents</span></div>
-          <div><strong>3</strong><span>We review the details</span></div>
-          <div><strong>4</strong><span>You approve the next step</span></div>
+          <div><strong>1</strong><span data-i18n="multiPage.step1">Tell us what you need</span></div>
+          <div><strong>2</strong><span data-i18n="multiPage.step2">Bring or upload documents</span></div>
+          <div><strong>3</strong><span data-i18n="multiPage.step3">We review the details</span></div>
+          <div><strong>4</strong><span data-i18n="multiPage.step4">You approve the next step</span></div>
         </section>
 
         <section class="service-cta">
           <div>
-            <h2>Bring the paperwork. We help organize the next step.</h2>
-            <p>For legal, immigration or financial matters, we help prepare and coordinate but do not promise outcomes.</p>
+            <h2 data-i18n="multiPage.ctaTitle">Bring the paperwork. We help organize the next step.</h2>
+            <p data-i18n="multiPage.ctaCopy">For legal, immigration or financial matters, we help prepare and coordinate but do not promise outcomes.</p>
           </div>
-          <a class="action-gradient" href="contact.html">Start a request</a>
+          <a class="action-gradient" href="contact.html" data-i18n="multiPage.ctaButton">Start a request</a>
         </section>
       </main>
 
       <footer class="footer">
         <img src="assets/logo.png" alt="Next Print NY" />
-        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <p data-i18n="home.footer.rights">© 2026 Next Print NY. All rights reserved.</p>
         <div>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
+          <a href="privacy.html" data-i18n="home.footer.privacy">Privacy</a>
+          <a href="terms.html" data-i18n="home.footer.terms">Terms</a>
         </div>
       </footer>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?v=20260603-1548"></script>
   </body>
 </html>

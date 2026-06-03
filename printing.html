@@ -23,30 +23,34 @@
           <span></span>
         </button>
         <nav id="menu" class="menu" aria-label="Main navigation">
-          <a href="index.html">Home</a>
-          <a href="services.html">Services</a>
-          <a class="active" href="printing.html">Printing</a>
-          <a href="multiservices.html">Multiservices</a>
-          <a href="consulting-agent.html">Consulting Agent</a>
-          <a href="contact.html">Contact</a>
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="services.html" data-i18n="home.nav.services">Services</a>
+          <a class="active" href="printing.html" data-i18n="nav.print">Printing</a>
+          <a href="multiservices.html" data-i18n="nav.multi">Multiservices</a>
+          <a href="consulting-agent.html" data-i18n="nav.consultant">Consulting Agent</a>
+          <a href="contact.html" data-i18n="home.nav.contact">Contact</a>
         </nav>
         <div class="nav-actions">
           <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
         </div>
       </header>
 
       <main class="service-detail-page printing-detail">
         <section class="service-hero">
           <div class="service-hero-copy">
-            <span class="service-kicker">Printing Department</span>
-            <h1>Printing that makes your business look ready.</h1>
-            <p>
+            <span class="service-kicker" data-i18n="printingPage.kicker">Printing Department</span>
+            <h1 data-i18n="printingPage.heroTitle">Printing that makes your business look ready.</h1>
+            <p data-i18n="printingPage.heroCopy">
               From everyday copies to business cards, banners, signs, shirts and custom orders,
               Next Print NY helps you prepare professional materials fast in Brooklyn.
             </p>
             <div class="service-actions">
-              <a class="action-gradient" href="quote.html">Request a quote</a>
-              <a class="outline-button" href="index.html#uploadForm">Upload files</a>
+              <a class="action-gradient" href="quote.html" data-i18n="printingPage.quote">Request a quote</a>
+              <a class="outline-button" href="index.html#uploadForm" data-i18n="printingPage.upload">Upload files</a>
             </div>
           </div>
           <div class="service-hero-media">
@@ -56,65 +60,65 @@
 
         <section class="service-band">
           <div class="section-heading">
-            <span>What we print</span>
-            <h2>Business, event and everyday printing</h2>
+            <span data-i18n="printingPage.sectionKicker">What we print</span>
+            <h2 data-i18n="printingPage.sectionTitle">Business, event and everyday printing</h2>
           </div>
           <div class="service-card-grid">
             <article>
-              <h3>Business Materials</h3>
+              <h3 data-i18n="printingPage.card1Title">Business Materials</h3>
               <ul>
-                <li>Business cards</li>
-                <li>Flyers and brochures</li>
-                <li>Postcards and menus</li>
-                <li>Invoices and forms</li>
+                <li data-i18n="printingPage.card1Item1">Business cards</li>
+                <li data-i18n="printingPage.card1Item2">Flyers and brochures</li>
+                <li data-i18n="printingPage.card1Item3">Postcards and menus</li>
+                <li data-i18n="printingPage.card1Item4">Invoices and forms</li>
               </ul>
             </article>
             <article>
-              <h3>Signs and Display</h3>
+              <h3 data-i18n="printingPage.card2Title">Signs and Display</h3>
               <ul>
-                <li>Banners and posters</li>
-                <li>Window vinyl</li>
-                <li>Yard signs</li>
-                <li>Car signs and lettering</li>
+                <li data-i18n="printingPage.card2Item1">Banners and posters</li>
+                <li data-i18n="printingPage.card2Item2">Window vinyl</li>
+                <li data-i18n="printingPage.card2Item3">Yard signs</li>
+                <li data-i18n="printingPage.card2Item4">Car signs and lettering</li>
               </ul>
             </article>
             <article>
-              <h3>Custom Products</h3>
+              <h3 data-i18n="printingPage.card3Title">Custom Products</h3>
               <ul>
-                <li>Stickers and labels</li>
-                <li>T-shirts</li>
-                <li>Embroidery coordination</li>
-                <li>Special print requests</li>
+                <li data-i18n="printingPage.card3Item1">Stickers and labels</li>
+                <li data-i18n="printingPage.card3Item2">T-shirts</li>
+                <li data-i18n="printingPage.card3Item3">Embroidery coordination</li>
+                <li data-i18n="printingPage.card3Item4">Special print requests</li>
               </ul>
             </article>
           </div>
         </section>
 
         <section class="process-strip" aria-label="Printing process">
-          <div><strong>1</strong><span>Send your file or idea</span></div>
-          <div><strong>2</strong><span>Confirm size, quantity and finish</span></div>
-          <div><strong>3</strong><span>Approve and print</span></div>
-          <div><strong>4</strong><span>Pick up or coordinate delivery</span></div>
+          <div><strong>1</strong><span data-i18n="printingPage.step1">Send your file or idea</span></div>
+          <div><strong>2</strong><span data-i18n="printingPage.step2">Confirm size, quantity and finish</span></div>
+          <div><strong>3</strong><span data-i18n="printingPage.step3">Approve and print</span></div>
+          <div><strong>4</strong><span data-i18n="printingPage.step4">Pick up or coordinate delivery</span></div>
         </section>
 
         <section class="service-cta">
           <div>
-            <h2>Need a price?</h2>
-            <p>Send quantity, size, material, colors and deadline so we can quote it correctly.</p>
+            <h2 data-i18n="printingPage.ctaTitle">Need a price?</h2>
+            <p data-i18n="printingPage.ctaCopy">Send quantity, size, material, colors and deadline so we can quote it correctly.</p>
           </div>
-          <a class="action-gradient" href="contact.html">Contact Next Print NY</a>
+          <a class="action-gradient" href="contact.html" data-i18n="printingPage.ctaButton">Contact Next Print NY</a>
         </section>
       </main>
 
       <footer class="footer">
         <img src="assets/logo.png" alt="Next Print NY" />
-        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <p data-i18n="home.footer.rights">© 2026 Next Print NY. All rights reserved.</p>
         <div>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
+          <a href="privacy.html" data-i18n="home.footer.privacy">Privacy</a>
+          <a href="terms.html" data-i18n="home.footer.terms">Terms</a>
         </div>
       </footer>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?v=20260603-1548"></script>
   </body>
 </html>

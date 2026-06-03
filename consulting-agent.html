@@ -23,30 +23,34 @@
           <span></span>
         </button>
         <nav id="menu" class="menu" aria-label="Main navigation">
-          <a href="index.html">Home</a>
-          <a href="services.html">Services</a>
-          <a href="printing.html">Printing</a>
-          <a href="multiservices.html">Multiservices</a>
-          <a class="active" href="consulting-agent.html">Consulting Agent</a>
-          <a href="contact.html">Contact</a>
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="services.html" data-i18n="home.nav.services">Services</a>
+          <a href="printing.html" data-i18n="nav.print">Printing</a>
+          <a href="multiservices.html" data-i18n="nav.multi">Multiservices</a>
+          <a class="active" href="consulting-agent.html" data-i18n="nav.consultant">Consulting Agent</a>
+          <a href="contact.html" data-i18n="home.nav.contact">Contact</a>
         </nav>
         <div class="nav-actions">
           <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
         </div>
       </header>
 
       <main class="service-detail-page consulting-detail">
         <section class="service-hero">
           <div class="service-hero-copy">
-            <span class="service-kicker">Consulting Agent</span>
-            <h1>Guidance for business moves, paperwork and growth.</h1>
-            <p>
+            <span class="service-kicker" data-i18n="consultingPage.kicker">Consulting Agent</span>
+            <h1 data-i18n="consultingPage.heroTitle">Guidance for business moves, paperwork and growth.</h1>
+            <p data-i18n="consultingPage.heroCopy">
               We help entrepreneurs and families organize business formation, planning, automation,
               marketing and document workflows with practical, bilingual support.
             </p>
             <div class="service-actions">
-              <a class="action-gradient" href="contact.html">Book a consultation</a>
-              <a class="outline-button" href="index.html#ia">Ask the AI assistant</a>
+              <a class="action-gradient" href="contact.html" data-i18n="consultingPage.book">Book a consultation</a>
+              <a class="outline-button" href="index.html#ia" data-i18n="consultingPage.ai">Ask the AI assistant</a>
             </div>
           </div>
           <div class="service-hero-media">
@@ -56,65 +60,65 @@
 
         <section class="service-band">
           <div class="section-heading">
-            <span>Business support</span>
-            <h2>From idea to organized operation</h2>
+            <span data-i18n="consultingPage.sectionKicker">Business support</span>
+            <h2 data-i18n="consultingPage.sectionTitle">From idea to organized operation</h2>
           </div>
           <div class="service-card-grid">
             <article>
-              <h3>Business Setup</h3>
+              <h3 data-i18n="consultingPage.card1Title">Business Setup</h3>
               <ul>
-                <li>LLC, S-Corp and corporation guidance</li>
-                <li>EIN and business registration support</li>
-                <li>Business plans</li>
-                <li>Document preparation</li>
+                <li data-i18n="consultingPage.card1Item1">LLC, S-Corp and corporation guidance</li>
+                <li data-i18n="consultingPage.card1Item2">EIN and business registration support</li>
+                <li data-i18n="consultingPage.card1Item3">Business plans</li>
+                <li data-i18n="consultingPage.card1Item4">Document preparation</li>
               </ul>
             </article>
             <article>
-              <h3>Growth and Marketing</h3>
+              <h3 data-i18n="consultingPage.card2Title">Growth and Marketing</h3>
               <ul>
-                <li>Growth strategies</li>
-                <li>Digital marketing direction</li>
-                <li>Brand and print coordination</li>
-                <li>Customer communication ideas</li>
+                <li data-i18n="consultingPage.card2Item1">Growth strategies</li>
+                <li data-i18n="consultingPage.card2Item2">Digital marketing direction</li>
+                <li data-i18n="consultingPage.card2Item3">Brand and print coordination</li>
+                <li data-i18n="consultingPage.card2Item4">Customer communication ideas</li>
               </ul>
             </article>
             <article>
-              <h3>Automation and Coordination</h3>
+              <h3 data-i18n="consultingPage.card3Title">Automation and Coordination</h3>
               <ul>
-                <li>AI automation planning</li>
-                <li>Workflow organization</li>
-                <li>Attorney coordination</li>
-                <li>Insurance and finance referrals</li>
+                <li data-i18n="consultingPage.card3Item1">AI automation planning</li>
+                <li data-i18n="consultingPage.card3Item2">Workflow organization</li>
+                <li data-i18n="consultingPage.card3Item3">Attorney coordination</li>
+                <li data-i18n="consultingPage.card3Item4">Insurance and finance referrals</li>
               </ul>
             </article>
           </div>
         </section>
 
         <section class="process-strip" aria-label="Consulting process">
-          <div><strong>1</strong><span>Share the goal</span></div>
-          <div><strong>2</strong><span>Review documents and needs</span></div>
-          <div><strong>3</strong><span>Build the action list</span></div>
-          <div><strong>4</strong><span>Coordinate next steps</span></div>
+          <div><strong>1</strong><span data-i18n="consultingPage.step1">Share the goal</span></div>
+          <div><strong>2</strong><span data-i18n="consultingPage.step2">Review documents and needs</span></div>
+          <div><strong>3</strong><span data-i18n="consultingPage.step3">Build the action list</span></div>
+          <div><strong>4</strong><span data-i18n="consultingPage.step4">Coordinate next steps</span></div>
         </section>
 
         <section class="service-cta">
           <div>
-            <h2>Need help making the business more organized?</h2>
-            <p>We can help you map the next step and connect the services your business needs.</p>
+            <h2 data-i18n="consultingPage.ctaTitle">Need help making the business more organized?</h2>
+            <p data-i18n="consultingPage.ctaCopy">We can help you map the next step and connect the services your business needs.</p>
           </div>
-          <a class="action-gradient" href="contact.html">Talk to us</a>
+          <a class="action-gradient" href="contact.html" data-i18n="consultingPage.ctaButton">Talk to us</a>
         </section>
       </main>
 
       <footer class="footer">
         <img src="assets/logo.png" alt="Next Print NY" />
-        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <p data-i18n="home.footer.rights">© 2026 Next Print NY. All rights reserved.</p>
         <div>
-          <a href="privacy.html">Privacy</a>
-          <a href="terms.html">Terms</a>
+          <a href="privacy.html" data-i18n="home.footer.privacy">Privacy</a>
+          <a href="terms.html" data-i18n="home.footer.terms">Terms</a>
         </div>
       </footer>
     </div>
-    <script src="script.js"></script>
+    <script src="script.js?v=20260603-1548"></script>
   </body>
 </html>
