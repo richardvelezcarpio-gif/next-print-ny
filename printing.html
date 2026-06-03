@@ -3,24 +3,118 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Printing | Next Print NY</title>
+    <meta
+      name="description"
+      content="Printing services in Brooklyn: business cards, flyers, banners, signs, stickers, menus, shirts and custom print orders."
+    />
+    <title>Printing Services | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div class="page-shell">
       <header class="top-nav">
-        <a class="brand" href="index.html"><img src="assets/logo.png" alt="Next Print NY" /></a>
-        <nav class="menu open"><a href="index.html">Home</a><a class="active" href="printing.html">Printing</a><a href="contact.html">Contact</a></nav>
-        <div class="nav-actions"><a class="phone-pill" href="tel:+12393337935">239 333 7935</a></div>
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="services.html">Services</a>
+          <a class="active" href="printing.html">Printing</a>
+          <a href="multiservices.html">Multiservices</a>
+          <a href="consulting-agent.html">Consulting Agent</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+        </div>
       </header>
-      <main class="placeholder-page">
-        <article>
-          <h1>Printing</h1>
-          <p>Business cards, flyers, banners, signs, shirts, stickers and more will be organized here.</p>
-          <a class="action-gradient" href="index.html">Back Home</a>
-        </article>
+
+      <main class="service-detail-page printing-detail">
+        <section class="service-hero">
+          <div class="service-hero-copy">
+            <span class="service-kicker">Printing Department</span>
+            <h1>Printing that makes your business look ready.</h1>
+            <p>
+              From everyday copies to business cards, banners, signs, shirts and custom orders,
+              Next Print NY helps you prepare professional materials fast in Brooklyn.
+            </p>
+            <div class="service-actions">
+              <a class="action-gradient" href="quote.html">Request a quote</a>
+              <a class="outline-button" href="index.html#uploadForm">Upload files</a>
+            </div>
+          </div>
+          <div class="service-hero-media">
+            <img src="assets/printing-printer.png" alt="Professional printing machine" />
+          </div>
+        </section>
+
+        <section class="service-band">
+          <div class="section-heading">
+            <span>What we print</span>
+            <h2>Business, event and everyday printing</h2>
+          </div>
+          <div class="service-card-grid">
+            <article>
+              <h3>Business Materials</h3>
+              <ul>
+                <li>Business cards</li>
+                <li>Flyers and brochures</li>
+                <li>Postcards and menus</li>
+                <li>Invoices and forms</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Signs and Display</h3>
+              <ul>
+                <li>Banners and posters</li>
+                <li>Window vinyl</li>
+                <li>Yard signs</li>
+                <li>Car signs and lettering</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Custom Products</h3>
+              <ul>
+                <li>Stickers and labels</li>
+                <li>T-shirts</li>
+                <li>Embroidery coordination</li>
+                <li>Special print requests</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="process-strip" aria-label="Printing process">
+          <div><strong>1</strong><span>Send your file or idea</span></div>
+          <div><strong>2</strong><span>Confirm size, quantity and finish</span></div>
+          <div><strong>3</strong><span>Approve and print</span></div>
+          <div><strong>4</strong><span>Pick up or coordinate delivery</span></div>
+        </section>
+
+        <section class="service-cta">
+          <div>
+            <h2>Need a price?</h2>
+            <p>Send quantity, size, material, colors and deadline so we can quote it correctly.</p>
+          </div>
+          <a class="action-gradient" href="contact.html">Contact Next Print NY</a>
+        </section>
       </main>
+
+      <footer class="footer">
+        <img src="assets/logo.png" alt="Next Print NY" />
+        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <div>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+      </footer>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>

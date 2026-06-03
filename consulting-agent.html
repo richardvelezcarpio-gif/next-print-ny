@@ -3,6 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Consulting agent services for business formation, growth strategy, AI automation, marketing, document preparation and planning."
+    />
     <title>Consulting Agent | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
     <link rel="stylesheet" href="styles.css" />
@@ -10,17 +14,107 @@
   <body>
     <div class="page-shell">
       <header class="top-nav">
-        <a class="brand" href="index.html"><img src="assets/logo.png" alt="Next Print NY" /></a>
-        <nav class="menu open"><a href="index.html">Home</a><a class="active" href="consulting-agent.html">Consulting Agent</a><a href="contact.html">Contact</a></nav>
-        <div class="nav-actions"><a class="phone-pill" href="tel:+12393337935">239 333 7935</a></div>
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="services.html">Services</a>
+          <a href="printing.html">Printing</a>
+          <a href="multiservices.html">Multiservices</a>
+          <a class="active" href="consulting-agent.html">Consulting Agent</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+        </div>
       </header>
-      <main class="placeholder-page">
-        <article>
-          <h1>Consulting Agent</h1>
-          <p>Business consulting, automation, planning and professional guidance will be built on this page.</p>
-          <a class="action-gradient" href="index.html">Back Home</a>
-        </article>
+
+      <main class="service-detail-page consulting-detail">
+        <section class="service-hero">
+          <div class="service-hero-copy">
+            <span class="service-kicker">Consulting Agent</span>
+            <h1>Guidance for business moves, paperwork and growth.</h1>
+            <p>
+              We help entrepreneurs and families organize business formation, planning, automation,
+              marketing and document workflows with practical, bilingual support.
+            </p>
+            <div class="service-actions">
+              <a class="action-gradient" href="contact.html">Book a consultation</a>
+              <a class="outline-button" href="index.html#ia">Ask the AI assistant</a>
+            </div>
+          </div>
+          <div class="service-hero-media">
+            <img src="assets/consulting-agent-card.png" alt="Next Print NY consulting agent" />
+          </div>
+        </section>
+
+        <section class="service-band">
+          <div class="section-heading">
+            <span>Business support</span>
+            <h2>From idea to organized operation</h2>
+          </div>
+          <div class="service-card-grid">
+            <article>
+              <h3>Business Setup</h3>
+              <ul>
+                <li>LLC, S-Corp and corporation guidance</li>
+                <li>EIN and business registration support</li>
+                <li>Business plans</li>
+                <li>Document preparation</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Growth and Marketing</h3>
+              <ul>
+                <li>Growth strategies</li>
+                <li>Digital marketing direction</li>
+                <li>Brand and print coordination</li>
+                <li>Customer communication ideas</li>
+              </ul>
+            </article>
+            <article>
+              <h3>Automation and Coordination</h3>
+              <ul>
+                <li>AI automation planning</li>
+                <li>Workflow organization</li>
+                <li>Attorney coordination</li>
+                <li>Insurance and finance referrals</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="process-strip" aria-label="Consulting process">
+          <div><strong>1</strong><span>Share the goal</span></div>
+          <div><strong>2</strong><span>Review documents and needs</span></div>
+          <div><strong>3</strong><span>Build the action list</span></div>
+          <div><strong>4</strong><span>Coordinate next steps</span></div>
+        </section>
+
+        <section class="service-cta">
+          <div>
+            <h2>Need help making the business more organized?</h2>
+            <p>We can help you map the next step and connect the services your business needs.</p>
+          </div>
+          <a class="action-gradient" href="contact.html">Talk to us</a>
+        </section>
       </main>
+
+      <footer class="footer">
+        <img src="assets/logo.png" alt="Next Print NY" />
+        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <div>
+          <a href="privacy.html">Privacy</a>
+          <a href="terms.html">Terms</a>
+        </div>
+      </footer>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>
