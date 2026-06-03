@@ -20,6 +20,9 @@
     },
     "api/track-order.js": {
       "maxDuration": 10
+    },
+    "api/supabase-debug.js": {
+      "maxDuration": 10
     }
   }
 }
