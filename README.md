@@ -111,6 +111,8 @@ create table business_records (
 );
 ```
 
+También puedes copiar y ejecutar directamente el archivo `supabase-business-records.sql` en Supabase SQL Editor. Ese archivo crea la tabla y agrega permisos para que Vercel pueda guardar y leer las órdenes.
+
 Después de desplegar, entra a:
 
 ```text
