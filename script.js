@@ -338,6 +338,10 @@ const translations = {
     "tracking.status.paid": "Pago recibido",
     "tracking.status.completed": "Completada",
     "tracking.whatsapp": "Preguntar por WhatsApp",
+    "quick.call": "Llamar",
+    "quick.whatsapp": "WhatsApp",
+    "quick.order": "Orden",
+    "quick.track": "Rastrear",
   },
   en: {
     "nav.print": "Printing",
@@ -662,6 +666,10 @@ const translations = {
     "tracking.status.paid": "Payment received",
     "tracking.status.completed": "Completed",
     "tracking.whatsapp": "Ask on WhatsApp",
+    "quick.call": "Call",
+    "quick.whatsapp": "WhatsApp",
+    "quick.order": "Order",
+    "quick.track": "Track",
   },
 };
 
@@ -920,6 +928,33 @@ menu?.addEventListener("click", (event) => {
 languageButtons.forEach((button) => {
   button.addEventListener("click", () => applyLanguage(button.dataset.lang));
 });
+
+function createQuickActionBar() {
+  if (document.querySelector(".quick-action-bar")) return;
+
+  const bar = document.createElement("nav");
+  bar.className = "quick-action-bar";
+  bar.setAttribute("aria-label", "Quick actions");
+  bar.innerHTML = `
+    <a href="tel:+12393337935">
+      <span class="quick-icon" aria-hidden="true">☎</span>
+      <span data-i18n="quick.call">Call</span>
+    </a>
+    <a href="https://wa.me/12393337935" target="_blank" rel="noreferrer">
+      <span class="quick-icon" aria-hidden="true">WA</span>
+      <span data-i18n="quick.whatsapp">WhatsApp</span>
+    </a>
+    <a href="order.html">
+      <span class="quick-icon" aria-hidden="true">+</span>
+      <span data-i18n="quick.order">Order</span>
+    </a>
+    <a href="tracking.html">
+      <span class="quick-icon" aria-hidden="true">#</span>
+      <span data-i18n="quick.track">Track</span>
+    </a>
+  `;
+  document.body.appendChild(bar);
+}
 
 function addMessage(text, type, shouldSave = true) {
   const message = document.createElement("div");
@@ -1202,5 +1237,6 @@ uploadForm?.addEventListener("submit", async (event) => {
   }
 });
 
+createQuickActionBar();
 applyLanguage(customerMemory.language || currentLanguage);
 renderConversationHistory();
