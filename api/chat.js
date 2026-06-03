@@ -90,6 +90,11 @@ export default async function handler(req, res) {
 
 function buildCustomerContext(customer) {
   const name = safeText(customer.name);
+  const deviceId = safeText(customer.deviceId);
+  const lastVisit = safeText(customer.lastVisit);
+  const recentQuestions = Array.isArray(customer.recentQuestions)
+    ? customer.recentQuestions.map(safeText).filter(Boolean).slice(0, 5)
+    : [];
   const recentOrders = Array.isArray(customer.recentOrders)
     ? customer.recentOrders.map(safeText).filter(Boolean).slice(0, 3)
     : [];
@@ -97,10 +102,16 @@ function buildCustomerContext(customer) {
   return `
 Memoria local del cliente:
 - Nombre recordado: ${name || "No disponible"}
+- Dispositivo reconocido: ${deviceId ? "Sí" : "No"}
+- Última visita guardada: ${lastVisit || "No disponible"}
+- Preguntas recientes recordadas: ${
+    recentQuestions.length ? recentQuestions.join(" | ") : "No hay preguntas previas recordadas"
+  }
 - Pedidos o archivos recientes recordados: ${
     recentOrders.length ? recentOrders.join(" | ") : "No hay pedidos previos recordados"
   }
 Usa esta memoria con naturalidad, sin decir que viene de localStorage.
+Si el cliente pregunta si lo recuerdas, responde con su nombre, preguntas recientes o archivos recientes cuando estén disponibles.
 `;
 }
 

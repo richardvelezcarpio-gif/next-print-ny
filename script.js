@@ -11,6 +11,7 @@ const maxUploadSize = 4 * 1024 * 1024;
 const memoryKey = "nextPrintCustomerMemory";
 const conversationKey = "nextPrintConversation";
 const maxConversationMessages = 16;
+const maxRememberedQuestions = 8;
 
 const translations = {
   es: {
@@ -299,15 +300,48 @@ function loadCustomerMemory() {
       name: savedMemory.name || "",
       language: savedMemory.language || currentLanguage,
       orders: Array.isArray(savedMemory.orders) ? savedMemory.orders.slice(0, 5) : [],
+      deviceId: savedMemory.deviceId || createDeviceId(),
+      lastVisit: savedMemory.lastVisit || "",
+      questions: Array.isArray(savedMemory.questions)
+        ? savedMemory.questions.slice(0, maxRememberedQuestions)
+        : [],
     };
   } catch {
-    return { name: "", language: currentLanguage, orders: [] };
+    return {
+      name: "",
+      language: currentLanguage,
+      orders: [],
+      deviceId: createDeviceId(),
+      lastVisit: "",
+      questions: [],
+    };
   }
 }
 
 function saveCustomerMemory() {
   customerMemory.language = currentLanguage;
+  customerMemory.lastVisit = new Date().toISOString();
   localStorage.setItem(memoryKey, JSON.stringify(customerMemory));
+}
+
+function createDeviceId() {
+  if (window.crypto?.randomUUID) return window.crypto.randomUUID();
+  return `device-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
+function rememberQuestion(text) {
+  const question = String(text || "").trim().slice(0, 160);
+
+  if (!question) return;
+
+  customerMemory.questions = [
+    {
+      date: new Date().toLocaleDateString(currentLanguage === "en" ? "en-US" : "es-US"),
+      text: question,
+    },
+    ...(customerMemory.questions || []).filter((item) => item.text !== question),
+  ].slice(0, maxRememberedQuestions);
+  saveCustomerMemory();
 }
 
 function loadConversationHistory() {
@@ -459,6 +493,21 @@ function addMessage(text, type, shouldSave = true) {
 
 function localReply(text) {
   const normalized = text.toLowerCase();
+  const asksMemory = [
+    "te acuerdas",
+    "te recuerdas",
+    "me recuerdas",
+    "recuerdas de mi",
+    "recuerdas de mí",
+    "remember me",
+    "do you remember",
+    "you remember me",
+  ].some((phrase) => normalized.includes(phrase));
+
+  if (asksMemory) {
+    return buildLocalMemoryReply();
+  }
+
   const answers = fallbackAnswers[currentLanguage] || fallbackAnswers.es;
   const match = answers.find((item) =>
     item.keywords.some((keyword) => normalized.includes(keyword))
@@ -472,6 +521,38 @@ function localReply(text) {
   );
 }
 
+function buildLocalMemoryReply() {
+  const rememberedName = customerMemory.name;
+  const recentQuestion = customerMemory.questions?.[0]?.text;
+  const recentOrder = customerMemory.orders?.[0]?.fileName;
+
+  if (currentLanguage === "en") {
+    if (!rememberedName && !recentQuestion && !recentOrder) {
+      return "I do not have your name saved on this device yet. Tell me your name once, and I will remember it here for your next visit.";
+    }
+
+    return [
+      rememberedName ? `Yes, I remember you as ${rememberedName}.` : "Yes, I recognize this device.",
+      recentQuestion ? `Your last question was about: ${recentQuestion}.` : "",
+      recentOrder ? `I also see your recent uploaded file: ${recentOrder}.` : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  if (!rememberedName && !recentQuestion && !recentOrder) {
+    return "Todavía no tengo tu nombre guardado en este dispositivo. Dime tu nombre una vez y lo recordaré aquí para tu próxima visita.";
+  }
+
+  return [
+    rememberedName ? `Sí, te recuerdo como ${rememberedName}.` : "Sí, reconozco este dispositivo.",
+    recentQuestion ? `Tu última pregunta fue sobre: ${recentQuestion}.` : "",
+    recentOrder ? `También veo tu archivo reciente: ${recentOrder}.` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
+
 function buildMemorySummary() {
   const orders = customerMemory.orders
     .slice(0, 3)
@@ -480,6 +561,11 @@ function buildMemorySummary() {
   return {
     name: customerMemory.name,
     language: currentLanguage,
+    deviceId: customerMemory.deviceId,
+    lastVisit: customerMemory.lastVisit,
+    recentQuestions: (customerMemory.questions || [])
+      .slice(0, 5)
+      .map((item) => `${item.date}: ${item.text}`),
     recentOrders: orders,
   };
 }
@@ -540,6 +626,7 @@ chatForm?.addEventListener("submit", async (event) => {
   renderMessageText(loadingMessage, reply, "bot");
   conversationHistory.push({ role: "assistant", content: reply });
   saveConversationHistory();
+  rememberQuestion(message);
 
   chatInput.disabled = false;
   chatInput.focus();
