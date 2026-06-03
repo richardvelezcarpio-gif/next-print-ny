@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Start an order with Next Print NY for printing, multiservices or consulting agent support."
+    />
+    <title>Start Order | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="top-nav">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="printing.html" data-i18n="nav.print">Printing</a>
+          <a href="multiservices.html" data-i18n="nav.multi">Multiservices</a>
+          <a href="consulting-agent.html" data-i18n="nav.consultant">Consulting Agent</a>
+          <a class="active" href="order.html" data-i18n="order.nav">Start Order</a>
+          <a href="contact.html" data-i18n="home.nav.contact">Contact</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="order-page">
+        <section class="order-hero">
+          <div>
+            <span data-i18n="order.kicker">Fast online request</span>
+            <h1 data-i18n="order.title">Start your order in minutes.</h1>
+            <p data-i18n="order.copy">
+              Choose a service, add details, upload a file if needed and receive an order number for follow-up.
+            </p>
+          </div>
+          <a class="outline-button" href="https://wa.me/12393337935" target="_blank" rel="noreferrer" data-i18n="order.whatsapp">
+            WhatsApp
+          </a>
+        </section>
+
+        <section class="order-workspace">
+          <aside class="order-steps" aria-label="Order steps">
+            <div class="active"><strong>1</strong><span data-i18n="order.stepService">Service</span></div>
+            <div><strong>2</strong><span data-i18n="order.stepDetails">Details</span></div>
+            <div><strong>3</strong><span data-i18n="order.stepFile">File</span></div>
+            <div><strong>4</strong><span data-i18n="order.stepContact">Contact</span></div>
+          </aside>
+
+          <form id="smartOrderForm" class="smart-order-form">
+            <section class="order-form-section">
+              <h2 data-i18n="order.serviceTitle">What do you need?</h2>
+              <div class="choice-grid">
+                <label>
+                  <input type="radio" name="service" value="Printing" checked />
+                  <span data-i18n="order.servicePrinting">Printing</span>
+                </label>
+                <label>
+                  <input type="radio" name="service" value="Multiservices" />
+                  <span data-i18n="order.serviceMulti">Multiservices</span>
+                </label>
+                <label>
+                  <input type="radio" name="service" value="Consulting Agent" />
+                  <span data-i18n="order.serviceConsulting">Consulting Agent</span>
+                </label>
+              </div>
+            </section>
+
+            <section class="order-form-section">
+              <h2 data-i18n="order.detailsTitle">Order details</h2>
+              <label>
+                <span data-i18n="order.detailsLabel">Tell us what you need</span>
+                <textarea name="details" rows="5" required data-i18n-placeholder="order.detailsPlaceholder" placeholder="Example: 500 business cards, full color, matte finish, needed Friday."></textarea>
+              </label>
+              <div class="field-row order-fields">
+                <label>
+                  <span data-i18n="order.dueDate">Date needed</span>
+                  <input name="dueDate" type="date" />
+                </label>
+                <label>
+                  <span data-i18n="order.budget">Estimated budget</span>
+                  <input name="budget" type="text" data-i18n-placeholder="order.budgetPlaceholder" placeholder="Optional" />
+                </label>
+              </div>
+            </section>
+
+            <section class="order-form-section">
+              <h2 data-i18n="order.fileTitle">Upload file</h2>
+              <label class="order-file-drop">
+                <input id="orderFile" name="file" type="file" />
+                <span data-i18n="order.fileButton">Choose file</span>
+                <small id="orderFileName" data-i18n="order.fileHint">PDF, JPG, PNG or design file. Optional.</small>
+              </label>
+            </section>
+
+            <section class="order-form-section">
+              <h2 data-i18n="order.contactTitle">Contact information</h2>
+              <div class="field-row order-fields">
+                <label>
+                  <span data-i18n="upload.name">Name</span>
+                  <input name="name" type="text" autocomplete="name" required />
+                </label>
+                <label>
+                  <span data-i18n="upload.phone">Phone</span>
+                  <input name="phone" type="tel" autocomplete="tel" required />
+                </label>
+              </div>
+              <label>
+                <span data-i18n="upload.email">Email</span>
+                <input name="email" type="email" autocomplete="email" />
+              </label>
+            </section>
+
+            <button class="action-gradient order-submit" type="submit" data-i18n="order.submit">Send order</button>
+            <p id="orderStatus" class="order-status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section id="orderSuccess" class="order-success" hidden>
+          <span data-i18n="order.successKicker">Order received</span>
+          <h2 data-i18n="order.successTitle">We received your request.</h2>
+          <p>
+            <span data-i18n="order.successCopy">Your order number is</span>
+            <strong id="orderNumber">NP-000000</strong>
+          </p>
+          <div class="service-actions">
+            <a id="orderWhatsapp" class="action-gradient" href="https://wa.me/12393337935" target="_blank" rel="noreferrer" data-i18n="order.whatsappFollow">
+              Follow up on WhatsApp
+            </a>
+            <a class="outline-button" href="tracking.html" data-i18n="order.track">Track order</a>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <img src="assets/logo.png" alt="Next Print NY" />
+        <p data-i18n="home.footer.rights">© 2026 Next Print NY. All rights reserved.</p>
+        <div>
+          <a href="privacy.html" data-i18n="home.footer.privacy">Privacy</a>
+          <a href="terms.html" data-i18n="home.footer.terms">Terms</a>
+        </div>
+      </footer>
+    </div>
+    <script src="script.js?v=20260603-1620"></script>
+    <script src="order.js?v=20260603-1620"></script>
+  </body>
+</html>

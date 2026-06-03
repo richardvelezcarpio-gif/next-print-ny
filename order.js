@@ -1,0 +1,124 @@
+const smartOrderForm = document.querySelector("#smartOrderForm");
+const orderFile = document.querySelector("#orderFile");
+const orderFileName = document.querySelector("#orderFileName");
+const orderStatus = document.querySelector("#orderStatus");
+const orderSuccess = document.querySelector("#orderSuccess");
+const orderNumber = document.querySelector("#orderNumber");
+const orderWhatsapp = document.querySelector("#orderWhatsapp");
+const orderMaxFileSize = 4 * 1024 * 1024;
+
+orderFile?.addEventListener("change", () => {
+  const file = orderFile.files?.[0];
+
+  if (!file) {
+    orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design file. Optional.");
+    return;
+  }
+
+  if (file.size > orderMaxFileSize) {
+    orderFile.value = "";
+    orderFileName.textContent = getOrderText("order.fileTooLarge", "File must be under 4 MB.");
+    orderFileName.classList.add("error");
+    return;
+  }
+
+  orderFileName.classList.remove("error");
+  orderFileName.textContent = file.name;
+});
+
+smartOrderForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setOrderStatus(getOrderText("order.sending", "Sending order..."));
+
+  const submitButton = smartOrderForm.querySelector("button[type='submit']");
+  submitButton.disabled = true;
+
+  try {
+    const formData = new FormData(smartOrderForm);
+    const file = orderFile.files?.[0];
+    const payload = {
+      language: localStorage.getItem("preferredLanguage") || "en",
+      service: formData.get("service"),
+      details: formData.get("details"),
+      dueDate: formData.get("dueDate"),
+      budget: formData.get("budget"),
+      name: formData.get("name"),
+      phone: formData.get("phone"),
+      email: formData.get("email"),
+      file: file
+        ? {
+            name: file.name,
+            content: await fileToBase64(file),
+          }
+        : null,
+    };
+
+    const response = await fetch("/api/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+
+    if (!response.ok) throw new Error(data.error || "Order failed");
+
+    orderNumber.textContent = data.orderNumber;
+    orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
+    orderSuccess.hidden = false;
+    smartOrderForm.reset();
+    orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design file. Optional.");
+    setOrderStatus(getOrderText("order.sent", "Order sent."));
+    orderSuccess.scrollIntoView({ behavior: "smooth", block: "start" });
+  } catch (error) {
+    setOrderStatus(
+      error.message === "RESEND_API_KEY missing"
+        ? getOrderText("order.configError", "Order form needs RESEND_API_KEY in Vercel.")
+        : getOrderText("order.error", "Could not send. Please call or WhatsApp us."),
+      "error"
+    );
+  } finally {
+    submitButton.disabled = false;
+  }
+});
+
+function setOrderStatus(text, tone = "") {
+  if (!orderStatus) return;
+  orderStatus.textContent = text;
+  orderStatus.className = `order-status ${tone}`.trim();
+}
+
+function getOrderText(key, fallback) {
+  const language = localStorage.getItem("preferredLanguage") || "en";
+  const dictionary = {
+    es: {
+      "order.fileHint": "PDF, JPG, PNG o archivo de diseño. Opcional.",
+      "order.fileTooLarge": "El archivo debe pesar menos de 4 MB.",
+      "order.sending": "Enviando orden...",
+      "order.sent": "Orden enviada.",
+      "order.configError": "El formulario necesita RESEND_API_KEY en Vercel.",
+      "order.error": "No se pudo enviar. Llámanos o escríbenos por WhatsApp.",
+    },
+    en: {
+      "order.fileHint": "PDF, JPG, PNG or design file. Optional.",
+      "order.fileTooLarge": "File must be under 4 MB.",
+      "order.sending": "Sending order...",
+      "order.sent": "Order sent.",
+      "order.configError": "Order form needs RESEND_API_KEY in Vercel.",
+      "order.error": "Could not send. Please call or WhatsApp us.",
+    },
+  };
+
+  return dictionary[language]?.[key] || dictionary.en[key] || fallback;
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      resolve(result.split(",")[1] || "");
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
