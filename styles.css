@@ -225,6 +225,11 @@ textarea {
   font-size: 1.12em;
 }
 
+.hero h1 .hero-line {
+  color: #fff;
+  font-size: 1em;
+}
+
 .hero p {
   width: min(540px, 100%);
   margin: 14px auto 24px;
