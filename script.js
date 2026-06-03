@@ -5,6 +5,7 @@ const chatInput = document.querySelector("#chatInput");
 const chatMessages = document.querySelector("#chatMessages");
 const uploadForm = document.querySelector("#uploadForm");
 const uploadFile = document.querySelector("#uploadFile");
+const uploadTrigger = document.querySelector("#uploadTrigger");
 const uploadStatus = document.querySelector("#uploadStatus");
 const languageButtons = document.querySelectorAll("[data-lang]");
 const maxUploadSize = 4 * 1024 * 1024;
@@ -47,8 +48,10 @@ const translations = {
     "upload.notes": "Detalles del pedido",
     "upload.notesPlaceholder": "Cantidad, tamaño, color, fecha...",
     "upload.choose": "Escoger archivo",
-    "upload.button": "Upload your files",
+    "upload.button": "Escoger archivos para subir",
     "upload.selected": "Archivo seleccionado:",
+    "upload.ready": "Archivo listo. Presiona el botón otra vez para enviarlo.",
+    "upload.sendSelected": "Enviar archivo seleccionado",
     "upload.sending": "Enviando archivo...",
     "upload.success": "Listo. Tu archivo fue enviado a Next Print NY.",
     "upload.error": "No se pudo enviar. Llama al 239 333 7935 o intenta de nuevo.",
@@ -156,8 +159,10 @@ const translations = {
     "upload.notes": "Order details",
     "upload.notesPlaceholder": "Quantity, size, color, date...",
     "upload.choose": "Choose file",
-    "upload.button": "Upload your files",
+    "upload.button": "Choose files to upload",
     "upload.selected": "Selected file:",
+    "upload.ready": "File ready. Press the button again to send it.",
+    "upload.sendSelected": "Send selected file",
     "upload.sending": "Sending file...",
     "upload.success": "Done. Your file was sent to Next Print NY.",
     "upload.error": "Could not send. Call 239 333 7935 or try again.",
@@ -655,16 +660,28 @@ uploadFile?.addEventListener("change", () => {
 
   if (!file) {
     setUploadStatus("");
+    if (uploadTrigger) uploadTrigger.textContent = t("upload.button");
     return;
   }
 
   if (file.size > maxUploadSize) {
     uploadFile.value = "";
     setUploadStatus(t("upload.sizeError"), "error");
+    if (uploadTrigger) uploadTrigger.textContent = t("upload.button");
     return;
   }
 
-  setUploadStatus(`${t("upload.selected")} ${file.name}`);
+  setUploadStatus(`${t("upload.selected")} ${file.name}. ${t("upload.ready")}`);
+  if (uploadTrigger) uploadTrigger.textContent = t("upload.sendSelected");
+});
+
+uploadTrigger?.addEventListener("click", () => {
+  if (!uploadFile?.files?.[0]) {
+    uploadFile?.click();
+    return;
+  }
+
+  uploadForm?.requestSubmit();
 });
 
 uploadForm?.addEventListener("submit", async (event) => {
@@ -690,6 +707,7 @@ uploadForm?.addEventListener("submit", async (event) => {
     field.disabled = true;
   });
   if (submitButtonText) submitButtonText.textContent = t("upload.sending");
+  if (uploadTrigger) uploadTrigger.disabled = true;
 
   try {
     const fileContent = await fileToBase64(file);
@@ -736,7 +754,10 @@ uploadForm?.addEventListener("submit", async (event) => {
     uploadForm.querySelectorAll("input, textarea").forEach((field) => {
       field.disabled = false;
     });
-    if (submitButtonText) submitButtonText.textContent = originalButtonText;
+    if (uploadTrigger) uploadTrigger.disabled = false;
+    if (submitButtonText) {
+      submitButtonText.textContent = uploadFile.files?.[0] ? originalButtonText : t("upload.button");
+    }
   }
 });
 
