@@ -54,31 +54,8 @@
         </section>
 
         <section class="order-workspace">
-          <aside class="order-steps" aria-label="Order steps">
-            <div class="active"><strong>1</strong><span data-i18n="order.stepService">Service</span></div>
-            <div><strong>2</strong><span data-i18n="order.stepDetails">Details</span></div>
-            <div><strong>3</strong><span data-i18n="order.stepFile">File</span></div>
-            <div><strong>4</strong><span data-i18n="order.stepContact">Contact</span></div>
-          </aside>
-
           <form id="smartOrderForm" class="smart-order-form">
-            <section class="order-form-section">
-              <h2 data-i18n="order.serviceTitle">What do you need?</h2>
-              <div class="choice-grid">
-                <label>
-                  <input type="radio" name="service" value="Printing" checked />
-                  <span data-i18n="order.servicePrinting">Printing</span>
-                </label>
-                <label>
-                  <input type="radio" name="service" value="Multiservices" />
-                  <span data-i18n="order.serviceMulti">Multiservices</span>
-                </label>
-                <label>
-                  <input type="radio" name="service" value="Consulting Agent" />
-                  <span data-i18n="order.serviceConsulting">Consulting Agent</span>
-                </label>
-              </div>
-            </section>
+            <input name="service" type="hidden" value="Printing" />
 
             <section class="order-form-section">
               <h2 data-i18n="order.detailsTitle">Order details</h2>
@@ -92,7 +69,7 @@
                   <input name="dueDate" type="date" />
                 </label>
                 <label>
-                  <span data-i18n="order.budget">Estimated budget</span>
+                  <span data-i18n="order.budget">Price</span>
                   <input name="budget" type="text" data-i18n-placeholder="order.budgetPlaceholder" placeholder="Optional" />
                 </label>
               </div>
@@ -101,9 +78,9 @@
             <section class="order-form-section">
               <h2 data-i18n="order.fileTitle">Upload file</h2>
               <label class="order-file-drop">
-                <input id="orderFile" name="file" type="file" />
+                <input id="orderFile" name="file" type="file" multiple />
                 <span data-i18n="order.fileButton">Choose file</span>
-                <small id="orderFileName" data-i18n="order.fileHint">PDF, JPG, PNG or design file. Optional.</small>
+                <small id="orderFileName" data-i18n="order.fileHint">PDF, JPG, PNG or design files. Optional.</small>
               </label>
             </section>
 
@@ -177,7 +154,7 @@
         </div>
       </footer>
     </div>
-    <script src="script.js?v=20260604-1135"></script>
-    <script src="order.js?v=20260604-1135"></script>
+    <script src="script.js?v=20260604-1215"></script>
+    <script src="order.js?v=20260604-1215"></script>
   </body>
 </html>

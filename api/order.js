@@ -1,6 +1,6 @@
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
-const MAX_FILE_SIZE_BASE64 = 5.6 * 1024 * 1024;
+const MAX_FILE_SIZE_BASE64 = 17 * 1024 * 1024;
 const ZELLE_ACCOUNT = "2393337935";
 
 export default async function handler(req, res) {
@@ -16,7 +16,8 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (order.file?.content && String(order.file.content).length > MAX_FILE_SIZE_BASE64) {
+  const totalFileSize = order.files.reduce((total, file) => total + String(file.content || "").length, 0);
+  if (totalFileSize > MAX_FILE_SIZE_BASE64) {
     res.status(413).json({ error: "File too large" });
     return;
   }
@@ -67,21 +68,17 @@ async function sendAdminOrderEmail(order, orderNumber, apiKey) {
     <p><strong>Email:</strong> ${escapeHtml(order.email || "No incluido")}</p>
     <p><strong>Idioma:</strong> ${selectedLanguage}</p>
     <p><strong>Fecha necesaria:</strong> ${escapeHtml(order.dueDate || "No incluida")}</p>
-    <p><strong>Presupuesto estimado:</strong> ${escapeHtml(order.budget || "No incluido")}</p>
+    <p><strong>Precio:</strong> ${escapeHtml(order.budget || "No incluido")}</p>
     <p><strong>Zelle:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
     <p><strong>Nota para pago:</strong> Order ${escapeHtml(orderNumber)}</p>
     <p><strong>Detalles:</strong></p>
     <p>${escapeHtml(order.details).replace(/\n/g, "<br>")}</p>
   `;
 
-  const attachments = order.file?.name && order.file?.content
-    ? [
-        {
-          filename: order.file.name,
-          content: order.file.content,
-        },
-      ]
-    : [];
+  const attachments = order.files.map((file) => ({
+    filename: file.name,
+    content: file.content,
+  }));
 
   await sendResendEmail(apiKey, {
     to: TO_EMAIL,
@@ -181,8 +178,8 @@ async function saveOrderRecord(order, orderNumber) {
     `Order: ${orderNumber}`,
     `Service: ${order.service}`,
     `Details: ${order.details}`,
-    order.budget ? `Budget: ${order.budget}` : "",
-    order.file?.name ? `File: ${order.file.name}` : "",
+    order.budget ? `Price: ${order.budget}` : "",
+    order.files.length ? `Files: ${order.files.map((file) => file.name).join(", ")}` : "",
   ]
     .filter(Boolean)
     .join("\n");
@@ -224,12 +221,14 @@ async function saveOrderRecord(order, orderNumber) {
 }
 
 function sanitizeOrder(input) {
-  const file = input.file?.name && input.file?.content
-    ? {
-        name: clean(input.file.name, 180),
-        content: String(input.file.content || ""),
-      }
-    : null;
+  const filesInput = Array.isArray(input.files) ? input.files : input.file ? [input.file] : [];
+  const files = filesInput
+    .filter((file) => file?.name && file?.content)
+    .slice(0, 8)
+    .map((file) => ({
+      name: clean(file.name, 180),
+      content: String(file.content || ""),
+    }));
 
   return {
     language: input.language === "en" ? "en" : "es",
@@ -240,7 +239,7 @@ function sanitizeOrder(input) {
     name: clean(input.name, 120),
     phone: clean(input.phone, 80),
     email: clean(input.email, 120),
-    file,
+    files,
   };
 }
 

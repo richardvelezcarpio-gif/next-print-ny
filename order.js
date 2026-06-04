@@ -12,6 +12,7 @@ const orderCopyZelle = document.querySelector("#orderCopyZelle");
 const orderCopyNumber = document.querySelector("#orderCopyNumber");
 const orderPayZelle = document.querySelector("#orderPayZelle");
 const orderMaxFileSize = 4 * 1024 * 1024;
+const orderMaxTotalFileSize = 12 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
 
@@ -21,22 +22,27 @@ orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, ord
 orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
 
 orderFile?.addEventListener("change", () => {
-  const file = orderFile.files?.[0];
+  const files = Array.from(orderFile.files || []);
 
-  if (!file) {
-    orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design file. Optional.");
+  if (!files.length) {
+    orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design files. Optional.");
     return;
   }
 
-  if (file.size > orderMaxFileSize) {
+  const oversizedFile = files.find((file) => file.size > orderMaxFileSize);
+  const totalSize = files.reduce((total, file) => total + file.size, 0);
+
+  if (oversizedFile || totalSize > orderMaxTotalFileSize) {
     orderFile.value = "";
-    orderFileName.textContent = getOrderText("order.fileTooLarge", "File must be under 4 MB.");
+    orderFileName.textContent = oversizedFile
+      ? getOrderText("order.fileTooLarge", "Each file must be under 4 MB.")
+      : getOrderText("order.filesTooLarge", "All files together must be under 12 MB.");
     orderFileName.classList.add("error");
     return;
   }
 
   orderFileName.classList.remove("error");
-  orderFileName.textContent = file.name;
+  orderFileName.textContent = files.map((file) => file.name).join(", ");
 });
 
 smartOrderForm?.addEventListener("submit", async (event) => {
@@ -48,7 +54,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
 
   try {
     const formData = new FormData(smartOrderForm);
-    const file = orderFile.files?.[0];
+    const files = Array.from(orderFile.files || []);
     const payload = {
       language: localStorage.getItem("preferredLanguage") || "en",
       service: formData.get("service"),
@@ -58,12 +64,12 @@ smartOrderForm?.addEventListener("submit", async (event) => {
       name: formData.get("name"),
       phone: formData.get("phone"),
       email: formData.get("email"),
-      file: file
-        ? {
-            name: file.name,
-            content: await fileToBase64(file),
-          }
-        : null,
+      files: await Promise.all(
+        files.map(async (file) => ({
+          name: file.name,
+          content: await fileToBase64(file),
+        }))
+      ),
     };
 
     const response = await fetch("/api/order", {
@@ -92,7 +98,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     }
     orderSuccess.hidden = false;
     smartOrderForm.reset();
-    orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design file. Optional.");
+    orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design files. Optional.");
     setOrderStatus(getOrderText("order.sent", "Order sent."));
     orderSuccess.scrollIntoView({ behavior: "smooth", block: "start" });
   } catch (error) {
@@ -124,9 +130,6 @@ function prefillOrderFromCatalog() {
   const service = cleanParam(params.get("service")) || "Printing";
 
   if (!product && !details) return;
-
-  const serviceInput = smartOrderForm.querySelector(`input[name="service"][value="${service}"]`);
-  if (serviceInput) serviceInput.checked = true;
 
   const detailsInput = smartOrderForm.querySelector('[name="details"]');
   const budgetInput = smartOrderForm.querySelector('[name="budget"]');
@@ -172,8 +175,9 @@ function getOrderText(key, fallback) {
   const language = localStorage.getItem("preferredLanguage") || "en";
   const dictionary = {
     es: {
-      "order.fileHint": "PDF, JPG, PNG o archivo de diseño. Opcional.",
-      "order.fileTooLarge": "El archivo debe pesar menos de 4 MB.",
+      "order.fileHint": "PDF, JPG, PNG o archivos de diseño. Opcional.",
+      "order.fileTooLarge": "Cada archivo debe pesar menos de 4 MB.",
+      "order.filesTooLarge": "Todos los archivos juntos deben pesar menos de 12 MB.",
       "order.sending": "Enviando orden...",
       "order.sent": "Orden enviada.",
       "order.configError": "El formulario necesita RESEND_API_KEY en Vercel.",
@@ -183,8 +187,9 @@ function getOrderText(key, fallback) {
       "zelle.copied": "Copiado",
     },
     en: {
-      "order.fileHint": "PDF, JPG, PNG or design file. Optional.",
-      "order.fileTooLarge": "File must be under 4 MB.",
+      "order.fileHint": "PDF, JPG, PNG or design files. Optional.",
+      "order.fileTooLarge": "Each file must be under 4 MB.",
+      "order.filesTooLarge": "All files together must be under 12 MB.",
       "order.sending": "Sending order...",
       "order.sent": "Order sent.",
       "order.configError": "Order form needs RESEND_API_KEY in Vercel.",
