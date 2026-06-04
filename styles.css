@@ -1071,6 +1071,177 @@ textarea {
   line-height: 1.38;
 }
 
+.product-builder {
+  display: grid;
+  grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+  gap: 24px;
+  padding: 44px 52px 22px;
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.product-sidebar {
+  border-right: 1px solid var(--line);
+  padding-right: 18px;
+}
+
+.product-sidebar > span {
+  display: block;
+  margin-bottom: 14px;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.product-list {
+  display: grid;
+  gap: 4px;
+  max-height: 640px;
+  overflow: auto;
+  padding-right: 8px;
+}
+
+.product-list button {
+  min-height: 38px;
+  border: 0;
+  border-radius: 8px;
+  color: var(--ink);
+  background: transparent;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+}
+
+.product-list button:hover,
+.product-list button.active {
+  color: #fff;
+  background: var(--navy);
+}
+
+.product-detail-card {
+  display: grid;
+  gap: 22px;
+}
+
+.product-preview {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+}
+
+.product-art {
+  min-height: 330px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(3, 191, 231, 0.16), rgba(5, 39, 92, 0.05)),
+    #f8fbff;
+}
+
+.product-art span {
+  width: 140px;
+  height: 140px;
+  display: inline-grid;
+  place-items: center;
+  border: 12px solid var(--cyan);
+  border-radius: 28px;
+  color: var(--navy);
+  background: #fff;
+  font-size: 2.8rem;
+  font-weight: 900;
+  box-shadow: var(--shadow);
+  transform: rotate(-8deg);
+}
+
+.product-preview h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.product-preview p {
+  margin: 16px 0 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.product-order-panel {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) minmax(180px, auto) auto;
+  gap: 14px;
+  align-items: end;
+  padding: 18px;
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.product-order-panel label {
+  color: var(--navy);
+  font-weight: 900;
+}
+
+.product-order-panel select {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--ink);
+  background: #fff;
+}
+
+.selected-price {
+  display: grid;
+  gap: 5px;
+}
+
+.selected-price span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.selected-price strong {
+  color: #5ea10b;
+  font-size: 1.65rem;
+}
+
+.price-table-wrap {
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.price-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.price-table th,
+.price-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.price-table th {
+  color: var(--navy);
+  background: var(--soft);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.price-table td:last-child {
+  color: #5ea10b;
+  font-weight: 900;
+}
+
 .process-strip {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1709,6 +1880,8 @@ textarea {
   .visit-grid,
   .service-hero,
   .service-card-grid,
+  .product-builder,
+  .product-preview,
   .order-workspace,
   .tracking-form,
   .choice-grid {
@@ -1733,6 +1906,26 @@ textarea {
   .order-success {
     margin-left: 28px;
     margin-right: 28px;
+  }
+
+  .product-builder {
+    padding: 32px 28px 18px;
+  }
+
+  .product-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 0 0 18px;
+  }
+
+  .product-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    max-height: none;
+    overflow: visible;
+  }
+
+  .product-order-panel {
+    grid-template-columns: 1fr;
   }
 
   .service-cta,
@@ -1816,6 +2009,18 @@ textarea {
   .order-hero,
   .tracking-hero {
     padding: 30px 18px;
+  }
+
+  .product-builder {
+    padding: 28px 18px 16px;
+  }
+
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+
+  .product-art {
+    min-height: 230px;
   }
 
   .service-hero-media {

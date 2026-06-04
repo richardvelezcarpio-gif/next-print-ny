@@ -15,6 +15,8 @@ const orderMaxFileSize = 4 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
 
+prefillOrderFromCatalog();
+
 orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, orderCopyZelle, "zelle.copyEmail"));
 orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
 
@@ -109,6 +111,40 @@ function setOrderStatus(text, tone = "") {
   if (!orderStatus) return;
   orderStatus.textContent = text;
   orderStatus.className = `order-status ${tone}`.trim();
+}
+
+function prefillOrderFromCatalog() {
+  if (!smartOrderForm) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const product = cleanParam(params.get("product"));
+  const quantity = cleanParam(params.get("quantity"));
+  const price = cleanParam(params.get("price"));
+  const details = cleanParam(params.get("details"));
+  const service = cleanParam(params.get("service")) || "Printing";
+
+  if (!product && !details) return;
+
+  const serviceInput = smartOrderForm.querySelector(`input[name="service"][value="${service}"]`);
+  if (serviceInput) serviceInput.checked = true;
+
+  const detailsInput = smartOrderForm.querySelector('[name="details"]');
+  const budgetInput = smartOrderForm.querySelector('[name="budget"]');
+
+  if (detailsInput) {
+    detailsInput.value = details || `Product: ${product}\nQuantity: ${quantity}\nSuggested sale price: ${price}`;
+  }
+
+  if (budgetInput && price) {
+    budgetInput.value = price;
+  }
+}
+
+function cleanParam(value) {
+  return String(value || "")
+    .replace(/[<>]/g, "")
+    .trim()
+    .slice(0, 500);
 }
 
 async function copyOrderValue(value, button, labelKey) {

@@ -231,6 +231,11 @@ const translations = {
     "printingPage.ctaTitle": "¿Necesitas precio?",
     "printingPage.ctaCopy": "Envía cantidad, tamaño, material, colores y fecha para cotizar correctamente.",
     "printingPage.ctaButton": "Contactar a Next Print NY",
+    "printingCatalog.products": "Productos",
+    "printingCatalog.copy": "Selecciona un producto y cantidad para ver el precio sugerido. Inicia la orden y confirmaremos los detalles antes de producir.",
+    "printingCatalog.quantity": "Cantidad",
+    "printingCatalog.suggested": "Precio sugerido",
+    "printingCatalog.start": "Iniciar orden con este producto",
     "multiPage.kicker": "Área de multiservicios",
     "multiPage.heroTitle": "Un solo lugar para los trámites que te quitan tiempo.",
     "multiPage.heroCopy":
@@ -574,6 +579,11 @@ const translations = {
     "printingPage.ctaTitle": "Need a price?",
     "printingPage.ctaCopy": "Send quantity, size, material, colors and deadline so we can quote it correctly.",
     "printingPage.ctaButton": "Contact Next Print NY",
+    "printingCatalog.products": "Products",
+    "printingCatalog.copy": "Select a product and quantity to see the suggested sale price. Start an order and we will confirm details before production.",
+    "printingCatalog.quantity": "Quantity",
+    "printingCatalog.suggested": "Suggested sale price",
+    "printingCatalog.start": "Start order with this product",
     "multiPage.kicker": "Multiservices Desk",
     "multiPage.heroTitle": "One place for the errands that slow your day down.",
     "multiPage.heroCopy":

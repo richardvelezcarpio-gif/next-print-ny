@@ -59,6 +59,52 @@
           </div>
         </section>
 
+        <section class="product-builder" aria-label="Printing product catalog">
+          <aside class="product-sidebar">
+            <span data-i18n="printingCatalog.products">Products</span>
+            <div id="productList" class="product-list"></div>
+          </aside>
+
+          <section class="product-detail-card">
+            <div class="product-preview">
+              <div class="product-art">
+                <span>NP</span>
+              </div>
+              <div>
+                <span id="productKicker" class="service-kicker">Price options</span>
+                <h2 id="productTitle">Business Cards</h2>
+                <p data-i18n="printingCatalog.copy">
+                  Select a product and quantity to see the suggested sale price. Start an order and we will confirm details before production.
+                </p>
+              </div>
+            </div>
+
+            <div class="product-order-panel">
+              <label>
+                <span data-i18n="printingCatalog.quantity">Quantity</span>
+                <select id="productQuantity"></select>
+              </label>
+              <div class="selected-price">
+                <span data-i18n="printingCatalog.suggested">Suggested sale price</span>
+                <strong id="productPrice">$35.00</strong>
+              </div>
+              <a id="productOrderLink" class="action-gradient" href="order.html" data-i18n="printingCatalog.start">Start order with this product</a>
+            </div>
+
+            <div class="price-table-wrap">
+              <table class="price-table">
+                <thead>
+                  <tr>
+                    <th data-i18n="printingCatalog.quantity">Quantity</th>
+                    <th data-i18n="printingCatalog.suggested">Suggested sale price</th>
+                  </tr>
+                </thead>
+                <tbody id="productPriceRows"></tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
         <section class="service-band">
           <div class="section-heading">
             <span data-i18n="printingPage.sectionKicker">What we print</span>
@@ -120,6 +166,7 @@
         </div>
       </footer>
     </div>
-    <script src="script.js?v=20260603-1725"></script>
+    <script src="script.js?v=20260604-1135"></script>
+    <script src="printing-catalog.js?v=20260604-1135"></script>
   </body>
 </html>
