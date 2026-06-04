@@ -6,8 +6,16 @@ const orderSuccess = document.querySelector("#orderSuccess");
 const orderNumber = document.querySelector("#orderNumber");
 const orderWhatsapp = document.querySelector("#orderWhatsapp");
 const orderTrackLink = document.querySelector("#orderTrackLink");
+const orderZelleEmail = document.querySelector("#orderZelleEmail");
+const orderZelleNote = document.querySelector("#orderZelleNote");
+const orderCopyZelle = document.querySelector("#orderCopyZelle");
+const orderCopyNumber = document.querySelector("#orderCopyNumber");
 const orderMaxFileSize = 4 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
+const zelleEmail = "nextprintny@gmail.com";
+
+orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleEmail, orderCopyZelle, "zelle.copyEmail"));
+orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
 
 orderFile?.addEventListener("change", () => {
   const file = orderFile.files?.[0];
@@ -72,6 +80,8 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     });
 
     orderNumber.textContent = data.orderNumber;
+    if (orderZelleEmail) orderZelleEmail.textContent = zelleEmail;
+    if (orderZelleNote) orderZelleNote.textContent = `Order ${data.orderNumber}`;
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
       orderTrackLink.href = `tracking.html?order=${encodeURIComponent(data.orderNumber)}`;
@@ -99,6 +109,27 @@ function setOrderStatus(text, tone = "") {
   orderStatus.className = `order-status ${tone}`.trim();
 }
 
+async function copyOrderValue(value, button, labelKey) {
+  const text = String(value || "").trim();
+  if (!text || !button) return;
+
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+  } else {
+    const input = document.createElement("input");
+    input.value = text;
+    document.body.append(input);
+    input.select();
+    document.execCommand("copy");
+    input.remove();
+  }
+
+  button.textContent = getOrderText("zelle.copied", "Copied");
+  window.setTimeout(() => {
+    button.textContent = getOrderText(labelKey, button.textContent);
+  }, 1300);
+}
+
 function getOrderText(key, fallback) {
   const language = localStorage.getItem("preferredLanguage") || "en";
   const dictionary = {
@@ -109,6 +140,9 @@ function getOrderText(key, fallback) {
       "order.sent": "Orden enviada.",
       "order.configError": "El formulario necesita RESEND_API_KEY en Vercel.",
       "order.error": "No se pudo enviar. Llámanos o escríbenos por WhatsApp.",
+      "zelle.copyEmail": "Copiar email de Zelle",
+      "zelle.copyOrder": "Copiar número de orden",
+      "zelle.copied": "Copiado",
     },
     en: {
       "order.fileHint": "PDF, JPG, PNG or design file. Optional.",
@@ -117,6 +151,9 @@ function getOrderText(key, fallback) {
       "order.sent": "Order sent.",
       "order.configError": "Order form needs RESEND_API_KEY in Vercel.",
       "order.error": "Could not send. Please call or WhatsApp us.",
+      "zelle.copyEmail": "Copy Zelle email",
+      "zelle.copyOrder": "Copy order number",
+      "zelle.copied": "Copied",
     },
   };
 

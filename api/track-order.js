@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
   try {
     const query = new URLSearchParams({
-      select: "title,status,customer_name,due_date,created_at,updated_at,description",
+      select: "title,status,customer_name,due_date,amount,created_at,updated_at,description",
       type: "eq.order",
       order: "created_at.desc",
       limit: "1",
@@ -49,6 +49,7 @@ export default async function handler(req, res) {
         status: record.status || "new",
         customerName: firstName(record.customer_name),
         dueDate: record.due_date || "",
+        amount: Number(record.amount || 0),
         createdAt: record.created_at || "",
         updatedAt: record.updated_at || record.created_at || "",
       },

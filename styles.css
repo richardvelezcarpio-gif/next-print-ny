@@ -1337,6 +1337,106 @@ textarea {
   font-size: 1.1rem;
 }
 
+.zelle-card {
+  display: grid;
+  gap: 16px;
+  margin: 18px 0;
+  padding: 18px;
+  border: 1px solid #bceefa;
+  border-left: 5px solid var(--cyan);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f2fcff, #ffffff);
+}
+
+.zelle-card.large {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.zelle-card span {
+  display: block;
+  color: var(--cyan);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.zelle-card h3 {
+  margin: 5px 0 8px;
+  color: var(--navy);
+  font-size: 1.35rem;
+}
+
+.zelle-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.zelle-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.zelle-card dl div {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.zelle-card dt {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.zelle-card dd {
+  margin: 6px 0 0;
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 900;
+  overflow-wrap: anywhere;
+}
+
+.zelle-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.zelle-actions button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--navy);
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.zelle-actions button:hover {
+  background: var(--navy-2);
+}
+
+.payment-workspace {
+  padding: 36px 52px 54px;
+}
+
+.zelle-steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding-left: 22px;
+  color: var(--ink);
+  font-weight: 800;
+  line-height: 1.45;
+}
+
 .tracking-page {
   background: #fff;
 }
@@ -1632,6 +1732,14 @@ textarea {
     padding: 28px;
   }
 
+  .payment-workspace {
+    padding: 28px;
+  }
+
+  .zelle-card dl {
+    grid-template-columns: 1fr;
+  }
+
   .order-steps {
     position: static;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1709,6 +1817,10 @@ textarea {
   }
 
   .tracking-workspace {
+    padding: 18px;
+  }
+
+  .payment-workspace {
     padding: 18px;
   }
 
