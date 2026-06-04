@@ -193,12 +193,22 @@ textarea {
 .hero-flag {
   position: absolute;
   z-index: 1;
-  top: 36px;
-  right: 10px;
-  width: 190px;
+  top: 28px;
+  width: 122px;
   height: auto;
-  transform: rotate(8deg);
-  filter: drop-shadow(0 14px 18px rgba(0, 0, 0, 0.35));
+  opacity: 0.94;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.28));
+  pointer-events: none;
+}
+
+.hero-flag-left {
+  left: 24px;
+  transform: rotate(-7deg) scaleX(-1);
+}
+
+.hero-flag-right {
+  right: 24px;
+  transform: rotate(7deg);
 }
 
 .hero::before {
@@ -1931,10 +1941,17 @@ textarea {
   }
 
   .hero-flag {
-    top: 54px;
-    right: 18px;
-    width: 128px;
+    top: 66px;
+    width: 92px;
     opacity: 0.72;
+  }
+
+  .hero-flag-left {
+    left: 14px;
+  }
+
+  .hero-flag-right {
+    right: 14px;
   }
 
   .service-showcase,
