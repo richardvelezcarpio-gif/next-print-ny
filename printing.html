@@ -9,7 +9,7 @@
     />
     <title>Printing Services | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260604-1420" />
+    <link rel="stylesheet" href="styles.css?v=20260604-1515" />
   </head>
   <body>
     <div class="page-shell">
@@ -89,6 +89,10 @@
 
             <div class="product-order-panel">
               <label>
+                <span>Size / Tamaño</span>
+                <select id="productSize"></select>
+              </label>
+              <label>
                 <span data-i18n="printingCatalog.quantity">Quantity</span>
                 <select id="productQuantity"></select>
               </label>
@@ -97,18 +101,6 @@
                 <strong id="productPrice">$35.00</strong>
               </div>
               <a id="productOrderLink" class="action-gradient" href="order.html" data-i18n="printingCatalog.start">Start order with this product</a>
-            </div>
-
-            <div class="price-table-wrap">
-              <table class="price-table">
-                <thead>
-                  <tr>
-                    <th data-i18n="printingCatalog.quantity">Quantity</th>
-                    <th data-i18n="printingCatalog.suggested">Suggested sale price</th>
-                  </tr>
-                </thead>
-                <tbody id="productPriceRows"></tbody>
-              </table>
             </div>
           </section>
         </section>
@@ -175,6 +167,6 @@
       </footer>
     </div>
     <script src="script.js?v=20260604-1135"></script>
-    <script src="printing-catalog.js?v=20260604-1420"></script>
+    <script src="printing-catalog.js?v=20260604-1515"></script>
   </body>
 </html>

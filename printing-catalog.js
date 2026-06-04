@@ -63,6 +63,22 @@ const printingProducts = [
   { name: "Door Hangers 3.5x8.5", category: "hangers", prices: [["100", "$160.00"], ["250", "$197.00"], ["500", "$219.00"], ["1000", "$240.00"], ["2500", "$367.00"], ["5000", "$485.00"], ["10000", "$775.00"]] },
 ];
 
+const productGroups = [
+  { name: "Business Cards", category: "cards", variants: ["Business Cards"] },
+  { name: "Flyers", category: "flyers", variants: ["Flyers 4x6", "Flyers 5x7"] },
+  {
+    name: "Stickers",
+    category: "stickers",
+    variants: ["Stickers round 2\"", "Stickers round 2.5\"", "Stickers 2x3.5", "Stickers 2x2", "Stickers 4x4"],
+  },
+  { name: "Menus", category: "menus", variants: ["Menus 8.5x11", "Menus 11x17"] },
+  { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
+  { name: "Door Hangers", category: "hangers", variants: ["Door Hangers 4x11", "Door Hangers 3.5x8.5"] },
+].map((group) => ({
+  ...group,
+  variants: group.variants.map((name) => printingProducts.find((product) => product.name === name)).filter(Boolean),
+}));
+
 const productList = document.querySelector("#productList");
 const productTitle = document.querySelector("#productTitle");
 const productKicker = document.querySelector("#productKicker");
@@ -70,16 +86,24 @@ const productArt = document.querySelector("#productArt");
 const productHook = document.querySelector("#productHook");
 const productMaterial = document.querySelector("#productMaterial");
 const productBenefits = document.querySelector("#productBenefits");
-const productPriceRows = document.querySelector("#productPriceRows");
+const productSize = document.querySelector("#productSize");
 const productQuantity = document.querySelector("#productQuantity");
 const productPrice = document.querySelector("#productPrice");
 const productOrderLink = document.querySelector("#productOrderLink");
 
-let selectedProduct = printingProducts[0];
+let selectedGroup = productGroups[0];
+let selectedProduct = selectedGroup.variants[0];
 let selectedPrice = selectedProduct.prices[0];
 
 renderProductList();
-renderProduct(selectedProduct.name);
+renderProductGroup(selectedGroup.name);
+
+productSize?.addEventListener("change", () => {
+  selectedProduct = selectedGroup.variants.find((item) => item.name === productSize.value) || selectedGroup.variants[0];
+  selectedPrice = selectedProduct.prices[0];
+  renderQuantityOptions();
+  updateSelectedPrice();
+});
 
 productQuantity?.addEventListener("change", () => {
   selectedPrice = selectedProduct.prices.find((item) => item[0] === productQuantity.value) || selectedProduct.prices[0];
@@ -89,53 +113,54 @@ productQuantity?.addEventListener("change", () => {
 function renderProductList() {
   if (!productList) return;
 
-  productList.innerHTML = printingProducts
+  productList.innerHTML = productGroups
     .map(
-      (product, index) => `
-        <button class="${index === 0 ? "active" : ""}" type="button" data-product="${escapeAttribute(product.name)}">
-          ${escapeHtml(product.name)}
+      (group, index) => `
+        <button class="${index === 0 ? "active" : ""}" type="button" data-product-group="${escapeAttribute(group.name)}">
+          ${escapeHtml(group.name)}
         </button>
       `
     )
     .join("");
 
   productList.addEventListener("click", (event) => {
-    const button = event.target.closest("button[data-product]");
+    const button = event.target.closest("button[data-product-group]");
     if (!button) return;
-    renderProduct(button.dataset.product);
+    renderProductGroup(button.dataset.productGroup);
   });
 }
 
-function renderProduct(productName) {
-  selectedProduct = printingProducts.find((product) => product.name === productName) || printingProducts[0];
+function renderProductGroup(groupName) {
+  selectedGroup = productGroups.find((group) => group.name === groupName) || productGroups[0];
+  selectedProduct = selectedGroup.variants[0];
   selectedPrice = selectedProduct.prices[0];
 
   productList?.querySelectorAll("button").forEach((button) => {
-    button.classList.toggle("active", button.dataset.product === selectedProduct.name);
+    button.classList.toggle("active", button.dataset.productGroup === selectedGroup.name);
   });
 
-  if (productTitle) productTitle.textContent = selectedProduct.name;
-  if (productKicker) productKicker.textContent = `${selectedProduct.prices.length} price options`;
-  renderProductDetails(selectedProduct);
-  if (productQuantity) {
-    productQuantity.innerHTML = selectedProduct.prices
-      .map(([quantity]) => `<option value="${escapeAttribute(quantity)}">${escapeHtml(quantity)}</option>`)
-      .join("");
+  if (productTitle) productTitle.textContent = selectedGroup.name;
+  if (productKicker) {
+    productKicker.textContent = `${selectedGroup.variants.length} size ${selectedGroup.variants.length === 1 ? "option" : "options"}`;
   }
-  if (productPriceRows) {
-    productPriceRows.innerHTML = selectedProduct.prices
-      .map(
-        ([quantity, price]) => `
-          <tr>
-            <td>${escapeHtml(quantity)}</td>
-            <td>${escapeHtml(price)}</td>
-          </tr>
-        `
-      )
+  renderProductDetails(selectedProduct);
+
+  if (productSize) {
+    productSize.innerHTML = selectedGroup.variants
+      .map((variant) => `<option value="${escapeAttribute(variant.name)}">${escapeHtml(sizeLabel(variant.name, selectedGroup.name))}</option>`)
       .join("");
   }
 
+  renderQuantityOptions();
   updateSelectedPrice();
+}
+
+function renderQuantityOptions() {
+  if (!productQuantity) return;
+
+  productQuantity.innerHTML = selectedProduct.prices
+    .map(([quantity]) => `<option value="${escapeAttribute(quantity)}">${escapeHtml(quantity)}</option>`)
+    .join("");
 }
 
 function renderProductDetails(product) {
@@ -170,7 +195,7 @@ function updateSelectedPrice() {
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
     const info = productDetails[selectedProduct.category] || productDetails.cards;
-    const details = `Product: ${selectedProduct.name}\nQuantity: ${selectedPrice[0]}\nSuggested sale price: ${selectedPrice[1]}\nMaterial: ${info.material}`;
+    const details = `Product: ${selectedProduct.name}\nSize: ${sizeLabel(selectedProduct.name, selectedGroup.name)}\nQuantity: ${selectedPrice[0]}\nSuggested sale price: ${selectedPrice[1]}\nMaterial: ${info.material}`;
     const params = new URLSearchParams({
       service: "Printing",
       product: selectedProduct.name,
@@ -180,6 +205,11 @@ function updateSelectedPrice() {
     });
     productOrderLink.href = `order.html?${params.toString()}`;
   }
+}
+
+function sizeLabel(productName, groupName) {
+  if (groupName === "Business Cards") return "Standard Business Cards";
+  return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
 }
 
 function escapeHtml(value) {

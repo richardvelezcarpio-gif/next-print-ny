@@ -1447,7 +1447,7 @@ textarea {
 
 .product-order-panel {
   display: grid;
-  grid-template-columns: minmax(180px, 1fr) minmax(180px, auto) auto;
+  grid-template-columns: minmax(170px, 1.2fr) minmax(120px, 0.75fr) minmax(150px, auto) auto;
   gap: 14px;
   align-items: end;
   padding: 18px;
@@ -1456,11 +1456,14 @@ textarea {
 }
 
 .product-order-panel label {
+  display: grid;
+  gap: 7px;
   color: var(--navy);
   font-weight: 900;
 }
 
 .product-order-panel select {
+  width: 100%;
   min-height: 48px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1484,36 +1487,6 @@ textarea {
 .selected-price strong {
   color: #5ea10b;
   font-size: 1.65rem;
-}
-
-.price-table-wrap {
-  overflow: auto;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-}
-
-.price-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.price-table th,
-.price-table td {
-  padding: 13px 16px;
-  border-bottom: 1px solid var(--line);
-  text-align: left;
-}
-
-.price-table th {
-  color: var(--navy);
-  background: var(--soft);
-  font-size: 0.78rem;
-  text-transform: uppercase;
-}
-
-.price-table td:last-child {
-  color: #5ea10b;
-  font-weight: 900;
 }
 
 .process-strip {
