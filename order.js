@@ -12,9 +12,9 @@ const orderCopyZelle = document.querySelector("#orderCopyZelle");
 const orderCopyNumber = document.querySelector("#orderCopyNumber");
 const orderMaxFileSize = 4 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
-const zelleEmail = "nextprintny@gmail.com";
+const zelleAccount = "2393337935";
 
-orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleEmail, orderCopyZelle, "zelle.copyEmail"));
+orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, orderCopyZelle, "zelle.copyEmail"));
 orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
 
 orderFile?.addEventListener("change", () => {
@@ -80,7 +80,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     });
 
     orderNumber.textContent = data.orderNumber;
-    if (orderZelleEmail) orderZelleEmail.textContent = zelleEmail;
+    if (orderZelleEmail) orderZelleEmail.textContent = zelleAccount;
     if (orderZelleNote) orderZelleNote.textContent = `Order ${data.orderNumber}`;
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
@@ -140,7 +140,7 @@ function getOrderText(key, fallback) {
       "order.sent": "Orden enviada.",
       "order.configError": "El formulario necesita RESEND_API_KEY en Vercel.",
       "order.error": "No se pudo enviar. Llámanos o escríbenos por WhatsApp.",
-      "zelle.copyEmail": "Copiar email de Zelle",
+      "zelle.copyEmail": "Copiar teléfono de Zelle",
       "zelle.copyOrder": "Copiar número de orden",
       "zelle.copied": "Copiado",
     },
@@ -151,7 +151,7 @@ function getOrderText(key, fallback) {
       "order.sent": "Order sent.",
       "order.configError": "Order form needs RESEND_API_KEY in Vercel.",
       "order.error": "Could not send. Please call or WhatsApp us.",
-      "zelle.copyEmail": "Copy Zelle email",
+      "zelle.copyEmail": "Copy Zelle phone",
       "zelle.copyOrder": "Copy order number",
       "zelle.copied": "Copied",
     },

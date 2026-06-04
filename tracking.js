@@ -13,9 +13,9 @@ const trackingZelleNote = document.querySelector("#trackingZelleNote");
 const trackingCopyZelle = document.querySelector("#trackingCopyZelle");
 const trackingCopyNumber = document.querySelector("#trackingCopyNumber");
 const localOrdersKey = "nextPrintRecentOrders";
-const zelleEmail = "nextprintny@gmail.com";
+const zelleAccount = "2393337935";
 
-trackingCopyZelle?.addEventListener("click", () => copyTrackingValue(zelleEmail, trackingCopyZelle, "zelle.copyEmail"));
+trackingCopyZelle?.addEventListener("click", () => copyTrackingValue(zelleAccount, trackingCopyZelle, "zelle.copyEmail"));
 trackingCopyNumber?.addEventListener("click", () => {
   const orderNumber = normalizeTrackingOrder(trackingInput?.value || trackingOrderTitle?.textContent || "");
   copyTrackingValue(orderNumber, trackingCopyNumber, "zelle.copyOrder");
@@ -71,7 +71,7 @@ function renderTrackingResult(order) {
     trackingAmountRow.hidden = !amount;
     trackingAmount.textContent = amount ? money(amount) : "-";
   }
-  if (trackingZelleEmail) trackingZelleEmail.textContent = zelleEmail;
+  if (trackingZelleEmail) trackingZelleEmail.textContent = zelleAccount;
   if (trackingZelleNote) trackingZelleNote.textContent = `Order ${order.orderNumber}`;
   trackingWhatsapp.href = `https://wa.me/12393337935?text=${encodeURIComponent(
     `Hello Next Print NY, I want to ask about order ${order.orderNumber}.`
@@ -125,7 +125,7 @@ function getTrackingText(key, fallback) {
       "tracking.loading": "Buscando orden...",
       "tracking.local": "Mostrando tu confirmación local. Actualizaremos el estado en vivo pronto.",
       "tracking.notFound": "No encontramos la orden. Revisa el número o contáctanos.",
-      "zelle.copyEmail": "Copiar email de Zelle",
+      "zelle.copyEmail": "Copiar teléfono de Zelle",
       "zelle.copyOrder": "Copiar número de orden",
       "zelle.copied": "Copiado",
     },
@@ -133,7 +133,7 @@ function getTrackingText(key, fallback) {
       "tracking.loading": "Checking order...",
       "tracking.local": "Showing your local order confirmation. We will update the live status soon.",
       "tracking.notFound": "Order not found. Check the number or contact us.",
-      "zelle.copyEmail": "Copy Zelle email",
+      "zelle.copyEmail": "Copy Zelle phone",
       "zelle.copyOrder": "Copy order number",
       "zelle.copied": "Copied",
     },
