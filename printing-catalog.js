@@ -1,36 +1,42 @@
 const productDetails = {
   cards: {
     visual: "cards",
+    image: "assets/printing-business-cards-ai.webp",
     material: "Premium cardstock. Available with glossy, matte or uncoated style depending on the finish confirmed before production.",
     hook: "Make the first impression feel professional. Perfect for networking, deliveries, front desks and every customer handoff.",
     benefits: ["Easy to carry and share", "Professional brand presentation", "Great for repeat customers"],
   },
   flyers: {
     visual: "flyers",
+    image: "assets/printing-flyers-ai.webp",
     material: "Full color flyer paper. Good for handouts, events, promotions, grand openings and local marketing.",
     hook: "Put your offer directly in people's hands. Flyers are fast, affordable and powerful for local promotion.",
     benefits: ["Great for events and promotions", "Easy to distribute", "Strong local marketing tool"],
   },
   stickers: {
     visual: "stickers",
+    image: "assets/printing-stickers-ai.webp",
     material: "Adhesive sticker material for labels, packaging, product branding, events and giveaways.",
     hook: "Turn every bag, box, cup or package into brand exposure. Stickers make simple products feel custom.",
     benefits: ["Ideal for packaging", "Adds brand identity quickly", "Works for giveaways and labels"],
   },
   menus: {
     visual: "menus",
+    image: "assets/printing-menus-ai.webp",
     material: "Full color menu prints for restaurants, cafes, food trucks and service lists. Lamination can be quoted if needed.",
     hook: "Make your menu clear, clean and easy to sell from. A better menu helps customers choose faster.",
     benefits: ["Great for restaurants and services", "Easy to read", "Helps present prices professionally"],
   },
   banners: {
     visual: "banners",
+    image: "assets/printing-banners-ai.webp",
     material: "Durable banner material for indoor or outdoor display. Grommets or finishing can be confirmed before production.",
     hook: "Get seen from farther away. Banners are perfect for storefronts, events, sales and announcements.",
     benefits: ["Large and visible", "Good for indoor or outdoor use", "Reusable for repeated promotions"],
   },
   hangers: {
     visual: "hangers",
+    image: "assets/printing-door-hangers-ai.webp",
     material: "Door hanger stock for neighborhood campaigns, real estate, menus, cleaning services and local offers.",
     hook: "Reach homes and apartments directly. Door hangers are a strong way to promote services block by block.",
     benefits: ["Direct neighborhood marketing", "Perfect for service businesses", "Easy for customers to keep"],
@@ -137,7 +143,9 @@ function renderProductDetails(product) {
 
   if (productArt) {
     productArt.className = `product-art product-art-${details.visual}`;
-    productArt.innerHTML = renderProductVisual(details.visual);
+    productArt.innerHTML = details.image
+      ? `<img src="${escapeAttribute(details.image)}" alt="${escapeAttribute(product.name)} product preview" loading="lazy" />`
+      : renderProductVisual(details.visual);
   }
   if (productHook) productHook.textContent = details.hook;
   if (productMaterial) productMaterial.textContent = details.material;
