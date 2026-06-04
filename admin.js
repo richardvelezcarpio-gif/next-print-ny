@@ -6,6 +6,9 @@ const recordForm = document.querySelector("#recordForm");
 const customOrderForm = document.querySelector("#customOrderForm");
 const customOrderStatus = document.querySelector("#customOrderStatus");
 const customDueDate = document.querySelector("#customDueDate");
+const customOrderFiles = document.querySelector("#customOrderFiles");
+const customOrderFileName = document.querySelector("#customOrderFileName");
+const customOrderActions = document.querySelector("#customOrderActions");
 const recordStatus = document.querySelector("#recordStatus");
 const recordsList = document.querySelector("#recordsList");
 const recordCount = document.querySelector("#recordCount");
@@ -49,6 +52,8 @@ const kanbanStatuses = [
 
 let records = [];
 let activeFilter = "all";
+const adminMaxFileSize = 4 * 1024 * 1024;
+const adminMaxTotalFileSize = 12 * 1024 * 1024;
 
 init();
 setCustomOrderDueDate();
@@ -103,19 +108,47 @@ recordForm?.addEventListener("submit", async (event) => {
   }
 });
 
+customOrderFiles?.addEventListener("change", () => {
+  const files = Array.from(customOrderFiles.files || []);
+
+  if (!files.length) {
+    customOrderFileName.textContent = "PDF, JPG, PNG o archivos de diseño. Opcional.";
+    customOrderFileName.classList.remove("error");
+    return;
+  }
+
+  const oversizedFile = files.find((file) => file.size > adminMaxFileSize);
+  const totalSize = files.reduce((total, file) => total + file.size, 0);
+
+  if (oversizedFile || totalSize > adminMaxTotalFileSize) {
+    customOrderFiles.value = "";
+    customOrderFileName.textContent = oversizedFile
+      ? "Cada archivo debe pesar menos de 4 MB."
+      : "Todos los archivos juntos deben pesar menos de 12 MB.";
+    customOrderFileName.classList.add("error");
+    return;
+  }
+
+  customOrderFileName.classList.remove("error");
+  customOrderFileName.textContent = files.map((file) => file.name).join(", ");
+});
+
 customOrderForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
   setStatus(customOrderStatus, "Creando orden custom...", "");
+  renderCustomOrderActions("");
 
   const submitButton = customOrderForm.querySelector("button[type='submit']");
   submitButton.disabled = true;
 
   try {
     const formData = new FormData(customOrderForm);
+    const files = Array.from(customOrderFiles?.files || []);
     const description = [
       `Custom order instructions: ${formData.get("description")}`,
       formData.get("internal_notes") ? `Internal notes: ${formData.get("internal_notes")}` : "",
       formData.get("amount") ? `Price: $${Number(formData.get("amount") || 0).toFixed(2)}` : "",
+      files.length ? `Files: ${files.map((file) => file.name).join(", ")}` : "",
     ]
       .filter(Boolean)
       .join("\n");
@@ -131,6 +164,12 @@ customOrderForm?.addEventListener("submit", async (event) => {
       quantity: 1,
       description,
       send_invoice: formData.get("send_invoice") === "on",
+      files: await Promise.all(
+        files.map(async (file) => ({
+          name: file.name,
+          content: await fileToBase64(file),
+        }))
+      ),
     };
     const { response, data } = await fetchJson("/api/business-records", {
       method: "POST",
@@ -144,6 +183,8 @@ customOrderForm?.addEventListener("submit", async (event) => {
     const orderNumber = createdRecord ? getOrderNumber(createdRecord) : "";
     customOrderForm.reset();
     setCustomOrderDueDate();
+    if (customOrderFileName) customOrderFileName.textContent = "PDF, JPG, PNG o archivos de diseño. Opcional.";
+    renderCustomOrderActions(orderNumber);
     setStatus(
       customOrderStatus,
       data.warning
@@ -247,6 +288,26 @@ function setCustomOrderDueDate() {
   const date = new Date();
   date.setDate(date.getDate() + 7);
   customDueDate.value = toDateInputValue(date);
+}
+
+function renderCustomOrderActions(orderNumber) {
+  if (!customOrderActions) return;
+
+  if (!orderNumber) {
+    customOrderActions.hidden = true;
+    customOrderActions.innerHTML = "";
+    return;
+  }
+
+  const invoiceUrl = `invoice.html?order=${encodeURIComponent(orderNumber)}`;
+  const printUrl = `${invoiceUrl}&print=1`;
+  const trackingUrl = `tracking.html?order=${encodeURIComponent(orderNumber)}`;
+  customOrderActions.innerHTML = `
+    <a href="${escapeAttribute(invoiceUrl)}" target="_blank" rel="noreferrer">Abrir invoice</a>
+    <a href="${escapeAttribute(printUrl)}" target="_blank" rel="noreferrer">Imprimir invoice</a>
+    <a href="${escapeAttribute(trackingUrl)}" target="_blank" rel="noreferrer">Tracking</a>
+  `;
+  customOrderActions.hidden = false;
 }
 
 async function loadRecords() {
@@ -571,6 +632,18 @@ function extractPriceFromDescription(description) {
 function toDateInputValue(date) {
   const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
   return localDate.toISOString().slice(0, 10);
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result || "");
+      resolve(result.split(",")[1] || "");
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
 }
 
 function setStatus(element, message, tone) {

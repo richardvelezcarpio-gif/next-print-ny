@@ -29,6 +29,7 @@ const statusLabels = {
 
 const params = new URLSearchParams(window.location.search);
 const initialOrder = normalizeOrderNumber(params.get("order"));
+const shouldPrint = params.get("print") === "1";
 
 if (initialOrder && invoiceLookupInput) {
   invoiceLookupInput.value = initialOrder;
@@ -58,6 +59,9 @@ async function openInvoice(value) {
     renderInvoice(data.order);
     setInvoiceStatus("");
     invoiceCard.hidden = false;
+    if (shouldPrint) {
+      window.setTimeout(() => window.print(), 500);
+    }
   } catch (error) {
     setInvoiceStatus("Invoice not found. Check the order number or contact us.", "error");
   }

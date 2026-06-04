@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Admin | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="admin.css?v=20260604-1245" />
+    <link rel="stylesheet" href="admin.css?v=20260604-1310" />
   </head>
   <body>
     <main class="admin-shell">
@@ -125,11 +125,17 @@
                 Notas internas
                 <textarea name="internal_notes" rows="3" placeholder="Notas para ti: depósito, conversación, fecha prometida, proveedor, etc."></textarea>
               </label>
+              <label class="custom-file-drop">
+                <input id="customOrderFiles" name="files" type="file" multiple />
+                <span>Subir archivos del pedido</span>
+                <small id="customOrderFileName">PDF, JPG, PNG o archivos de diseño. Opcional.</small>
+              </label>
               <label class="checkbox-line">
                 <input name="send_invoice" type="checkbox" checked />
                 Enviar invoice al email del cliente al guardar
               </label>
               <button type="submit">Crear orden custom</button>
+              <div id="customOrderActions" class="custom-order-actions" hidden></div>
               <p id="customOrderStatus" class="status-text" aria-live="polite"></p>
             </form>
           </section>
@@ -233,6 +239,6 @@
         </section>
       </section>
     </main>
-    <script src="admin.js?v=20260604-1245"></script>
+    <script src="admin.js?v=20260604-1310"></script>
   </body>
 </html>

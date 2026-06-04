@@ -1,9 +1,11 @@
 import { requireAdmin } from "./_admin-auth.js";
 
+const TO_EMAIL = "nextprintny@gmail.com";
 const TABLE = "business_records";
 const ALLOWED_TYPES = new Set(["order", "income", "expense", "inventory", "customer", "document"]);
 const ALLOWED_STATUSES = new Set(["new", "in_progress", "waiting", "paid", "completed", "cancelled"]);
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
+const MAX_FILE_SIZE_BASE64 = 17 * 1024 * 1024;
 
 export default async function handler(req, res) {
   const session = requireAdmin(req, res);
@@ -63,6 +65,14 @@ async function listRecords(req, res) {
 
 async function createRecord(req, res, session) {
   const record = sanitizeRecord(req.body || {});
+  const files = sanitizeFiles(req.body || {});
+  const totalFileSize = files.reduce((total, file) => total + String(file.content || "").length, 0);
+
+  if (totalFileSize > MAX_FILE_SIZE_BASE64) {
+    res.status(413).json({ error: "File too large" });
+    return;
+  }
+
   record.created_by = session.email;
   prepareAdminOrder(record);
 
@@ -79,12 +89,20 @@ async function createRecord(req, res, session) {
   }
 
   const savedRecord = Array.isArray(data) ? data[0] : null;
-  const warning =
+  const warnings = [];
+
+  if (savedRecord?.type === "order") {
+    const ownerWarning = await trySendOwnerOrderEmail(savedRecord, files, req);
+    if (ownerWarning) warnings.push(ownerWarning);
+  }
+
+  const customerWarning =
     req.body?.send_invoice && savedRecord?.type === "order" && savedRecord.customer_email
       ? await trySendInvoiceEmail(savedRecord, req, "invoice")
       : "";
+  if (customerWarning) warnings.push(customerWarning);
 
-  res.status(200).json({ records: data, warning });
+  res.status(200).json({ records: data, warning: warnings.join(" | ") });
 }
 
 async function updateRecord(req, res) {
@@ -175,6 +193,17 @@ function sanitizeRecord(input, options = {}) {
   return record;
 }
 
+function sanitizeFiles(input) {
+  const filesInput = Array.isArray(input.files) ? input.files : [];
+  return filesInput
+    .filter((file) => file?.name && file?.content)
+    .slice(0, 8)
+    .map((file) => ({
+      name: clean(file.name, 180),
+      content: String(file.content || ""),
+    }));
+}
+
 function prepareAdminOrder(record) {
   if (record.type !== "order") return;
 
@@ -201,6 +230,49 @@ async function trySendInvoiceEmail(record, req, kind) {
   } catch (error) {
     return `Invoice email failed: ${error.message}`;
   }
+}
+
+async function trySendOwnerOrderEmail(record, files, req) {
+  try {
+    await sendOwnerOrderEmail(record, files, req);
+    return "";
+  } catch (error) {
+    return `Admin email failed: ${error.message}`;
+  }
+}
+
+async function sendOwnerOrderEmail(record, files, req) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error("RESEND_API_KEY missing");
+
+  const orderNumber = getOrderNumber(record);
+  const baseUrl = publicBaseUrl(req);
+  const invoiceUrl = `${baseUrl}/invoice.html?order=${encodeURIComponent(orderNumber)}`;
+  const trackingUrl = `${baseUrl}/tracking.html?order=${encodeURIComponent(orderNumber)}`;
+
+  await sendResendEmail(apiKey, {
+    to: TO_EMAIL,
+    replyTo: record.customer_email,
+    subject: `Nueva orden custom ${orderNumber || ""} - ${record.title || "Next Print NY"}`,
+    html: `
+      <div style="font-family:Arial,Helvetica,sans-serif;color:#07142f;line-height:1.55">
+        <h2 style="color:#05275c;margin-bottom:8px">Nueva orden custom - ${escapeHtml(orderNumber || "Sin número")}</h2>
+        <p><strong>Cliente:</strong> ${escapeHtml(record.customer_name || "No incluido")}</p>
+        <p><strong>Teléfono:</strong> ${escapeHtml(record.customer_phone || "No incluido")}</p>
+        <p><strong>Email:</strong> ${escapeHtml(record.customer_email || "No incluido")}</p>
+        <p><strong>Total:</strong> ${money(Number(record.amount || 0))}</p>
+        <p><strong>Entrega:</strong> ${escapeHtml(record.due_date || "No incluida")}</p>
+        <p><strong>Detalles:</strong></p>
+        <p>${escapeHtml(record.description || "").replace(/\n/g, "<br>")}</p>
+        <p><a href="${escapeHtml(invoiceUrl)}" style="color:#05275c;font-weight:bold">Abrir invoice</a></p>
+        <p><a href="${escapeHtml(trackingUrl)}" style="color:#05275c;font-weight:bold">Abrir tracking</a></p>
+      </div>
+    `,
+    attachments: files.map((file) => ({
+      filename: file.name,
+      content: file.content,
+    })),
+  });
 }
 
 async function sendInvoiceEmail(record, req, kind) {
@@ -250,8 +322,10 @@ async function sendResendEmail(apiKey, message) {
     body: JSON.stringify({
       from: process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
       to: message.to,
+      ...(message.replyTo ? { reply_to: message.replyTo } : {}),
       subject: message.subject,
       html: message.html,
+      ...(message.attachments?.length ? { attachments: message.attachments } : {}),
     }),
   });
 

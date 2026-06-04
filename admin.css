@@ -291,6 +291,64 @@ textarea {
   gap: 12px;
 }
 
+.custom-file-drop {
+  min-height: 104px;
+  display: grid;
+  place-items: center;
+  gap: 7px;
+  border: 1px dashed var(--cyan);
+  border-radius: 8px;
+  background: #f2fcff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.custom-file-drop input {
+  display: none;
+}
+
+.custom-file-drop span {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 8px;
+  color: var(--navy);
+  background: #fff;
+  font-weight: 900;
+}
+
+.custom-file-drop small {
+  color: var(--muted);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.custom-file-drop small.error {
+  color: var(--danger);
+}
+
+.custom-order-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.custom-order-actions a {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  border-radius: 8px;
+  color: var(--navy);
+  background: #dff8ff;
+  font-size: 0.8rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
 .record-form {
   display: grid;
   gap: 14px;
