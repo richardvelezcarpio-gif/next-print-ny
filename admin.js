@@ -122,12 +122,25 @@ recordsList?.addEventListener("click", async (event) => {
   const id = button.dataset.id;
   const action = button.dataset.action;
 
+  if (action === "status") {
+    await updateRecord(id, { status: button.dataset.status });
+  }
+
   if (action === "complete") {
     await updateRecord(id, { status: "completed" });
   }
 
   if (action === "delete") {
+    if (!window.confirm("¿Seguro que quieres borrar este registro?")) return;
     await deleteRecord(id);
+  }
+
+  if (action === "copy-order") {
+    await copyText(button.dataset.order || "");
+    button.textContent = "Copiado";
+    window.setTimeout(() => {
+      button.textContent = "Copiar #";
+    }, 1300);
   }
 });
 
@@ -295,6 +308,8 @@ function renderKanbanColumn(status, columnRecords) {
 function renderKanbanCard(record) {
   const createdAt = record.created_at ? new Date(record.created_at).toLocaleDateString("es-US") : "";
   const amount = Number(record.amount || 0);
+  const orderNumber = getOrderNumber(record);
+  const quickLinks = renderQuickLinks(record, orderNumber, { compact: true });
   const statusOptions = Object.entries(statusLabels)
     .map(([value, label]) => `<option value="${value}" ${record.status === value ? "selected" : ""}>${label}</option>`)
     .join("");
@@ -306,9 +321,11 @@ function renderKanbanCard(record) {
         <p>${escapeHtml(record.customer_name || "Cliente sin nombre")}</p>
       </div>
       <div class="kanban-card-meta">
+        ${orderNumber ? `<span>${escapeHtml(orderNumber)}</span>` : ""}
         ${createdAt ? `<span>${createdAt}</span>` : ""}
         ${amount ? `<span>${money(amount)}</span>` : ""}
       </div>
+      ${quickLinks}
       <label class="kanban-status">
         Cambiar estado
         <select data-action="kanban-status" data-id="${escapeAttribute(record.id)}">
@@ -323,9 +340,8 @@ function renderRecord(record) {
   const amount = Number(record.amount || 0);
   const quantity = Number(record.quantity || 0);
   const createdAt = record.created_at ? new Date(record.created_at).toLocaleString("es-US") : "";
-  const fileLink = record.file_url
-    ? `<a href="${escapeAttribute(record.file_url)}" target="_blank" rel="noreferrer">Abrir archivo</a>`
-    : "";
+  const orderNumber = getOrderNumber(record);
+  const quickLinks = renderQuickLinks(record, orderNumber);
   const statusOptions = Object.entries(statusLabels)
     .map(([value, label]) => `<option value="${value}" ${record.status === value ? "selected" : ""}>${label}</option>`)
     .join("");
@@ -342,11 +358,13 @@ function renderRecord(record) {
       <div class="pill-row">
         <span class="pill">${typeLabels[record.type] || record.type}</span>
         <span class="pill">${statusLabels[record.status] || record.status}</span>
+        ${orderNumber ? `<span class="pill">${escapeHtml(orderNumber)}</span>` : ""}
         ${quantity ? `<span class="pill">Cant. ${quantity}</span>` : ""}
         ${record.due_date ? `<span class="pill">${escapeHtml(record.due_date)}</span>` : ""}
       </div>
       ${record.description ? `<p class="record-description">${escapeHtml(record.description)}</p>` : ""}
       <p class="record-meta">${createdAt}</p>
+      ${quickLinks}
       <label class="status-editor">
         Estado de tracking
         <select data-action="status" data-id="${escapeAttribute(record.id)}">
@@ -354,12 +372,90 @@ function renderRecord(record) {
         </select>
       </label>
       <div class="record-actions">
+        <button type="button" data-action="status" data-status="in_progress" data-id="${escapeAttribute(record.id)}">En revisión</button>
+        <button type="button" data-action="status" data-status="waiting" data-id="${escapeAttribute(record.id)}">Esperando</button>
+        <button class="paid-button" type="button" data-action="status" data-status="paid" data-id="${escapeAttribute(record.id)}">Pago recibido</button>
         <button class="complete-button" type="button" data-action="complete" data-id="${escapeAttribute(record.id)}">Completar</button>
-        ${fileLink}
+        <button class="cancel-button" type="button" data-action="status" data-status="cancelled" data-id="${escapeAttribute(record.id)}">Cancelar</button>
         <button class="delete-button" type="button" data-action="delete" data-id="${escapeAttribute(record.id)}">Borrar</button>
       </div>
     </article>
   `;
+}
+
+function renderQuickLinks(record, orderNumber, options = {}) {
+  const compact = Boolean(options.compact);
+  const phone = normalizePhone(record.customer_phone);
+  const email = String(record.customer_email || "").trim();
+  const trackingUrl = orderNumber ? `tracking.html?order=${encodeURIComponent(orderNumber)}` : "tracking.html";
+  const message = buildCustomerMessage(record, orderNumber);
+  const links = [];
+
+  if (phone) {
+    links.push(
+      `<a href="https://wa.me/${phone}?text=${encodeURIComponent(message)}" target="_blank" rel="noreferrer">WhatsApp</a>`
+    );
+    links.push(`<a href="tel:+${phone}">Llamar</a>`);
+  }
+
+  if (email) {
+    links.push(
+      `<a href="mailto:${escapeAttribute(email)}?subject=${encodeURIComponent(`Next Print NY ${orderNumber || "Order"}`)}&body=${encodeURIComponent(message)}">Email</a>`
+    );
+  }
+
+  if (orderNumber) {
+    links.push(`<a href="${escapeAttribute(trackingUrl)}" target="_blank" rel="noreferrer">Tracking</a>`);
+    if (!compact) {
+      links.push(
+        `<button type="button" data-action="copy-order" data-order="${escapeAttribute(orderNumber)}">Copiar #</button>`
+      );
+    }
+  }
+
+  if (record.file_url) {
+    links.push(`<a href="${escapeAttribute(record.file_url)}" target="_blank" rel="noreferrer">Archivo</a>`);
+  }
+
+  if (!links.length) return "";
+
+  return `<div class="${compact ? "quick-links compact" : "quick-links"}">${links.join("")}</div>`;
+}
+
+function buildCustomerMessage(record, orderNumber) {
+  const name = record.customer_name ? `Hi ${record.customer_name},` : "Hi,";
+  const orderLine = orderNumber ? `we are contacting you about order ${orderNumber}.` : "we are contacting you about your order.";
+  const status = statusLabels[record.status] ? `Status: ${statusLabels[record.status]}.` : "";
+  return `${name} ${orderLine} ${status} Next Print NY`;
+}
+
+function getOrderNumber(record) {
+  const source = `${record.title || ""}\n${record.description || ""}`;
+  const match = source.match(/\bNP-\d{6}-\d{6}\b/i);
+  return match ? match[0].toUpperCase() : "";
+}
+
+function normalizePhone(phone) {
+  const digits = String(phone || "").replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.length === 10) return `1${digits}`;
+  return digits;
+}
+
+async function copyText(text) {
+  if (!text) return;
+
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const input = document.createElement("input");
+  input.value = text;
+  document.body.append(input);
+  input.select();
+  document.execCommand("copy");
+  input.remove();
 }
 
 function renderMetrics() {

@@ -188,8 +188,35 @@ textarea {
   text-transform: uppercase;
 }
 
-.admin-header button {
+.admin-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.admin-header-actions a,
+.admin-header-actions button {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
   padding: 0 18px;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--navy);
+  font-size: 0.86rem;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.admin-header-actions a {
+  color: var(--navy);
+  background: #dff8ff;
+}
+
+.admin-header-actions a:hover {
+  background: #c6f2fb;
 }
 
 .metric-grid {
@@ -432,10 +459,24 @@ textarea {
   text-transform: uppercase;
 }
 
-.record-actions {
+.record-actions,
+.quick-links {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.quick-links {
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.quick-links.compact {
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .status-editor {
@@ -454,20 +495,40 @@ textarea {
 }
 
 .record-actions button,
-.record-actions a {
+.record-actions a,
+.quick-links a,
+.quick-links button {
   display: inline-flex;
   min-height: 34px;
   align-items: center;
+  justify-content: center;
   padding: 0 10px;
+  border: 1px solid transparent;
   border-radius: 8px;
   color: #fff;
   background: var(--navy);
   font-size: 0.78rem;
   font-weight: 900;
+  text-decoration: none;
+}
+
+.quick-links a,
+.quick-links button {
+  color: var(--navy);
+  background: #dff8ff;
 }
 
 .record-actions .complete-button {
   background: var(--success);
+}
+
+.record-actions .paid-button {
+  background: #0f766e;
+}
+
+.record-actions .cancel-button {
+  color: var(--ink);
+  background: #facc15;
 }
 
 .record-actions .delete-button {
@@ -535,6 +596,15 @@ textarea {
   .admin-header {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .admin-header-actions {
+    justify-content: stretch;
+  }
+
+  .admin-header-actions a,
+  .admin-header-actions button {
+    flex: 1 1 130px;
   }
 
   .records-header {
