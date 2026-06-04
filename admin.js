@@ -6,6 +6,8 @@ const recordForm = document.querySelector("#recordForm");
 const recordStatus = document.querySelector("#recordStatus");
 const recordsList = document.querySelector("#recordsList");
 const recordCount = document.querySelector("#recordCount");
+const kanbanBoard = document.querySelector("#kanbanBoard");
+const kanbanCount = document.querySelector("#kanbanCount");
 const sessionEmail = document.querySelector("#sessionEmail");
 const logoutButton = document.querySelector("#logoutButton");
 const refreshButton = document.querySelector("#refreshButton");
@@ -32,6 +34,15 @@ const statusLabels = {
   completed: "Completado",
   cancelled: "Cancelado",
 };
+
+const kanbanStatuses = [
+  { value: "new", label: "Recibida", hint: "Pedido nuevo del cliente" },
+  { value: "in_progress", label: "En revisión", hint: "Revisando detalles y archivo" },
+  { value: "waiting", label: "Esperando", hint: "Falta información, aprobación o pago" },
+  { value: "paid", label: "Pago recibido", hint: "Listo para producir o finalizar" },
+  { value: "completed", label: "Completada", hint: "Trabajo cerrado" },
+  { value: "cancelled", label: "Cancelada", hint: "Pedido detenido o anulado" },
+];
 
 let records = [];
 let activeFilter = "all";
@@ -122,6 +133,13 @@ recordsList?.addEventListener("click", async (event) => {
 
 recordsList?.addEventListener("change", async (event) => {
   const select = event.target.closest("select[data-action='status']");
+  if (!select) return;
+
+  await updateRecord(select.dataset.id, { status: select.value });
+});
+
+kanbanBoard?.addEventListener("change", async (event) => {
+  const select = event.target.closest("select[data-action='kanban-status']");
   if (!select) return;
 
   await updateRecord(select.dataset.id, { status: select.value });
@@ -224,6 +242,7 @@ async function fetchJson(url, options = {}) {
 
 function renderRecords() {
   renderMetrics();
+  renderKanbanBoard();
 
   const visibleRecords =
     activeFilter === "all" ? records : records.filter((record) => record.type === activeFilter);
@@ -236,6 +255,68 @@ function renderRecords() {
   }
 
   recordsList.innerHTML = visibleRecords.map(renderRecord).join("");
+}
+
+function renderKanbanBoard() {
+  const orderRecords = records.filter((record) => record.type === "order");
+  kanbanCount.textContent = `${orderRecords.length} ${orderRecords.length === 1 ? "pedido" : "pedidos"}`;
+
+  if (!orderRecords.length) {
+    kanbanBoard.innerHTML = `<div class="empty-state">Todavía no hay pedidos para organizar.</div>`;
+    return;
+  }
+
+  kanbanBoard.innerHTML = kanbanStatuses
+    .map((status) => renderKanbanColumn(status, orderRecords.filter((record) => record.status === status.value)))
+    .join("");
+}
+
+function renderKanbanColumn(status, columnRecords) {
+  const cards = columnRecords.length
+    ? columnRecords.map(renderKanbanCard).join("")
+    : `<div class="kanban-empty">Sin pedidos</div>`;
+
+  return `
+    <section class="kanban-column">
+      <div class="kanban-column-header">
+        <div>
+          <h3>${escapeHtml(status.label)}</h3>
+          <p>${escapeHtml(status.hint)}</p>
+        </div>
+        <strong>${columnRecords.length}</strong>
+      </div>
+      <div class="kanban-stack">
+        ${cards}
+      </div>
+    </section>
+  `;
+}
+
+function renderKanbanCard(record) {
+  const createdAt = record.created_at ? new Date(record.created_at).toLocaleDateString("es-US") : "";
+  const amount = Number(record.amount || 0);
+  const statusOptions = Object.entries(statusLabels)
+    .map(([value, label]) => `<option value="${value}" ${record.status === value ? "selected" : ""}>${label}</option>`)
+    .join("");
+
+  return `
+    <article class="kanban-card">
+      <div>
+        <h4>${escapeHtml(record.title || "Pedido sin título")}</h4>
+        <p>${escapeHtml(record.customer_name || "Cliente sin nombre")}</p>
+      </div>
+      <div class="kanban-card-meta">
+        ${createdAt ? `<span>${createdAt}</span>` : ""}
+        ${amount ? `<span>${money(amount)}</span>` : ""}
+      </div>
+      <label class="kanban-status">
+        Cambiar estado
+        <select data-action="kanban-status" data-id="${escapeAttribute(record.id)}">
+          ${statusOptions}
+        </select>
+      </label>
+    </article>
+  `;
 }
 
 function renderRecord(record) {

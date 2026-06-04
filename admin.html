@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Admin | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="admin.css?v=20260603-1758" />
+    <link rel="stylesheet" href="admin.css?v=20260603-1905" />
   </head>
   <body>
     <main class="admin-shell">
@@ -70,6 +70,17 @@
               <span>Balance</span>
               <strong id="balanceTotal">$0.00</strong>
             </article>
+          </section>
+
+          <section class="kanban-panel" aria-label="Tablero de pedidos">
+            <div class="records-header">
+              <div>
+                <span class="eyebrow">Flujo de trabajo</span>
+                <h2>Tablero de pedidos</h2>
+              </div>
+              <span id="kanbanCount">0 pedidos</span>
+            </div>
+            <div id="kanbanBoard" class="kanban-board"></div>
           </section>
 
           <section class="workspace-grid">
@@ -156,6 +167,6 @@
         </section>
       </section>
     </main>
-    <script src="admin.js?v=20260603-1758"></script>
+    <script src="admin.js?v=20260603-1905"></script>
   </body>
 </html>
