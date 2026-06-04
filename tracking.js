@@ -12,6 +12,7 @@ const trackingZelleEmail = document.querySelector("#trackingZelleEmail");
 const trackingZelleNote = document.querySelector("#trackingZelleNote");
 const trackingCopyZelle = document.querySelector("#trackingCopyZelle");
 const trackingCopyNumber = document.querySelector("#trackingCopyNumber");
+const trackingPayZelle = document.querySelector("#trackingPayZelle");
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
 
@@ -73,6 +74,7 @@ function renderTrackingResult(order) {
   }
   if (trackingZelleEmail) trackingZelleEmail.textContent = zelleAccount;
   if (trackingZelleNote) trackingZelleNote.textContent = `Order ${order.orderNumber}`;
+  if (trackingPayZelle) trackingPayZelle.href = `payments.html?order=${encodeURIComponent(order.orderNumber)}`;
   trackingWhatsapp.href = `https://wa.me/12393337935?text=${encodeURIComponent(
     `Hello Next Print NY, I want to ask about order ${order.orderNumber}.`
   )}`;

@@ -10,6 +10,7 @@ const orderZelleEmail = document.querySelector("#orderZelleEmail");
 const orderZelleNote = document.querySelector("#orderZelleNote");
 const orderCopyZelle = document.querySelector("#orderCopyZelle");
 const orderCopyNumber = document.querySelector("#orderCopyNumber");
+const orderPayZelle = document.querySelector("#orderPayZelle");
 const orderMaxFileSize = 4 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
@@ -82,6 +83,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     orderNumber.textContent = data.orderNumber;
     if (orderZelleEmail) orderZelleEmail.textContent = zelleAccount;
     if (orderZelleNote) orderZelleNote.textContent = `Order ${data.orderNumber}`;
+    if (orderPayZelle) orderPayZelle.href = `payments.html?order=${encodeURIComponent(data.orderNumber)}`;
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
       orderTrackLink.href = `tracking.html?order=${encodeURIComponent(data.orderNumber)}`;

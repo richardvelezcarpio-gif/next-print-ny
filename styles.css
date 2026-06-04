@@ -1408,8 +1408,12 @@ textarea {
   gap: 10px;
 }
 
-.zelle-actions button {
+.zelle-actions button,
+.zelle-actions a {
+  display: inline-flex;
   min-height: 40px;
+  align-items: center;
+  justify-content: center;
   padding: 0 14px;
   border: 0;
   border-radius: 8px;
@@ -1419,8 +1423,21 @@ textarea {
   cursor: pointer;
 }
 
-.zelle-actions button:hover {
+.zelle-actions a {
+  background: linear-gradient(135deg, var(--cyan), var(--cyan-2));
+}
+
+.zelle-actions button:hover,
+.zelle-actions a:hover {
   background: var(--navy-2);
+}
+
+.zelle-order-note {
+  margin-top: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
 }
 
 .payment-workspace {
