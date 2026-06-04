@@ -55,7 +55,7 @@ export default async function handler(req, res) {
         amount: recordAmount(record),
         createdAt: record.created_at || "",
         updatedAt: record.updated_at || record.created_at || "",
-        description: publicText(record.description, 1500),
+        description: publicDescription(record.description),
       },
     });
   } catch (error) {
@@ -112,6 +112,16 @@ function publicText(value, limit) {
     .replace(/[<>]/g, "")
     .trim()
     .slice(0, limit);
+}
+
+function publicDescription(value) {
+  return String(value || "")
+    .split(/\n+/)
+    .filter((line) => !/^\s*(internal notes|notas internas)\s*:/i.test(line))
+    .join("\n")
+    .replace(/[<>]/g, "")
+    .trim()
+    .slice(0, 1500);
 }
 
 function recordAmount(record) {

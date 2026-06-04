@@ -3,6 +3,9 @@ const dashboardView = document.querySelector("#dashboardView");
 const loginForm = document.querySelector("#loginForm");
 const loginStatus = document.querySelector("#loginStatus");
 const recordForm = document.querySelector("#recordForm");
+const customOrderForm = document.querySelector("#customOrderForm");
+const customOrderStatus = document.querySelector("#customOrderStatus");
+const customDueDate = document.querySelector("#customDueDate");
 const recordStatus = document.querySelector("#recordStatus");
 const recordsList = document.querySelector("#recordsList");
 const recordCount = document.querySelector("#recordCount");
@@ -48,6 +51,7 @@ let records = [];
 let activeFilter = "all";
 
 init();
+setCustomOrderDueDate();
 
 loginForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
@@ -94,6 +98,62 @@ recordForm?.addEventListener("submit", async (event) => {
     await loadRecords();
   } catch (error) {
     setStatus(recordStatus, error.message, "error");
+  } finally {
+    submitButton.disabled = false;
+  }
+});
+
+customOrderForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  setStatus(customOrderStatus, "Creando orden custom...", "");
+
+  const submitButton = customOrderForm.querySelector("button[type='submit']");
+  submitButton.disabled = true;
+
+  try {
+    const formData = new FormData(customOrderForm);
+    const description = [
+      `Custom order instructions: ${formData.get("description")}`,
+      formData.get("internal_notes") ? `Internal notes: ${formData.get("internal_notes")}` : "",
+      formData.get("amount") ? `Price: $${Number(formData.get("amount") || 0).toFixed(2)}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const body = {
+      type: "order",
+      status: "new",
+      title: formData.get("title"),
+      customer_name: formData.get("customer_name"),
+      customer_phone: formData.get("customer_phone"),
+      customer_email: formData.get("customer_email"),
+      due_date: formData.get("due_date"),
+      amount: formData.get("amount"),
+      quantity: 1,
+      description,
+      send_invoice: formData.get("send_invoice") === "on",
+    };
+    const { response, data } = await fetchJson("/api/business-records", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) throw new Error(data.error || "No se pudo crear la orden custom");
+
+    const createdRecord = Array.isArray(data.records) ? data.records[0] : null;
+    const orderNumber = createdRecord ? getOrderNumber(createdRecord) : "";
+    customOrderForm.reset();
+    setCustomOrderDueDate();
+    setStatus(
+      customOrderStatus,
+      data.warning
+        ? `Orden custom creada${orderNumber ? `: ${orderNumber}` : ""}. ${data.warning}`
+        : `Orden custom creada${orderNumber ? `: ${orderNumber}` : ""}.`,
+      "success"
+    );
+    await loadRecords();
+  } catch (error) {
+    setStatus(customOrderStatus, error.message, "error");
   } finally {
     submitButton.disabled = false;
   }
@@ -180,6 +240,13 @@ function showDashboard(email) {
   sessionEmail.textContent = email ? `Sesión: ${email}` : "Sesión privada";
   setStatus(recordStatus, "Cargando registros...", "");
   loadRecords();
+}
+
+function setCustomOrderDueDate() {
+  if (!customDueDate) return;
+  const date = new Date();
+  date.setDate(date.getDate() + 7);
+  customDueDate.value = toDateInputValue(date);
 }
 
 async function loadRecords() {
@@ -501,7 +568,13 @@ function extractPriceFromDescription(description) {
   return Number.isFinite(amount) ? amount : 0;
 }
 
+function toDateInputValue(date) {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 10);
+}
+
 function setStatus(element, message, tone) {
+  if (!element) return;
   element.textContent = message;
   element.className = `status-text ${tone || ""}`.trim();
 }

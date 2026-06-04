@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Admin | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="admin.css?v=20260604-1225" />
+    <link rel="stylesheet" href="admin.css?v=20260604-1245" />
   </head>
   <body>
     <main class="admin-shell">
@@ -76,6 +76,62 @@
               <span>Balance</span>
               <strong id="balanceTotal">$0.00</strong>
             </article>
+          </section>
+
+          <section class="custom-order-panel" aria-label="Orden custom privada">
+            <div class="records-header">
+              <div>
+                <span class="eyebrow">Solo para el dueño</span>
+                <h2>Orden custom privada</h2>
+              </div>
+              <span>Invoice automático</span>
+            </div>
+            <form id="customOrderForm" class="custom-order-form">
+              <div class="field-row">
+                <label>
+                  Nombre del cliente
+                  <input name="customer_name" type="text" autocomplete="name" required />
+                </label>
+                <label>
+                  Teléfono
+                  <input name="customer_phone" type="tel" autocomplete="tel" required />
+                </label>
+              </div>
+              <div class="field-row">
+                <label>
+                  Email del cliente
+                  <input name="customer_email" type="email" autocomplete="email" />
+                </label>
+                <label>
+                  Fecha de entrega
+                  <input id="customDueDate" name="due_date" type="date" />
+                </label>
+              </div>
+              <div class="field-row">
+                <label>
+                  Servicio o producto custom
+                  <input name="title" type="text" required placeholder="Ej: Custom banner, diseño especial, paquete completo" />
+                </label>
+                <label>
+                  Precio custom
+                  <input name="amount" type="number" min="0" step="0.01" required placeholder="0.00" />
+                </label>
+              </div>
+              <label>
+                Indicaciones del pedido
+                <textarea name="description" rows="5" required placeholder="Medidas, colores, material, cantidades, dirección, instrucciones especiales..."></textarea>
+              </label>
+              <label>
+                Notas internas
+                <textarea name="internal_notes" rows="3" placeholder="Notas para ti: depósito, conversación, fecha prometida, proveedor, etc."></textarea>
+              </label>
+              <label class="checkbox-line">
+                <input name="send_invoice" type="checkbox" checked />
+                Enviar invoice al email del cliente al guardar
+              </label>
+              <button type="submit">Crear orden custom</button>
+              <p id="customOrderStatus" class="status-text" aria-live="polite"></p>
+            </form>
           </section>
 
           <section class="kanban-panel" aria-label="Tablero de pedidos">
@@ -177,6 +233,6 @@
         </section>
       </section>
     </main>
-    <script src="admin.js?v=20260604-1225"></script>
+    <script src="admin.js?v=20260604-1245"></script>
   </body>
 </html>

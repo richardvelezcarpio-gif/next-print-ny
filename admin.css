@@ -229,6 +229,7 @@ textarea {
 .metric-grid article,
 .record-form,
 .records-panel,
+.custom-order-panel,
 .kanban-panel {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -258,6 +259,36 @@ textarea {
   grid-template-columns: minmax(320px, 390px) minmax(0, 1fr);
   gap: 18px;
   align-items: start;
+}
+
+.custom-order-panel {
+  margin-bottom: 18px;
+  padding: 18px;
+  background:
+    linear-gradient(135deg, rgba(3, 191, 231, 0.12), rgba(255, 255, 255, 0.96)),
+    #fff;
+}
+
+.custom-order-panel .records-header {
+  margin-bottom: 14px;
+}
+
+.custom-order-panel .records-header > span {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: var(--navy);
+  background: #dff8ff;
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.custom-order-form {
+  display: grid;
+  gap: 12px;
 }
 
 .record-form {

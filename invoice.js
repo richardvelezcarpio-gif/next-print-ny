@@ -118,7 +118,7 @@ function buildNotes(description) {
     .split(/\n+/)
     .map((line) => line.trim())
     .filter(Boolean)
-    .filter((line) => !/^(order|service|product|quantity|price|precio|suggested sale price|order date|delivery date|files)\s*:/i.test(line));
+    .filter((line) => !/^(order|service|product|quantity|price|precio|suggested sale price|order date|delivery date|files|internal notes|notas internas)\s*:/i.test(line));
 
   return lines.length ? lines.join(" · ") : "Thank you for choosing Next Print NY.";
 }
