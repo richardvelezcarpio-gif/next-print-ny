@@ -147,6 +147,7 @@ customOrderForm?.addEventListener("submit", async (event) => {
     const description = [
       `Custom order instructions: ${formData.get("description")}`,
       formData.get("internal_notes") ? `Internal notes: ${formData.get("internal_notes")}` : "",
+      formData.get("quantity") ? `Quantity: ${formData.get("quantity")}` : "",
       formData.get("amount") ? `Price: $${Number(formData.get("amount") || 0).toFixed(2)}` : "",
       files.length ? `Files: ${files.map((file) => file.name).join(", ")}` : "",
     ]
@@ -161,7 +162,7 @@ customOrderForm?.addEventListener("submit", async (event) => {
       customer_email: formData.get("customer_email"),
       due_date: formData.get("due_date"),
       amount: formData.get("amount"),
-      quantity: 1,
+      quantity: formData.get("quantity"),
       description,
       send_invoice: formData.get("send_invoice") === "on",
       files: await Promise.all(

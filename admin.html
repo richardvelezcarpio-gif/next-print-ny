@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Admin | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="admin.css?v=20260604-1310" />
+    <link rel="stylesheet" href="admin.css?v=20260604-1350" />
   </head>
   <body>
     <main class="admin-shell">
@@ -112,6 +112,12 @@
                   Servicio o producto custom
                   <input name="title" type="text" required placeholder="Ej: Custom banner, diseño especial, paquete completo" />
                 </label>
+                <label>
+                  Cantidad
+                  <input name="quantity" type="number" min="1" step="1" required value="1" placeholder="1" />
+                </label>
+              </div>
+              <div class="field-row single-field">
                 <label>
                   Precio custom
                   <input name="amount" type="number" min="0" step="0.01" required placeholder="0.00" />
@@ -239,6 +245,6 @@
         </section>
       </section>
     </main>
-    <script src="admin.js?v=20260604-1310"></script>
+    <script src="admin.js?v=20260604-1350"></script>
   </body>
 </html>
