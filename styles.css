@@ -1476,6 +1476,12 @@ textarea {
   line-height: 1.45;
 }
 
+.order-form-section input[readonly] {
+  color: var(--muted);
+  background: #f8fbff;
+  cursor: default;
+}
+
 .order-file-drop {
   min-height: 128px;
   display: grid;

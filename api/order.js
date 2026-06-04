@@ -67,7 +67,8 @@ async function sendAdminOrderEmail(order, orderNumber, apiKey) {
     <p><strong>Teléfono:</strong> ${escapeHtml(order.phone)}</p>
     <p><strong>Email:</strong> ${escapeHtml(order.email || "No incluido")}</p>
     <p><strong>Idioma:</strong> ${selectedLanguage}</p>
-    <p><strong>Fecha necesaria:</strong> ${escapeHtml(order.dueDate || "No incluida")}</p>
+    <p><strong>Fecha del pedido:</strong> ${escapeHtml(order.orderDate || "No incluida")}</p>
+    <p><strong>Fecha de entrega:</strong> ${escapeHtml(order.dueDate || "No incluida")}</p>
     <p><strong>Precio:</strong> ${escapeHtml(order.budget || "No incluido")}</p>
     <p><strong>Zelle:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
     <p><strong>Nota para pago:</strong> Order ${escapeHtml(orderNumber)}</p>
@@ -117,7 +118,8 @@ async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
       <p><strong>Service:</strong> ${escapeHtml(order.service)}</p>
       <p><strong>Customer:</strong> ${escapeHtml(order.name)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(order.phone)}</p>
-      <p><strong>Date needed:</strong> ${escapeHtml(order.dueDate || (isEnglish ? "Not included" : "No incluida"))}</p>
+      <p><strong>${isEnglish ? "Order date" : "Fecha del pedido"}:</strong> ${escapeHtml(order.orderDate || (isEnglish ? "Not included" : "No incluida"))}</p>
+      <p><strong>${isEnglish ? "Delivery date" : "Fecha de entrega"}:</strong> ${escapeHtml(order.dueDate || (isEnglish ? "Not included" : "No incluida"))}</p>
       <div style="border-left:4px solid #03bfe7;background:#f2fcff;padding:14px 16px;margin:18px 0">
         <h3 style="margin:0 0 8px;color:#05275c">Zelle</h3>
         <p style="margin:0 0 6px">${paymentCopy}</p>
@@ -178,6 +180,8 @@ async function saveOrderRecord(order, orderNumber) {
     `Order: ${orderNumber}`,
     `Service: ${order.service}`,
     `Details: ${order.details}`,
+    order.orderDate ? `Order date: ${order.orderDate}` : "",
+    order.dueDate ? `Delivery date: ${order.dueDate}` : "",
     order.budget ? `Price: ${order.budget}` : "",
     order.files.length ? `Files: ${order.files.map((file) => file.name).join(", ")}` : "",
   ]
@@ -234,6 +238,7 @@ function sanitizeOrder(input) {
     language: input.language === "en" ? "en" : "es",
     service: clean(input.service, 80),
     details: clean(input.details, 1500),
+    orderDate: clean(input.orderDate, 20),
     dueDate: clean(input.dueDate, 20),
     budget: clean(input.budget, 80),
     name: clean(input.name, 120),

@@ -65,14 +65,18 @@
               </label>
               <div class="field-row order-fields">
                 <label>
-                  <span data-i18n="order.dueDate">Date needed</span>
-                  <input name="dueDate" type="date" />
+                  <span data-i18n="order.orderDate">Order date</span>
+                  <input id="orderDateInput" name="orderDate" type="date" readonly />
                 </label>
                 <label>
-                  <span data-i18n="order.budget">Price</span>
-                  <input name="budget" type="text" data-i18n-placeholder="order.budgetPlaceholder" placeholder="Optional" />
+                  <span data-i18n="order.deliveryDate">Delivery date</span>
+                  <input id="deliveryDateInput" name="dueDate" type="date" readonly />
                 </label>
               </div>
+              <label>
+                <span data-i18n="order.budget">Price</span>
+                <input name="budget" type="text" data-i18n-placeholder="order.budgetPlaceholder" placeholder="Optional" />
+              </label>
             </section>
 
             <section class="order-form-section">

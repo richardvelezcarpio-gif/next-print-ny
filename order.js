@@ -11,11 +11,14 @@ const orderZelleNote = document.querySelector("#orderZelleNote");
 const orderCopyZelle = document.querySelector("#orderCopyZelle");
 const orderCopyNumber = document.querySelector("#orderCopyNumber");
 const orderPayZelle = document.querySelector("#orderPayZelle");
+const orderDateInput = document.querySelector("#orderDateInput");
+const deliveryDateInput = document.querySelector("#deliveryDateInput");
 const orderMaxFileSize = 4 * 1024 * 1024;
 const orderMaxTotalFileSize = 12 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
 
+setAutomaticOrderDates();
 prefillOrderFromCatalog();
 
 orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, orderCopyZelle, "zelle.copyEmail"));
@@ -59,6 +62,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
       language: localStorage.getItem("preferredLanguage") || "en",
       service: formData.get("service"),
       details: formData.get("details"),
+      orderDate: formData.get("orderDate"),
       dueDate: formData.get("dueDate"),
       budget: formData.get("budget"),
       name: formData.get("name"),
@@ -98,6 +102,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     }
     orderSuccess.hidden = false;
     smartOrderForm.reset();
+    setAutomaticOrderDates();
     orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design files. Optional.");
     setOrderStatus(getOrderText("order.sent", "Order sent."));
     orderSuccess.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -117,6 +122,20 @@ function setOrderStatus(text, tone = "") {
   if (!orderStatus) return;
   orderStatus.textContent = text;
   orderStatus.className = `order-status ${tone}`.trim();
+}
+
+function setAutomaticOrderDates() {
+  const orderDate = new Date();
+  const deliveryDate = new Date(orderDate);
+  deliveryDate.setDate(orderDate.getDate() + 7);
+
+  if (orderDateInput) orderDateInput.value = toDateInputValue(orderDate);
+  if (deliveryDateInput) deliveryDateInput.value = toDateInputValue(deliveryDate);
+}
+
+function toDateInputValue(date) {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 10);
 }
 
 function prefillOrderFromCatalog() {
