@@ -1,6 +1,7 @@
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
 const MAX_FILE_SIZE_BASE64 = 5.6 * 1024 * 1024;
+const ZELLE_ACCOUNT = "2393337935";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
   const orderNumber = buildOrderNumber();
 
   try {
-    await sendOrderEmail(order, orderNumber);
+    const emailResult = await sendOrderEmails(order, orderNumber, req);
     const saveResult = await saveOrderRecord(order, orderNumber);
 
     res.status(200).json({
@@ -31,20 +32,32 @@ export default async function handler(req, res) {
       orderNumber,
       whatsappUrl: buildWhatsappUrl(order, orderNumber),
       saved: saveResult.saved,
-      warning: saveResult.warning,
+      warning: [saveResult.warning, emailResult.warning].filter(Boolean).join(" | "),
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 }
 
-async function sendOrderEmail(order, orderNumber) {
+async function sendOrderEmails(order, orderNumber, req) {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
     throw new Error("RESEND_API_KEY missing");
   }
 
+  const adminResult = await sendAdminOrderEmail(order, orderNumber, apiKey);
+  const customerResult = order.email
+    ? await sendCustomerOrderEmail(order, orderNumber, apiKey, publicBaseUrl(req))
+    : { ok: false, warning: "Customer email not included" };
+
+  return {
+    ok: adminResult.ok,
+    warning: customerResult.warning || "",
+  };
+}
+
+async function sendAdminOrderEmail(order, orderNumber, apiKey) {
   const selectedLanguage = order.language === "en" ? "English" : "Español";
   const html = `
     <h2>Nueva orden web - ${escapeHtml(orderNumber)}</h2>
@@ -55,6 +68,8 @@ async function sendOrderEmail(order, orderNumber) {
     <p><strong>Idioma:</strong> ${selectedLanguage}</p>
     <p><strong>Fecha necesaria:</strong> ${escapeHtml(order.dueDate || "No incluida")}</p>
     <p><strong>Presupuesto estimado:</strong> ${escapeHtml(order.budget || "No incluido")}</p>
+    <p><strong>Zelle:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
+    <p><strong>Nota para pago:</strong> Order ${escapeHtml(orderNumber)}</p>
     <p><strong>Detalles:</strong></p>
     <p>${escapeHtml(order.details).replace(/\n/g, "<br>")}</p>
   `;
@@ -68,6 +83,71 @@ async function sendOrderEmail(order, orderNumber) {
       ]
     : [];
 
+  await sendResendEmail(apiKey, {
+    to: TO_EMAIL,
+    replyTo: order.email,
+    subject: `Nueva orden web ${orderNumber} - ${order.service}`,
+    html,
+    attachments,
+  });
+
+  return { ok: true, warning: "" };
+}
+
+async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
+  const isEnglish = order.language === "en";
+  const trackUrl = `${baseUrl}/tracking.html?order=${encodeURIComponent(orderNumber)}`;
+  const payUrl = `${baseUrl}/payments.html`;
+  const subject = isEnglish
+    ? `Next Print NY received your order ${orderNumber}`
+    : `Next Print NY recibió tu orden ${orderNumber}`;
+  const greeting = isEnglish ? `Hi ${escapeHtml(order.name)},` : `Hola ${escapeHtml(order.name)},`;
+  const intro = isEnglish
+    ? "We received your request. Keep this order number for tracking and payment reference."
+    : "Recibimos tu solicitud. Guarda este número para rastrear tu orden y usarlo como referencia de pago.";
+  const paymentCopy = isEnglish
+    ? "If we confirm a total or deposit, you can pay by Zelle using the information below."
+    : "Cuando confirmemos el total o depósito, puedes pagar por Zelle usando esta información.";
+  const nextStep = isEnglish
+    ? "We will review your request and contact you with the next step."
+    : "Vamos a revisar tu solicitud y te contactaremos con el próximo paso.";
+  const html = `
+    <div style="font-family:Arial,Helvetica,sans-serif;color:#07142f;line-height:1.55">
+      <h2 style="color:#05275c;margin-bottom:8px">${subject}</h2>
+      <p>${greeting}</p>
+      <p>${intro}</p>
+      <p><strong>Order number:</strong> ${escapeHtml(orderNumber)}</p>
+      <p><strong>Service:</strong> ${escapeHtml(order.service)}</p>
+      <p><strong>Customer:</strong> ${escapeHtml(order.name)}</p>
+      <p><strong>Phone:</strong> ${escapeHtml(order.phone)}</p>
+      <p><strong>Date needed:</strong> ${escapeHtml(order.dueDate || (isEnglish ? "Not included" : "No incluida"))}</p>
+      <div style="border-left:4px solid #03bfe7;background:#f2fcff;padding:14px 16px;margin:18px 0">
+        <h3 style="margin:0 0 8px;color:#05275c">Zelle</h3>
+        <p style="margin:0 0 6px">${paymentCopy}</p>
+        <p style="margin:0"><strong>${isEnglish ? "Send to" : "Enviar a"}:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
+        <p style="margin:0"><strong>${isEnglish ? "Note" : "Nota"}:</strong> Order ${escapeHtml(orderNumber)}</p>
+      </div>
+      <p><a href="${escapeHtml(trackUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Track your order" : "Rastrear tu orden"}</a></p>
+      <p><a href="${escapeHtml(payUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Payment instructions" : "Instrucciones de pago"}</a></p>
+      <p>${nextStep}</p>
+      <p style="color:#66708a">Next Print NY<br />239 333 7935</p>
+    </div>
+  `;
+
+  try {
+    await sendResendEmail(apiKey, {
+      to: order.email,
+      replyTo: TO_EMAIL,
+      subject,
+      html,
+    });
+    return { ok: true, warning: "" };
+  } catch (error) {
+    return { ok: false, warning: `Customer email failed: ${error.message}` };
+  }
+}
+
+async function sendResendEmail(apiKey, message) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -76,11 +156,11 @@ async function sendOrderEmail(order, orderNumber) {
     },
     body: JSON.stringify({
       from: process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
-      to: TO_EMAIL,
-      ...(order.email ? { reply_to: order.email } : {}),
-      subject: `Nueva orden web ${orderNumber} - ${order.service}`,
-      html,
-      ...(attachments.length ? { attachments } : {}),
+      to: message.to,
+      ...(message.replyTo ? { reply_to: message.replyTo } : {}),
+      subject: message.subject,
+      html: message.html,
+      ...(message.attachments?.length ? { attachments: message.attachments } : {}),
     }),
   });
 
@@ -88,6 +168,8 @@ async function sendOrderEmail(order, orderNumber) {
     const errorText = await response.text();
     throw new Error(errorText || "Could not send order email");
   }
+
+  return response.json();
 }
 
 async function saveOrderRecord(order, orderNumber) {
@@ -178,6 +260,15 @@ function buildWhatsappUrl(order, orderNumber) {
   ].join("\n");
 
   return `https://wa.me/12393337935?text=${encodeURIComponent(message)}`;
+}
+
+function publicBaseUrl(req) {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (envUrl) return String(envUrl).startsWith("http") ? String(envUrl).replace(/\/$/, "") : `https://${envUrl}`;
+
+  const host = req.headers.host || "next-print-ny.vercel.app";
+  const protocol = host.includes("localhost") || host.includes("127.0.0.1") ? "http" : "https";
+  return `${protocol}://${host}`;
 }
 
 function clean(value, limit) {
