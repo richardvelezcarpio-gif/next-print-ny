@@ -196,7 +196,7 @@ async function saveOrderRecord(order, orderNumber) {
     customer_phone: order.phone,
     customer_email: order.email,
     description,
-    amount: 0,
+    amount: parseMoney(order.budget),
     quantity: 0,
     due_date: order.dueDate || null,
     file_url: "",
@@ -253,6 +253,11 @@ function buildOrderNumber() {
   const date = now.toISOString().slice(2, 10).replace(/-/g, "");
   const time = now.toISOString().slice(11, 19).replace(/:/g, "");
   return `NP-${date}-${time}`;
+}
+
+function parseMoney(value) {
+  const amount = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(amount) ? amount : 0;
 }
 
 function buildWhatsappUrl(order, orderNumber) {

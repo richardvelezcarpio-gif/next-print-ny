@@ -307,7 +307,7 @@ function renderKanbanColumn(status, columnRecords) {
 
 function renderKanbanCard(record) {
   const createdAt = record.created_at ? new Date(record.created_at).toLocaleDateString("es-US") : "";
-  const amount = Number(record.amount || 0);
+  const amount = getRecordAmount(record);
   const orderNumber = getOrderNumber(record);
   const quickLinks = renderQuickLinks(record, orderNumber, { compact: true });
   const statusOptions = Object.entries(statusLabels)
@@ -337,7 +337,7 @@ function renderKanbanCard(record) {
 }
 
 function renderRecord(record) {
-  const amount = Number(record.amount || 0);
+  const amount = getRecordAmount(record);
   const quantity = Number(record.quantity || 0);
   const createdAt = record.created_at ? new Date(record.created_at).toLocaleString("es-US") : "";
   const orderNumber = getOrderNumber(record);
@@ -462,7 +462,7 @@ function renderMetrics() {
   const openOrderCount = records.filter(
     (record) => record.type === "order" && !["completed", "cancelled"].includes(record.status)
   ).length;
-  const income = sumByType("income");
+  const income = sumByType("income") + sumPaidOrders();
   const expenses = sumByType("expense");
 
   openOrders.textContent = openOrderCount;
@@ -474,7 +474,28 @@ function renderMetrics() {
 function sumByType(type) {
   return records
     .filter((record) => record.type === type)
-    .reduce((total, record) => total + Number(record.amount || 0), 0);
+    .reduce((total, record) => total + getRecordAmount(record), 0);
+}
+
+function sumPaidOrders() {
+  return records
+    .filter((record) => record.type === "order" && ["paid", "completed"].includes(record.status))
+    .reduce((total, record) => total + getRecordAmount(record), 0);
+}
+
+function getRecordAmount(record) {
+  const amount = Number(record.amount || 0);
+  if (Number.isFinite(amount) && amount > 0) return amount;
+  return extractPriceFromDescription(record.description);
+}
+
+function extractPriceFromDescription(description) {
+  const text = String(description || "");
+  const priceLine = text.match(/(?:price|precio|suggested sale price)\s*:\s*\$?\s*([0-9,]+(?:\.[0-9]{1,2})?)/i);
+  if (!priceLine) return 0;
+
+  const amount = Number(priceLine[1].replace(/,/g, ""));
+  return Number.isFinite(amount) ? amount : 0;
 }
 
 function setStatus(element, message, tone) {
