@@ -272,6 +272,20 @@ textarea {
   gap: 12px;
 }
 
+.checkbox-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fbff;
+}
+
+.checkbox-line input {
+  width: auto;
+}
+
 .records-panel {
   min-height: 560px;
   padding: 18px;

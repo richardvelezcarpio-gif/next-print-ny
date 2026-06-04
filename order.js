@@ -6,6 +6,7 @@ const orderSuccess = document.querySelector("#orderSuccess");
 const orderNumber = document.querySelector("#orderNumber");
 const orderWhatsapp = document.querySelector("#orderWhatsapp");
 const orderTrackLink = document.querySelector("#orderTrackLink");
+const orderInvoiceLink = document.querySelector("#orderInvoiceLink");
 const orderZelleEmail = document.querySelector("#orderZelleEmail");
 const orderZelleNote = document.querySelector("#orderZelleNote");
 const orderCopyZelle = document.querySelector("#orderCopyZelle");
@@ -99,6 +100,9 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
       orderTrackLink.href = `tracking.html?order=${encodeURIComponent(data.orderNumber)}`;
+    }
+    if (orderInvoiceLink) {
+      orderInvoiceLink.href = `invoice.html?order=${encodeURIComponent(data.orderNumber)}`;
     }
     orderSuccess.hidden = false;
     smartOrderForm.reset();

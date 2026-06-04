@@ -3,6 +3,7 @@ import { requireAdmin } from "./_admin-auth.js";
 const TABLE = "business_records";
 const ALLOWED_TYPES = new Set(["order", "income", "expense", "inventory", "customer", "document"]);
 const ALLOWED_STATUSES = new Set(["new", "in_progress", "waiting", "paid", "completed", "cancelled"]);
+const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
 
 export default async function handler(req, res) {
   const session = requireAdmin(req, res);
@@ -63,6 +64,7 @@ async function listRecords(req, res) {
 async function createRecord(req, res, session) {
   const record = sanitizeRecord(req.body || {});
   record.created_by = session.email;
+  prepareAdminOrder(record);
 
   const response = await supabaseFetch(TABLE, {
     method: "POST",
@@ -70,7 +72,19 @@ async function createRecord(req, res, session) {
     body: JSON.stringify(record),
   });
   const data = await response.json();
-  sendSupabaseResponse(res, response, data);
+
+  if (!response.ok) {
+    sendSupabaseResponse(res, response, data);
+    return;
+  }
+
+  const savedRecord = Array.isArray(data) ? data[0] : null;
+  const warning =
+    req.body?.send_invoice && savedRecord?.type === "order" && savedRecord.customer_email
+      ? await trySendInvoiceEmail(savedRecord, req, "invoice")
+      : "";
+
+  res.status(200).json({ records: data, warning });
 }
 
 async function updateRecord(req, res) {
@@ -90,7 +104,19 @@ async function updateRecord(req, res) {
     body: JSON.stringify(record),
   });
   const data = await response.json();
-  sendSupabaseResponse(res, response, data);
+
+  if (!response.ok) {
+    sendSupabaseResponse(res, response, data);
+    return;
+  }
+
+  const savedRecord = Array.isArray(data) ? data[0] : null;
+  const warning =
+    req.body?.status === "paid" && savedRecord?.type === "order" && savedRecord.customer_email
+      ? await trySendInvoiceEmail(savedRecord, req, "receipt")
+      : "";
+
+  res.status(200).json({ records: data, warning });
 }
 
 async function deleteRecord(req, res) {
@@ -147,6 +173,135 @@ function sanitizeRecord(input, options = {}) {
   if ("file_url" in input) record.file_url = clean(input.file_url, 500);
 
   return record;
+}
+
+function prepareAdminOrder(record) {
+  if (record.type !== "order") return;
+
+  const orderNumber = getOrderNumber(record) || buildOrderNumber();
+  const title = record.title || "Order";
+  const description = record.description || "";
+
+  if (!getOrderNumber({ title, description })) {
+    record.title = `${orderNumber} - ${title}`;
+    record.description = [`Order: ${orderNumber}`, description].filter(Boolean).join("\n");
+  }
+
+  if (!record.due_date) {
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7);
+    record.due_date = toDateInputValue(dueDate);
+  }
+}
+
+async function trySendInvoiceEmail(record, req, kind) {
+  try {
+    await sendInvoiceEmail(record, req, kind);
+    return "";
+  } catch (error) {
+    return `Invoice email failed: ${error.message}`;
+  }
+}
+
+async function sendInvoiceEmail(record, req, kind) {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) throw new Error("RESEND_API_KEY missing");
+
+  const orderNumber = getOrderNumber(record);
+  if (!orderNumber) throw new Error("Order number missing");
+
+  const baseUrl = publicBaseUrl(req);
+  const invoiceUrl = `${baseUrl}/invoice.html?order=${encodeURIComponent(orderNumber)}`;
+  const trackingUrl = `${baseUrl}/tracking.html?order=${encodeURIComponent(orderNumber)}`;
+  const isReceipt = kind === "receipt";
+  const subject = isReceipt
+    ? `Next Print NY payment receipt ${orderNumber}`
+    : `Next Print NY invoice ${orderNumber}`;
+  const title = isReceipt ? "Payment received" : "Invoice ready";
+  const copy = isReceipt
+    ? "We received your payment. You can open or print your receipt using the link below."
+    : "Your invoice is ready. You can open it, print it, or use it for payment reference.";
+
+  await sendResendEmail(apiKey, {
+    to: record.customer_email,
+    subject,
+    html: `
+      <div style="font-family:Arial,Helvetica,sans-serif;color:#07142f;line-height:1.55">
+        <h2 style="color:#05275c;margin-bottom:8px">${title} - ${escapeHtml(orderNumber)}</h2>
+        <p>Hi ${escapeHtml(record.customer_name || "customer")},</p>
+        <p>${copy}</p>
+        <p><strong>Order:</strong> ${escapeHtml(orderNumber)}</p>
+        <p><strong>Total:</strong> ${money(Number(record.amount || 0))}</p>
+        <p><a href="${escapeHtml(invoiceUrl)}" style="color:#05275c;font-weight:bold">Open invoice / receipt</a></p>
+        <p><a href="${escapeHtml(trackingUrl)}" style="color:#05275c;font-weight:bold">Track order</a></p>
+        <p style="color:#66708a">Next Print NY<br />239 333 7935</p>
+      </div>
+    `,
+  });
+}
+
+async function sendResendEmail(apiKey, message) {
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: process.env.RESEND_FROM_EMAIL || DEFAULT_FROM_EMAIL,
+      to: message.to,
+      subject: message.subject,
+      html: message.html,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(errorText || "Could not send invoice email");
+  }
+}
+
+function getOrderNumber(record) {
+  const source = `${record.title || ""}\n${record.description || ""}`;
+  const match = source.match(/\bNP-\d{6}-\d{6}\b/i);
+  return match ? match[0].toUpperCase() : "";
+}
+
+function buildOrderNumber() {
+  const now = new Date();
+  const date = now.toISOString().slice(2, 10).replace(/-/g, "");
+  const time = now.toISOString().slice(11, 19).replace(/:/g, "");
+  return `NP-${date}-${time}`;
+}
+
+function toDateInputValue(date) {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 10);
+}
+
+function publicBaseUrl(req) {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL || process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  if (envUrl) return String(envUrl).startsWith("http") ? String(envUrl).replace(/\/$/, "") : `https://${envUrl}`;
+
+  const host = req.headers.host || "next-print-ny.vercel.app";
+  const protocol = host.includes("localhost") || host.includes("127.0.0.1") ? "http" : "https";
+  return `${protocol}://${host}`;
+}
+
+function money(value) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value || 0);
+}
+
+function escapeHtml(value) {
+  return String(value || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 function sanitizeType(value) {

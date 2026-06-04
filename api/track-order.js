@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
   try {
     const query = new URLSearchParams({
-      select: "title,status,customer_name,due_date,amount,created_at,updated_at,description",
+      select: "title,status,customer_name,customer_phone,customer_email,due_date,amount,created_at,updated_at,description",
       type: "eq.order",
       order: "created_at.desc",
       limit: "1",
@@ -48,10 +48,14 @@ export default async function handler(req, res) {
         title: publicTitle(record.title, orderNumber),
         status: record.status || "new",
         customerName: firstName(record.customer_name),
+        customerFullName: publicText(record.customer_name, 120),
+        customerPhone: publicText(record.customer_phone, 80),
+        customerEmail: publicText(record.customer_email, 120),
         dueDate: record.due_date || "",
-        amount: Number(record.amount || 0),
+        amount: recordAmount(record),
         createdAt: record.created_at || "",
         updatedAt: record.updated_at || record.created_at || "",
+        description: publicText(record.description, 1500),
       },
     });
   } catch (error) {
@@ -101,4 +105,24 @@ function firstName(value) {
     .split(/\s+/)
     .slice(0, 1)
     .join(" ");
+}
+
+function publicText(value, limit) {
+  return String(value || "")
+    .replace(/[<>]/g, "")
+    .trim()
+    .slice(0, limit);
+}
+
+function recordAmount(record) {
+  const amount = Number(record.amount || 0);
+  if (Number.isFinite(amount) && amount > 0) return amount;
+
+  const priceLine = String(record.description || "").match(
+    /(?:price|precio|suggested sale price)\s*:\s*\$?\s*([0-9,]+(?:\.[0-9]{1,2})?)/i
+  );
+  if (!priceLine) return 0;
+
+  const parsed = Number(priceLine[1].replace(/,/g, ""));
+  return Number.isFinite(parsed) ? parsed : 0;
 }

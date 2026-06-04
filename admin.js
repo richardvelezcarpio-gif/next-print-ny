@@ -90,7 +90,7 @@ recordForm?.addEventListener("submit", async (event) => {
 
     if (!response.ok) throw new Error(data.error || "No se pudo guardar");
     recordForm.reset();
-    setStatus(recordStatus, "Registro guardado.", "success");
+    setStatus(recordStatus, data.warning ? `Registro guardado. ${data.warning}` : "Registro guardado.", "success");
     await loadRecords();
   } catch (error) {
     setStatus(recordStatus, error.message, "error");
@@ -213,6 +213,7 @@ async function updateRecord(id, changes) {
     return;
   }
 
+  if (data.warning) setStatus(recordStatus, data.warning, "error");
   await loadRecords();
 }
 
@@ -388,6 +389,7 @@ function renderQuickLinks(record, orderNumber, options = {}) {
   const phone = normalizePhone(record.customer_phone);
   const email = String(record.customer_email || "").trim();
   const trackingUrl = orderNumber ? `tracking.html?order=${encodeURIComponent(orderNumber)}` : "tracking.html";
+  const invoiceUrl = orderNumber ? `invoice.html?order=${encodeURIComponent(orderNumber)}` : "invoice.html";
   const message = buildCustomerMessage(record, orderNumber);
   const links = [];
 
@@ -406,6 +408,7 @@ function renderQuickLinks(record, orderNumber, options = {}) {
 
   if (orderNumber) {
     links.push(`<a href="${escapeAttribute(trackingUrl)}" target="_blank" rel="noreferrer">Tracking</a>`);
+    links.push(`<a href="${escapeAttribute(invoiceUrl)}" target="_blank" rel="noreferrer">Invoice</a>`);
     if (!compact) {
       links.push(
         `<button type="button" data-action="copy-order" data-order="${escapeAttribute(orderNumber)}">Copiar #</button>`

@@ -95,6 +95,7 @@ async function sendAdminOrderEmail(order, orderNumber, apiKey) {
 async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
   const isEnglish = order.language === "en";
   const trackUrl = `${baseUrl}/tracking.html?order=${encodeURIComponent(orderNumber)}`;
+  const invoiceUrl = `${baseUrl}/invoice.html?order=${encodeURIComponent(orderNumber)}`;
   const payUrl = `${baseUrl}/payments.html`;
   const subject = isEnglish
     ? `Next Print NY received your order ${orderNumber}`
@@ -126,6 +127,7 @@ async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
         <p style="margin:0"><strong>${isEnglish ? "Send to" : "Enviar a"}:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
         <p style="margin:0"><strong>${isEnglish ? "Note" : "Nota"}:</strong> Order ${escapeHtml(orderNumber)}</p>
       </div>
+      <p><a href="${escapeHtml(invoiceUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Open invoice / receipt" : "Abrir invoice / recibo"}</a></p>
       <p><a href="${escapeHtml(trackUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Track your order" : "Rastrear tu orden"}</a></p>
       <p><a href="${escapeHtml(payUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Payment instructions" : "Instrucciones de pago"}</a></p>
       <p>${nextStep}</p>

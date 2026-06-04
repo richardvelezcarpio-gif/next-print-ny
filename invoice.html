@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Next Print NY invoice and receipt." />
+    <title>Invoice | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260604-1225" />
+  </head>
+  <body>
+    <div class="page-shell invoice-shell">
+      <header class="top-nav invoice-nav">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <nav class="menu open" aria-label="Invoice navigation">
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="tracking.html" data-i18n="tracking.nav">Track Order</a>
+          <a href="payments.html" data-i18n="home.mini.payments">Online Payments</a>
+        </nav>
+      </header>
+
+      <main class="invoice-page">
+        <section class="invoice-lookup no-print">
+          <div>
+            <span>Invoice / Receipt</span>
+            <h1>Open customer invoice</h1>
+          </div>
+          <form id="invoiceLookupForm">
+            <label>
+              Order number
+              <input id="invoiceLookupInput" type="text" placeholder="NP-260604-123456" />
+            </label>
+            <button class="action-gradient" type="submit">Open invoice</button>
+          </form>
+          <p id="invoiceStatus" class="tracking-status" aria-live="polite"></p>
+        </section>
+
+        <section id="invoiceCard" class="invoice-card" hidden>
+          <div class="invoice-actions no-print">
+            <a id="invoicePayLink" class="outline-button" href="payments.html">Payment</a>
+            <a id="invoiceTrackLink" class="outline-button" href="tracking.html">Tracking</a>
+            <button id="invoicePrintButton" class="action-gradient" type="button">Print / Save PDF</button>
+          </div>
+
+          <article class="invoice-paper">
+            <header class="invoice-head">
+              <div>
+                <img src="assets/logo.png" alt="Next Print NY" />
+                <p>Printing · Multiservices · Consulting Agent</p>
+              </div>
+              <div class="invoice-title">
+                <span id="invoiceKind">INVOICE</span>
+                <strong id="invoiceNumber">NP-000000-000000</strong>
+                <small id="invoiceStatusLabel">Received</small>
+              </div>
+            </header>
+
+            <section class="invoice-parties">
+              <div>
+                <span>Bill From</span>
+                <strong>Next Print NY</strong>
+                <p>Brooklyn, NY<br />239 333 7935<br />nextprintny@gmail.com</p>
+              </div>
+              <div>
+                <span>Bill To</span>
+                <strong id="invoiceCustomer">Customer</strong>
+                <p id="invoiceCustomerInfo">Phone and email</p>
+              </div>
+            </section>
+
+            <section class="invoice-meta-grid">
+              <div>
+                <span>Order date</span>
+                <strong id="invoiceOrderDate">-</strong>
+              </div>
+              <div>
+                <span>Delivery date</span>
+                <strong id="invoiceDueDate">-</strong>
+              </div>
+              <div>
+                <span>Payment method</span>
+                <strong>Zelle / Confirmed total</strong>
+              </div>
+            </section>
+
+            <table class="invoice-table">
+              <thead>
+                <tr>
+                  <th>Service / Product</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceItems"></tbody>
+            </table>
+
+            <section class="invoice-total-row">
+              <div>
+                <span>Notes</span>
+                <p id="invoiceNotes">Thank you for choosing Next Print NY.</p>
+              </div>
+              <dl>
+                <div>
+                  <dt>Subtotal</dt>
+                  <dd id="invoiceSubtotal">$0.00</dd>
+                </div>
+                <div>
+                  <dt>Tax</dt>
+                  <dd>Included / if applicable</dd>
+                </div>
+                <div class="invoice-grand-total">
+                  <dt>Total</dt>
+                  <dd id="invoiceTotal">$0.00</dd>
+                </div>
+              </dl>
+            </section>
+
+            <footer class="invoice-footer">
+              <p>Use your order number in Zelle note: <strong id="invoiceZelleNote">Order NP-000000</strong></p>
+              <p>This invoice is generated from your Next Print NY order record.</p>
+            </footer>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="script.js?v=20260604-1015"></script>
+    <script src="invoice.js?v=20260604-1225"></script>
+  </body>
+</html>

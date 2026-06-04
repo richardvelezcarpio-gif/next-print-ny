@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex, nofollow" />
     <title>Admin | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="admin.css?v=20260603-1935" />
+    <link rel="stylesheet" href="admin.css?v=20260604-1225" />
   </head>
   <body>
     <main class="admin-shell">
@@ -158,6 +158,10 @@
                 Detalles
                 <textarea name="description" rows="4" placeholder="Notas del pedido, pago, gasto o documento"></textarea>
               </label>
+              <label class="checkbox-line">
+                <input name="send_invoice" type="checkbox" checked />
+                Enviar invoice/recibo al cliente si hay email
+              </label>
               <button type="submit">Guardar registro</button>
               <p id="recordStatus" class="status-text" aria-live="polite"></p>
             </form>
@@ -173,6 +177,6 @@
         </section>
       </section>
     </main>
-    <script src="admin.js?v=20260604-1135"></script>
+    <script src="admin.js?v=20260604-1225"></script>
   </body>
 </html>
