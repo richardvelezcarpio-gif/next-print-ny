@@ -101,6 +101,12 @@ const stickerConfigurationOptions = document.querySelector("#stickerConfiguratio
 const stickerFrontSide = document.querySelector("#stickerFrontSide");
 const stickerBackSide = document.querySelector("#stickerBackSide");
 const stickerMaterial = document.querySelector("#stickerMaterial");
+const menuConfigurationOptions = document.querySelector("#menuConfigurationOptions");
+const menuFrontSide = document.querySelector("#menuFrontSide");
+const menuBackSide = document.querySelector("#menuBackSide");
+const menuPaperStock = document.querySelector("#menuPaperStock");
+const menuCoating = document.querySelector("#menuCoating");
+const menuFolding = document.querySelector("#menuFolding");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
@@ -121,7 +127,7 @@ productQuantity?.addEventListener("change", () => {
   updateSelectedPrice();
 });
 
-[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial].forEach((select) => {
+[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding].forEach((select) => {
   select?.addEventListener("change", updateSelectedPrice);
 });
 
@@ -175,10 +181,12 @@ function renderProductOptions() {
   const isBusinessCards = selectedGroup.category === "cards";
   const isFlyers = selectedGroup.category === "flyers";
   const isStickers = selectedGroup.category === "stickers";
+  const isMenus = selectedGroup.category === "menus";
   const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
-  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers;
+  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus;
   if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
   if (stickerConfigurationOptions) stickerConfigurationOptions.hidden = !isStickers;
+  if (menuConfigurationOptions) menuConfigurationOptions.hidden = !isMenus;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
 }
@@ -241,6 +249,15 @@ function updateSelectedPrice() {
         `Material: ${stickerMaterial?.value || "High Gloss White Outdoor Vinyl"}`
       );
     }
+    if (selectedGroup.category === "menus") {
+      configuration.push(
+        `Front Side: ${menuFrontSide?.value || "Full Color"}`,
+        `Back Side: ${menuBackSide?.value || "Full Color"}`,
+        `Paper Stock: ${menuPaperStock?.value || "80 lb. Paper"}`,
+        `Coating: ${menuCoating?.value || "Gloss Both Sides"}`,
+        `Folding Option: ${menuFolding?.value || "Half Fold"}`
+      );
+    }
     const details = [
       `Product: ${selectedProduct.name}`,
       `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,
@@ -262,6 +279,7 @@ function updateSelectedPrice() {
 
 function sizeLabel(productName, groupName) {
   if (groupName === "Business Cards") return '2" x 3.5" (U.S. Standard)';
+  if (groupName === "Menus") return `${productName.replace(/^Menus\s*/i, "").replace(/x/i, " x ")} Take Out Menus`;
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
 }
 
