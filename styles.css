@@ -114,6 +114,27 @@ textarea {
   gap: 12px;
 }
 
+.top-nav-simple {
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  padding-block: 4px;
+}
+
+.top-nav-simple .brand img {
+  width: 200px;
+}
+
+.top-nav-simple .menu {
+  justify-content: flex-end;
+  gap: 8px;
+  font-size: 0.72rem;
+}
+
+.top-nav-simple .menu a {
+  min-height: 50px;
+  padding: 10px 13px;
+}
+
 .phone-pill {
   display: inline-flex;
   min-height: 40px;
@@ -2368,6 +2389,10 @@ textarea {
 
   .top-nav {
     grid-template-columns: auto auto;
+  }
+
+  .top-nav-simple .brand img {
+    width: 152px;
   }
 
   .menu-toggle {
