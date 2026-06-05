@@ -62,6 +62,8 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     const payload = {
       language: localStorage.getItem("preferredLanguage") || "en",
       service: formData.get("service"),
+      product: formData.get("product"),
+      quantity: formData.get("quantity"),
       details: formData.get("details"),
       orderDate: formData.get("orderDate"),
       dueDate: formData.get("dueDate"),
@@ -156,6 +158,11 @@ function prefillOrderFromCatalog() {
 
   const detailsInput = smartOrderForm.querySelector('[name="details"]');
   const budgetInput = smartOrderForm.querySelector('[name="budget"]');
+  const productInput = smartOrderForm.querySelector('[name="product"]');
+  const quantityInput = smartOrderForm.querySelector('[name="quantity"]');
+
+  if (productInput) productInput.value = product;
+  if (quantityInput) quantityInput.value = quantity;
 
   if (detailsInput) {
     detailsInput.value = details || `Product: ${product}\nQuantity: ${quantity}\nSuggested sale price: ${price}`;
@@ -163,6 +170,8 @@ function prefillOrderFromCatalog() {
 
   if (budgetInput && price) {
     budgetInput.value = price;
+    budgetInput.readOnly = true;
+    budgetInput.setAttribute("aria-readonly", "true");
   }
 }
 

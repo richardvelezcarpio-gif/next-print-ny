@@ -9,7 +9,7 @@
     />
     <title>Start Order | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260604-1225" />
+    <link rel="stylesheet" href="styles.css?v=20260605-0700" />
   </head>
   <body>
     <div class="page-shell">
@@ -56,6 +56,8 @@
         <section class="order-workspace">
           <form id="smartOrderForm" class="smart-order-form">
             <input name="service" type="hidden" value="Printing" />
+            <input name="product" type="hidden" value="" />
+            <input name="quantity" type="hidden" value="" />
 
             <section class="order-form-section">
               <h2 data-i18n="order.detailsTitle">Order details</h2>
@@ -75,7 +77,14 @@
               </div>
               <label>
                 <span data-i18n="order.budget">Price</span>
-                <input name="budget" type="text" data-i18n-placeholder="order.budgetPlaceholder" placeholder="Optional" />
+                <input
+                  name="budget"
+                  type="text"
+                  readonly
+                  aria-readonly="true"
+                  data-i18n-placeholder="order.budgetPlaceholder"
+                  placeholder="Assigned automatically"
+                />
               </label>
             </section>
 
@@ -160,6 +169,6 @@
       </footer>
     </div>
     <script src="script.js?v=20260604-1215"></script>
-    <script src="order.js?v=20260604-1225"></script>
+    <script src="order.js?v=20260605-0700"></script>
   </body>
 </html>

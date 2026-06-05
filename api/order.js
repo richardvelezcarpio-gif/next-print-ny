@@ -1,3 +1,5 @@
+import { catalogPriceFor } from "./printing-prices.js";
+
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
 const MAX_FILE_SIZE_BASE64 = 17 * 1024 * 1024;
@@ -10,11 +12,19 @@ export default async function handler(req, res) {
   }
 
   const order = sanitizeOrder(req.body || {});
+  const catalogPrice = catalogPriceFor(order.product, order.quantity);
 
   if (!order.name || !order.phone || !order.service || !order.details) {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
+
+  if (order.product && !catalogPrice) {
+    res.status(400).json({ error: "Invalid catalog product or quantity" });
+    return;
+  }
+
+  if (catalogPrice) order.budget = catalogPrice;
 
   const totalFileSize = order.files.reduce((total, file) => total + String(file.content || "").length, 0);
   if (totalFileSize > MAX_FILE_SIZE_BASE64) {
@@ -63,6 +73,8 @@ async function sendAdminOrderEmail(order, orderNumber, apiKey) {
   const html = `
     <h2>Nueva orden web - ${escapeHtml(orderNumber)}</h2>
     <p><strong>Servicio:</strong> ${escapeHtml(order.service)}</p>
+    ${order.product ? `<p><strong>Producto:</strong> ${escapeHtml(order.product)}</p>` : ""}
+    ${order.quantity ? `<p><strong>Cantidad:</strong> ${escapeHtml(order.quantity)}</p>` : ""}
     <p><strong>Cliente:</strong> ${escapeHtml(order.name)}</p>
     <p><strong>Teléfono:</strong> ${escapeHtml(order.phone)}</p>
     <p><strong>Email:</strong> ${escapeHtml(order.email || "No incluido")}</p>
@@ -181,6 +193,8 @@ async function saveOrderRecord(order, orderNumber) {
   const description = [
     `Order: ${orderNumber}`,
     `Service: ${order.service}`,
+    order.product ? `Product: ${order.product}` : "",
+    order.quantity ? `Quantity: ${order.quantity}` : "",
     `Details: ${order.details}`,
     order.orderDate ? `Order date: ${order.orderDate}` : "",
     order.dueDate ? `Delivery date: ${order.dueDate}` : "",
@@ -239,6 +253,7 @@ function sanitizeOrder(input) {
   return {
     language: input.language === "en" ? "en" : "es",
     service: clean(input.service, 80),
+    product: clean(input.product, 120),
     details: clean(input.details, 1500),
     orderDate: clean(input.orderDate, 20),
     dueDate: clean(input.dueDate, 20),
