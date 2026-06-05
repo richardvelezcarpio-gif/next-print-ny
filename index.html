@@ -9,7 +9,7 @@
     />
     <title>Next Print NY | Printing, Multiservices & Consulting Agent</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260605-0005" />
+    <link rel="stylesheet" href="styles.css?v=20260605-0045" />
   </head>
   <body>
     <div class="page-shell">
@@ -122,28 +122,50 @@
                 <a class="action-gradient" href="printing.html" data-i18n="order.printingButton">Start Printing Order</a>
               </section>
 
-              <form id="uploadForm" class="tool-card upload-card">
-                <input type="hidden" name="email" value="" />
+              <form id="uploadForm" class="tool-card upload-card copies-order-card">
+                <input type="hidden" name="paper" value="20 lbs" />
                 <div class="upload-hero">
                   <label class="drop-zone">
-                    <input id="uploadFile" type="file" name="file" required />
-                    <span class="cloud">↑</span>
+                    <input id="uploadFile" type="file" name="files" accept=".pdf,.jpg,.jpeg,.png" multiple required />
+                    <img class="copies-service-image" src="assets/copies-service.png" alt="Bulk black and white or color copies" />
+                    <strong data-i18n="copies.chooseFiles">Choose multiple files</strong>
                     <small data-i18n="home.upload.formats">PDF, JPG, PNG (Max. 4MB each)</small>
                   </label>
                   <div class="upload-copy">
-                    <h2 data-i18n="home.upload.title">Upload your documents</h2>
-                    <p data-i18n="home.upload.copy">Share your files securely</p>
-                    <ul>
-                      <li><strong data-i18n="home.upload.safe">Safe & Secure</strong><span data-i18n="home.upload.safeText">Your privacy is our priority</span></li>
-                      <li><strong data-i18n="home.upload.fast">Fast Processing</strong><span data-i18n="home.upload.fastText">We handle your documents quickly</span></li>
-                      <li><strong data-i18n="home.upload.easy">Easy & Convenient</strong><span data-i18n="home.upload.easyText">Upload from any device, anytime</span></li>
-                    </ul>
-                    <div class="upload-mini-fields">
-                      <input type="text" name="name" autocomplete="name" placeholder="Name" data-i18n-placeholder="upload.name" />
-                      <input type="tel" name="phone" autocomplete="tel" placeholder="Phone" data-i18n-placeholder="upload.phone" />
-                      <textarea name="notes" rows="2" placeholder="Notes: what do you need?" data-i18n-placeholder="home.upload.notesPlaceholder"></textarea>
+                    <h2 data-i18n="copies.title">Order Copies Online</h2>
+                    <p data-i18n="copies.copy">Upload your files and choose your copy specifications.</p>
+                    <div class="copy-spec-grid">
+                      <label>
+                        <span data-i18n="copies.color">Print type</span>
+                        <select name="printType" required>
+                          <option value="Black & White" data-i18n="copies.bw">Black & White</option>
+                          <option value="Color" data-i18n="copies.fullColor">Color</option>
+                        </select>
+                      </label>
+                      <label>
+                        <span data-i18n="copies.size">Paper size</span>
+                        <select name="paperSize" required>
+                          <option value="8.5x11">8.5x11</option>
+                          <option value="8.5x14">8.5x14</option>
+                          <option value="11x17">11x17</option>
+                        </select>
+                      </label>
+                      <label>
+                        <span data-i18n="copies.paper">Paper</span>
+                        <input type="text" value="20 lbs" readonly />
+                      </label>
+                      <label>
+                        <span data-i18n="copies.quantity">Copies per file</span>
+                        <input type="number" name="quantity" min="1" value="1" required />
+                      </label>
                     </div>
-                    <button id="uploadTrigger" class="upload-submit action-gradient" type="button" data-i18n="upload.button">Choose files to upload</button>
+                    <div class="upload-mini-fields">
+                      <input type="text" name="name" autocomplete="name" placeholder="Name" data-i18n-placeholder="upload.name" required />
+                      <input type="tel" name="phone" autocomplete="tel" placeholder="Phone" data-i18n-placeholder="upload.phone" required />
+                      <input type="email" name="email" autocomplete="email" placeholder="Email" data-i18n-placeholder="upload.email" />
+                      <textarea name="notes" rows="2" placeholder="Notes: page range, one or two sided, finishing, pickup details..." data-i18n-placeholder="copies.notes"></textarea>
+                    </div>
+                    <button id="uploadTrigger" class="upload-submit action-gradient" type="button" data-i18n="copies.chooseFiles">Choose multiple files</button>
                     <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
                   </div>
                 </div>
@@ -234,6 +256,6 @@
       </footer>
     </div>
 
-    <script src="script.js?v=20260604-1235"></script>
+    <script src="script.js?v=20260605-0045"></script>
   </body>
 </html>

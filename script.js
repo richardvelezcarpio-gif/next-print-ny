@@ -9,6 +9,7 @@ const uploadTrigger = document.querySelector("#uploadTrigger");
 const uploadStatus = document.querySelector("#uploadStatus");
 const languageButtons = document.querySelectorAll("[data-lang]");
 const maxUploadSize = 4 * 1024 * 1024;
+const maxUploadTotalSize = 12 * 1024 * 1024;
 const memoryKey = "nextPrintCustomerMemory";
 const conversationKey = "nextPrintConversation";
 const maxConversationMessages = 16;
@@ -57,6 +58,17 @@ const translations = {
     "upload.error": "No se pudo enviar. Llama al 239 333 7935 o intenta de nuevo.",
     "upload.configError": "El formulario está listo, pero falta configurar RESEND_API_KEY en Vercel.",
     "upload.sizeError": "El archivo debe pesar menos de 4 MB.",
+    "copies.title": "Ordena copias online",
+    "copies.copy": "Sube tus archivos y escoge las especificaciones de tus copias.",
+    "copies.chooseFiles": "Escoger varios archivos",
+    "copies.send": "Enviar orden de copias",
+    "copies.color": "Tipo de impresión",
+    "copies.bw": "Blanco y negro",
+    "copies.fullColor": "Color",
+    "copies.size": "Tamaño del papel",
+    "copies.paper": "Papel",
+    "copies.quantity": "Copias por archivo",
+    "copies.notes": "Notas: páginas, un lado o ambos lados, acabado, detalles de recogida...",
     "tabs.print": "🖨️ Impresión",
     "tabs.consultant": "🤝 Agente consultor",
     "tabs.multi": "👥 Multiservicios",
@@ -408,6 +420,17 @@ const translations = {
     "upload.error": "Could not send. Call 239 333 7935 or try again.",
     "upload.configError": "The form is ready, but RESEND_API_KEY must be configured in Vercel.",
     "upload.sizeError": "The file must be under 4 MB.",
+    "copies.title": "Order Copies Online",
+    "copies.copy": "Upload your files and choose your copy specifications.",
+    "copies.chooseFiles": "Choose multiple files",
+    "copies.send": "Send Copy Order",
+    "copies.color": "Print type",
+    "copies.bw": "Black & White",
+    "copies.fullColor": "Color",
+    "copies.size": "Paper size",
+    "copies.paper": "Paper",
+    "copies.quantity": "Copies per file",
+    "copies.notes": "Notes: page range, one or two sided, finishing, pickup details...",
     "tabs.print": "🖨️ Printing",
     "tabs.consultant": "🤝 Consulting agent",
     "tabs.multi": "👥 Multiservices",
@@ -907,17 +930,17 @@ function updateChatWelcome() {
 }
 
 function updateUploadLanguageState() {
-  const file = uploadFile?.files?.[0];
+  const files = Array.from(uploadFile?.files || []);
 
   if (!uploadTrigger) return;
 
-  if (!file) {
-    uploadTrigger.textContent = t("upload.button");
+  if (files.length === 0) {
+    uploadTrigger.textContent = t("copies.chooseFiles");
     return;
   }
 
-  uploadTrigger.textContent = t("upload.sendSelected");
-  setUploadStatus(`${t("upload.selected")} ${file.name}. ${t("upload.ready")}`);
+  uploadTrigger.textContent = t("copies.send");
+  setUploadStatus(`${files.length} ${currentLanguage === "en" ? "files selected" : "archivos seleccionados"}. ${t("upload.ready")}`);
 }
 
 function renderConversationHistory() {
@@ -1178,27 +1201,35 @@ function fileToBase64(file) {
 }
 
 uploadFile?.addEventListener("change", () => {
-  const file = uploadFile.files?.[0];
+  const files = Array.from(uploadFile.files || []);
 
-  if (!file) {
+  if (files.length === 0) {
     setUploadStatus("");
-    if (uploadTrigger) uploadTrigger.textContent = t("upload.button");
+    if (uploadTrigger) uploadTrigger.textContent = t("copies.chooseFiles");
     return;
   }
 
-  if (file.size > maxUploadSize) {
+  if (files.some((file) => file.size > maxUploadSize)) {
     uploadFile.value = "";
     setUploadStatus(t("upload.sizeError"), "error");
-    if (uploadTrigger) uploadTrigger.textContent = t("upload.button");
+    if (uploadTrigger) uploadTrigger.textContent = t("copies.chooseFiles");
     return;
   }
 
-  setUploadStatus(`${t("upload.selected")} ${file.name}. ${t("upload.ready")}`);
-  if (uploadTrigger) uploadTrigger.textContent = t("upload.sendSelected");
+  const totalSize = files.reduce((total, file) => total + file.size, 0);
+  if (totalSize > maxUploadTotalSize) {
+    uploadFile.value = "";
+    setUploadStatus(currentLanguage === "en" ? "The selected files exceed the 12 MB total limit." : "Los archivos seleccionados superan el límite total de 12 MB.", "error");
+    if (uploadTrigger) uploadTrigger.textContent = t("copies.chooseFiles");
+    return;
+  }
+
+  setUploadStatus(`${files.length} ${currentLanguage === "en" ? "files selected" : "archivos seleccionados"}. ${t("upload.ready")}`);
+  if (uploadTrigger) uploadTrigger.textContent = t("copies.send");
 });
 
 uploadTrigger?.addEventListener("click", () => {
-  if (!uploadFile?.files?.[0]) {
+  if (!uploadFile?.files?.length) {
     uploadFile?.click();
     return;
   }
@@ -1208,14 +1239,14 @@ uploadTrigger?.addEventListener("click", () => {
 
 uploadForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const file = uploadFile.files?.[0];
+  const files = Array.from(uploadFile.files || []);
 
-  if (!file) {
+  if (files.length === 0) {
     uploadFile.click();
     return;
   }
 
-  if (file.size > maxUploadSize) {
+  if (files.some((file) => file.size > maxUploadSize)) {
     setUploadStatus(t("upload.sizeError"), "error");
     return;
   }
@@ -1225,28 +1256,47 @@ uploadForm?.addEventListener("submit", async (event) => {
   const originalButtonText = submitButtonText?.textContent || t("upload.button");
 
   setUploadStatus(t("upload.sending"));
-  uploadForm.querySelectorAll("input, textarea").forEach((field) => {
+  uploadForm.querySelectorAll("input, textarea, select").forEach((field) => {
     field.disabled = true;
   });
   if (submitButtonText) submitButtonText.textContent = t("upload.sending");
   if (uploadTrigger) uploadTrigger.disabled = true;
 
   try {
-    const fileContent = await fileToBase64(file);
-    const response = await fetch("/api/upload", {
+    const encodedFiles = await Promise.all(
+      files.map(async (file) => ({
+        name: file.name,
+        content: await fileToBase64(file),
+      }))
+    );
+    const orderDate = new Date();
+    const dueDate = new Date(orderDate);
+    dueDate.setDate(orderDate.getDate() + 7);
+    const details = [
+      `Print type: ${formData.get("printType")}`,
+      `Paper size: ${formData.get("paperSize")}`,
+      `Paper: ${formData.get("paper")}`,
+      `Copies per file: ${formData.get("quantity")}`,
+      `Files: ${files.map((file) => file.name).join(", ")}`,
+      formData.get("notes") ? `Notes: ${formData.get("notes")}` : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+    const response = await fetch("/api/order", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         language: currentLanguage,
+        service: "Copies",
+        details,
+        orderDate: toLocalDateValue(orderDate),
+        dueDate: toLocalDateValue(dueDate),
+        budget: "",
+        quantity: formData.get("quantity"),
         name: formData.get("name"),
         email: formData.get("email"),
         phone: formData.get("phone"),
-        notes: formData.get("notes"),
-        file: {
-          name: file.name,
-          type: file.type || "application/octet-stream",
-          content: fileContent,
-        },
+        files: encodedFiles,
       }),
     });
 
@@ -1261,27 +1311,37 @@ uploadForm?.addEventListener("submit", async (event) => {
     customerMemory.orders = [
       {
         date: new Date().toLocaleDateString(currentLanguage === "en" ? "en-US" : "es-US"),
-        fileName: file.name,
-        notes: String(formData.get("notes") || "").slice(0, 140),
+        fileName: files.map((file) => file.name).join(", "),
+        notes: details.slice(0, 140),
       },
       ...customerMemory.orders,
     ].slice(0, 5);
     saveCustomerMemory();
-    setUploadStatus(t("upload.success"), "success");
+    setUploadStatus(
+      currentLanguage === "en"
+        ? `Copy order received. Order number: ${data.orderNumber}`
+        : `Orden de copias recibida. Número de orden: ${data.orderNumber}`,
+      "success"
+    );
   } catch (error) {
     const message =
       error.message === "RESEND_API_KEY missing" ? t("upload.configError") : t("upload.error");
     setUploadStatus(message, "error");
   } finally {
-    uploadForm.querySelectorAll("input, textarea").forEach((field) => {
+    uploadForm.querySelectorAll("input, textarea, select").forEach((field) => {
       field.disabled = false;
     });
     if (uploadTrigger) uploadTrigger.disabled = false;
     if (submitButtonText) {
-      submitButtonText.textContent = uploadFile.files?.[0] ? originalButtonText : t("upload.button");
+      submitButtonText.textContent = uploadFile.files?.length ? originalButtonText : t("copies.chooseFiles");
     }
   }
 });
+
+function toLocalDateValue(date) {
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+  return localDate.toISOString().slice(0, 10);
+}
 
 createQuickActionBar();
 applyLanguage(customerMemory.language || currentLanguage);

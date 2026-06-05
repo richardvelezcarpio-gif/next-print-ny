@@ -199,7 +199,7 @@ async function saveOrderRecord(order, orderNumber) {
     customer_email: order.email,
     description,
     amount: parseMoney(order.budget),
-    quantity: 0,
+    quantity: order.quantity,
     due_date: order.dueDate || null,
     file_url: "",
     created_by: "website-order",
@@ -243,6 +243,7 @@ function sanitizeOrder(input) {
     orderDate: clean(input.orderDate, 20),
     dueDate: clean(input.dueDate, 20),
     budget: clean(input.budget, 80),
+    quantity: parseQuantity(input.quantity),
     name: clean(input.name, 120),
     phone: clean(input.phone, 80),
     email: clean(input.email, 120),
@@ -260,6 +261,11 @@ function buildOrderNumber() {
 function parseMoney(value) {
   const amount = Number(String(value || "").replace(/[^0-9.-]/g, ""));
   return Number.isFinite(amount) ? amount : 0;
+}
+
+function parseQuantity(value) {
+  const quantity = Number.parseInt(String(value || "0"), 10);
+  return Number.isFinite(quantity) && quantity > 0 ? quantity : 0;
 }
 
 function buildWhatsappUrl(order, orderNumber) {
