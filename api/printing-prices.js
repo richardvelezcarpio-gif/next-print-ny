@@ -16,6 +16,7 @@ const printingPrices = {
   "Banner 2x10": { 1: 267.33 },
   "Door Hangers 4x11": { 100: 202, 250: 236, 500: 277, 1000: 310, 2500: 483, 5000: 560, 10000: 1050 },
   "Door Hangers 3.5x8.5": { 100: 160, 250: 197, 500: 219, 1000: 240, 2500: 367, 5000: 485, 10000: 775 },
+  "Retractable Banner": { 1: 180, 2: 360, 3: 540, 4: 720, 5: 900, 6: 1080, 7: 1260, 8: 1440, 9: 1620, 10: 1800 },
 };
 
 export function catalogPriceFor(product, quantity) {

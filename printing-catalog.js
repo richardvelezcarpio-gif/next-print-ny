@@ -41,6 +41,13 @@ const productDetails = {
     hook: "Reach homes and apartments directly. Door hangers are a strong way to promote services block by block.",
     benefits: ["Direct neighborhood marketing", "Perfect for service businesses", "Easy for customers to keep"],
   },
+  retractable: {
+    visual: "retractable",
+    image: "assets/catalog-retractable-banners.png",
+    material: "Complete retractable display with a standard 33-inch stand and a full-color, 13 oz. smooth blockout vinyl banner.",
+    hook: "Make a professional impression anywhere. Retractable banners set up in seconds and travel easily to events, offices, presentations and promotions.",
+    benefits: ["Stand and printed banner included", "Portable and easy to set up", "High-impact full-color display"],
+  },
 };
 
 const printingProducts = [
@@ -61,6 +68,7 @@ const printingProducts = [
   { name: "Banner 2x10", category: "banners", prices: [["1", "$267.33"]] },
   { name: "Door Hangers 4x11", category: "hangers", prices: [["100", "$202.00"], ["250", "$236.00"], ["500", "$277.00"], ["1000", "$310.00"], ["2500", "$483.00"], ["5000", "$560.00"], ["10000", "$1,050.00"]] },
   { name: "Door Hangers 3.5x8.5", category: "hangers", prices: [["100", "$160.00"], ["250", "$197.00"], ["500", "$219.00"], ["1000", "$240.00"], ["2500", "$367.00"], ["5000", "$485.00"], ["10000", "$775.00"]] },
+  { name: "Retractable Banner", category: "retractable", prices: [["1", "$180.00"], ["2", "$360.00"], ["3", "$540.00"], ["4", "$720.00"], ["5", "$900.00"], ["6", "$1,080.00"], ["7", "$1,260.00"], ["8", "$1,440.00"], ["9", "$1,620.00"], ["10", "$1,800.00"]] },
 ];
 
 const productGroups = [
@@ -74,6 +82,7 @@ const productGroups = [
   { name: "Menus", category: "menus", variants: ["Menus 8.5x11", "Menus 11x17"] },
   { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
   { name: "Door Hangers", category: "hangers", variants: ["Door Hangers 4x11", "Door Hangers 3.5x8.5"] },
+  { name: "Retractable Banners", category: "retractable", stock: 10, variants: ["Retractable Banner"] },
 ].map((group) => ({
   ...group,
   variants: group.variants.map((name) => printingProducts.find((product) => product.name === name)).filter(Boolean),
@@ -117,6 +126,13 @@ const hangerFrontSide = document.querySelector("#hangerFrontSide");
 const hangerBackSide = document.querySelector("#hangerBackSide");
 const hangerPaperStock = document.querySelector("#hangerPaperStock");
 const hangerCoating = document.querySelector("#hangerCoating");
+const retractableConfigurationOptions = document.querySelector("#retractableConfigurationOptions");
+const retractableDisplayOptions = document.querySelector("#retractableDisplayOptions");
+const retractableBannerStand = document.querySelector("#retractableBannerStand");
+const retractableFrontSide = document.querySelector("#retractableFrontSide");
+const retractableBackSide = document.querySelector("#retractableBackSide");
+const retractableMaterial = document.querySelector("#retractableMaterial");
+const retractablePanels = document.querySelector("#retractablePanels");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
@@ -137,7 +153,7 @@ productQuantity?.addEventListener("change", () => {
   updateSelectedPrice();
 });
 
-[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating].forEach((select) => {
+[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating, retractableDisplayOptions, retractableBannerStand, retractableFrontSide, retractableBackSide, retractableMaterial, retractablePanels].forEach((select) => {
   select?.addEventListener("change", updateSelectedPrice);
 });
 
@@ -148,7 +164,8 @@ function renderProductList() {
     .map(
       (group, index) => `
         <button class="${index === 0 ? "active" : ""}" type="button" data-product-group="${escapeAttribute(group.name)}">
-          ${escapeHtml(group.name)}
+          <span>${escapeHtml(group.name)}</span>
+          ${group.stock ? `<small class="product-stock">Stock: ${escapeHtml(group.stock)}</small>` : ""}
         </button>
       `
     )
@@ -194,13 +211,15 @@ function renderProductOptions() {
   const isMenus = selectedGroup.category === "menus";
   const isBanners = selectedGroup.category === "banners";
   const isHangers = selectedGroup.category === "hangers";
+  const isRetractable = selectedGroup.category === "retractable";
   const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
-  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers;
+  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers || isRetractable;
   if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
   if (stickerConfigurationOptions) stickerConfigurationOptions.hidden = !isStickers;
   if (menuConfigurationOptions) menuConfigurationOptions.hidden = !isMenus;
   if (bannerConfigurationOptions) bannerConfigurationOptions.hidden = !isBanners;
   if (hangerConfigurationOptions) hangerConfigurationOptions.hidden = !isHangers;
+  if (retractableConfigurationOptions) retractableConfigurationOptions.hidden = !isRetractable;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
 }
@@ -288,6 +307,16 @@ function updateSelectedPrice() {
         `Coating: ${hangerCoating?.value || "High Gloss UV"}`
       );
     }
+    if (selectedGroup.category === "retractable") {
+      configuration.push(
+        `Display Options: ${retractableDisplayOptions?.value || "Stand + 1 Banner (Single Sided)"}`,
+        `Banner Stand: ${retractableBannerStand?.value || 'Standard Retractable 33"'}`,
+        `Front Side: ${retractableFrontSide?.value || "Full Color"}`,
+        `Back Side: ${retractableBackSide?.value || "No Printing"}`,
+        `Paper Stock: ${retractableMaterial?.value || "13 oz. Smooth Blockout Vinyl"}`,
+        `Panels: ${retractablePanels?.value || "1 Panel"}`
+      );
+    }
     const details = [
       `Product: ${selectedProduct.name}`,
       `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,
@@ -314,6 +343,7 @@ function sizeLabel(productName, groupName) {
     const [width, height] = productName.replace(/^Banner\s*/i, "").split("x");
     return `${Number(width) * 12} x ${Number(height) * 12}`;
   }
+  if (groupName === "Retractable Banners") return '33.5" x 80"';
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
 }
 

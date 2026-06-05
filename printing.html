@@ -9,7 +9,7 @@
     />
     <title>Printing Services | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260605-0745" />
+    <link rel="stylesheet" href="styles.css?v=20260605-1700" />
   </head>
   <body>
     <div class="page-shell">
@@ -223,6 +223,44 @@
                   </select>
                 </label>
               </div>
+              <div id="retractableConfigurationOptions" class="product-configuration-options" hidden>
+                <label>
+                  <span data-i18n="printingCatalog.displayOptions">Display Options</span>
+                  <select id="retractableDisplayOptions">
+                    <option value="Stand + 1 Banner (Single Sided)" data-i18n="printingCatalog.singleSidedStand">Stand + 1 Banner (Single Sided)</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.bannerStand">Banner Stand</span>
+                  <select id="retractableBannerStand">
+                    <option value='Standard Retractable 33"' data-i18n="printingCatalog.standardRetractable">Standard Retractable 33"</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.frontSide">Front Side</span>
+                  <select id="retractableFrontSide">
+                    <option value="Full Color" data-i18n="printingCatalog.fullColor">Full Color</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.backSide">Back Side</span>
+                  <select id="retractableBackSide">
+                    <option value="No Printing" data-i18n="printingCatalog.noPrinting">No Printing</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.paperStock">Paper Stock</span>
+                  <select id="retractableMaterial">
+                    <option value="13 oz. Smooth Blockout Vinyl" data-i18n="printingCatalog.smoothBlockoutVinyl">13 oz. Smooth Blockout Vinyl</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.panels">Panels</span>
+                  <select id="retractablePanels">
+                    <option value="1 Panel" data-i18n="printingCatalog.onePanel">1 Panel</option>
+                  </select>
+                </label>
+              </div>
               <label>
                 <span data-i18n="printingCatalog.quantity">Quantity</span>
                 <select id="productQuantity"></select>
@@ -297,7 +335,7 @@
         </div>
       </footer>
     </div>
-    <script src="script.js?v=20260605-1400"></script>
-    <script src="printing-catalog.js?v=20260605-1400"></script>
+    <script src="script.js?v=20260605-1700"></script>
+    <script src="printing-catalog.js?v=20260605-1700"></script>
   </body>
 </html>

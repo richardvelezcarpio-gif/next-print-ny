@@ -1223,6 +1223,31 @@ textarea {
   cursor: pointer;
 }
 
+.product-list button:has(.product-stock) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.product-stock {
+  flex: 0 0 auto;
+  border: 1px solid #b8e8f5;
+  border-radius: 999px;
+  padding: 3px 7px;
+  color: var(--navy);
+  background: #e8f9fd;
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+.product-list button:hover .product-stock,
+.product-list button.active .product-stock {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
 .product-list button:hover,
 .product-list button.active {
   color: #fff;
