@@ -2483,16 +2483,46 @@ textarea {
   }
 
   .hero .service-showcase {
-    grid-template-columns: repeat(3, minmax(300px, 1fr));
-    gap: 18px;
-    overflow-x: auto;
-    padding-bottom: 10px;
-    scrollbar-width: thin;
-    scroll-snap-type: x proximity;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    overflow: visible;
+    padding-bottom: 0;
   }
 
   .hero .showcase-card {
-    scroll-snap-align: start;
+    min-width: 0;
+  }
+
+  .hero .service-icon {
+    left: 14px;
+    top: 14px;
+    width: 58px;
+    height: 58px;
+    font-size: 1.55rem;
+  }
+
+  .hero .visual {
+    height: 150px;
+  }
+
+  .hero .showcase-body {
+    padding: 16px 14px 18px;
+  }
+
+  .hero .showcase-body h2 {
+    font-size: 1rem;
+  }
+
+  .hero .showcase-body ul {
+    padding-left: 16px;
+    font-size: 0.76rem;
+    line-height: 1.55;
+  }
+
+  .hero .mini-button {
+    width: 100%;
+    padding-inline: 10px;
+    font-size: 0.72rem;
   }
 
   .feature-row,
