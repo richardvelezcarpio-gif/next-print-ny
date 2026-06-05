@@ -2482,6 +2482,19 @@ textarea {
     grid-template-columns: 1fr;
   }
 
+  .hero .service-showcase {
+    grid-template-columns: repeat(3, minmax(300px, 1fr));
+    gap: 18px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    scrollbar-width: thin;
+    scroll-snap-type: x proximity;
+  }
+
+  .hero .showcase-card {
+    scroll-snap-align: start;
+  }
+
   .feature-row,
   .mini-services,
   .process-strip {
