@@ -97,6 +97,10 @@ const cardRoundedCorners = document.querySelector("#cardRoundedCorners");
 const cardPrintedSide = document.querySelector("#cardPrintedSide");
 const cardPaperType = document.querySelector("#cardPaperType");
 const cardCoating = document.querySelector("#cardCoating");
+const stickerConfigurationOptions = document.querySelector("#stickerConfigurationOptions");
+const stickerFrontSide = document.querySelector("#stickerFrontSide");
+const stickerBackSide = document.querySelector("#stickerBackSide");
+const stickerMaterial = document.querySelector("#stickerMaterial");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
@@ -117,7 +121,7 @@ productQuantity?.addEventListener("change", () => {
   updateSelectedPrice();
 });
 
-[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating].forEach((select) => {
+[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial].forEach((select) => {
   select?.addEventListener("change", updateSelectedPrice);
 });
 
@@ -170,8 +174,11 @@ function renderProductGroup(groupName) {
 function renderProductOptions() {
   const isBusinessCards = selectedGroup.category === "cards";
   const isFlyers = selectedGroup.category === "flyers";
-  const hasConfiguration = isBusinessCards || isFlyers;
-  if (productConfigurationOptions) productConfigurationOptions.hidden = !hasConfiguration;
+  const isStickers = selectedGroup.category === "stickers";
+  const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
+  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers;
+  if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
+  if (stickerConfigurationOptions) stickerConfigurationOptions.hidden = !isStickers;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
 }
@@ -227,13 +234,20 @@ function updateSelectedPrice() {
         `Coating: ${cardCoating?.value || "High Gloss"}`
       );
     }
+    if (selectedGroup.category === "stickers") {
+      configuration.push(
+        `Front Side: ${stickerFrontSide?.value || "Full Color"}`,
+        `Back Side: ${stickerBackSide?.value || "No Printing"}`,
+        `Material: ${stickerMaterial?.value || "High Gloss White Outdoor Vinyl"}`
+      );
+    }
     const details = [
       `Product: ${selectedProduct.name}`,
       `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,
       ...configuration,
       `Quantity: ${selectedPrice[0]}`,
       `Suggested sale price: ${selectedPrice[1]}`,
-      `Material: ${info.material}`,
+      `Product information: ${info.material}`,
     ].join("\n");
     const params = new URLSearchParams({
       service: "Printing",
