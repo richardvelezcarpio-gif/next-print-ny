@@ -363,6 +363,7 @@ const translations = {
     "tracking.whatsapp": "Preguntar por WhatsApp",
     "quick.call": "Llamar",
     "quick.whatsapp": "WhatsApp",
+    "quick.order": "Orden",
     "quick.track": "Rastrear",
   },
   en: {
@@ -713,6 +714,7 @@ const translations = {
     "tracking.whatsapp": "Ask on WhatsApp",
     "quick.call": "Call",
     "quick.whatsapp": "WhatsApp",
+    "quick.order": "Order",
     "quick.track": "Track",
   },
 };
@@ -988,9 +990,9 @@ function createQuickActionBar() {
       <span class="quick-icon" aria-hidden="true">WA</span>
       <span data-i18n="quick.whatsapp">WhatsApp</span>
     </a>
-    <a href="printing.html#printingCatalog">
+    <a href="order.html">
       <span class="quick-icon" aria-hidden="true">+</span>
-      <span data-i18n="nav.print">Printing</span>
+      <span data-i18n="quick.order">Order</span>
     </a>
     <a href="tracking.html">
       <span class="quick-icon" aria-hidden="true">#</span>
