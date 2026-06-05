@@ -1563,6 +1563,48 @@ textarea {
   background: #fff;
 }
 
+.product-order-panel.business-card-mode {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.business-card-options {
+  display: grid;
+  gap: 14px;
+}
+
+.business-card-options[hidden] {
+  display: none;
+}
+
+.product-order-panel.business-card-mode label {
+  grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.product-order-panel.business-card-mode label > span {
+  font-size: 1rem;
+}
+
+.product-order-panel.business-card-mode .selected-price {
+  grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+
+.product-order-panel.business-card-mode .action-gradient {
+  justify-self: stretch;
+  text-align: center;
+}
+
 .selected-price {
   display: grid;
   gap: 5px;
@@ -2717,6 +2759,12 @@ textarea {
 @media (max-width: 620px) {
   body {
     padding-bottom: 86px;
+  }
+
+  .product-order-panel.business-card-mode label,
+  .product-order-panel.business-card-mode .selected-price {
+    grid-template-columns: 1fr;
+    gap: 7px;
   }
 
   .quick-action-bar {

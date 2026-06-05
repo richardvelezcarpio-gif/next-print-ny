@@ -9,7 +9,7 @@
     />
     <title>Printing Services | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260605-0640" />
+    <link rel="stylesheet" href="styles.css?v=20260605-0745" />
   </head>
   <body>
     <div class="page-shell">
@@ -77,9 +77,38 @@
 
             <div class="product-order-panel">
               <label>
-                <span>Size / Tamaño</span>
+                <span data-i18n="printingCatalog.size">Size</span>
                 <select id="productSize"></select>
               </label>
+              <div id="businessCardOptions" class="business-card-options" hidden>
+                <label>
+                  <span data-i18n="printingCatalog.rounded">Rounded Corners</span>
+                  <select id="cardRoundedCorners">
+                    <option value="No" data-i18n="printingCatalog.no">No</option>
+                    <option value="Yes" data-i18n="printingCatalog.yes">Yes</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.printedSide">Printed Side</span>
+                  <select id="cardPrintedSide">
+                    <option value="Front Only" data-i18n="printingCatalog.frontOnly">Front Only</option>
+                    <option value="Front and Back" selected data-i18n="printingCatalog.frontBack">Front and Back</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.paperType">Paper Type</span>
+                  <select id="cardPaperType">
+                    <option value="14 pt. Cardstock">14 pt. Cardstock</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="printingCatalog.coating">Coating</span>
+                  <select id="cardCoating">
+                    <option value="High Gloss" data-i18n="printingCatalog.highGloss">High Gloss</option>
+                    <option value="Matte" data-i18n="printingCatalog.matte">Matte</option>
+                  </select>
+                </label>
+              </div>
               <label>
                 <span data-i18n="printingCatalog.quantity">Quantity</span>
                 <select id="productQuantity"></select>
@@ -154,7 +183,7 @@
         </div>
       </footer>
     </div>
-    <script src="script.js?v=20260604-1135"></script>
-    <script src="printing-catalog.js?v=20260605-0640"></script>
+    <script src="script.js?v=20260605-0745"></script>
+    <script src="printing-catalog.js?v=20260605-0745"></script>
   </body>
 </html>

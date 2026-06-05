@@ -90,6 +90,12 @@ const productSize = document.querySelector("#productSize");
 const productQuantity = document.querySelector("#productQuantity");
 const productPrice = document.querySelector("#productPrice");
 const productOrderLink = document.querySelector("#productOrderLink");
+const productOrderPanel = document.querySelector(".product-order-panel");
+const businessCardOptions = document.querySelector("#businessCardOptions");
+const cardRoundedCorners = document.querySelector("#cardRoundedCorners");
+const cardPrintedSide = document.querySelector("#cardPrintedSide");
+const cardPaperType = document.querySelector("#cardPaperType");
+const cardCoating = document.querySelector("#cardCoating");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
@@ -108,6 +114,10 @@ productSize?.addEventListener("change", () => {
 productQuantity?.addEventListener("change", () => {
   selectedPrice = selectedProduct.prices.find((item) => item[0] === productQuantity.value) || selectedProduct.prices[0];
   updateSelectedPrice();
+});
+
+[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating].forEach((select) => {
+  select?.addEventListener("change", updateSelectedPrice);
 });
 
 function renderProductList() {
@@ -144,6 +154,7 @@ function renderProductGroup(groupName) {
     productKicker.textContent = `${selectedGroup.variants.length} size ${selectedGroup.variants.length === 1 ? "option" : "options"}`;
   }
   renderProductDetails(selectedProduct);
+  renderProductOptions();
 
   if (productSize) {
     productSize.innerHTML = selectedGroup.variants
@@ -153,6 +164,12 @@ function renderProductGroup(groupName) {
 
   renderQuantityOptions();
   updateSelectedPrice();
+}
+
+function renderProductOptions() {
+  const isBusinessCards = selectedGroup.category === "cards";
+  if (businessCardOptions) businessCardOptions.hidden = !isBusinessCards;
+  productOrderPanel?.classList.toggle("business-card-mode", isBusinessCards);
 }
 
 function renderQuantityOptions() {
@@ -195,7 +212,23 @@ function updateSelectedPrice() {
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
     const info = productDetails[selectedProduct.category] || productDetails.cards;
-    const details = `Product: ${selectedProduct.name}\nSize: ${sizeLabel(selectedProduct.name, selectedGroup.name)}\nQuantity: ${selectedPrice[0]}\nSuggested sale price: ${selectedPrice[1]}\nMaterial: ${info.material}`;
+    const configuration =
+      selectedGroup.category === "cards"
+        ? [
+            `Rounded Corners: ${cardRoundedCorners?.value || "No"}`,
+            `Printed Side: ${cardPrintedSide?.value || "Front and Back"}`,
+            `Paper Type: ${cardPaperType?.value || "14 pt. Cardstock"}`,
+            `Coating: ${cardCoating?.value || "High Gloss"}`,
+          ]
+        : [];
+    const details = [
+      `Product: ${selectedProduct.name}`,
+      `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,
+      ...configuration,
+      `Quantity: ${selectedPrice[0]}`,
+      `Suggested sale price: ${selectedPrice[1]}`,
+      `Material: ${info.material}`,
+    ].join("\n");
     const params = new URLSearchParams({
       service: "Printing",
       product: selectedProduct.name,
@@ -208,7 +241,7 @@ function updateSelectedPrice() {
 }
 
 function sizeLabel(productName, groupName) {
-  if (groupName === "Business Cards") return "Standard Business Cards";
+  if (groupName === "Business Cards") return '2" x 3.5" (U.S. Standard)';
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
 }
 
