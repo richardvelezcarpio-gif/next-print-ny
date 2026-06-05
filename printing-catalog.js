@@ -48,7 +48,20 @@ const productDetails = {
     hook: "Make a professional impression anywhere. Retractable banners set up in seconds and travel easily to events, offices, presentations and promotions.",
     benefits: ["Stand and printed banner included", "Portable and easy to set up", "High-impact full-color display"],
   },
+  yardSigns: {
+    visual: "yard-signs",
+    image: "assets/catalog-yard-signs.png",
+    material: "Weather-resistant 4 mm coroplast board with a sturdy H-wire stake for easy outdoor installation.",
+    hook: "Put your message where customers can see it. Yard signs are ideal for real estate, events, contractors, campaigns and neighborhood promotions.",
+    benefits: ["Weather-resistant outdoor display", "H-wire stake included", "Vibrant full-color printing"],
+  },
 };
+
+const yardSignPrices = Array.from({ length: 100 }, (_, index) => {
+  const quantity = index + 1;
+  const unitPrice = quantity <= 25 ? 40 : quantity <= 50 ? 35 : 30;
+  return [String(quantity), `$${(quantity * unitPrice).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`];
+});
 
 const printingProducts = [
   { name: "Business Cards", category: "cards", prices: [["100", "$35.00"], ["250", "$55.00"], ["500", "$65.00"], ["1000", "$119.00"], ["2500", "$180.00"], ["5000", "$220.00"], ["10000", "$370.00"]] },
@@ -69,6 +82,7 @@ const printingProducts = [
   { name: "Door Hangers 4x11", category: "hangers", prices: [["100", "$202.00"], ["250", "$236.00"], ["500", "$277.00"], ["1000", "$310.00"], ["2500", "$483.00"], ["5000", "$560.00"], ["10000", "$1,050.00"]] },
   { name: "Door Hangers 3.5x8.5", category: "hangers", prices: [["100", "$160.00"], ["250", "$197.00"], ["500", "$219.00"], ["1000", "$240.00"], ["2500", "$367.00"], ["5000", "$485.00"], ["10000", "$775.00"]] },
   { name: "Retractable Banner", category: "retractable", prices: [["1", "$180.00"], ["2", "$360.00"], ["3", "$540.00"], ["4", "$720.00"], ["5", "$900.00"], ["6", "$1,080.00"], ["7", "$1,260.00"], ["8", "$1,440.00"], ["9", "$1,620.00"], ["10", "$1,800.00"]] },
+  { name: "Yard Sign", category: "yardSigns", prices: yardSignPrices },
 ];
 
 const productGroups = [
@@ -83,6 +97,7 @@ const productGroups = [
   { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
   { name: "Door Hangers", category: "hangers", variants: ["Door Hangers 4x11", "Door Hangers 3.5x8.5"] },
   { name: "Retractable Banners", category: "retractable", stock: 10, variants: ["Retractable Banner"] },
+  { name: "Yard Signs", category: "yardSigns", variants: ["Yard Sign"] },
 ].map((group) => ({
   ...group,
   variants: group.variants.map((name) => printingProducts.find((product) => product.name === name)).filter(Boolean),
@@ -133,6 +148,12 @@ const retractableFrontSide = document.querySelector("#retractableFrontSide");
 const retractableBackSide = document.querySelector("#retractableBackSide");
 const retractableMaterial = document.querySelector("#retractableMaterial");
 const retractablePanels = document.querySelector("#retractablePanels");
+const yardSignConfigurationOptions = document.querySelector("#yardSignConfigurationOptions");
+const yardSignFrontSide = document.querySelector("#yardSignFrontSide");
+const yardSignBackSide = document.querySelector("#yardSignBackSide");
+const yardSignMaterial = document.querySelector("#yardSignMaterial");
+const yardSignWire = document.querySelector("#yardSignWire");
+const yardSignGrommets = document.querySelector("#yardSignGrommets");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
@@ -153,7 +174,7 @@ productQuantity?.addEventListener("change", () => {
   updateSelectedPrice();
 });
 
-[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating, retractableDisplayOptions, retractableBannerStand, retractableFrontSide, retractableBackSide, retractableMaterial, retractablePanels].forEach((select) => {
+[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating, retractableDisplayOptions, retractableBannerStand, retractableFrontSide, retractableBackSide, retractableMaterial, retractablePanels, yardSignFrontSide, yardSignBackSide, yardSignMaterial, yardSignWire, yardSignGrommets].forEach((select) => {
   select?.addEventListener("change", updateSelectedPrice);
 });
 
@@ -212,14 +233,16 @@ function renderProductOptions() {
   const isBanners = selectedGroup.category === "banners";
   const isHangers = selectedGroup.category === "hangers";
   const isRetractable = selectedGroup.category === "retractable";
+  const isYardSigns = selectedGroup.category === "yardSigns";
   const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
-  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers || isRetractable;
+  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers || isRetractable || isYardSigns;
   if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
   if (stickerConfigurationOptions) stickerConfigurationOptions.hidden = !isStickers;
   if (menuConfigurationOptions) menuConfigurationOptions.hidden = !isMenus;
   if (bannerConfigurationOptions) bannerConfigurationOptions.hidden = !isBanners;
   if (hangerConfigurationOptions) hangerConfigurationOptions.hidden = !isHangers;
   if (retractableConfigurationOptions) retractableConfigurationOptions.hidden = !isRetractable;
+  if (yardSignConfigurationOptions) yardSignConfigurationOptions.hidden = !isYardSigns;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
 }
@@ -317,6 +340,15 @@ function updateSelectedPrice() {
         `Panels: ${retractablePanels?.value || "1 Panel"}`
       );
     }
+    if (selectedGroup.category === "yardSigns") {
+      configuration.push(
+        `Front Side: ${yardSignFrontSide?.value || "Full Color"}`,
+        `Back Side: ${yardSignBackSide?.value || "No Printing"}`,
+        `Material: ${yardSignMaterial?.value || "4 mm Coroplast Board"}`,
+        `H-Wire: ${yardSignWire?.value || 'XL 9 Gauge H-Wire (24" tall x 10" wide)'}`,
+        `Grommets: ${yardSignGrommets?.value || "None"}`
+      );
+    }
     const details = [
       `Product: ${selectedProduct.name}`,
       `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,
@@ -344,6 +376,7 @@ function sizeLabel(productName, groupName) {
     return `${Number(width) * 12} x ${Number(height) * 12}`;
   }
   if (groupName === "Retractable Banners") return '33.5" x 80"';
+  if (groupName === "Yard Signs") return "18 x 24 inches";
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
 }
 

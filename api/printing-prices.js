@@ -20,6 +20,12 @@ const printingPrices = {
 };
 
 export function catalogPriceFor(product, quantity) {
+  if (String(product || "") === "Yard Sign") {
+    const count = Number(quantity);
+    if (!Number.isInteger(count) || count < 1) return "";
+    const unitPrice = count <= 25 ? 40 : count <= 50 ? 35 : 30;
+    return `$${(count * unitPrice).toFixed(2)}`;
+  }
   const amount = printingPrices[String(product || "")]?.[Number(quantity)];
   return Number.isFinite(amount) ? `$${amount.toFixed(2)}` : "";
 }
