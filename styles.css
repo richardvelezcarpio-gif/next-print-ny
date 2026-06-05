@@ -2395,6 +2395,35 @@ textarea {
     width: 152px;
   }
 
+  .top-nav-simple {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  .top-nav-simple .menu-toggle {
+    display: none;
+  }
+
+  .top-nav-simple .menu {
+    grid-column: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 7px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: thin;
+  }
+
+  .top-nav-simple .menu a {
+    min-height: 46px;
+    flex: 0 0 auto;
+    padding: 9px 11px;
+    white-space: nowrap;
+  }
+
   .menu-toggle {
     display: block;
     justify-self: end;
