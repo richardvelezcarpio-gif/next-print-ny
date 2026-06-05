@@ -91,7 +91,8 @@ const productQuantity = document.querySelector("#productQuantity");
 const productPrice = document.querySelector("#productPrice");
 const productOrderLink = document.querySelector("#productOrderLink");
 const productOrderPanel = document.querySelector(".product-order-panel");
-const businessCardOptions = document.querySelector("#businessCardOptions");
+const productConfigurationOptions = document.querySelector("#productConfigurationOptions");
+const roundedCornersField = document.querySelector("#roundedCornersField");
 const cardRoundedCorners = document.querySelector("#cardRoundedCorners");
 const cardPrintedSide = document.querySelector("#cardPrintedSide");
 const cardPaperType = document.querySelector("#cardPaperType");
@@ -168,8 +169,11 @@ function renderProductGroup(groupName) {
 
 function renderProductOptions() {
   const isBusinessCards = selectedGroup.category === "cards";
-  if (businessCardOptions) businessCardOptions.hidden = !isBusinessCards;
-  productOrderPanel?.classList.toggle("business-card-mode", isBusinessCards);
+  const isFlyers = selectedGroup.category === "flyers";
+  const hasConfiguration = isBusinessCards || isFlyers;
+  if (productConfigurationOptions) productConfigurationOptions.hidden = !hasConfiguration;
+  if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
+  productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
 }
 
 function renderQuantityOptions() {
@@ -212,15 +216,17 @@ function updateSelectedPrice() {
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
     const info = productDetails[selectedProduct.category] || productDetails.cards;
-    const configuration =
-      selectedGroup.category === "cards"
-        ? [
-            `Rounded Corners: ${cardRoundedCorners?.value || "No"}`,
-            `Printed Side: ${cardPrintedSide?.value || "Front and Back"}`,
-            `Paper Type: ${cardPaperType?.value || "14 pt. Cardstock"}`,
-            `Coating: ${cardCoating?.value || "High Gloss"}`,
-          ]
-        : [];
+    const configuration = [];
+    if (selectedGroup.category === "cards") {
+      configuration.push(`Rounded Corners: ${cardRoundedCorners?.value || "No"}`);
+    }
+    if (selectedGroup.category === "cards" || selectedGroup.category === "flyers") {
+      configuration.push(
+        `Printed Side: ${cardPrintedSide?.value || "Front and Back"}`,
+        `Paper Type: ${cardPaperType?.value || "14 pt. Cardstock"}`,
+        `Coating: ${cardCoating?.value || "High Gloss"}`
+      );
+    }
     const details = [
       `Product: ${selectedProduct.name}`,
       `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,

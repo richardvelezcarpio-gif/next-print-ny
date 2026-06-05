@@ -1563,7 +1563,7 @@ textarea {
   background: #fff;
 }
 
-.product-order-panel.business-card-mode {
+.product-order-panel.configured-product-mode {
   grid-template-columns: minmax(0, 1fr);
   align-items: stretch;
   width: 100%;
@@ -1573,26 +1573,27 @@ textarea {
   box-sizing: border-box;
 }
 
-.business-card-options {
+.product-configuration-options {
   display: grid;
   gap: 14px;
 }
 
-.business-card-options[hidden] {
+.product-configuration-options[hidden],
+.product-configuration-options label[hidden] {
   display: none;
 }
 
-.product-order-panel.business-card-mode label {
+.product-order-panel.configured-product-mode label {
   grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1fr);
   gap: 18px;
   align-items: center;
 }
 
-.product-order-panel.business-card-mode label > span {
+.product-order-panel.configured-product-mode label > span {
   font-size: 1rem;
 }
 
-.product-order-panel.business-card-mode .selected-price {
+.product-order-panel.configured-product-mode .selected-price {
   grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1fr);
   gap: 18px;
   align-items: center;
@@ -1600,7 +1601,7 @@ textarea {
   border-top: 1px solid var(--line);
 }
 
-.product-order-panel.business-card-mode .action-gradient {
+.product-order-panel.configured-product-mode .action-gradient {
   justify-self: stretch;
   text-align: center;
 }
@@ -2761,8 +2762,8 @@ textarea {
     padding-bottom: 86px;
   }
 
-  .product-order-panel.business-card-mode label,
-  .product-order-panel.business-card-mode .selected-price {
+  .product-order-panel.configured-product-mode label,
+  .product-order-panel.configured-product-mode .selected-price {
     grid-template-columns: 1fr;
     gap: 7px;
   }
