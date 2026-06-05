@@ -112,6 +112,11 @@ const bannerFrontSide = document.querySelector("#bannerFrontSide");
 const bannerBackSide = document.querySelector("#bannerBackSide");
 const bannerMaterial = document.querySelector("#bannerMaterial");
 const bannerTreatment = document.querySelector("#bannerTreatment");
+const hangerConfigurationOptions = document.querySelector("#hangerConfigurationOptions");
+const hangerFrontSide = document.querySelector("#hangerFrontSide");
+const hangerBackSide = document.querySelector("#hangerBackSide");
+const hangerPaperStock = document.querySelector("#hangerPaperStock");
+const hangerCoating = document.querySelector("#hangerCoating");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
@@ -132,7 +137,7 @@ productQuantity?.addEventListener("change", () => {
   updateSelectedPrice();
 });
 
-[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment].forEach((select) => {
+[cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating].forEach((select) => {
   select?.addEventListener("change", updateSelectedPrice);
 });
 
@@ -188,12 +193,14 @@ function renderProductOptions() {
   const isStickers = selectedGroup.category === "stickers";
   const isMenus = selectedGroup.category === "menus";
   const isBanners = selectedGroup.category === "banners";
+  const isHangers = selectedGroup.category === "hangers";
   const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
-  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners;
+  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers;
   if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
   if (stickerConfigurationOptions) stickerConfigurationOptions.hidden = !isStickers;
   if (menuConfigurationOptions) menuConfigurationOptions.hidden = !isMenus;
   if (bannerConfigurationOptions) bannerConfigurationOptions.hidden = !isBanners;
+  if (hangerConfigurationOptions) hangerConfigurationOptions.hidden = !isHangers;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
 }
@@ -271,6 +278,14 @@ function updateSelectedPrice() {
         `Back Side: ${bannerBackSide?.value || "No Printing"}`,
         `Material: ${bannerMaterial?.value || "13 oz. Standard Vinyl"}`,
         `Treatment: ${bannerTreatment?.value || "None"}`
+      );
+    }
+    if (selectedGroup.category === "hangers") {
+      configuration.push(
+        `Front Side: ${hangerFrontSide?.value || "Full Color"}`,
+        `Back Side: ${hangerBackSide?.value || "Full Color"}`,
+        `Paper Stock: ${hangerPaperStock?.value || "14 pt. Cardstock"}`,
+        `Coating: ${hangerCoating?.value || "High Gloss UV"}`
       );
     }
     const details = [
