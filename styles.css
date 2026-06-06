@@ -1710,6 +1710,26 @@ textarea {
   min-height: 42px;
 }
 
+.designer-shape-field {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.designer-shape-field select {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--navy);
+  background: #fff;
+  font: inherit;
+}
+
 .designer-tools input[type="range"] {
   width: 100%;
   accent-color: var(--cyan);

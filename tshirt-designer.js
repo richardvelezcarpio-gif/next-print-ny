@@ -28,8 +28,8 @@ fallbackSelection.totalPrice = fallbackSelection.items[0].lineTotal;
 const selection = loadSelection() || fallbackSelection;
 const previewItem = selection.items[0] || fallbackSelection.items[0];
 const designs = {
-  front: { artwork: null, text: "", color: "#05275c", size: 34, scale: 62, position: { x: 413, y: 310 } },
-  back: { artwork: null, text: "", color: "#05275c", size: 52, scale: 70, position: { x: 360, y: 392 } },
+  front: { artwork: null, text: "", color: "#05275c", size: 34, shape: "straight", scale: 62, position: { x: 413, y: 310 } },
+  back: { artwork: null, text: "", color: "#05275c", size: 52, shape: "straight", scale: 70, position: { x: 360, y: 392 } },
 };
 
 const translations = {
@@ -47,6 +47,11 @@ const translations = {
     placeholder: "Your text",
     color: "Color",
     size: "Size",
+    shape: "Text shape",
+    straight: "Straight",
+    arcUp: "Arc up",
+    arcDown: "Arc down",
+    circle: "Circle",
     scale: "Artwork size",
     center: "Center design",
     clear: "Clear side",
@@ -66,6 +71,11 @@ const translations = {
     placeholder: "Tu texto",
     color: "Color",
     size: "Tamaño",
+    shape: "Forma del texto",
+    straight: "Recto",
+    arcUp: "Arco arriba",
+    arcDown: "Arco abajo",
+    circle: "Círculo",
     scale: "Tamaño de imagen",
     center: "Centrar diseño",
     clear: "Borrar lado",
@@ -92,12 +102,13 @@ document.querySelector("#designFile").addEventListener("change", async (event) =
   image.src = URL.createObjectURL(file);
 });
 
-["designText", "designTextColor", "designTextSize", "designScale"].forEach((id) => {
+["designText", "designTextColor", "designTextSize", "designTextShape", "designScale"].forEach((id) => {
   document.querySelector(`#${id}`).addEventListener("input", () => {
     const design = designs[activeSide];
     design.text = document.querySelector("#designText").value;
     design.color = document.querySelector("#designTextColor").value;
     design.size = Number(document.querySelector("#designTextSize").value);
+    design.shape = document.querySelector("#designTextShape").value;
     design.scale = Number(document.querySelector("#designScale").value);
     draw();
   });
@@ -117,7 +128,7 @@ document.querySelector("#centerDesign").addEventListener("click", () => {
   draw();
 });
 document.querySelector("#clearDesign").addEventListener("click", () => {
-  designs[activeSide] = { ...designs[activeSide], artwork: null, text: "" };
+  designs[activeSide] = { ...designs[activeSide], artwork: null, text: "", shape: "straight" };
   if (activeSide === "front") originalArtwork = null;
   loadSideControls();
   draw();
@@ -227,9 +238,55 @@ function drawDesign(side) {
     ctx.font = `900 ${design.size}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
-    ctx.fillText(design.text.trim(), design.position.x, design.position.y, area.width - 10);
+    drawTextShape(design, area);
     ctx.restore();
   }
+}
+
+function drawTextShape(design, area) {
+  const text = design.text.trim();
+  if (design.shape === "straight") {
+    ctx.fillText(text, design.position.x, design.position.y, area.width - 10);
+    return;
+  }
+
+  if (design.shape === "circle") {
+    drawCircularText(text, design.position.x, design.position.y, Math.min(area.width, area.height) * 0.34);
+    return;
+  }
+
+  const bendUp = design.shape === "arcUp";
+  const radius = Math.max(area.width * 0.58, 48);
+  const measuredWidth = ctx.measureText(text).width;
+  const maxAngle = Math.min(Math.PI * 1.55, Math.max(Math.PI * 0.5, measuredWidth / radius));
+  const start = -maxAngle / 2;
+  const step = text.length > 1 ? maxAngle / (text.length - 1) : 0;
+
+  [...text].forEach((letter, index) => {
+    const angle = start + step * index;
+    const x = design.position.x + Math.sin(angle) * radius;
+    const y = design.position.y + (bendUp ? 1 : -1) * (Math.cos(angle) * radius - radius);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate((bendUp ? 1 : -1) * angle * 0.24);
+    ctx.fillText(letter, 0, 0);
+    ctx.restore();
+  });
+}
+
+function drawCircularText(text, centerX, centerY, radius) {
+  const letters = [...text];
+  const step = (Math.PI * 2) / Math.max(letters.length, 1);
+  const start = -Math.PI / 2 - (step * (letters.length - 1)) / 2;
+
+  letters.forEach((letter, index) => {
+    const angle = start + step * index;
+    ctx.save();
+    ctx.translate(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+    ctx.rotate(angle + Math.PI / 2);
+    ctx.fillText(letter, 0, 0);
+    ctx.restore();
+  });
 }
 
 function moveDesign(event) {
@@ -302,7 +359,9 @@ function buildOrderDetails() {
     `Total quantity: ${selection.totalQuantity}`,
     `Suggested sale price: ${money(selection.totalPrice)}`,
     `Front text: ${designs.front.text.trim() || "None"}`,
+    `Front text shape: ${shapeLabel(designs.front.shape)}`,
     `Back text: ${designs.back.text.trim() || "None"}`,
+    `Back text shape: ${shapeLabel(designs.back.shape)}`,
   ].join("\n");
 }
 
@@ -320,7 +379,17 @@ function loadSideControls() {
   document.querySelector("#designText").value = design.text;
   document.querySelector("#designTextColor").value = design.color;
   document.querySelector("#designTextSize").value = design.size;
+  document.querySelector("#designTextShape").value = design.shape;
   document.querySelector("#designScale").value = design.scale;
+}
+
+function shapeLabel(shape) {
+  return {
+    straight: "Straight",
+    arcUp: "Arc up",
+    arcDown: "Arc down",
+    circle: "Circle",
+  }[shape] || "Straight";
 }
 
 function loadSelection() {
@@ -386,6 +455,11 @@ function renderLanguage(lang) {
     ["textTitle", "text"],
     ["textColorLabel", "color"],
     ["textSizeLabel", "size"],
+    ["textShapeLabel", "shape"],
+    ["shapeStraight", "straight"],
+    ["shapeArcUp", "arcUp"],
+    ["shapeArcDown", "arcDown"],
+    ["shapeCircle", "circle"],
     ["scaleTitle", "scale"],
     ["centerDesign", "center"],
     ["clearDesign", "clear"],

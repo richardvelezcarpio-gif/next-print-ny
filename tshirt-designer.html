@@ -6,7 +6,7 @@
     <meta name="description" content="Design a custom T-shirt online with Next Print NY." />
     <title>T-Shirt Designer | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260606-0330" />
+    <link rel="stylesheet" href="styles.css?v=20260606-1225" />
   </head>
   <body>
     <div class="page-shell">
@@ -52,6 +52,15 @@
                 <label><span id="textColorLabel">Color</span><input id="designTextColor" type="color" value="#05275c" /></label>
                 <label><span id="textSizeLabel">Size</span><input id="designTextSize" type="range" min="20" max="90" value="44" /></label>
               </div>
+              <label class="designer-shape-field">
+                <span id="textShapeLabel">Text shape</span>
+                <select id="designTextShape">
+                  <option value="straight" id="shapeStraight">Straight</option>
+                  <option value="arcUp" id="shapeArcUp">Arc up</option>
+                  <option value="arcDown" id="shapeArcDown">Arc down</option>
+                  <option value="circle" id="shapeCircle">Circle</option>
+                </select>
+              </label>
             </section>
             <section>
               <h2 id="scaleTitle">Artwork size</h2>
@@ -67,6 +76,6 @@
         </section>
       </main>
     </div>
-    <script src="tshirt-designer.js?v=20260606-0330"></script>
+    <script src="tshirt-designer.js?v=20260606-1225"></script>
   </body>
 </html>
