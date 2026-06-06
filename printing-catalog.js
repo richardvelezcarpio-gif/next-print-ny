@@ -57,9 +57,10 @@ const productDetails = {
   },
   shirts: {
     visual: "shirts",
-    material: "Gildan G500 Unisex Heavy Cotton shirt with a front print area up to 12 x 12 inches.",
-    hook: "Create a shirt that feels like your brand. Choose a color and size, then add your artwork or custom text in our online designer.",
-    benefits: ["10 basic shirt colors", "Online front-print designer", "Automatic 7-day delivery date"],
+    image: "assets/tshirt-showcase.png",
+    material: "Gildan G500 Unisex Heavy Cotton. Left chest print area 4 x 4 inches and back print area 14 x 14 inches.",
+    hook: "Professional custom T-shirts with left chest and back print options. Start here, then choose up to 10 basic colors, sizes and quantities in the online designer.",
+    benefits: ["10 basic shirt colors", "Left chest and back design", "Automatic 7-day delivery date"],
   },
 };
 
@@ -242,6 +243,7 @@ function renderProductOptions() {
   const isHangers = selectedGroup.category === "hangers";
   const isRetractable = selectedGroup.category === "retractable";
   const isYardSigns = selectedGroup.category === "yardSigns";
+  const isTshirts = selectedGroup.category === "shirts";
   const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
   const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers || isRetractable || isYardSigns;
   if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
@@ -253,6 +255,7 @@ function renderProductOptions() {
   if (yardSignConfigurationOptions) yardSignConfigurationOptions.hidden = !isYardSigns;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
+  productOrderPanel?.classList.toggle("shirt-product-mode", isTshirts);
 }
 
 function renderQuantityOptions() {
@@ -296,7 +299,7 @@ function updateSelectedPrice() {
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
     if (selectedGroup.category === "shirts") {
-      productPrice.textContent = "$14.00+";
+      productPrice.innerHTML = `$14.00 <small>${localStorage.getItem("preferredLanguage") === "es" ? "cada una" : "each"}</small>`;
       productOrderLink.href = "tshirt.html";
       productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Diseñar camiseta" : "Design T-shirt";
       return;
