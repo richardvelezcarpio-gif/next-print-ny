@@ -471,6 +471,18 @@ textarea {
   color: #fff;
 }
 
+.hero-printing-cta {
+  width: min(860px, 100%);
+  margin: 26px auto 0;
+  padding: 18px 22px;
+  text-align: center;
+}
+
+.hero-printing-cta p {
+  max-width: 620px;
+  margin-inline: auto;
+}
+
 .chat-form input {
   width: 100%;
   border: 1px solid var(--line);
@@ -509,6 +521,31 @@ textarea {
   object-fit: cover;
   object-position: center;
   border-radius: 8px;
+}
+
+.tshirt-home-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+
+.tshirt-home-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: center;
+  border: 1px solid rgba(8, 228, 255, 0.35);
+  border-radius: 10px;
+}
+
+.tshirt-home-card h2,
+.tshirt-home-card p {
+  text-align: left;
+}
+
+.tshirt-home-card .action-gradient {
+  width: 100%;
 }
 
 .copy-spec-grid {
