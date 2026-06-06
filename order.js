@@ -19,6 +19,7 @@ const orderMaxTotalFileSize = 12 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
 const tshirtFilesKey = "nextPrintTshirtFiles";
+const tshirtDetailsKey = "nextPrintTshirtDetails";
 
 setAutomaticOrderDates();
 prefillOrderFromCatalog();
@@ -114,6 +115,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     }
     orderSuccess.hidden = false;
     sessionStorage.removeItem(tshirtFilesKey);
+    sessionStorage.removeItem(tshirtDetailsKey);
     smartOrderForm.reset();
     setAutomaticOrderDates();
     orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design files. Optional.");
@@ -159,6 +161,7 @@ function prefillOrderFromCatalog() {
   const quantity = cleanParam(params.get("quantity"));
   const price = cleanParam(params.get("price"));
   const details = cleanParam(params.get("details"));
+  const tshirtDetails = cleanSessionDetails();
   const service = cleanParam(params.get("service")) || "Printing";
 
   if (!product && !details) return;
@@ -172,7 +175,9 @@ function prefillOrderFromCatalog() {
   if (quantityInput) quantityInput.value = quantity;
 
   if (detailsInput) {
-    detailsInput.value = details || `Product: ${product}\nQuantity: ${quantity}\nSuggested sale price: ${price}`;
+    detailsInput.value = product === "Gildan G500 T-Shirt Mix" && tshirtDetails
+      ? tshirtDetails
+      : details || `Product: ${product}\nQuantity: ${quantity}\nSuggested sale price: ${price}`;
   }
 
   if (budgetInput && price) {
@@ -187,6 +192,17 @@ function cleanParam(value) {
     .replace(/[<>]/g, "")
     .trim()
     .slice(0, 500);
+}
+
+function cleanSessionDetails() {
+  try {
+    return String(sessionStorage.getItem(tshirtDetailsKey) || "")
+      .replace(/[<>]/g, "")
+      .trim()
+      .slice(0, 1500);
+  } catch {
+    return "";
+  }
 }
 
 async function copyOrderValue(value, button, labelKey) {
@@ -282,7 +298,7 @@ function getTshirtDesignFiles() {
   try {
     const files = JSON.parse(sessionStorage.getItem(tshirtFilesKey) || "[]");
     return Array.isArray(files)
-      ? files.filter((file) => file?.name && file?.content).slice(0, 2)
+      ? files.filter((file) => file?.name && file?.content).slice(0, 4)
       : [];
   } catch {
     return [];

@@ -6,7 +6,7 @@
     <meta name="description" content="Customize a Gildan G500 T-shirt with Next Print NY." />
     <title>Custom T-Shirts | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260605-2030" />
+    <link rel="stylesheet" href="styles.css?v=20260606-0330" />
   </head>
   <body>
     <div class="page-shell">
@@ -22,12 +22,15 @@
         <section class="shirt-heading">
           <span id="shirtKicker">Custom apparel</span>
           <h1 id="shirtTitle">Gildan G500 Unisex Heavy Cotton</h1>
-          <p id="shirtIntro">Choose your shirt color, size and quantity. Then create the front design in our online designer.</p>
+          <p id="shirtIntro">Choose colors, sizes and quantities. Then create the front and back design in our online designer.</p>
         </section>
 
         <section class="shirt-configurator">
           <div class="shirt-product-stage">
-            <div id="shirtPreview" class="shirt-preview" aria-label="Selected blank T-shirt"><span>12 × 12</span></div>
+            <div id="shirtPreview" class="shirt-preview" aria-label="Selected blank T-shirt">
+              <span class="shirt-left-print">4 × 4</span>
+              <span class="shirt-back-print">14 × 14</span>
+            </div>
             <p id="shirtColorName">White</p>
           </div>
 
@@ -37,16 +40,13 @@
               <div id="shirtColors" class="shirt-color-grid" role="radiogroup" aria-label="Shirt color"></div>
             </section>
             <section>
-              <h2 id="sizeTitle">Choose a size</h2>
-              <div id="shirtSizes" class="shirt-size-grid"></div>
+              <h2 id="sizeTitle">Choose quantities by size</h2>
+              <div id="shirtSizes" class="shirt-quantity-matrix"></div>
               <small id="sizeNote">Sizes 2XL–5XL add $4 per shirt.</small>
             </section>
-            <label class="shirt-quantity">
-              <span id="quantityLabel">Quantity</span>
-              <input id="shirtQuantity" type="number" min="1" max="500" value="1" required />
-            </label>
+            <div id="shirtOrderSummary" class="shirt-order-summary" aria-live="polite"></div>
             <div class="shirt-price-box">
-              <span id="unitPriceLabel">Price per shirt</span><strong id="shirtUnitPrice">$14.00</strong>
+              <span id="quantityLabel">Total shirts</span><strong id="shirtTotalQty">0</strong>
               <span id="totalLabel">Order total</span><strong id="shirtTotal">$14.00</strong>
               <small id="deliveryNote">Delivery date: automatically 7 days after the order.</small>
             </div>
@@ -55,6 +55,6 @@
         </section>
       </main>
     </div>
-    <script src="tshirt.js?v=20260605-2030"></script>
+    <script src="tshirt.js?v=20260606-0330"></script>
   </body>
 </html>

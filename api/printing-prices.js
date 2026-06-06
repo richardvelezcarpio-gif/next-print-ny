@@ -19,7 +19,11 @@ const printingPrices = {
   "Retractable Banner": { 1: 180, 2: 360, 3: 540, 4: 720, 5: 900, 6: 1080, 7: 1260, 8: 1440, 9: 1620, 10: 1800 },
 };
 
-export function catalogPriceFor(product, quantity) {
+export function catalogPriceFor(product, quantity, details = "") {
+  if (String(product || "") === "Gildan G500 T-Shirt Mix") {
+    return catalogTshirtMixPrice(details);
+  }
+
   const shirtMatch = String(product || "").match(/^Gildan G500 T-Shirt \((S|M|L|XL|2XL|3XL|4XL|5XL)\)$/);
   if (shirtMatch) {
     const count = Number(quantity);
@@ -35,4 +39,29 @@ export function catalogPriceFor(product, quantity) {
   }
   const amount = printingPrices[String(product || "")]?.[Number(quantity)];
   return Number.isFinite(amount) ? `$${amount.toFixed(2)}` : "";
+}
+
+function catalogTshirtMixPrice(details) {
+  const linePattern = /^-\s+.+?\s\/\s(S|M|L|XL|2XL|3XL|4XL|5XL):\s+(\d+)\s+x\s+\$(14|18)\.00\s+=\s+\$([0-9,]+\.\d{2})$/gm;
+  let match;
+  let total = 0;
+  let lines = 0;
+
+  while ((match = linePattern.exec(String(details || "")))) {
+    const size = match[1];
+    const quantity = Number(match[2]);
+    const unit = Number(match[3]);
+    const lineTotal = Number(match[4].replace(/,/g, ""));
+    const expectedUnit = ["2XL", "3XL", "4XL", "5XL"].includes(size) ? 18 : 14;
+    const expectedLine = quantity * expectedUnit;
+
+    if (!Number.isInteger(quantity) || quantity < 1 || unit !== expectedUnit || Math.abs(lineTotal - expectedLine) > 0.01) {
+      return "";
+    }
+
+    total += expectedLine;
+    lines += 1;
+  }
+
+  return lines > 0 ? `$${total.toFixed(2)}` : "";
 }

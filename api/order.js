@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   }
 
   const order = sanitizeOrder(req.body || {});
-  const catalogPrice = catalogPriceFor(order.product, order.quantity);
+  const catalogPrice = catalogPriceFor(order.product, order.quantity, order.details);
 
   if (!order.name || !order.phone || !order.service || !order.details) {
     res.status(400).json({ error: "Missing required fields" });

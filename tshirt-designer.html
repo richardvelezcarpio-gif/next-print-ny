@@ -6,7 +6,7 @@
     <meta name="description" content="Design a custom T-shirt online with Next Print NY." />
     <title>T-Shirt Designer | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260605-2030" />
+    <link rel="stylesheet" href="styles.css?v=20260606-0330" />
   </head>
   <body>
     <div class="page-shell">
@@ -19,8 +19,8 @@
       <main class="designer-page">
         <section class="shirt-heading">
           <span id="designerKicker">Online T-shirt designer</span>
-          <h1 id="designerTitle">Create your front design</h1>
-          <p id="designerIntro">Upload artwork or add text. Drag the design inside the 12 × 12 print area to preview the final shirt.</p>
+          <h1 id="designerTitle">Create your shirt design</h1>
+          <p id="designerIntro">Upload artwork or add text. Use the left chest 4 × 4 area and the back 14 × 14 area.</p>
         </section>
 
         <section class="designer-workspace">
@@ -31,6 +31,13 @@
 
           <aside class="designer-tools">
             <div id="shirtSummary" class="designer-summary"></div>
+            <section>
+              <h2 id="sideTitle">Design side</h2>
+              <div class="designer-side-tabs" role="tablist" aria-label="Design side">
+                <button type="button" class="active" data-side="front" id="frontSideButton">Front left chest 4 × 4</button>
+                <button type="button" data-side="back" id="backSideButton">Back 14 × 14</button>
+              </div>
+            </section>
             <section>
               <h2 id="artworkTitle">Add artwork</h2>
               <label class="designer-upload">
@@ -60,6 +67,6 @@
         </section>
       </main>
     </div>
-    <script src="tshirt-designer.js?v=20260605-2030"></script>
+    <script src="tshirt-designer.js?v=20260606-0330"></script>
   </body>
 </html>
