@@ -18,9 +18,11 @@ const orderMaxFileSize = 4 * 1024 * 1024;
 const orderMaxTotalFileSize = 12 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
 const zelleAccount = "2393337935";
+const tshirtFilesKey = "nextPrintTshirtFiles";
 
 setAutomaticOrderDates();
 prefillOrderFromCatalog();
+showAttachedTshirtDesign();
 
 orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, orderCopyZelle, "zelle.copyEmail"));
 orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
@@ -59,6 +61,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
   try {
     const formData = new FormData(smartOrderForm);
     const files = Array.from(orderFile.files || []);
+    const tshirtFiles = getTshirtDesignFiles();
     const payload = {
       language: localStorage.getItem("preferredLanguage") || "en",
       service: formData.get("service"),
@@ -71,12 +74,15 @@ smartOrderForm?.addEventListener("submit", async (event) => {
       name: formData.get("name"),
       phone: formData.get("phone"),
       email: formData.get("email"),
-      files: await Promise.all(
-        files.map(async (file) => ({
+      files: [
+        ...await Promise.all(
+          files.map(async (file) => ({
           name: file.name,
           content: await fileToBase64(file),
-        }))
-      ),
+          }))
+        ),
+        ...tshirtFiles,
+      ],
     };
 
     const response = await fetch("/api/order", {
@@ -107,6 +113,7 @@ smartOrderForm?.addEventListener("submit", async (event) => {
       orderInvoiceLink.href = `invoice.html?order=${encodeURIComponent(data.orderNumber)}`;
     }
     orderSuccess.hidden = false;
+    sessionStorage.removeItem(tshirtFilesKey);
     smartOrderForm.reset();
     setAutomaticOrderDates();
     orderFileName.textContent = getOrderText("order.fileHint", "PDF, JPG, PNG or design files. Optional.");
@@ -210,6 +217,7 @@ function getOrderText(key, fallback) {
       "order.fileHint": "PDF, JPG, PNG o archivos de diseño. Opcional.",
       "order.fileTooLarge": "Cada archivo debe pesar menos de 4 MB.",
       "order.filesTooLarge": "Todos los archivos juntos deben pesar menos de 12 MB.",
+      "order.tshirtAttached": "Vista previa del diseño de camiseta adjunta automáticamente.",
       "order.sending": "Enviando orden...",
       "order.sent": "Orden enviada.",
       "order.configError": "El formulario necesita RESEND_API_KEY en Vercel.",
@@ -222,6 +230,7 @@ function getOrderText(key, fallback) {
       "order.fileHint": "PDF, JPG, PNG or design files. Optional.",
       "order.fileTooLarge": "Each file must be under 4 MB.",
       "order.filesTooLarge": "All files together must be under 12 MB.",
+      "order.tshirtAttached": "T-shirt design preview attached automatically.",
       "order.sending": "Sending order...",
       "order.sent": "Order sent.",
       "order.configError": "Order form needs RESEND_API_KEY in Vercel.",
@@ -267,4 +276,22 @@ function fileToBase64(file) {
     reader.onerror = () => reject(reader.error);
     reader.readAsDataURL(file);
   });
+}
+
+function getTshirtDesignFiles() {
+  try {
+    const files = JSON.parse(sessionStorage.getItem(tshirtFilesKey) || "[]");
+    return Array.isArray(files)
+      ? files.filter((file) => file?.name && file?.content).slice(0, 2)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
+function showAttachedTshirtDesign() {
+  const files = getTshirtDesignFiles();
+  if (files.length && orderFileName) {
+    orderFileName.textContent = getOrderText("order.tshirtAttached", "T-shirt design preview attached automatically.");
+  }
 }

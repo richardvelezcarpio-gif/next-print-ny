@@ -55,6 +55,12 @@ const productDetails = {
     hook: "Put your message where customers can see it. Yard signs are ideal for real estate, events, contractors, campaigns and neighborhood promotions.",
     benefits: ["Weather-resistant outdoor display", "H-wire stake included", "Vibrant full-color printing"],
   },
+  shirts: {
+    visual: "shirts",
+    material: "Gildan G500 Unisex Heavy Cotton shirt with a front print area up to 12 x 12 inches.",
+    hook: "Create a shirt that feels like your brand. Choose a color and size, then add your artwork or custom text in our online designer.",
+    benefits: ["10 basic shirt colors", "Online front-print designer", "Automatic 7-day delivery date"],
+  },
 };
 
 const yardSignPrices = Array.from({ length: 100 }, (_, index) => {
@@ -83,6 +89,7 @@ const printingProducts = [
   { name: "Door Hangers 3.5x8.5", category: "hangers", prices: [["100", "$160.00"], ["250", "$197.00"], ["500", "$219.00"], ["1000", "$240.00"], ["2500", "$367.00"], ["5000", "$485.00"], ["10000", "$775.00"]] },
   { name: "Retractable Banner", category: "retractable", prices: [["1", "$180.00"], ["2", "$360.00"], ["3", "$540.00"], ["4", "$720.00"], ["5", "$900.00"], ["6", "$1,080.00"], ["7", "$1,260.00"], ["8", "$1,440.00"], ["9", "$1,620.00"], ["10", "$1,800.00"]] },
   { name: "Yard Sign", category: "yardSigns", prices: yardSignPrices },
+  { name: "Gildan G500 T-Shirt", category: "shirts", prices: [["1", "$14.00"]] },
 ];
 
 const productGroups = [
@@ -98,6 +105,7 @@ const productGroups = [
   { name: "Door Hangers", category: "hangers", variants: ["Door Hangers 4x11", "Door Hangers 3.5x8.5"] },
   { name: "Retractable Banners", category: "retractable", stock: 10, variants: ["Retractable Banner"] },
   { name: "Yard Signs", category: "yardSigns", variants: ["Yard Sign"] },
+  { name: "T-Shirts", category: "shirts", variants: ["Gildan G500 T-Shirt"] },
 ].map((group) => ({
   ...group,
   variants: group.variants.map((name) => printingProducts.find((product) => product.name === name)).filter(Boolean),
@@ -279,6 +287,7 @@ function renderProductVisual(type) {
     menus: `<div class="mockup-menu"><strong>MENU</strong><span></span><span></span><span></span><em>Next Print NY</em></div>`,
     banners: `<div class="mockup-banner"><span>GRAND OPENING</span><strong>NEXT PRINT NY</strong></div>`,
     hangers: `<div class="mockup-hanger"><span></span><strong>DOOR OFFER</strong><em>Scan - Call - Visit</em></div>`,
+    shirts: `<div class="mockup-shirt"><span>YOUR DESIGN</span></div>`,
   };
   return visuals[type] || visuals.cards;
 }
@@ -286,6 +295,13 @@ function renderProductVisual(type) {
 function updateSelectedPrice() {
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
+    if (selectedGroup.category === "shirts") {
+      productPrice.textContent = "$14.00+";
+      productOrderLink.href = "tshirt.html";
+      productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Diseñar camiseta" : "Design T-shirt";
+      return;
+    }
+    productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Iniciar orden con este producto" : "Start order with this product";
     const info = productDetails[selectedProduct.category] || productDetails.cards;
     const configuration = [];
     if (selectedGroup.category === "cards") {
@@ -377,6 +393,7 @@ function sizeLabel(productName, groupName) {
   }
   if (groupName === "Retractable Banners") return '33.5" x 80"';
   if (groupName === "Yard Signs") return "18 x 24 inches";
+  if (groupName === "T-Shirts") return "Gildan G500 Unisex Heavy Cotton";
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
 }
 

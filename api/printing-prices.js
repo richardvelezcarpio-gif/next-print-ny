@@ -20,6 +20,13 @@ const printingPrices = {
 };
 
 export function catalogPriceFor(product, quantity) {
+  const shirtMatch = String(product || "").match(/^Gildan G500 T-Shirt \((S|M|L|XL|2XL|3XL|4XL|5XL)\)$/);
+  if (shirtMatch) {
+    const count = Number(quantity);
+    if (!Number.isInteger(count) || count < 1) return "";
+    const unitPrice = ["2XL", "3XL", "4XL", "5XL"].includes(shirtMatch[1]) ? 18 : 14;
+    return `$${(count * unitPrice).toFixed(2)}`;
+  }
   if (String(product || "") === "Yard Sign") {
     const count = Number(quantity);
     if (!Number.isInteger(count) || count < 1) return "";

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Customize a Gildan G500 T-shirt with Next Print NY." />
+    <title>Custom T-Shirts | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260605-2030" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="top-nav top-nav-simple">
+        <a class="brand" href="index.html" aria-label="Next Print NY home"><img src="assets/logo.png" alt="Next Print NY" /></a>
+        <nav class="menu" aria-label="Main navigation">
+          <a href="index.html">Home</a><a href="printing.html">Printing</a><a href="tracking.html">Track Order</a><a href="contact.html">Contact</a>
+        </nav>
+        <div class="language-switch" aria-label="Change language"><button type="button" data-shirt-lang="en">EN</button><button type="button" data-shirt-lang="es">ES</button></div>
+      </header>
+
+      <main class="shirt-page">
+        <section class="shirt-heading">
+          <span id="shirtKicker">Custom apparel</span>
+          <h1 id="shirtTitle">Gildan G500 Unisex Heavy Cotton</h1>
+          <p id="shirtIntro">Choose your shirt color, size and quantity. Then create the front design in our online designer.</p>
+        </section>
+
+        <section class="shirt-configurator">
+          <div class="shirt-product-stage">
+            <div id="shirtPreview" class="shirt-preview" aria-label="Selected blank T-shirt"><span>12 × 12</span></div>
+            <p id="shirtColorName">White</p>
+          </div>
+
+          <form id="shirtSelectionForm" class="shirt-selection-panel">
+            <section>
+              <h2 id="colorTitle">Choose a color</h2>
+              <div id="shirtColors" class="shirt-color-grid" role="radiogroup" aria-label="Shirt color"></div>
+            </section>
+            <section>
+              <h2 id="sizeTitle">Choose a size</h2>
+              <div id="shirtSizes" class="shirt-size-grid"></div>
+              <small id="sizeNote">Sizes 2XL–5XL add $4 per shirt.</small>
+            </section>
+            <label class="shirt-quantity">
+              <span id="quantityLabel">Quantity</span>
+              <input id="shirtQuantity" type="number" min="1" max="500" value="1" required />
+            </label>
+            <div class="shirt-price-box">
+              <span id="unitPriceLabel">Price per shirt</span><strong id="shirtUnitPrice">$14.00</strong>
+              <span id="totalLabel">Order total</span><strong id="shirtTotal">$14.00</strong>
+              <small id="deliveryNote">Delivery date: automatically 7 days after the order.</small>
+            </div>
+            <button id="openDesigner" class="action-gradient" type="submit">Continue to designer</button>
+          </form>
+        </section>
+      </main>
+    </div>
+    <script src="tshirt.js?v=20260605-2030"></script>
+  </body>
+</html>

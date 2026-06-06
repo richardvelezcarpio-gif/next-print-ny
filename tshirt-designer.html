@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Design a custom T-shirt online with Next Print NY." />
+    <title>T-Shirt Designer | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260605-2030" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="top-nav top-nav-simple">
+        <a class="brand" href="index.html" aria-label="Next Print NY home"><img src="assets/logo.png" alt="Next Print NY" /></a>
+        <nav class="menu" aria-label="Main navigation"><a href="printing.html">Printing</a><a href="tshirt.html">T-Shirts</a><a href="tracking.html">Track Order</a><a href="contact.html">Contact</a></nav>
+        <div class="language-switch" aria-label="Change language"><button type="button" data-designer-lang="en">EN</button><button type="button" data-designer-lang="es">ES</button></div>
+      </header>
+
+      <main class="designer-page">
+        <section class="shirt-heading">
+          <span id="designerKicker">Online T-shirt designer</span>
+          <h1 id="designerTitle">Create your front design</h1>
+          <p id="designerIntro">Upload artwork or add text. Drag the design inside the 12 × 12 print area to preview the final shirt.</p>
+        </section>
+
+        <section class="designer-workspace">
+          <div class="designer-canvas-panel">
+            <canvas id="shirtCanvas" width="720" height="820" aria-label="T-shirt design preview"></canvas>
+            <p id="canvasHint">Drag the image or text to move it.</p>
+          </div>
+
+          <aside class="designer-tools">
+            <div id="shirtSummary" class="designer-summary"></div>
+            <section>
+              <h2 id="artworkTitle">Add artwork</h2>
+              <label class="designer-upload">
+                <input id="designFile" type="file" accept=".png,.jpg,.jpeg,.webp" />
+                <span id="designFileLabel">Choose image</span>
+              </label>
+            </section>
+            <section>
+              <h2 id="textTitle">Add text</h2>
+                <input id="designText" type="text" maxlength="40" placeholder="Your text" />
+              <div class="designer-inline-fields">
+                <label><span id="textColorLabel">Color</span><input id="designTextColor" type="color" value="#05275c" /></label>
+                <label><span id="textSizeLabel">Size</span><input id="designTextSize" type="range" min="20" max="90" value="44" /></label>
+              </div>
+            </section>
+            <section>
+              <h2 id="scaleTitle">Artwork size</h2>
+              <input id="designScale" type="range" min="20" max="100" value="62" />
+            </section>
+            <div class="designer-actions">
+              <button id="centerDesign" class="outline-button" type="button">Center design</button>
+              <button id="clearDesign" class="outline-button" type="button">Clear design</button>
+              <button id="continueOrder" class="action-gradient" type="button">Approve design and order</button>
+            </div>
+            <p id="designerStatus" class="order-status" aria-live="polite"></p>
+          </aside>
+        </section>
+      </main>
+    </div>
+    <script src="tshirt-designer.js?v=20260605-2030"></script>
+  </body>
+</html>

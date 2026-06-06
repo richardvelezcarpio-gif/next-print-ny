@@ -1248,6 +1248,344 @@ textarea {
   background: rgba(255, 255, 255, 0.15);
 }
 
+.mockup-shirt {
+  position: relative;
+  width: 72%;
+  aspect-ratio: 0.82;
+  clip-path: polygon(28% 5%, 40% 0, 60% 0, 72% 5%, 100% 22%, 86% 42%, 76% 34%, 78% 100%, 22% 100%, 24% 34%, 14% 42%, 0 22%);
+  display: grid;
+  place-items: center;
+  background: #f8fafc;
+  filter: drop-shadow(0 16px 18px rgba(5, 39, 92, 0.18));
+}
+
+.mockup-shirt::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24%;
+  height: 12%;
+  border-radius: 0 0 50% 50%;
+  background: #dce6f0;
+}
+
+.mockup-shirt span {
+  color: var(--cyan);
+  font-weight: 900;
+  font-size: clamp(0.8rem, 2vw, 1.25rem);
+}
+
+.shirt-page,
+.designer-page {
+  padding: 46px 52px 64px;
+  background: #f4f8fd;
+}
+
+.shirt-heading {
+  max-width: 850px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.shirt-heading > span {
+  color: var(--cyan);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.shirt-heading h1 {
+  margin: 8px 0 10px;
+  color: var(--navy);
+  font-size: clamp(2rem, 5vw, 3.8rem);
+}
+
+.shirt-heading p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.shirt-configurator,
+.designer-workspace {
+  display: grid;
+  grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
+  gap: 28px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+.shirt-product-stage,
+.shirt-selection-panel,
+.designer-canvas-panel,
+.designer-tools {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 18px 40px rgba(5, 39, 92, 0.08);
+}
+
+.shirt-product-stage {
+  min-height: 650px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 18px;
+  padding: 30px;
+}
+
+.shirt-preview {
+  --shirt-color: #f7f7f4;
+  position: relative;
+  width: min(88%, 430px);
+  aspect-ratio: 0.82;
+  clip-path: polygon(28% 5%, 40% 0, 60% 0, 72% 5%, 100% 22%, 86% 42%, 76% 34%, 78% 100%, 22% 100%, 24% 34%, 14% 42%, 0 22%);
+  display: grid;
+  place-items: center;
+  background: var(--shirt-color);
+  filter: drop-shadow(0 20px 20px rgba(5, 39, 92, 0.2));
+}
+
+.shirt-preview::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 24%;
+  height: 12%;
+  border-radius: 0 0 50% 50%;
+  background: rgba(5, 39, 92, 0.14);
+}
+
+.shirt-preview span {
+  width: 35%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--cyan);
+  color: var(--navy);
+  font-weight: 900;
+}
+
+.shirt-product-stage p {
+  margin: 0;
+  color: var(--navy);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.shirt-selection-panel,
+.designer-tools {
+  display: grid;
+  gap: 22px;
+  padding: 28px;
+}
+
+.shirt-selection-panel h2,
+.designer-tools h2 {
+  margin: 0 0 12px;
+  color: var(--navy);
+  font-size: 1.15rem;
+}
+
+.shirt-color-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.shirt-color-swatch {
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.shirt-color-swatch span {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #c8d2df;
+  border-radius: 50%;
+  background: var(--swatch);
+}
+
+.shirt-color-swatch.active {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 3px #dff8fd;
+}
+
+.shirt-size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.shirt-size-grid button {
+  min-height: 64px;
+  display: grid;
+  gap: 3px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--navy);
+  background: #fff;
+  cursor: pointer;
+}
+
+.shirt-size-grid button.active {
+  border-color: var(--cyan);
+  background: #e9faff;
+  box-shadow: inset 0 0 0 1px var(--cyan);
+}
+
+.shirt-size-grid small,
+.shirt-selection-panel small {
+  color: var(--muted);
+}
+
+.shirt-quantity {
+  display: grid;
+  gap: 7px;
+  color: var(--navy);
+  font-weight: 900;
+}
+
+.shirt-quantity input,
+.designer-tools input[type="text"] {
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  font: inherit;
+}
+
+.shirt-price-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 9px 18px;
+  padding: 18px;
+  border-radius: 8px;
+  background: var(--soft);
+  color: var(--muted);
+}
+
+.shirt-price-box strong {
+  color: #5ea10b;
+  font-size: 1.35rem;
+}
+
+.shirt-price-box small {
+  grid-column: 1 / -1;
+}
+
+.designer-canvas-panel {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 18px;
+}
+
+#shirtCanvas {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  touch-action: none;
+}
+
+.designer-canvas-panel p {
+  margin: 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.designer-tools {
+  align-content: start;
+}
+
+.designer-summary {
+  display: grid;
+  gap: 5px;
+  padding: 16px;
+  border-left: 4px solid var(--cyan);
+  background: var(--soft);
+  color: var(--muted);
+}
+
+.designer-summary strong,
+.designer-summary b {
+  color: var(--navy);
+}
+
+.designer-summary b {
+  font-size: 1.5rem;
+}
+
+.designer-upload {
+  min-height: 88px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--cyan);
+  border-radius: 8px;
+  color: var(--navy);
+  background: #effcff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.designer-upload input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.designer-inline-fields {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.designer-inline-fields label {
+  display: grid;
+  gap: 5px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.designer-inline-fields input[type="color"] {
+  width: 100%;
+  min-height: 42px;
+}
+
+.designer-tools input[type="range"] {
+  width: 100%;
+  accent-color: var(--cyan);
+}
+
+.designer-actions {
+  display: grid;
+  gap: 10px;
+}
+
+@media (max-width: 880px) {
+  .shirt-page,
+  .designer-page {
+    padding: 28px 14px 48px;
+  }
+
+  .shirt-configurator,
+  .designer-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .shirt-product-stage {
+    min-height: 440px;
+  }
+}
+
 .product-list button:hover,
 .product-list button.active {
   color: #fff;
