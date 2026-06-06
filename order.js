@@ -174,6 +174,7 @@ function prefillOrderFromCatalog() {
 
   if (productInput) productInput.value = product;
   if (quantityInput) quantityInput.value = quantity;
+  if (product === "Gildan G500 T-Shirt Mix") markTshirtAutoUpload();
 
   if (detailsInput) {
     detailsInput.value = product === "Gildan G500 T-Shirt Mix" && tshirtDetails
@@ -309,9 +310,13 @@ function getTshirtDesignFiles() {
 function showAttachedTshirtDesign() {
   const files = getTshirtDesignFiles();
   if (files.length && orderFileName) {
-    orderFile?.setAttribute("disabled", "true");
-    orderFile?.closest(".order-file-drop")?.classList.add("has-auto-file");
-    if (orderFileButton) orderFileButton.hidden = true;
+    markTshirtAutoUpload();
     orderFileName.textContent = getOrderText("order.tshirtAttached", "T-shirt design preview attached automatically.");
   }
+}
+
+function markTshirtAutoUpload() {
+  orderFile?.setAttribute("disabled", "true");
+  orderFile?.closest(".order-file-drop")?.classList.add("has-auto-file");
+  if (orderFileButton) orderFileButton.hidden = true;
 }
