@@ -33,6 +33,8 @@ const copy = {
     next: "Continue to designer",
     empty: "Add at least one quantity to continue.",
     summary: "Selected shirts",
+    areaTitle: "Print areas",
+    areaText: "Front left chest: 4 x 4 in · Back: 14 x 14 in",
   },
   es: {
     kicker: "Ropa personalizada",
@@ -47,6 +49,8 @@ const copy = {
     next: "Continuar al diseñador",
     empty: "Agrega al menos una cantidad para continuar.",
     summary: "Camisetas seleccionadas",
+    areaTitle: "Áreas de impresión",
+    areaText: "Frente izquierdo: 4 x 4 pulgadas · Espalda: 14 x 14 pulgadas",
   },
 };
 
@@ -195,6 +199,8 @@ function renderLanguage(language) {
     ["totalLabel", "total"],
     ["deliveryNote", "delivery"],
     ["openDesigner", "next"],
+    ["printAreaTitle", "areaTitle"],
+    ["printAreaText", "areaText"],
   ].forEach(([id, key]) => {
     const node = document.querySelector(`#${id}`);
     if (node) node.textContent = text[key];

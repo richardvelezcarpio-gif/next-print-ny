@@ -1359,37 +1359,29 @@ textarea {
   background: rgba(5, 39, 92, 0.14);
 }
 
-.shirt-preview span {
-  position: absolute;
-  display: grid;
-  place-items: center;
-  border: 2px dashed var(--cyan);
-  color: var(--navy);
-  font-weight: 900;
-  background: rgba(255, 255, 255, 0.5);
-}
-
-.shirt-left-print {
-  top: 28%;
-  left: 41%;
-  width: 18%;
-  aspect-ratio: 1;
-  font-size: 0.8rem;
-}
-
-.shirt-back-print {
-  top: 38%;
-  left: 31%;
-  width: 38%;
-  aspect-ratio: 1;
-  font-size: 1rem;
-}
-
 .shirt-product-stage p {
   margin: 0;
   color: var(--navy);
   font-size: 1.2rem;
   font-weight: 900;
+}
+
+.shirt-print-note {
+  display: grid;
+  gap: 5px;
+  max-width: 430px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f8fbff;
+  color: var(--muted);
+  text-align: center;
+}
+
+.shirt-print-note strong {
+  color: var(--navy);
+  text-transform: uppercase;
+  font-size: 0.82rem;
 }
 
 .shirt-selection-panel,
