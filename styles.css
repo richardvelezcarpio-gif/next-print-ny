@@ -2381,6 +2381,19 @@ textarea {
   line-height: 1.45;
 }
 
+.order-file-drop.has-auto-file {
+  min-height: 96px;
+  border-style: solid;
+  background: #f8fbff;
+  cursor: default;
+}
+
+.order-file-drop.has-auto-file small {
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 900;
+}
+
 .order-file-drop small.error,
 .order-status.error {
   color: #b42318;

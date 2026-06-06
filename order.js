@@ -1,5 +1,6 @@
 const smartOrderForm = document.querySelector("#smartOrderForm");
 const orderFile = document.querySelector("#orderFile");
+const orderFileButton = document.querySelector("#orderFileButton");
 const orderFileName = document.querySelector("#orderFileName");
 const orderStatus = document.querySelector("#orderStatus");
 const orderSuccess = document.querySelector("#orderSuccess");
@@ -308,6 +309,9 @@ function getTshirtDesignFiles() {
 function showAttachedTshirtDesign() {
   const files = getTshirtDesignFiles();
   if (files.length && orderFileName) {
+    orderFile?.setAttribute("disabled", "true");
+    orderFile?.closest(".order-file-drop")?.classList.add("has-auto-file");
+    if (orderFileButton) orderFileButton.hidden = true;
     orderFileName.textContent = getOrderText("order.tshirtAttached", "T-shirt design preview attached automatically.");
   }
 }
