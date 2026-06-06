@@ -473,7 +473,7 @@ textarea {
 
 .hero-printing-cta {
   width: min(860px, 100%);
-  margin: 26px auto 0;
+  margin: 26px auto 34px;
   padding: 18px 22px;
   text-align: center;
 }
