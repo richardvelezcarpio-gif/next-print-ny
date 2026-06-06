@@ -28,7 +28,7 @@ fallbackSelection.totalPrice = fallbackSelection.items[0].lineTotal;
 const selection = loadSelection() || fallbackSelection;
 const previewItem = selection.items[0] || fallbackSelection.items[0];
 const designs = {
-  front: { artwork: null, text: "", color: "#05275c", size: 34, scale: 62, position: { x: 307, y: 310 } },
+  front: { artwork: null, text: "", color: "#05275c", size: 34, scale: 62, position: { x: 413, y: 310 } },
   back: { artwork: null, text: "", color: "#05275c", size: 52, scale: 70, position: { x: 360, y: 392 } },
 };
 
@@ -244,7 +244,7 @@ function moveDesign(event) {
 
 function printAreaFor(side) {
   return side === "front"
-    ? { x: 270, y: 230, width: 78, height: 78 }
+    ? { x: 374, y: 230, width: 78, height: 78 }
     : { x: 242, y: 245, width: 236, height: 236 };
 }
 
