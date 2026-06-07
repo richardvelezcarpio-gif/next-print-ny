@@ -58,6 +58,49 @@ textarea {
   background: #fff;
 }
 
+.reseller-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 30px;
+  color: #fff;
+  background: linear-gradient(90deg, #05275c, #03bfe7);
+}
+
+.reseller-strip div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+}
+
+.reseller-strip strong {
+  font-size: 0.86rem;
+  text-transform: uppercase;
+}
+
+.reseller-strip span {
+  color: #e9fbff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.reseller-strip a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  border-radius: 7px;
+  color: var(--navy);
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
 .brand img {
   display: block;
   width: 172px;
@@ -287,6 +330,11 @@ textarea {
   text-align: left;
 }
 
+.hero-copies-card {
+  grid-column: span 2;
+  min-height: 390px;
+}
+
 .showcase-card {
   position: relative;
   overflow: hidden;
@@ -502,9 +550,17 @@ textarea {
   grid-column: 1 / -1;
 }
 
+.service-showcase .copies-order-card {
+  grid-column: span 2;
+}
+
 .copies-order-card .upload-hero {
   grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
   align-items: stretch;
+}
+
+.service-showcase .copies-order-card .upload-hero {
+  height: 100%;
 }
 
 .copies-order-card .drop-zone {
@@ -521,6 +577,10 @@ textarea {
   object-fit: cover;
   object-position: center;
   border-radius: 8px;
+}
+
+.service-showcase .copies-service-image {
+  max-height: 230px;
 }
 
 .tshirt-home-card {
@@ -618,6 +678,67 @@ textarea {
   grid-template-columns: minmax(190px, 0.78fr) minmax(0, 1.22fr);
   gap: 26px;
   align-items: center;
+}
+
+.trust-section {
+  padding: 34px 52px 42px;
+  background: #fff;
+}
+
+.trust-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.review-card,
+.founder-card {
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--soft);
+}
+
+.review-card strong {
+  display: block;
+  margin-bottom: 12px;
+  color: #ff9a00;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.review-card p,
+.founder-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.founder-card {
+  color: #fff;
+  background:
+    linear-gradient(135deg, rgba(3, 191, 231, 0.2), rgba(5, 39, 92, 0.94)),
+    var(--navy);
+}
+
+.founder-card span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--cyan);
+  font-size: 0.75rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.founder-card h2 {
+  margin: 0 0 12px;
+  color: #fff;
+  font-size: 1.3rem;
+  text-transform: uppercase;
+}
+
+.founder-card p {
+  color: #e7f5ff;
 }
 
 .drop-zone {
@@ -3184,6 +3305,11 @@ textarea {
     padding-bottom: 0;
   }
 
+  .hero-copies-card,
+  .service-showcase .copies-order-card {
+    grid-column: span 2;
+  }
+
   .hero .showcase-card {
     min-width: 0;
   }
@@ -3360,8 +3486,33 @@ textarea {
     border-radius: 0;
   }
 
+  .reseller-strip {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 12px 18px;
+    text-align: center;
+  }
+
+  .reseller-strip div {
+    justify-content: center;
+  }
+
   .top-nav {
     padding: 12px 18px;
+  }
+
+  .hero .service-showcase,
+  .trust-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-copies-card,
+  .service-showcase .copies-order-card {
+    grid-column: auto;
+  }
+
+  .trust-section {
+    padding: 28px 18px 34px;
   }
 
   .copies-order-card .upload-hero,
