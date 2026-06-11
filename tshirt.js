@@ -233,8 +233,10 @@ function renderSizeRows() {
 function updateSelection() {
   shirtColorName.textContent = `${state.color} ${state.activeSide === "back" ? "Back" : "Front"}`;
   const selection = buildSelection();
-  document.querySelector("#shirtTotalQty").textContent = String(selection.totalQuantity);
-  document.querySelector("#shirtTotal").textContent = money(selection.totalPrice);
+  const shirtTotalQty = document.querySelector("#shirtTotalQty");
+  const shirtTotal = document.querySelector("#shirtTotal");
+  if (shirtTotalQty) shirtTotalQty.textContent = String(selection.totalQuantity);
+  if (shirtTotal) shirtTotal.textContent = money(selection.totalPrice);
   document.querySelector("#sideShirtTotal").textContent = money(selection.totalPrice);
   updatePrintAreaText();
   renderSummary(selection);
@@ -249,7 +251,7 @@ function updatePrintAreaText() {
 function renderSummary(selection) {
   if (!selection.items.length) {
     const empty = `<strong>${activeCopy().summary}</strong><p>${activeCopy().empty}</p>`;
-    shirtOrderSummary.innerHTML = empty;
+    if (shirtOrderSummary) shirtOrderSummary.innerHTML = empty;
     sideOrderSummary.innerHTML = `<p>${activeCopy().empty}</p>`;
     return;
   }
@@ -257,7 +259,7 @@ function renderSummary(selection) {
   const rows = selection.items
     .map((item) => `<span><b>${item.color}</b> ${item.size}: ${item.quantity} × ${money(item.unitPrice)} = ${money(item.lineTotal)}</span>`)
     .join("");
-  shirtOrderSummary.innerHTML = `<strong>${activeCopy().summary}</strong><div>${rows}</div>`;
+  if (shirtOrderSummary) shirtOrderSummary.innerHTML = `<strong>${activeCopy().summary}</strong><div>${rows}</div>`;
   sideOrderSummary.innerHTML = rows;
 }
 
@@ -423,7 +425,7 @@ function centerDesign() {
 async function continueOrder() {
   const selection = buildSelection();
   if (!selection.items.length) {
-    shirtOrderSummary.innerHTML = `<p class="error">${activeCopy().empty}</p>`;
+    if (shirtOrderSummary) shirtOrderSummary.innerHTML = `<p class="error">${activeCopy().empty}</p>`;
     setStatus(activeCopy().empty, true);
     return;
   }

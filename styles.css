@@ -2250,6 +2250,23 @@ textarea {
   font-size: 0.78rem;
 }
 
+.shirt-price-guide {
+  margin: 4px 0 0;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(7, 20, 47, 0.06);
+}
+
+.shirt-price-guide img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
 .shirt-live-stage {
   min-height: 560px;
   gap: 10px;
