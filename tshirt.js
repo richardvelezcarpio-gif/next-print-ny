@@ -308,20 +308,6 @@ function draw() {
   ctx.fillStyle = "#eef5fb";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   drawMockup();
-  const area = printAreaFor(state.activeSide);
-  ctx.save();
-  ctx.setLineDash([8, 7]);
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "#15bde5";
-  ctx.strokeRect(area.x, area.y, area.width, area.height);
-  ctx.fillStyle = "rgba(255,255,255,0.8)";
-  ctx.fillRect(area.x, area.y - 32, area.width, 26);
-  ctx.fillStyle = "#05275c";
-  ctx.font = "900 16px Arial";
-  ctx.textAlign = "center";
-  const label = state.printOption === "frontOnly" ? "14 x 14 FRONT" : state.activeSide === "front" ? "4 x 4 LEFT CHEST" : "14 x 14 BACK";
-  ctx.fillText(label, area.x + area.width / 2, area.y - 13);
-  ctx.restore();
   drawDesign(state.activeSide);
 }
 
