@@ -9,7 +9,7 @@
     />
     <title>Next Print NY | Wholesale Printing for Business Owners</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260606-2335" />
+    <link rel="stylesheet" href="styles.css?v=20260610-1015" />
   </head>
   <body>
     <div class="page-shell">
@@ -18,7 +18,7 @@
           <strong data-i18n="home.reseller.title">🔥 Reseller Program Available</strong>
           <span data-i18n="home.reseller.copy">Get wholesale pricing and grow your own print business.</span>
         </div>
-        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer" data-i18n="home.reseller.button">Apply Now</a>
+        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer" data-i18n="home.reseller.button">Apply for Wholesale</a>
       </section>
 
       <header class="top-nav">
@@ -34,7 +34,10 @@
 
         <nav id="menu" class="menu" aria-label="Main navigation">
           <a class="active" href="index.html" data-i18n="home.nav.home">Home</a>
-          <a href="printing.html" data-i18n="nav.print">Printing</a>
+          <a href="printing.html#banners" data-i18n="home.nav.signs">Signs & Banners</a>
+          <a href="tshirt.html" data-i18n="home.nav.shirts">T-Shirts & Apparel</a>
+          <a href="#copies" data-i18n="home.nav.copies">Bulk Copies</a>
+          <a href="printing.html" data-i18n="home.nav.products">Print Products</a>
           <a href="tracking.html" data-i18n="tracking.nav">Track Order</a>
           <a href="about.html" data-i18n="home.nav.about">About Us</a>
           <a href="contact.html" data-i18n="home.nav.contact">Contact</a>
@@ -50,152 +53,181 @@
       </header>
 
       <main>
-        <section class="hero">
-          <img class="hero-flag hero-flag-left" src="assets/ecuador-flag-wide.png" alt="Ecuador flag" />
-          <img class="hero-flag hero-flag-right" src="assets/ecuador-flag-wide.png" alt="Ecuador flag" />
-          <div class="hero-content">
-            <h1>
-              <span class="hero-line" data-i18n="home.hero.title1">Wholesale printing</span>
-              <span data-i18n="home.hero.title2">for business owners</span>
-            </h1>
-            <p data-i18n="home.hero.copy">Wholesale printing, bulk copies, signs, shirts and business materials for owners who need reliable service.</p>
-
-            <section class="tool-card start-order-card hero-printing-cta">
-              <h2 data-i18n="order.homeTitle">Order your printing products</h2>
-              <p data-i18n="order.homeCopy">Choose Business Cards, Flyers, Stickers, Banners, Menus or Door Hangers, review quantity and price, and send your order.</p>
-              <a class="action-gradient" href="printing.html" data-i18n="order.printingButton">Start Printing Order</a>
-            </section>
-
-            <div class="service-showcase">
-              <article class="showcase-card printing-card">
-                <div class="service-icon">▣</div>
-                <img class="visual service-photo contain-photo" src="assets/printing-printer.png" alt="Next Print NY printing machine" />
-                <div class="showcase-body">
-                  <h2 data-i18n="home.printing.title">Printing</h2>
-                  <ul>
-                    <li data-i18n="home.printing.item1">Business Cards</li>
-                    <li data-i18n="home.printing.item2">Flyers & Brochures</li>
-                    <li data-i18n="home.printing.item3">Banners & Signs</li>
-                    <li data-i18n="home.printing.item4">Window Vinyl</li>
-                    <li data-i18n="home.printing.item5">Car Wraps</li>
-                    <li data-i18n="home.printing.item6">T-Shirts & More</li>
-                  </ul>
-                  <a class="mini-button" href="printing.html"><span data-i18n="home.viewServices">View Services</span> <span>→</span></a>
-                </div>
-              </article>
-
-              <form id="uploadForm" class="tool-card upload-card copies-order-card hero-copies-card">
-                <input type="hidden" name="paper" value="20 lbs" />
-                <div class="upload-hero">
-                  <label class="drop-zone">
-                    <input id="uploadFile" type="file" name="files" accept=".pdf,.jpg,.jpeg,.png" multiple required />
-                    <img class="copies-service-image" src="assets/copies-service.png" alt="Bulk black and white or color copies" />
-                    <strong data-i18n="copies.chooseFiles">Choose multiple files</strong>
-                    <small data-i18n="home.upload.formats">PDF, JPG, PNG (Max. 4MB each)</small>
-                  </label>
-                  <div class="upload-copy">
-                    <h2 data-i18n="copies.title">Order Copies Online</h2>
-                    <p data-i18n="copies.copy">Upload your files and choose your copy specifications.</p>
-                    <div class="copy-spec-grid">
-                      <label>
-                        <span data-i18n="copies.color">Print type</span>
-                        <select name="printType" required>
-                          <option value="Black & White" data-i18n="copies.bw">Black & White</option>
-                          <option value="Color" data-i18n="copies.fullColor">Color</option>
-                        </select>
-                      </label>
-                      <label>
-                        <span data-i18n="copies.size">Paper size</span>
-                        <select name="paperSize" required>
-                          <option value="8.5x11">8.5x11</option>
-                          <option value="8.5x14">8.5x14</option>
-                          <option value="11x17">11x17</option>
-                        </select>
-                      </label>
-                      <label>
-                        <span data-i18n="copies.paper">Paper</span>
-                        <input type="text" value="20 lbs" readonly />
-                      </label>
-                      <label>
-                        <span data-i18n="copies.quantity">Copies per file</span>
-                        <input type="number" name="quantity" min="1" value="1" required />
-                      </label>
-                    </div>
-                    <div class="upload-mini-fields">
-                      <input type="text" name="name" autocomplete="name" placeholder="Name" data-i18n-placeholder="upload.name" required />
-                      <input type="tel" name="phone" autocomplete="tel" placeholder="Phone" data-i18n-placeholder="upload.phone" required />
-                      <input type="email" name="email" autocomplete="email" placeholder="Email" data-i18n-placeholder="upload.email" />
-                      <textarea name="notes" rows="2" placeholder="Notes: page range, one or two sided, finishing, pickup details..." data-i18n-placeholder="copies.notes"></textarea>
-                    </div>
-                    <button id="uploadTrigger" class="upload-submit action-gradient" type="button" data-i18n="copies.chooseFiles">Choose multiple files</button>
-                    <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
-                  </div>
-                </div>
-              </form>
+        <section class="np-home-hero">
+          <div class="np-hero-copy">
+            <h1><span data-i18n="home.hero.title1">Make your business</span> <strong data-i18n="home.hero.title2">look professional</strong></h1>
+            <p data-i18n="home.hero.copy">Signs, banners, T-shirts, bulk copies and marketing materials fabricated in Brooklyn, NY.</p>
+            <div class="np-hero-badges">
+              <span data-i18n="home.badge.same">Same day service available</span>
+              <span data-i18n="home.badge.wholesale">Wholesale pricing</span>
+              <span data-i18n="home.badge.pickup">Local pickup in Brooklyn</span>
+              <span data-i18n="home.badge.reseller">Reseller program available</span>
             </div>
-
-            <div class="feature-row" aria-label="Business features">
-              <div><strong data-i18n="home.feature.fast">Fast Response</strong><span data-i18n="home.feature.fastText">Quotes in minutes</span></div>
-              <div><strong data-i18n="home.feature.secure">100% Secure</strong><span data-i18n="home.feature.secureText">Your data is protected</span></div>
-              <div><strong data-i18n="home.feature.tech">Technology & AI</strong><span data-i18n="home.feature.techText">Smart solutions 24/7</span></div>
-              <div><strong data-i18n="home.feature.ecuador">Proudly Ecuadorian</strong><span data-i18n="home.feature.ecuadorText">We speak your language</span></div>
+            <div class="np-hero-actions">
+              <a class="action-gradient" href="printing.html" data-i18n="home.hero.primary">Start your order</a>
+              <a class="outline-button" href="https://wa.me/12393337935?text=I%20want%20wholesale%20pricing%20for%20printing" target="_blank" rel="noreferrer" data-i18n="home.hero.secondary">Get wholesale pricing</a>
             </div>
-
-            <div class="tools-grid" aria-label="Customer tools">
-
-              <section id="ia" class="tool-card chat-card" aria-label="AI Chat Assistant">
-                <div class="chat-mini-header">
-                  <div class="bot-avatar">AI</div>
-                  <div>
-                    <h2 data-i18n="home.chat.title">AI Chat Assistant</h2>
-                    <span data-i18n="home.chat.online">Online 24/7</span>
-                  </div>
-                </div>
-                <p data-i18n="home.chat.copy">Get answers, recommendations and personalized help 24/7.</p>
-                <div id="chatMessages" class="chat-messages" aria-live="polite">
-                  <div class="message bot" data-i18n="chat.welcome">
-                    Hi, I am the Next Print NY assistant. What is your name, and do you prefer English or Spanish?
-                  </div>
-                </div>
-                <form id="chatForm" class="chat-form">
-                  <label class="sr-only" for="chatInput" data-i18n="chat.label">Type your question</label>
-                  <input
-                    id="chatInput"
-                    name="message"
-                    type="text"
-                    autocomplete="off"
-                    placeholder="Ask now..."
-                    data-i18n-placeholder="chat.placeholder"
-                    required
-                  />
-                  <button type="submit" data-i18n="home.chat.button">Chat Now</button>
-                </form>
-                <small data-i18n="home.chat.powered">Powered by Next Print AI</small>
-              </section>
-
-              <section class="tool-card tshirt-home-card">
-                <img src="assets/tshirt-order-banner.png" alt="Order printed shirts here" />
-                <h2 data-i18n="home.shirts.title">Order your printed shirts here</h2>
-                <p data-i18n="home.shirts.copy">Choose colors, sizes and quantities, then design your shirt online.</p>
-                <a class="action-gradient" href="tshirt.html" data-i18n="home.shirts.button">Start your order</a>
-              </section>
-            </div>
+            <p class="np-rating">★★★★★ <span data-i18n="home.hero.rating">4.9/5 from 500+ customers</span></p>
+          </div>
+          <div class="np-hero-collage" aria-label="Printing samples">
+            <img class="collage-sign" src="assets/catalog-yard-signs.png" alt="Yard sign sample" />
+            <img class="collage-shirt" src="assets/tshirt-showcase.png" alt="Printed shirts" />
+            <img class="collage-banner" src="assets/catalog-banners.png" alt="Banner sample" />
+            <img class="collage-printer" src="assets/printing-printer.png" alt="Printing machine" />
           </div>
         </section>
 
-        <section class="trust-section" aria-label="Customer reviews and founder">
-          <div class="section-heading">
-            <span data-i18n="home.trust.kicker">Trusted by local businesses</span>
-            <h2 data-i18n="home.trust.title">What Our Customers Say</h2>
+        <section class="np-service-grid" aria-label="Main service categories">
+          <article class="np-service-card blue">
+            <img src="assets/catalog-banners.png" alt="Signs and banners" />
+            <h2 data-i18n="home.signs.title">Signs & Banners</h2>
+            <p data-i18n="home.signs.copy">High quality large format printing that gets you noticed.</p>
+            <ul>
+              <li>Yard Signs</li>
+              <li>Banners</li>
+              <li>Window Graphics</li>
+              <li>Retractable Banners</li>
+            </ul>
+            <a href="printing.html#banners" data-i18n="home.signs.button">Order Signs & Banners</a>
+          </article>
+          <article class="np-service-card purple">
+            <img src="assets/tshirt-order-banner.png" alt="Custom T-shirts" />
+            <h2 data-i18n="home.tshirts.title">Custom T-Shirts</h2>
+            <p data-i18n="home.tshirts.copy">Premium DTF printing for any event, business or organization.</p>
+            <ul>
+              <li>DTF T-Shirts</li>
+              <li>Business Uniforms</li>
+              <li>Team & Sports Apparel</li>
+              <li>Custom Transfers</li>
+            </ul>
+            <a href="tshirt.html" data-i18n="home.tshirts.button">Design Your Shirts</a>
+          </article>
+          <article class="np-service-card green">
+            <img src="assets/copies-service.png" alt="Bulk copies" />
+            <h2 data-i18n="home.copiesCard.title">Bulk Copies</h2>
+            <p data-i18n="home.copiesCard.copy">Fast, affordable copies for your business or organization.</p>
+            <ul>
+              <li>Black & White Copies</li>
+              <li>Color Copies</li>
+              <li>Booklets & Manuals</li>
+              <li>Presentations</li>
+            </ul>
+            <a href="#copies" data-i18n="home.copiesCard.button">Upload Files & Order</a>
+          </article>
+          <article class="np-service-card orange">
+            <img src="assets/catalog-business-cards.png" alt="Print products" />
+            <h2 data-i18n="home.productsCard.title">Print Products</h2>
+            <p data-i18n="home.productsCard.copy">Business cards, flyers, menus, stickers and more.</p>
+            <ul>
+              <li>Business Cards</li>
+              <li>Flyers & Menus</li>
+              <li>Stickers</li>
+              <li>Door Hangers</li>
+            </ul>
+            <a href="printing.html" data-i18n="home.productsCard.button">View Products</a>
+          </article>
+        </section>
+
+        <section class="np-product-strip" aria-label="Print products">
+          <h2 data-i18n="home.products.title">Print Products</h2>
+          <div class="np-product-row">
+            <a href="printing.html"><img src="assets/catalog-business-cards.png" alt="Business cards" /><span>Business Cards</span></a>
+            <a href="printing.html"><img src="assets/catalog-flyers.png" alt="Flyers" /><span>Flyers</span></a>
+            <a href="printing.html"><img src="assets/catalog-menus.png" alt="Menus" /><span>Menus</span></a>
+            <a href="printing.html"><img src="assets/catalog-stickers.png" alt="Stickers" /><span>Stickers</span></a>
+            <a href="printing.html"><img src="assets/catalog-door-hangers.png" alt="Door hangers" /><span>Door Hangers</span></a>
+            <a href="printing.html"><img src="assets/catalog-retractable-banners.png" alt="Retractable banners" /><span>Retractable</span></a>
+            <a class="np-view-all" href="printing.html" data-i18n="home.products.viewAll">View All</a>
           </div>
+        </section>
+
+        <section class="np-why-section" aria-label="Why businesses choose us">
+          <h2 data-i18n="home.why.title">Why local businesses choose Next Print NY</h2>
+          <div class="np-why-grid">
+            <article><strong>⏱</strong><h3 data-i18n="home.why.fast">Fast Turnaround</h3><p data-i18n="home.why.fastText">Most orders ready in 24-48 hours.</p></article>
+            <article><strong>$</strong><h3 data-i18n="home.why.wholesale">Wholesale Prices</h3><p data-i18n="home.why.wholesaleText">Save more with our reseller program.</p></article>
+            <article><strong>◎</strong><h3 data-i18n="home.why.minimum">No Minimum Orders</h3><p data-i18n="home.why.minimumText">Order only what you need.</p></article>
+            <article><strong>⌖</strong><h3 data-i18n="home.why.pickup">Local Pickup</h3><p data-i18n="home.why.pickupText">Convenient pickup in Brooklyn, NY.</p></article>
+            <article><strong>AI</strong><h3 data-i18n="home.why.ai">AI Assistant 24/7</h3><p data-i18n="home.why.aiText">Get answers and support anytime.</p></article>
+            <article><strong>☏</strong><h3 data-i18n="home.why.human">Real Human Support</h3><p data-i18n="home.why.humanText">We are here to help you succeed.</p></article>
+          </div>
+        </section>
+
+        <section class="np-memberships" aria-label="Monthly copy memberships">
+          <h2 data-i18n="home.memberships.title">Monthly Copy Memberships</h2>
+          <p data-i18n="home.memberships.copy">Perfect for churches, schools, offices, contractors and more.</p>
+          <div class="np-plan-grid">
+            <article><h3>Starter</h3><p>300 Copies / Month</p><strong>$30 <span>/month</span></strong><ul><li>Black & White Copies</li><li>8.5x11 Standard Size</li><li>Monthly Roll Over</li></ul><a href="https://wa.me/12393337935?text=I%20want%20the%20Starter%20copy%20membership" target="_blank" rel="noreferrer">Join Starter</a></article>
+            <article><h3>Business</h3><p>600 Copies / Month</p><strong>$59 <span>/month</span></strong><ul><li>Black & White Copies</li><li>Monthly Roll Over</li><li>Priority Support</li></ul><a href="https://wa.me/12393337935?text=I%20want%20the%20Business%20copy%20membership" target="_blank" rel="noreferrer">Join Business</a></article>
+            <article><h3>Pro</h3><p>1200 Copies / Month</p><strong>$120 <span>/month</span></strong><ul><li>Black & White Copies</li><li>Monthly Roll Over</li><li>Discount on Finishing</li></ul><a href="https://wa.me/12393337935?text=I%20want%20the%20Pro%20copy%20membership" target="_blank" rel="noreferrer">Join Pro</a></article>
+            <article class="np-custom-plan"><h3 data-i18n="home.memberships.customTitle">Need something custom?</h3><p data-i18n="home.memberships.customCopy">Contact us for custom volumes and pricing for your business.</p><a href="quote.html" data-i18n="home.memberships.quote">Request a Quote</a></article>
+          </div>
+        </section>
+
+        <section class="np-reseller-panel" aria-label="Reseller program">
+          <img src="assets/tshirt-showcase.png" alt="Next Print NY reseller program" />
+          <div>
+            <h2 data-i18n="home.resellerPanel.title">Reseller Program</h2>
+            <h3 data-i18n="home.resellerPanel.headline">You sell. We print.</h3>
+            <p data-i18n="home.resellerPanel.copy">Start your own printing business without buying equipment.</p>
+            <div class="np-reseller-points"><span>Wholesale Pricing</span><span>White Label Service</span><span>No Equipment Needed</span><span>Fast Production</span></div>
+          </div>
+          <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20a%20wholesale%20account" target="_blank" rel="noreferrer" data-i18n="home.resellerPanel.button">Apply for Wholesale Account</a>
+        </section>
+
+        <section id="copies" class="np-tools-grid" aria-label="Online tools">
+          <form id="uploadForm" class="tool-card upload-card copies-order-card">
+            <input type="hidden" name="paper" value="20 lbs" />
+            <div class="upload-hero">
+              <label class="drop-zone">
+                <input id="uploadFile" type="file" name="files" accept=".pdf,.jpg,.jpeg,.png" multiple required />
+                <img class="copies-service-image" src="assets/copies-service.png" alt="Bulk black and white or color copies" />
+                <strong data-i18n="copies.chooseFiles">Choose multiple files</strong>
+                <small data-i18n="home.upload.formats">PDF, JPG, PNG (Max. 4MB each)</small>
+              </label>
+              <div class="upload-copy">
+                <h2 data-i18n="copies.title">Order Copies Online</h2>
+                <p data-i18n="copies.copy">Upload your files and choose your copy specifications.</p>
+                <div class="copy-spec-grid">
+                  <label><span data-i18n="copies.color">Print type</span><select name="printType" required><option value="Black & White" data-i18n="copies.bw">Black & White</option><option value="Color" data-i18n="copies.fullColor">Color</option></select></label>
+                  <label><span data-i18n="copies.size">Paper size</span><select name="paperSize" required><option value="8.5x11">8.5x11</option><option value="8.5x14">8.5x14</option><option value="11x17">11x17</option></select></label>
+                  <label><span data-i18n="copies.paper">Paper</span><input type="text" value="20 lbs" readonly /></label>
+                  <label><span data-i18n="copies.quantity">Copies per file</span><input type="number" name="quantity" min="1" value="1" required /></label>
+                </div>
+                <div class="upload-mini-fields">
+                  <input type="text" name="name" autocomplete="name" placeholder="Name" data-i18n-placeholder="upload.name" required />
+                  <input type="tel" name="phone" autocomplete="tel" placeholder="Phone" data-i18n-placeholder="upload.phone" required />
+                  <input type="email" name="email" autocomplete="email" placeholder="Email" data-i18n-placeholder="upload.email" />
+                  <textarea name="notes" rows="2" placeholder="Notes: page range, one or two sided, finishing, pickup details..." data-i18n-placeholder="copies.notes"></textarea>
+                </div>
+                <button id="uploadTrigger" class="upload-submit action-gradient" type="button" data-i18n="copies.chooseFiles">Choose multiple files</button>
+                <p id="uploadStatus" class="upload-status" aria-live="polite"></p>
+              </div>
+            </div>
+          </form>
+
+          <section id="ia" class="tool-card chat-card" aria-label="AI Chat Assistant">
+            <div class="chat-mini-header"><div class="bot-avatar">AI</div><div><h2 data-i18n="home.chat.title">AI Chat Assistant</h2><span data-i18n="home.chat.online">Online 24/7</span></div></div>
+            <p data-i18n="home.chat.copy">Get answers, recommendations and personalized help 24/7.</p>
+            <div id="chatMessages" class="chat-messages" aria-live="polite"><div class="message bot" data-i18n="chat.welcome">Hi, I am the Next Print NY assistant. What is your name, and do you prefer English or Spanish?</div></div>
+            <form id="chatForm" class="chat-form"><label class="sr-only" for="chatInput" data-i18n="chat.label">Type your question</label><input id="chatInput" name="message" type="text" autocomplete="off" placeholder="Ask now..." data-i18n-placeholder="chat.placeholder" required /><button type="submit" data-i18n="home.chat.button">Chat Now</button></form>
+            <small data-i18n="home.chat.powered">Powered by Next Print AI</small>
+          </section>
+
+          <section class="tool-card tshirt-home-card">
+            <img src="assets/tshirt-order-banner.png" alt="Order printed shirts here" />
+            <h2 data-i18n="home.shirts.title">Order your printed shirts here</h2>
+            <p data-i18n="home.shirts.copy">Choose colors, sizes and quantities, then design your shirt online.</p>
+            <a class="action-gradient" href="tshirt.html" data-i18n="home.shirts.button">Start your order</a>
+          </section>
+        </section>
+
+        <section class="trust-section" aria-label="Customer reviews and founder">
+          <div class="section-heading"><span data-i18n="home.trust.kicker">Trusted by local businesses</span><h2 data-i18n="home.trust.title">What Our Customers Say</h2></div>
           <div class="trust-grid">
             <article class="review-card"><strong>★★★★★</strong><p data-i18n="home.review.one">"Fast service and great quality."</p></article>
             <article class="review-card"><strong>★★★★★</strong><p data-i18n="home.review.two">"Best prices in Brooklyn."</p></article>
-            <article class="founder-card">
-              <span data-i18n="home.founder.kicker">Meet Richard Velez</span>
-              <h2 data-i18n="home.founder.title">Founder of Next Print NY</h2>
-              <p data-i18n="home.founder.copy">Over 20 years of experience in printing and customer service. We help businesses look professional and grow.</p>
-            </article>
+            <article class="founder-card"><span data-i18n="home.founder.kicker">Meet Richard Velez</span><h2 data-i18n="home.founder.title">Founder of Next Print NY</h2><p data-i18n="home.founder.copy">Over 20 years of experience in printing and customer service. We help businesses look professional and grow.</p></article>
           </div>
         </section>
 
@@ -230,14 +262,6 @@
             </div>
           </article>
         </section>
-
-        <section class="mini-services" aria-label="Additional services">
-          <a href="payments.html"><strong data-i18n="home.mini.payments">Online Payments</strong><span data-i18n="home.mini.paymentsText">Secure payments</span></a>
-          <a href="digital-signature.html"><strong data-i18n="home.mini.signature">Digital Signature</strong><span data-i18n="home.mini.signatureText">Documents online</span></a>
-          <a href="tracking.html"><strong data-i18n="home.mini.tracking">Real-Time Tracking</strong><span data-i18n="home.mini.trackingText">Track your requests</span></a>
-          <a href="alerts.html"><strong data-i18n="home.mini.alerts">Email & SMS Alerts</strong><span data-i18n="home.mini.alertsText">Updates instantly</span></a>
-          <a href="support.html"><strong data-i18n="home.mini.support">Multilingual Support</strong><span data-i18n="home.mini.supportText">We speak your language</span></a>
-        </section>
       </main>
 
       <footer class="footer">
@@ -251,6 +275,6 @@
       </footer>
     </div>
 
-    <script src="script.js?v=20260606-2335"></script>
+    <script src="script.js?v=20260610-1015"></script>
   </body>
 </html>
