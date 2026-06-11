@@ -4627,8 +4627,8 @@ textarea {
 .np-home-hero {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
-  gap: 30px;
+  grid-template-columns: minmax(0, 0.92fr) minmax(360px, 1.08fr);
+  gap: 24px;
   padding: 32px 34px 24px;
   color: #fff;
   background:
@@ -4637,10 +4637,10 @@ textarea {
 }
 
 .np-hero-copy h1 {
-  max-width: 720px;
+  max-width: 620px;
   margin: 0;
   color: #fff;
-  font-size: clamp(2.25rem, 4.15vw, 3.7rem);
+  font-size: clamp(2rem, 3.45vw, 3.05rem);
   line-height: 1.04;
   text-transform: uppercase;
 }
@@ -4724,45 +4724,22 @@ textarea {
 .np-hero-collage {
   position: relative;
   min-height: 325px;
+  display: grid;
+  align-items: center;
 }
 
 .np-hero-collage img {
-  position: absolute;
   display: block;
   border-radius: 9px;
-  object-fit: cover;
   box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
 }
 
-.collage-sign {
-  left: 4%;
-  top: 20px;
-  width: 38%;
-  aspect-ratio: 1.2;
-}
-
-.collage-shirt {
-  left: 47%;
-  top: 0;
-  width: 34%;
-  aspect-ratio: 1;
-}
-
-.collage-banner {
-  left: 12%;
-  top: 132px;
-  width: 60%;
-  aspect-ratio: 1.7;
-  z-index: 2;
-}
-
-.collage-printer {
-  right: 0;
-  bottom: 0;
-  width: 37%;
-  aspect-ratio: 1.2;
-  background: #fff;
-  padding: 12px;
+.np-hero-main-image {
+  width: 100%;
+  max-height: 330px;
+  object-fit: contain;
+  object-position: center;
+  background: transparent;
 }
 
 .np-service-grid {
