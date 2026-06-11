@@ -22,8 +22,8 @@ const lang = localStorage.getItem("preferredLanguage") || "en";
 const copy = {
   en: {
     kicker: "Custom apparel",
-    title: "Gildan G500 Unisex Heavy Cotton",
-    intro: "Choose colors, sizes and quantities. Then create the left chest and back design in our online designer.",
+    title: "Custom T-Shirts|Made Your Way",
+    intro: "High quality prints. Any design, any color, any size. Perfect for your business, event, team or organization.",
     color: "Choose a color",
     size: "Choose quantities by size",
     note: "S-XL are $14 each. 2XL-5XL are $18 each.",
@@ -38,8 +38,8 @@ const copy = {
   },
   es: {
     kicker: "Ropa personalizada",
-    title: "Gildan G500 Unisex Heavy Cotton",
-    intro: "Escoge colores, tallas y cantidades. Luego crea el diseño pequeño del pecho y el diseño de la espalda.",
+    title: "Camisetas custom|a tu manera",
+    intro: "Impresiones de alta calidad. Cualquier diseño, color y talla. Perfecto para tu negocio, evento, equipo u organización.",
     color: "Escoge un color",
     size: "Escoge cantidades por talla",
     note: "S-XL cuestan $14 cada una. 2XL-5XL cuestan $18 cada una.",
@@ -60,6 +60,8 @@ const shirtColors = document.querySelector("#shirtColors");
 const shirtSizes = document.querySelector("#shirtSizes");
 const shirtOrderSummary = document.querySelector("#shirtOrderSummary");
 const form = document.querySelector("#shirtSelectionForm");
+const menuToggle = document.querySelector(".menu-toggle");
+const menu = document.querySelector("#menu");
 
 renderLanguage(lang);
 renderColors();
@@ -84,6 +86,13 @@ form.addEventListener("submit", (event) => {
   sessionStorage.setItem(selectionKey, JSON.stringify(selection));
   window.location.href = "tshirt-designer.html";
 });
+
+if (menuToggle && menu) {
+  menuToggle.addEventListener("click", () => {
+    const isOpen = menu.classList.toggle("open");
+    menuToggle.setAttribute("aria-expanded", String(isOpen));
+  });
+}
 
 function renderColors() {
   shirtColors.innerHTML = colors
@@ -188,9 +197,11 @@ function activeCopy() {
 
 function renderLanguage(language) {
   const text = copy[language] || copy.en;
+  document.querySelectorAll("[data-shirt-lang]").forEach((button) =>
+    button.classList.toggle("active", button.dataset.shirtLang === language)
+  );
   [
     ["shirtKicker", "kicker"],
-    ["shirtTitle", "title"],
     ["shirtIntro", "intro"],
     ["colorTitle", "color"],
     ["sizeTitle", "size"],
@@ -205,4 +216,10 @@ function renderLanguage(language) {
     const node = document.querySelector(`#${id}`);
     if (node) node.textContent = text[key];
   });
+
+  const titleNode = document.querySelector("#shirtTitle");
+  if (titleNode) {
+    const [lineOne, lineTwo] = text.title.split("|");
+    titleNode.innerHTML = `${lineOne || ""}<strong>${lineTwo || ""}</strong>`;
+  }
 }

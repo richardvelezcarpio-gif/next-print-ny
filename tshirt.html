@@ -3,60 +3,263 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Customize a Gildan G500 T-shirt with Next Print NY." />
+    <meta name="description" content="Design custom Gildan G500 T-shirts with Next Print NY." />
     <title>Custom T-Shirts | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260606-2335" />
+    <link rel="stylesheet" href="styles.css?v=20260611-0910" />
   </head>
   <body>
-    <div class="page-shell">
-      <header class="top-nav top-nav-simple">
-        <a class="brand" href="index.html" aria-label="Next Print NY home"><img src="assets/logo.png" alt="Next Print NY" /></a>
-        <nav class="menu" aria-label="Main navigation">
-          <a href="index.html">Home</a><a href="printing.html">Printing</a><a href="tracking.html">Track Order</a><a href="contact.html">Contact</a>
+    <div class="page-shell shirt-commerce-shell">
+      <section class="reseller-strip" aria-label="Reseller program">
+        <div>
+          <strong>🔥 Reseller Program Available</strong>
+          <span>Get wholesale pricing and grow your own print business.</span>
+        </div>
+        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer">Apply for Wholesale</a>
+      </section>
+
+      <header class="top-nav shirt-top-nav">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="printing.html#banners">Signs &amp; Banners</a>
+          <a class="active" href="tshirt.html">T-Shirts &amp; Apparel</a>
+          <a href="index.html#copies">Bulk Copies</a>
+          <a href="printing.html">Print Products</a>
+          <a href="tracking.html">Track Order</a>
+          <a href="about.html">About Us</a>
+          <a href="contact.html">Contact</a>
         </nav>
-        <div class="language-switch" aria-label="Change language"><button type="button" data-shirt-lang="en">EN</button><button type="button" data-shirt-lang="es">ES</button></div>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" class="active" data-shirt-lang="en">EN</button>
+            <button type="button" data-shirt-lang="es">ES</button>
+          </div>
+        </div>
       </header>
 
-      <main class="shirt-page">
-        <section class="shirt-heading">
-          <span id="shirtKicker">Custom apparel</span>
-          <h1 id="shirtTitle">Gildan G500 Unisex Heavy Cotton</h1>
-          <p id="shirtIntro">Choose colors, sizes and quantities. Then create the front and back design in our online designer.</p>
-        </section>
-
-        <section class="shirt-configurator">
-          <div class="shirt-product-stage">
-            <div id="shirtPreview" class="shirt-preview" aria-label="Selected blank T-shirt">
+      <main class="shirt-page shirt-commerce-page">
+        <section class="shirt-store-hero">
+          <div class="shirt-hero-copy">
+            <p class="breadcrumb">Home &gt; T-Shirts &amp; Apparel</p>
+            <span id="shirtKicker">Custom apparel</span>
+            <h1 id="shirtTitle">Custom T-Shirts Made Your Way</h1>
+            <p id="shirtIntro">High quality prints. Any design, any color, any size. Perfect for your business, event, team or organization.</p>
+            <div class="shirt-benefit-row" aria-label="T-shirt benefits">
+              <span><b>Premium DTF Printing</b>Vibrant &amp; long lasting</span>
+              <span><b>No Minimum Orders</b>Order what you need</span>
+              <span><b>Fast Turnaround</b>7-day delivery</span>
+              <span><b>Bulk Discounts</b>Save more on large orders</span>
             </div>
-            <p id="shirtColorName">White</p>
-            <div class="shirt-print-note">
-              <strong id="printAreaTitle">Print areas</strong>
-              <span id="printAreaText">Front left chest: 4 × 4 in · Back: 14 × 14 in</span>
+            <div class="shirt-hero-actions">
+              <a class="action-gradient" href="#shirt-design-studio">Design your shirt</a>
+              <a class="outline-button shirt-outline" href="printing.html">View all products</a>
+            </div>
+            <p class="np-rating">★★★★★ <span>4.9/5 from 500+ customers</span></p>
+          </div>
+          <div class="shirt-hero-visual" aria-label="Custom T-shirt examples">
+            <img src="assets/tshirt-order-banner.png" alt="Order printed shirts here" />
+            <div class="perfect-for">
+              <strong>Perfect for</strong>
+              <span>Businesses</span>
+              <span>Events</span>
+              <span>Teams</span>
+              <span>Schools</span>
+              <span>Churches</span>
+              <span>Organizations</span>
             </div>
           </div>
+        </section>
 
-          <form id="shirtSelectionForm" class="shirt-selection-panel">
-            <section>
-              <h2 id="colorTitle">Choose a color</h2>
-              <div id="shirtColors" class="shirt-color-grid" role="radiogroup" aria-label="Shirt color"></div>
-            </section>
-            <section>
-              <h2 id="sizeTitle">Choose quantities by size</h2>
-              <div id="shirtSizes" class="shirt-quantity-matrix"></div>
-              <small id="sizeNote">Sizes 2XL–5XL add $4 per shirt.</small>
-            </section>
-            <div id="shirtOrderSummary" class="shirt-order-summary" aria-live="polite"></div>
-            <div class="shirt-price-box">
-              <span id="quantityLabel">Total shirts</span><strong id="shirtTotalQty">0</strong>
-              <span id="totalLabel">Order total</span><strong id="shirtTotal">$14.00</strong>
-              <small id="deliveryNote">Delivery date: automatically 7 days after the order.</small>
+        <section id="shirt-design-studio" class="shirt-studio-card">
+          <header class="studio-heading">
+            <h2>Design your T-shirt in 3 easy steps</h2>
+            <ol>
+              <li><span>1</span> Choose product</li>
+              <li><span>2</span> Design your shirt</li>
+              <li><span>3</span> Review &amp; checkout</li>
+            </ol>
+          </header>
+
+          <div class="shirt-studio-grid">
+            <form id="shirtSelectionForm" class="shirt-selection-panel shirt-builder-panel">
+              <div class="builder-step-title"><span>1</span> Choose your product</div>
+              <label class="builder-select">
+                Product
+                <select aria-label="Product">
+                  <option>T-Shirt</option>
+                </select>
+              </label>
+              <label class="builder-select">
+                Brand / Style
+                <select aria-label="Brand style">
+                  <option>Gildan G500</option>
+                </select>
+              </label>
+
+              <section>
+                <h2 id="colorTitle">Choose a color</h2>
+                <div id="shirtColors" class="shirt-color-grid" role="radiogroup" aria-label="Shirt color"></div>
+              </section>
+
+              <section>
+                <h2 id="sizeTitle">Choose quantities by size</h2>
+                <div id="shirtSizes" class="shirt-quantity-matrix"></div>
+                <small id="sizeNote">S-XL are $14 each. 2XL-5XL are $18 each.</small>
+              </section>
+
+              <div id="shirtOrderSummary" class="shirt-order-summary" aria-live="polite"></div>
+              <div class="shirt-price-box">
+                <span id="quantityLabel">Total shirts</span><strong id="shirtTotalQty">0</strong>
+                <span id="totalLabel">Order total</span><strong id="shirtTotal">$14.00</strong>
+                <small id="deliveryNote">Delivery date: automatically 7 days after the order.</small>
+              </div>
+              <button id="openDesigner" class="action-gradient" type="submit">Continue to designer</button>
+            </form>
+
+            <div class="shirt-product-stage shirt-live-stage">
+              <div class="mini-tool-bar" aria-hidden="true">
+                <span>T Add Text</span>
+                <span>Image</span>
+                <span>Upload</span>
+                <span>Undo</span>
+                <span>Redo</span>
+                <span>Zoom</span>
+              </div>
+              <div id="shirtPreview" class="shirt-preview studio-shirt-preview" aria-label="Selected blank T-shirt">
+                <span>Your design</span>
+              </div>
+              <p id="shirtColorName">White</p>
+              <div class="shirt-side-thumbs" aria-hidden="true">
+                <span class="active">Front</span>
+                <span>Back</span>
+                <span>Left Sleeve</span>
+                <span>Right Sleeve</span>
+              </div>
+              <div class="shirt-print-note">
+                <strong id="printAreaTitle">Print areas</strong>
+                <span id="printAreaText">Front left chest: 4 x 4 in · Back: 14 x 14 in</span>
+              </div>
             </div>
-            <button id="openDesigner" class="action-gradient" type="submit">Continue to designer</button>
-          </form>
+
+            <aside class="shirt-design-panel">
+              <div class="builder-step-title"><span>2</span> Add your design</div>
+              <label>
+                Text
+                <input type="text" value="J&amp;R CONSTRUCTION" aria-label="Design text example" />
+              </label>
+              <label>
+                Font
+                <select aria-label="Font example">
+                  <option>Bebas Neue</option>
+                  <option>Arial Bold</option>
+                  <option>Impact</option>
+                </select>
+              </label>
+              <div class="format-buttons" aria-label="Formatting examples">
+                <button type="button">B</button>
+                <button type="button"><i>I</i></button>
+                <button type="button"><u>U</u></button>
+                <button type="button">≡</button>
+                <button type="button">⌒</button>
+              </div>
+              <p class="panel-label">Text color</p>
+              <div class="tiny-color-row" aria-hidden="true">
+                <span style="--dot:#061b42"></span>
+                <span style="--dot:#ffffff"></span>
+                <span style="--dot:#f5bf00"></span>
+                <span style="--dot:#ef233c"></span>
+                <span>+</span>
+              </div>
+              <label class="designer-upload fake-upload">
+                Upload your logo
+                <small>PNG, JPG, SVG, PDF</small>
+              </label>
+
+              <div class="checkout-preview">
+                <div class="builder-step-title"><span>3</span> Review &amp; checkout</div>
+                <p>Price breakup</p>
+                <div><span>Front print</span><b>Included</b></div>
+                <div><span>Back print</span><b>Included</b></div>
+                <div><span>Setup fee</span><b>$0.00</b></div>
+                <strong>Continue to designer to finish your order.</strong>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="shirt-template-strip" aria-label="T-shirt templates">
+          <h2>Choose a template to get started</h2>
+          <div class="template-tabs">
+            <span class="active">All Templates</span>
+            <span>Business</span>
+            <span>Construction</span>
+            <span>Event</span>
+            <span>Team &amp; Sports</span>
+            <span>School</span>
+            <span>Church</span>
+            <span>Custom Text</span>
+          </div>
+          <div class="template-grid">
+            <article>YOUR COMPANY<br /><small>Logo &amp; phone</small></article>
+            <article>SUMMER FEST<br /><small>Event shirts</small></article>
+            <article>TEAM<br /><small>Name &amp; number</small></article>
+            <article>CHURCH<br /><small>Groups</small></article>
+            <article>CLASS OF 2026<br /><small>School</small></article>
+            <article>YOUR DESIGN HERE<br /><small>Custom</small></article>
+          </div>
+        </section>
+
+        <section class="shirt-why">
+          <h2>Why choose Next Print NY?</h2>
+          <div>
+            <span><b>High Quality Prints</b>Vibrant colors that last wash after wash</span>
+            <span><b>Soft &amp; Comfortable</b>Premium shirts that feel great to wear</span>
+            <span><b>Durable &amp; Long Lasting</b>Printed to withstand everyday use</span>
+            <span><b>No Minimum Orders</b>Order 1 or 100, we have you covered</span>
+            <span><b>Fast Production</b>Most orders ready in about 7 days</span>
+            <span><b>Bulk Discounts</b>The more you order, the more you save</span>
+          </div>
+        </section>
+
+        <section class="shirt-reviews">
+          <h2>What our customers say</h2>
+          <article>
+            <strong>4.9 ★★★★★</strong>
+            <p>Based on 500+ reviews</p>
+          </article>
+          <article>
+            <strong>★★★★★</strong>
+            <p>“The shirts came out amazing. Great quality and fast service.”</p>
+            <b>– Carlos M.</b>
+          </article>
+          <article>
+            <strong>★★★★★</strong>
+            <p>“We order shirts for all our events. Highly recommended.”</p>
+            <b>– Jennifer R.</b>
+          </article>
+          <article>
+            <strong>★★★★★</strong>
+            <p>“Best printing in Brooklyn. The prints last long and the prices are great.”</p>
+            <b>– Luis G.</b>
+          </article>
         </section>
       </main>
+
+      <footer class="footer">
+        <img src="assets/logo.png" alt="Next Print NY" />
+        <p>© 2026 Next Print NY. All rights reserved.</p>
+        <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></div>
+      </footer>
     </div>
-    <script src="tshirt.js?v=20260606-0845"></script>
+    <script src="tshirt.js?v=20260611-0910"></script>
   </body>
 </html>
