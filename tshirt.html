@@ -6,7 +6,7 @@
     <meta name="description" content="Design custom Gildan G500 T-shirts with Next Print NY." />
     <title>Custom T-Shirts | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260611-1330" />
+    <link rel="stylesheet" href="styles.css?v=20260611-1420" />
   </head>
   <body>
     <div class="page-shell shirt-commerce-shell">
@@ -66,7 +66,7 @@
             <p class="np-rating">★★★★★ <span>4.9/5 from 500+ customers</span></p>
           </div>
           <div class="shirt-hero-visual" aria-label="Custom T-shirt examples">
-            <img src="assets/tshirt-order-banner.png" alt="Order printed shirts here" />
+            <img src="assets/logoheroshirts.png" alt="Custom Gildan G500 T-shirts" />
             <div class="perfect-for">
               <strong>Perfect for</strong>
               <span>Businesses</span>
@@ -122,32 +122,12 @@
                 <span id="totalLabel">Order total</span><strong id="shirtTotal">$14.00</strong>
                 <small id="deliveryNote">Delivery date: automatically 7 days after the order.</small>
               </div>
-              <button id="openDesigner" class="action-gradient" type="submit">Continue to designer</button>
+              <button id="openDesigner" class="action-gradient" type="submit">Approve design and order</button>
             </form>
 
             <div class="shirt-product-stage shirt-live-stage">
-              <div class="mini-tool-bar">
-                <button type="button" data-studio-action="text">T Add Text</button>
-                <button type="button" data-studio-action="image">Image</button>
-                <button type="button" data-studio-action="upload">Upload</button>
-                <button type="button" data-studio-action="undo">Undo</button>
-                <button type="button" data-studio-action="redo">Redo</button>
-                <button type="button" data-studio-action="zoom">Zoom</button>
-              </div>
-              <div id="shirtPreview" class="shirt-preview studio-shirt-preview" aria-label="Selected blank T-shirt">
-                <span>Your design</span>
-              </div>
+              <canvas id="shirtCanvas" width="720" height="820" aria-label="T-shirt design preview"></canvas>
               <p id="shirtColorName">White</p>
-              <div class="shirt-print-options" aria-label="Print area options">
-                <button class="active" type="button" data-print-option="frontBack">
-                  <strong>Front left chest 4 x 4 + Back 14 x 14</strong>
-                  <span>Logo on chest and large design on back.</span>
-                </button>
-                <button type="button" data-print-option="frontOnly">
-                  <strong>Front only 14 x 14</strong>
-                  <span>One large front print area.</span>
-                </button>
-              </div>
               <div class="shirt-print-note">
                 <strong id="printAreaTitle">Print areas</strong>
                 <span id="printAreaText">Front left chest: 4 x 4 in · Back: 14 x 14 in</span>
@@ -156,37 +136,51 @@
 
             <aside class="shirt-design-panel">
               <div class="builder-step-title"><span>2</span> Add your design</div>
+              <section>
+                <h2 id="sideTitle">Design side</h2>
+                <div class="designer-side-tabs compact-design-tabs" role="tablist" aria-label="Design side">
+                  <button type="button" class="active" data-side="front" id="frontSideButton">Front left chest 4 x 4</button>
+                  <button type="button" data-side="back" id="backSideButton">Back 14 x 14</button>
+                </div>
+                <button type="button" class="single-print-toggle" data-print-option="frontOnly">Front only 14 x 14</button>
+              </section>
+              <label class="designer-upload">
+                <input id="designFile" type="file" accept=".png,.jpg,.jpeg,.webp" />
+                <span id="designFileLabel">Choose image</span>
+              </label>
               <label>
                 Text
-                <input type="text" value="J&amp;R CONSTRUCTION" aria-label="Design text example" />
+                <input id="designText" type="text" maxlength="40" placeholder="Your text" />
               </label>
-              <label>
-                Font
-                <select aria-label="Font example">
-                  <option>Bebas Neue</option>
-                  <option>Arial Bold</option>
-                  <option>Impact</option>
+              <div class="designer-inline-fields">
+                <label><span id="textColorLabel">Color</span><input id="designTextColor" type="color" value="#05275c" /></label>
+                <label><span id="textSizeLabel">Size</span><input id="designTextSize" type="range" min="20" max="90" value="44" /></label>
+              </div>
+              <label class="designer-shape-field">
+                <span id="textShapeLabel">Text shape</span>
+                <select id="designTextShape">
+                  <option value="straight">Straight</option>
+                  <option value="arcUp">Arc up</option>
+                  <option value="arcDown">Arc down</option>
+                  <option value="circle">Circle</option>
                 </select>
               </label>
-              <div class="format-buttons" aria-label="Formatting examples">
-                <button type="button">B</button>
-                <button type="button"><i>I</i></button>
-                <button type="button"><u>U</u></button>
-                <button type="button">≡</button>
-                <button type="button">⌒</button>
+              <section>
+                <h2 id="scaleTitle">Artwork size</h2>
+                <input id="designScale" type="range" min="20" max="100" value="62" />
+              </section>
+              <div class="designer-actions">
+                <button id="centerDesign" class="outline-button" type="button">Center design</button>
+                <button id="clearDesign" class="outline-button" type="button">Clear side</button>
               </div>
-              <p class="panel-label">Text color</p>
-              <div class="tiny-color-row" aria-hidden="true">
-                <span style="--dot:#061b42"></span>
-                <span style="--dot:#ffffff"></span>
-                <span style="--dot:#f5bf00"></span>
-                <span style="--dot:#ef233c"></span>
-                <span>+</span>
+              <p id="designerStatus" class="order-status" aria-live="polite"></p>
+              <div class="shirt-price-box designer-order-box">
+                <span id="sideSummaryLabel">Selected shirts</span>
+                <div id="sideOrderSummary"></div>
+                <span id="sideTotalLabel">Order total</span><strong id="sideShirtTotal">$0.00</strong>
+                <small>Delivery date: automatically 7 days after the order.</small>
               </div>
-              <label class="designer-upload fake-upload">
-                Upload your logo
-                <small>PNG, JPG, SVG, PDF</small>
-              </label>
+              <button id="approveDesignOrder" class="action-gradient" type="button">Approve design and order</button>
             </aside>
           </div>
         </section>
@@ -280,6 +274,6 @@
         <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></div>
       </footer>
     </div>
-    <script src="tshirt.js?v=20260611-1330"></script>
+    <script src="tshirt.js?v=20260611-1420"></script>
   </body>
 </html>

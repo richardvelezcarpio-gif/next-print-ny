@@ -1811,6 +1811,12 @@ textarea {
   background: var(--navy);
 }
 
+.designer-side-tabs button:disabled {
+  color: #8b98ad;
+  background: #f4f8fd;
+  cursor: not-allowed;
+}
+
 .designer-inline-fields {
   display: grid;
   grid-template-columns: 110px 1fr;
@@ -1859,6 +1865,24 @@ textarea {
 .designer-actions {
   display: grid;
   gap: 10px;
+}
+
+.single-print-toggle {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--navy);
+  background: #fff;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.single-print-toggle.active {
+  color: #fff;
+  border-color: var(--navy);
+  background: var(--navy);
 }
 
 /* T-shirt product page redesign */
@@ -2114,7 +2138,7 @@ textarea {
 
 .shirt-studio-grid {
   display: grid;
-  grid-template-columns: minmax(210px, 0.82fr) minmax(380px, 1.6fr) minmax(250px, 0.9fr);
+  grid-template-columns: minmax(220px, 0.8fr) minmax(430px, 1.55fr) minmax(280px, 0.95fr);
   gap: 14px;
 }
 
@@ -2221,10 +2245,18 @@ textarea {
 }
 
 .shirt-live-stage {
-  min-height: 540px;
+  min-height: 560px;
   gap: 10px;
-  padding: 12px 22px 18px;
+  padding: 14px 22px 18px;
   box-shadow: inset 0 0 0 1px #edf4fc;
+}
+
+.shirt-live-stage #shirtCanvas {
+  width: min(100%, 520px);
+  max-height: 590px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #eef5fb;
 }
 
 .mini-tool-bar {
@@ -2342,6 +2374,48 @@ textarea {
   align-content: start;
   gap: 12px;
   padding: 16px;
+}
+
+.shirt-design-panel section {
+  display: grid;
+  gap: 8px;
+}
+
+.shirt-design-panel h2 {
+  margin: 0;
+  color: var(--navy);
+  font-size: 0.85rem;
+}
+
+.shirt-design-panel .designer-upload {
+  min-height: 78px;
+}
+
+.shirt-design-panel .designer-actions .outline-button {
+  min-height: 40px;
+  color: #fff;
+  border-color: #c7d4e2;
+  background: #b9b9b9;
+}
+
+.designer-order-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.designer-order-box #sideOrderSummary {
+  grid-column: 1 / -1;
+  max-height: 96px;
+  overflow: auto;
+  display: grid;
+  gap: 6px;
+}
+
+.designer-order-box #sideOrderSummary span {
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
 }
 
 .format-buttons {
