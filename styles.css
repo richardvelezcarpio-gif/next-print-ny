@@ -3692,8 +3692,8 @@ textarea {
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
-  gap: 36px;
-  padding: 42px 34px 34px;
+  gap: 30px;
+  padding: 32px 34px 24px;
   color: #fff;
   background:
     radial-gradient(circle at 92% 35%, rgba(3, 191, 231, 0.28), transparent 34%),
@@ -3701,22 +3701,27 @@ textarea {
 }
 
 .np-hero-copy h1 {
-  max-width: 620px;
+  max-width: 720px;
   margin: 0;
   color: #fff;
-  font-size: clamp(2.35rem, 4.7vw, 4.2rem);
-  line-height: 0.98;
+  font-size: clamp(2.25rem, 4.15vw, 3.7rem);
+  line-height: 1.04;
   text-transform: uppercase;
 }
 
+.np-hero-copy h1 span,
 .np-hero-copy h1 strong {
   display: block;
+  white-space: nowrap;
+}
+
+.np-hero-copy h1 strong {
   color: #19c8ff;
 }
 
 .np-hero-copy > p {
   max-width: 620px;
-  margin: 18px 0 0;
+  margin: 14px 0 0;
   color: #edf7ff;
   font-size: 1.08rem;
   line-height: 1.55;
@@ -3726,7 +3731,7 @@ textarea {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
-  margin: 28px 0 26px;
+  margin: 22px 0 22px;
 }
 
 .np-hero-badges span {
@@ -3770,7 +3775,7 @@ textarea {
 }
 
 .np-rating {
-  margin-top: 20px;
+  margin-top: 16px;
   color: #ffb229;
   font-weight: 900;
 }
@@ -3782,7 +3787,7 @@ textarea {
 
 .np-hero-collage {
   position: relative;
-  min-height: 360px;
+  min-height: 325px;
 }
 
 .np-hero-collage img {
@@ -3809,7 +3814,7 @@ textarea {
 
 .collage-banner {
   left: 12%;
-  top: 150px;
+  top: 132px;
   width: 60%;
   aspect-ratio: 1.7;
   z-index: 2;
@@ -4261,6 +4266,11 @@ textarea {
 @media (max-width: 620px) {
   .np-home-hero {
     padding: 30px 18px;
+  }
+
+  .np-hero-copy h1 span,
+  .np-hero-copy h1 strong {
+    white-space: normal;
   }
 
   .np-hero-badges,
