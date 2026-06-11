@@ -1944,17 +1944,23 @@ textarea {
 }
 
 .shirt-hero-copy h1 {
-  max-width: 500px;
+  max-width: 760px;
   margin: 6px 0 12px;
   color: var(--navy);
-  font-size: clamp(2.25rem, 4.7vw, 3.8rem);
+  font-size: clamp(2.25rem, 4.15vw, 3.55rem);
   line-height: 0.94;
   text-transform: uppercase;
+}
+
+.shirt-hero-copy h1 span {
+  display: block;
+  white-space: nowrap;
 }
 
 .shirt-hero-copy h1 strong {
   display: block;
   color: #147ee8;
+  white-space: nowrap;
 }
 
 .shirt-hero-copy p {
@@ -2767,6 +2773,11 @@ textarea {
 
   .shirt-hero-copy h1 {
     font-size: clamp(2rem, 13vw, 3.25rem);
+  }
+
+  .shirt-hero-copy h1 span,
+  .shirt-hero-copy h1 strong {
+    white-space: normal;
   }
 
   .studio-heading ol,

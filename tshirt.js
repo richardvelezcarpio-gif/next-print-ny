@@ -545,7 +545,7 @@ function renderLanguage(language) {
   const titleNode = document.querySelector("#shirtTitle");
   if (titleNode) {
     const [lineOne, lineTwo] = text.title.split("|");
-    titleNode.innerHTML = `${lineOne || ""}<strong>${lineTwo || ""}</strong>`;
+    titleNode.innerHTML = `<span>${lineOne || ""}</span><strong>${lineTwo || ""}</strong>`;
   }
 }
 
