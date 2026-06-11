@@ -1895,9 +1895,9 @@ textarea {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
   align-items: center;
-  gap: 24px;
-  min-height: 360px;
-  padding: 28px 18px 18px;
+  gap: 22px;
+  min-height: 330px;
+  padding: 24px 18px 16px;
   overflow: hidden;
   background:
     radial-gradient(circle at 92% 15%, rgba(255, 88, 172, 0.32), transparent 26%),
@@ -1920,11 +1920,11 @@ textarea {
 }
 
 .shirt-hero-copy h1 {
-  max-width: 520px;
+  max-width: 500px;
   margin: 6px 0 12px;
   color: var(--navy);
-  font-size: clamp(2.5rem, 5.2vw, 4.25rem);
-  line-height: 0.98;
+  font-size: clamp(2.25rem, 4.7vw, 3.8rem);
+  line-height: 0.94;
   text-transform: uppercase;
 }
 
@@ -1991,7 +1991,7 @@ textarea {
 
 .shirt-hero-visual {
   position: relative;
-  min-height: 310px;
+  min-height: 285px;
   display: grid;
   place-items: center;
 }
@@ -2012,10 +2012,11 @@ textarea {
   position: relative;
   z-index: 1;
   width: min(520px, 100%);
-  max-height: 300px;
-  object-fit: cover;
+  max-height: 248px;
+  object-fit: contain;
   object-position: center;
   border-radius: 12px;
+  background: #fff;
   box-shadow: 0 20px 42px rgba(7, 20, 47, 0.18);
 }
 
@@ -2023,12 +2024,12 @@ textarea {
   position: absolute;
   z-index: 2;
   right: 12px;
-  bottom: 0;
-  width: min(520px, 92%);
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  bottom: 4px;
+  width: min(500px, 92%);
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
-  padding: 14px 18px;
+  padding: 12px 14px;
   border-radius: 9px;
   color: #fff;
   background: linear-gradient(135deg, #061b42, #073b83);
@@ -2036,15 +2037,18 @@ textarea {
 }
 
 .perfect-for strong {
-  grid-column: 1 / -1;
+  flex: 0 0 100%;
   font-size: 0.75rem;
   text-transform: uppercase;
 }
 
 .perfect-for span {
-  min-height: 34px;
-  display: grid;
-  place-items: end center;
+  min-height: 28px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.09);
   font-size: 0.64rem;
   font-weight: 900;
   text-align: center;
@@ -2238,6 +2242,23 @@ textarea {
   text-align: center;
 }
 
+.mini-tool-bar button {
+  min-height: 42px;
+  border: 1px solid rgba(11, 97, 200, 0.16);
+  border-radius: 8px;
+  color: var(--navy);
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.mini-tool-bar button:hover,
+.mini-tool-bar button:focus-visible {
+  color: #fff;
+  background: linear-gradient(135deg, #06306c, #0b7ee8);
+  outline: none;
+}
+
 .studio-shirt-preview {
   width: min(82%, 390px);
   background:
@@ -2260,11 +2281,11 @@ textarea {
   text-transform: uppercase;
 }
 
-.shirt-side-thumbs {
+.shirt-print-options {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  width: min(420px, 100%);
+  width: min(500px, 100%);
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -2272,21 +2293,48 @@ textarea {
   box-shadow: 0 10px 24px rgba(7, 20, 47, 0.08);
 }
 
-.shirt-side-thumbs span {
-  min-height: 42px;
+.shirt-print-options button {
+  min-height: 72px;
   display: grid;
-  place-items: center;
+  gap: 4px;
+  align-content: center;
   border: 1px solid var(--line);
   border-radius: 7px;
   color: #40516f;
-  font-size: 0.62rem;
+  background: #fff;
+  font-size: 0.66rem;
   font-weight: 900;
+  text-align: center;
+  cursor: pointer;
 }
 
-.shirt-side-thumbs span.active {
+.shirt-print-options button.active {
   color: #0b6fe8;
   border-color: #0b8df4;
   background: #edf8ff;
+}
+
+.shirt-print-options strong {
+  color: var(--navy);
+  font-size: 0.76rem;
+}
+
+.shirt-print-note {
+  display: grid;
+  gap: 4px;
+  width: min(500px, 100%);
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: #5f6c86;
+  background: #f8fbff;
+  text-align: center;
+  font-size: 0.78rem;
+}
+
+.shirt-print-note strong {
+  color: var(--navy);
+  text-transform: uppercase;
 }
 
 .shirt-design-panel {
@@ -2430,6 +2478,116 @@ textarea {
   font-size: 0.65rem;
 }
 
+.template-grid .template-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 150px;
+  place-items: stretch;
+  align-content: center;
+  gap: 6px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 14px 28px rgba(7, 20, 47, 0.12);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.template-grid .template-card::before {
+  content: "";
+  position: absolute;
+  inset: -30% auto auto -20%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(0, 190, 230, 0.2);
+}
+
+.template-card strong,
+.template-card b,
+.template-card em,
+.template-card .template-icon {
+  position: relative;
+  z-index: 1;
+}
+
+.template-card strong {
+  font-size: 1.02rem;
+}
+
+.template-card b {
+  color: #fff;
+  font-size: 1.2rem;
+}
+
+.template-card em {
+  color: #ffd84d;
+  font-size: 0.72rem;
+  font-style: normal;
+}
+
+.template-card.construction {
+  background: linear-gradient(145deg, #111827, #020817);
+}
+
+.template-card.construction b,
+.template-card.construction em,
+.template-card.team em {
+  color: #ffce2e;
+}
+
+.template-card.festival {
+  color: #06306c;
+  background: radial-gradient(circle at 50% 38%, #fff 0 25%, transparent 26%), linear-gradient(145deg, #fff6e5, #ffe8f5 55%, #e3fbff);
+}
+
+.template-card.festival b,
+.template-card.festival strong {
+  color: #1261a8;
+}
+
+.template-card.festival em {
+  color: #e85b17;
+}
+
+.template-card.team {
+  background: linear-gradient(145deg, #111827, #070b14);
+}
+
+.template-card.team b {
+  font-size: 1.55rem;
+}
+
+.template-card.church {
+  background: linear-gradient(145deg, #161616, #0d0d0d);
+}
+
+.template-card.church::after {
+  content: "+";
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 1.6rem;
+}
+
+.template-card.class-year {
+  background: linear-gradient(145deg, #0a2e6e, #09204c);
+}
+
+.template-card.class-year b {
+  font-family: Georgia, serif;
+  font-size: 1.25rem;
+}
+
+.template-card.design-here {
+  background: linear-gradient(145deg, #151515, #050505);
+}
+
+.template-card.design-here b {
+  color: #ffce2e;
+}
+
 .shirt-why > div {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -2541,7 +2699,7 @@ textarea {
   .shirt-hero-actions,
   .perfect-for,
   .mini-tool-bar,
-  .shirt-side-thumbs {
+  .shirt-print-options {
     grid-template-columns: 1fr;
   }
 

@@ -15,6 +15,7 @@ const selectionKey = "nextPrintTshirtSelection";
 const state = {
   color: colors[0][0],
   colorHex: colors[0][1],
+  printOption: "frontBack",
   quantities: Object.fromEntries(colors.map(([color]) => [color, Object.fromEntries(sizes.map((size) => [size, 0]))])),
 };
 const lang = localStorage.getItem("preferredLanguage") || "en";
@@ -34,7 +35,10 @@ const copy = {
     empty: "Add at least one quantity to continue.",
     summary: "Selected shirts",
     areaTitle: "Print areas",
-    areaText: "Front left chest: 4 x 4 in · Back: 14 x 14 in",
+    areaText: {
+      frontBack: "Front left chest: 4 x 4 in · Back: 14 x 14 in",
+      frontOnly: "Front only: 14 x 14 in",
+    },
   },
   es: {
     kicker: "Ropa personalizada",
@@ -50,7 +54,10 @@ const copy = {
     empty: "Agrega al menos una cantidad para continuar.",
     summary: "Camisetas seleccionadas",
     areaTitle: "Áreas de impresión",
-    areaText: "Frente izquierdo: 4 x 4 pulgadas · Espalda: 14 x 14 pulgadas",
+    areaText: {
+      frontBack: "Frente izquierdo: 4 x 4 pulgadas · Espalda: 14 x 14 pulgadas",
+      frontOnly: "Solo frente: 14 x 14 pulgadas",
+    },
   },
 };
 
@@ -62,6 +69,8 @@ const shirtOrderSummary = document.querySelector("#shirtOrderSummary");
 const form = document.querySelector("#shirtSelectionForm");
 const menuToggle = document.querySelector(".menu-toggle");
 const menu = document.querySelector("#menu");
+const printOptionButtons = document.querySelectorAll("[data-print-option]");
+const studioActionButtons = document.querySelectorAll("[data-studio-action]");
 
 renderLanguage(lang);
 renderColors();
@@ -78,14 +87,32 @@ document.querySelectorAll("[data-shirt-lang]").forEach((button) =>
 
 form.addEventListener("submit", (event) => {
   event.preventDefault();
+  continueToDesigner();
+});
+
+printOptionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.printOption = button.dataset.printOption || "frontBack";
+    printOptionButtons.forEach((item) => item.classList.toggle("active", item === button));
+    updateSelection();
+  });
+});
+
+studioActionButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    continueToDesigner(button.dataset.studioAction || "");
+  });
+});
+
+function continueToDesigner(action = "") {
   const selection = buildSelection();
   if (!selection.items.length) {
     shirtOrderSummary.innerHTML = `<p class="error">${activeCopy().empty}</p>`;
     return;
   }
   sessionStorage.setItem(selectionKey, JSON.stringify(selection));
-  window.location.href = "tshirt-designer.html";
-});
+  window.location.href = action ? `tshirt-designer.html?tool=${encodeURIComponent(action)}` : "tshirt-designer.html";
+}
 
 if (menuToggle && menu) {
   menuToggle.addEventListener("click", () => {
@@ -142,6 +169,8 @@ function updateSelection() {
   const selection = buildSelection();
   document.querySelector("#shirtTotalQty").textContent = String(selection.totalQuantity);
   document.querySelector("#shirtTotal").textContent = money(selection.totalPrice);
+  const printAreaText = document.querySelector("#printAreaText");
+  if (printAreaText) printAreaText.textContent = activeCopy().areaText[state.printOption] || activeCopy().areaText.frontBack;
   renderSummary(selection);
 }
 
@@ -177,6 +206,8 @@ function buildSelection() {
   return {
     product: "Gildan G500 T-Shirt Mix",
     brand: "Gildan G500 Unisex Heavy Cotton",
+    printOption: state.printOption,
+    printOptionLabel: state.printOption === "frontOnly" ? "Front only 14 x 14 in" : "Front left chest 4 x 4 + Back 14 x 14 in",
     items,
     totalQuantity: items.reduce((total, item) => total + item.quantity, 0),
     totalPrice: items.reduce((total, item) => total + item.lineTotal, 0),
@@ -211,11 +242,12 @@ function renderLanguage(language) {
     ["deliveryNote", "delivery"],
     ["openDesigner", "next"],
     ["printAreaTitle", "areaTitle"],
-    ["printAreaText", "areaText"],
   ].forEach(([id, key]) => {
     const node = document.querySelector(`#${id}`);
     if (node) node.textContent = text[key];
   });
+  const printAreaText = document.querySelector("#printAreaText");
+  if (printAreaText) printAreaText.textContent = text.areaText[state.printOption] || text.areaText.frontBack;
 
   const titleNode = document.querySelector("#shirtTitle");
   if (titleNode) {

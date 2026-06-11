@@ -27,8 +27,17 @@ fallbackSelection.totalPrice = fallbackSelection.items[0].lineTotal;
 
 const selection = loadSelection() || fallbackSelection;
 const previewItem = selection.items[0] || fallbackSelection.items[0];
+const isFrontOnly = selection.printOption === "frontOnly";
 const designs = {
-  front: { artwork: null, text: "", color: "#05275c", size: 34, shape: "straight", scale: 62, position: { x: 413, y: 310 } },
+  front: {
+    artwork: null,
+    text: "",
+    color: "#05275c",
+    size: isFrontOnly ? 52 : 34,
+    shape: "straight",
+    scale: isFrontOnly ? 70 : 62,
+    position: isFrontOnly ? { x: 360, y: 392 } : { x: 413, y: 310 },
+  },
   back: { artwork: null, text: "", color: "#05275c", size: 52, shape: "straight", scale: 70, position: { x: 360, y: 392 } },
 };
 
@@ -36,10 +45,12 @@ const translations = {
   en: {
     kicker: "Online T-shirt designer",
     title: "Create your shirt design",
-    intro: "Upload artwork or add text. Use the left chest 4 x 4 area and the back 14 x 14 area.",
+    intro: isFrontOnly
+      ? "Upload artwork or add text. Use the front 14 x 14 print area."
+      : "Upload artwork or add text. Use the left chest 4 x 4 area and the back 14 x 14 area.",
     hint: "Choose a side, then drag the image or text inside the print area.",
     side: "Design side",
-    front: "Front left chest 4 x 4",
+    front: isFrontOnly ? "Front only 14 x 14" : "Front left chest 4 x 4",
     back: "Back 14 x 14",
     artwork: "Add artwork",
     choose: "Choose image",
@@ -60,10 +71,12 @@ const translations = {
   es: {
     kicker: "Diseñador de camisetas en línea",
     title: "Crea el diseño de tu camiseta",
-    intro: "Sube una imagen o agrega texto. Usa el área izquierda del pecho 4 x 4 y la espalda 14 x 14.",
+    intro: isFrontOnly
+      ? "Sube una imagen o agrega texto. Usa el área frontal 14 x 14."
+      : "Sube una imagen o agrega texto. Usa el área izquierda del pecho 4 x 4 y la espalda 14 x 14.",
     hint: "Escoge un lado y mueve la imagen o el texto dentro del área de impresión.",
     side: "Lado del diseño",
-    front: "Frente izquierdo 4 x 4",
+    front: isFrontOnly ? "Solo frente 14 x 14" : "Frente izquierdo 4 x 4",
     back: "Espalda 14 x 14",
     artwork: "Agregar imagen",
     choose: "Escoger imagen",
@@ -86,6 +99,11 @@ const translations = {
 renderLanguage(language);
 renderSummary();
 loadSideControls();
+if (isFrontOnly) {
+  activeSide = "front";
+  document.querySelector("#backSideButton")?.setAttribute("hidden", "");
+  document.querySelector("#frontSideButton")?.classList.add("active");
+}
 draw();
 
 document.querySelector("#designFile").addEventListener("change", async (event) => {
@@ -168,7 +186,8 @@ function draw() {
   ctx.fillStyle = "#05275c";
   ctx.font = "900 16px Arial";
   ctx.textAlign = "center";
-  ctx.fillText(activeSide === "front" ? "4 x 4 LEFT CHEST" : "14 x 14 BACK", area.x + area.width / 2, area.y - 13);
+  const label = activeSide === "front" ? (isFrontOnly ? "14 x 14 FRONT" : "4 x 4 LEFT CHEST") : "14 x 14 BACK";
+  ctx.fillText(label, area.x + area.width / 2, area.y - 13);
   ctx.restore();
   drawDesign(activeSide);
 }
@@ -300,6 +319,9 @@ function moveDesign(event) {
 }
 
 function printAreaFor(side) {
+  if (side === "front" && isFrontOnly) {
+    return { x: 242, y: 245, width: 236, height: 236 };
+  }
   return side === "front"
     ? { x: 374, y: 230, width: 78, height: 78 }
     : { x: 242, y: 245, width: 236, height: 236 };
@@ -311,23 +333,27 @@ function centerDesign() {
 }
 
 async function continueOrder() {
-  activeSide = "back";
-  sideButtons.forEach((item) => item.classList.toggle("active", item.dataset.side === "back"));
-  draw();
-  const backPreview = canvas.toDataURL("image/png").split(",")[1];
+  let backPreview = "";
+  if (!isFrontOnly) {
+    activeSide = "back";
+    sideButtons.forEach((item) => item.classList.toggle("active", item.dataset.side === "back"));
+    draw();
+    backPreview = canvas.toDataURL("image/png").split(",")[1];
+  }
   activeSide = "front";
   sideButtons.forEach((item) => item.classList.toggle("active", item.dataset.side === "front"));
   draw();
   const frontPreview = canvas.toDataURL("image/png").split(",")[1];
 
   try {
+    const previewFiles = [
+      { name: isFrontOnly ? "tshirt-front-14x14-preview.png" : "tshirt-front-left-chest-preview.png", content: frontPreview },
+    ];
+    if (!isFrontOnly) previewFiles.push({ name: "tshirt-back-preview.png", content: backPreview });
+    if (originalArtwork) previewFiles.push(originalArtwork);
     sessionStorage.setItem(
       filesKey,
-      JSON.stringify([
-        { name: "tshirt-front-left-chest-preview.png", content: frontPreview },
-        { name: "tshirt-back-preview.png", content: backPreview },
-        ...(originalArtwork ? [originalArtwork] : []),
-      ])
+      JSON.stringify(previewFiles)
     );
   } catch {}
 
@@ -347,11 +373,14 @@ async function continueOrder() {
 }
 
 function buildOrderDetails() {
-  return [
+  const lines = [
     "Product: Gildan G500 T-Shirt",
     "Brand: Gildan G500 Unisex Heavy Cotton",
-    "Front print area: Left chest 4 x 4 inches",
-    "Back print area: 14 x 14 inches",
+    `Print option: ${selection.printOptionLabel || (isFrontOnly ? "Front only 14 x 14 in" : "Front left chest 4 x 4 + Back 14 x 14 in")}`,
+    isFrontOnly ? "Front print area: 14 x 14 inches" : "Front print area: Left chest 4 x 4 inches",
+  ];
+  if (!isFrontOnly) lines.push("Back print area: 14 x 14 inches");
+  lines.push(
     "Selected shirts:",
     ...selection.items.map(
       (item) => `- ${item.color} / ${item.size}: ${item.quantity} x ${money(item.unitPrice)} = ${money(item.lineTotal)}`
@@ -360,9 +389,11 @@ function buildOrderDetails() {
     `Suggested sale price: ${money(selection.totalPrice)}`,
     `Front text: ${designs.front.text.trim() || "None"}`,
     `Front text shape: ${shapeLabel(designs.front.shape)}`,
-    `Back text: ${designs.back.text.trim() || "None"}`,
-    `Back text shape: ${shapeLabel(designs.back.shape)}`,
-  ].join("\n");
+  );
+  if (!isFrontOnly) {
+    lines.push(`Back text: ${designs.back.text.trim() || "None"}`, `Back text shape: ${shapeLabel(designs.back.shape)}`);
+  }
+  return lines.join("\n");
 }
 
 function renderSummary() {
@@ -370,6 +401,7 @@ function renderSummary() {
   document.querySelector("#shirtSummary").innerHTML = `
     <strong>Gildan G500</strong>
     <span>${selection.totalQuantity} ${isSpanish ? "camisetas" : "shirts"} / ${selection.items.length} ${isSpanish ? "combinaciones" : "combinations"}</span>
+    <small>${selection.printOptionLabel || (isFrontOnly ? "Front only 14 x 14 in" : "Front left chest 4 x 4 + Back 14 x 14 in")}</small>
     <div>${selection.items.map((item) => `<span>${item.color} ${item.size}: ${item.quantity}</span>`).join("")}</div>
     <b>${money(selection.totalPrice)}</b>`;
 }

@@ -6,7 +6,7 @@
     <meta name="description" content="Design custom Gildan G500 T-shirts with Next Print NY." />
     <title>Custom T-Shirts | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260611-0910" />
+    <link rel="stylesheet" href="styles.css?v=20260611-1330" />
   </head>
   <body>
     <div class="page-shell shirt-commerce-shell">
@@ -51,7 +51,7 @@
           <div class="shirt-hero-copy">
             <p class="breadcrumb">Home &gt; T-Shirts &amp; Apparel</p>
             <span id="shirtKicker">Custom apparel</span>
-            <h1 id="shirtTitle">Custom T-Shirts Made Your Way</h1>
+            <h1 id="shirtTitle">Custom T-Shirts<strong>Made Your Way</strong></h1>
             <p id="shirtIntro">High quality prints. Any design, any color, any size. Perfect for your business, event, team or organization.</p>
             <div class="shirt-benefit-row" aria-label="T-shirt benefits">
               <span><b>Premium DTF Printing</b>Vibrant &amp; long lasting</span>
@@ -126,23 +126,27 @@
             </form>
 
             <div class="shirt-product-stage shirt-live-stage">
-              <div class="mini-tool-bar" aria-hidden="true">
-                <span>T Add Text</span>
-                <span>Image</span>
-                <span>Upload</span>
-                <span>Undo</span>
-                <span>Redo</span>
-                <span>Zoom</span>
+              <div class="mini-tool-bar">
+                <button type="button" data-studio-action="text">T Add Text</button>
+                <button type="button" data-studio-action="image">Image</button>
+                <button type="button" data-studio-action="upload">Upload</button>
+                <button type="button" data-studio-action="undo">Undo</button>
+                <button type="button" data-studio-action="redo">Redo</button>
+                <button type="button" data-studio-action="zoom">Zoom</button>
               </div>
               <div id="shirtPreview" class="shirt-preview studio-shirt-preview" aria-label="Selected blank T-shirt">
                 <span>Your design</span>
               </div>
               <p id="shirtColorName">White</p>
-              <div class="shirt-side-thumbs" aria-hidden="true">
-                <span class="active">Front</span>
-                <span>Back</span>
-                <span>Left Sleeve</span>
-                <span>Right Sleeve</span>
+              <div class="shirt-print-options" aria-label="Print area options">
+                <button class="active" type="button" data-print-option="frontBack">
+                  <strong>Front left chest 4 x 4 + Back 14 x 14</strong>
+                  <span>Logo on chest and large design on back.</span>
+                </button>
+                <button type="button" data-print-option="frontOnly">
+                  <strong>Front only 14 x 14</strong>
+                  <span>One large front print area.</span>
+                </button>
               </div>
               <div class="shirt-print-note">
                 <strong id="printAreaTitle">Print areas</strong>
@@ -183,15 +187,6 @@
                 Upload your logo
                 <small>PNG, JPG, SVG, PDF</small>
               </label>
-
-              <div class="checkout-preview">
-                <div class="builder-step-title"><span>3</span> Review &amp; checkout</div>
-                <p>Price breakup</p>
-                <div><span>Front print</span><b>Included</b></div>
-                <div><span>Back print</span><b>Included</b></div>
-                <div><span>Setup fee</span><b>$0.00</b></div>
-                <strong>Continue to designer to finish your order.</strong>
-              </div>
             </aside>
           </div>
         </section>
@@ -209,12 +204,37 @@
             <span>Custom Text</span>
           </div>
           <div class="template-grid">
-            <article>YOUR COMPANY<br /><small>Logo &amp; phone</small></article>
-            <article>SUMMER FEST<br /><small>Event shirts</small></article>
-            <article>TEAM<br /><small>Name &amp; number</small></article>
-            <article>CHURCH<br /><small>Groups</small></article>
-            <article>CLASS OF 2026<br /><small>School</small></article>
-            <article>YOUR DESIGN HERE<br /><small>Custom</small></article>
+            <article class="template-card construction">
+              <span class="template-icon">▰</span>
+              <strong>Your Company</strong>
+              <b>Your Tagline</b>
+              <em>718-555-1234</em>
+            </article>
+            <article class="template-card festival">
+              <strong>Summer Fest</strong>
+              <b>2026</b>
+              <em>Event shirts</em>
+            </article>
+            <article class="template-card team">
+              <strong>Team</strong>
+              <b>Name<br />00</b>
+              <em>Name &amp; number</em>
+            </article>
+            <article class="template-card church">
+              <strong>Church</strong>
+              <b>Changes Lives</b>
+              <em>Groups</em>
+            </article>
+            <article class="template-card class-year">
+              <strong>Class of</strong>
+              <b>2026</b>
+              <em>Seniors</em>
+            </article>
+            <article class="template-card design-here">
+              <strong>Your</strong>
+              <b>Design<br />Here</b>
+              <em>Custom</em>
+            </article>
           </div>
         </section>
 
@@ -260,6 +280,6 @@
         <div><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms of Service</a></div>
       </footer>
     </div>
-    <script src="tshirt.js?v=20260611-0910"></script>
+    <script src="tshirt.js?v=20260611-1330"></script>
   </body>
 </html>
