@@ -1016,9 +1016,12 @@ textarea {
 
 .visit-grid {
   display: grid;
-  grid-template-columns: 0.82fr 1.55fr 0.88fr;
-  gap: 12px;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   margin-top: 14px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .visit-card h2,
