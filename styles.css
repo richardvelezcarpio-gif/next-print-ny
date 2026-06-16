@@ -1118,6 +1118,43 @@ textarea {
   font-size: 1.25rem;
 }
 
+.visit-card h2,
+.contact-card h2 {
+  color: #082b6d !important;
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.visit-card p,
+.contact-card p,
+.visit-card strong,
+.contact-card strong {
+  color: #082b6d !important;
+}
+
+.visit-card {
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(0,0,0,.08);
+}
+
+.contact-card {
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(0,0,0,.08);
+}
+
+.visit-card a {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.contact-card {
+  padding: 30px;
+}
+
+.visit-card {
+  padding: 30px;
+}
+
 @media (max-width: 900px) {
   .visit-grid {
     grid-template-columns: 1fr;
