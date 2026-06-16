@@ -1048,9 +1048,9 @@ textarea {
 
 .map-frame {
   width: 100%;
-  min-height: 306px;
-  border: 1px solid var(--line);
+  min-height: 300px;
   border-radius: 14px;
+  border: 1px solid var(--cyan);
 }
 
 .contact-card a {
