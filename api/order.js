@@ -1,4 +1,4 @@
-import { catalogPriceFor } from "./printing-prices.js";
+import { catalogPriceFor } from "../lib/printing-prices.js";
 
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";

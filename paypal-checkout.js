@@ -1,6 +1,6 @@
 (function () {
   async function createCheckout(payload) {
-    const response = await fetch("/api/create-paypal-order", {
+    const response = await fetch("/api/paypal?action=create", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -19,7 +19,7 @@
 
     try {
       setStatus?.("Confirming PayPal payment...");
-      const response = await fetch("/api/capture-paypal-order", {
+      const response = await fetch("/api/paypal?action=capture", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ orderNumber, paypalOrderId }),
