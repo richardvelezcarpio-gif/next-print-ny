@@ -27,6 +27,7 @@ const itemsNode = document.querySelector("#bannerCheckoutItems");
 const selection = loadJson(bannerSelectionKey);
 const files = loadJson(bannerFilesKey) || [];
 const baseDetails = String(sessionStorage.getItem(bannerDetailsKey) || "");
+let preparedCheckoutPayload = null;
 
 if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
   window.NextPrintPayPal.captureReturn({
@@ -45,85 +46,16 @@ if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
 
 checkoutForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  if (!selection?.product) return;
-
   const submitButton = checkoutForm.querySelector("button[type='submit']");
-  const form = new FormData(checkoutForm);
-  const customer = {
-    name: clean(form.get("name")),
-    phone: clean(form.get("phone")),
-    email: clean(form.get("email")),
-  };
-  const fulfillment = form.get("fulfillment") === "pickup" ? "pickup" : "shipping";
-  const address = fulfillment === "shipping" ? {
-    street: clean(form.get("street")),
-    apartment: clean(form.get("apartment")),
-    city: clean(form.get("city")),
-    state: clean(form.get("state")).toUpperCase(),
-    zip: clean(form.get("zip")),
-  } : {};
-
-  if (!customer.name || !customer.phone || !customer.email) {
-    setStatus("Please complete your name, phone, and email.", true);
-    return;
-  }
-
-  if (fulfillment === "shipping" && (!address.street || !address.city || !address.state || !address.zip)) {
-    setStatus("Please complete the full shipping address.", true);
-    return;
-  }
-
   submitButton.disabled = true;
-  setStatus("Saving order and opening secure PayPal checkout...");
+  setStatus("Opening backup PayPal checkout...");
 
   try {
     if (!window.NextPrintPayPal) {
       throw new Error("PayPal checkout is not ready. Please refresh and try again.");
     }
 
-    const details = buildFullDetails(selection, baseDetails);
-    const orderResponse = await fetch("/api/order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        language: localStorage.getItem("preferredLanguage") || "en",
-        service: "Signs & Banners",
-        product: "",
-        quantity: "1",
-        details,
-        orderDate: toDateInputValue(new Date()),
-        dueDate: toDateInputValue(daysFromNow(5)),
-        budget: money(selection.totalPrice),
-        name: customer.name,
-        phone: customer.phone,
-        email: customer.email,
-        fulfillment,
-        address,
-        files,
-      }),
-    });
-    const orderData = await orderResponse.json();
-
-    if (!orderResponse.ok) {
-      throw new Error(orderData?.error || "Could not save the banner order.");
-    }
-
-    const orderNumber = orderData.orderNumber;
-    const checkoutData = await window.NextPrintPayPal.createCheckout({
-      orderNumber,
-      itemName: selection.label || selection.product,
-      amount: orderData.amount || selection.totalPrice,
-      customerName: customer.name,
-      customerEmail: customer.email,
-      source: "banner-checkout",
-      paymentOption: "Full payment",
-      plan: selection.label || selection.product,
-      fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
-      shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
-      description: details,
-      successPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
-      cancelPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
-    });
+    const checkoutData = await window.NextPrintPayPal.createCheckout(await prepareCheckoutPayload());
 
     window.location.href = checkoutData.url;
   } catch (error) {
@@ -131,6 +63,9 @@ checkoutForm?.addEventListener("submit", async (event) => {
     submitButton.disabled = false;
   }
 });
+
+checkoutForm?.addEventListener("input", resetPreparedCheckout);
+checkoutForm?.addEventListener("change", resetPreparedCheckout);
 
 document.querySelectorAll("input[name='fulfillment']").forEach((input) => {
   input.addEventListener("change", updateFulfillmentFields);
@@ -161,6 +96,7 @@ function renderCheckout(orderSelection, orderFiles) {
   }
 
   updateFulfillmentFields();
+  mountPayPalButtons();
 }
 
 function showPaidState(orderNumber) {
@@ -190,6 +126,98 @@ function updateFulfillmentFields() {
     input.required = isShipping && required;
     input.disabled = !isShipping;
   });
+}
+
+async function prepareCheckoutPayload() {
+  if (!selection?.product) {
+    throw new Error("Your banner order is missing. Please return to the designer.");
+  }
+
+  if (preparedCheckoutPayload) return preparedCheckoutPayload;
+
+  const form = new FormData(checkoutForm);
+  const customer = {
+    name: clean(form.get("name")),
+    phone: clean(form.get("phone")),
+    email: clean(form.get("email")),
+  };
+  const fulfillment = form.get("fulfillment") === "pickup" ? "pickup" : "shipping";
+  const address = fulfillment === "shipping" ? {
+    street: clean(form.get("street")),
+    apartment: clean(form.get("apartment")),
+    city: clean(form.get("city")),
+    state: clean(form.get("state")).toUpperCase(),
+    zip: clean(form.get("zip")),
+  } : {};
+
+  if (!customer.name || !customer.phone || !customer.email) {
+    throw new Error("Please complete your name, phone, and email.");
+  }
+
+  if (fulfillment === "shipping" && (!address.street || !address.city || !address.state || !address.zip)) {
+    throw new Error("Please complete the full shipping address.");
+  }
+
+  setStatus("Saving your order before payment...");
+  const details = buildFullDetails(selection, baseDetails);
+  const orderResponse = await fetch("/api/order", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      language: localStorage.getItem("preferredLanguage") || "en",
+      service: "Signs & Banners",
+      product: "",
+      quantity: "1",
+      details,
+      orderDate: toDateInputValue(new Date()),
+      dueDate: toDateInputValue(daysFromNow(5)),
+      budget: money(selection.totalPrice),
+      name: customer.name,
+      phone: customer.phone,
+      email: customer.email,
+      fulfillment,
+      address,
+      files,
+    }),
+  });
+  const orderData = await orderResponse.json();
+
+  if (!orderResponse.ok) {
+    throw new Error(orderData?.error || "Could not save the banner order.");
+  }
+
+  const orderNumber = orderData.orderNumber;
+  preparedCheckoutPayload = {
+    orderNumber,
+    itemName: selection.label || selection.product,
+    amount: orderData.amount || selection.totalPrice,
+    customerName: customer.name,
+    customerEmail: customer.email,
+    source: "banner-checkout",
+    paymentOption: "Full payment",
+    plan: selection.label || selection.product,
+    fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
+    shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
+    description: details,
+    successPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
+    cancelPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
+  };
+
+  return preparedCheckoutPayload;
+}
+
+function mountPayPalButtons() {
+  window.NextPrintPayPal?.renderButtons({
+    container: "#bannerPayPalButtons",
+    fallbackButton: "#bannerPayFallback",
+    getCheckout: prepareCheckoutPayload,
+    setStatus,
+    onSuccess: showPaidState,
+  });
+}
+
+function resetPreparedCheckout() {
+  preparedCheckoutPayload = null;
 }
 
 function buildFullDetails(orderSelection, details) {

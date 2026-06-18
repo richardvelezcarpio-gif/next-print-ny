@@ -3026,6 +3026,50 @@ textarea {
   opacity: 0.65;
 }
 
+.embedded-paypal-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid #cde0f4;
+  border-radius: 14px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 247, 255, 0.96)),
+    radial-gradient(circle at top right, rgba(0, 194, 214, 0.16), transparent 36%);
+  box-shadow: 0 14px 32px rgba(7, 27, 58, 0.11);
+}
+
+.embedded-paypal-panel.compact {
+  margin-top: 6px;
+}
+
+.embedded-paypal-panel span {
+  display: block;
+  color: #00bfd4;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.embedded-paypal-panel h2 {
+  margin: 4px 0;
+  color: #061f49;
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+.embedded-paypal-panel p,
+.embedded-paypal-panel small {
+  margin: 0;
+  color: #607089;
+  line-height: 1.45;
+}
+
+.paypal-buttons-shell {
+  min-height: 52px;
+}
+
 .shirt-checkout-success,
 .shirt-checkout-missing {
   padding: 24px;

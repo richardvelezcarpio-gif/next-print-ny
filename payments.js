@@ -33,35 +33,22 @@ if (paymentCheckoutStatus === "paypal-return" && paymentOrder && paymentPaypalTo
   });
 } else if (paymentCheckoutStatus === "success" && paymentOrder) {
   setPaymentStatus("Payment received. Your order was updated.", "success");
+} else {
+  mountPaymentButtons();
 }
 
 paymentCheckoutForm?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const orderNumber = normalizePaymentOrder(paymentOrderInput?.value);
-  const amount = normalizePaymentAmount(paymentAmountInput?.value);
-
-  if (!orderNumber || !amount) {
-    setPaymentStatus("Enter a valid order number and confirmed total.", "error");
-    return;
-  }
-
   const submitButton = paymentCheckoutForm.querySelector("button[type='submit']");
   submitButton.disabled = true;
-  setPaymentStatus("Opening secure PayPal checkout...");
+  setPaymentStatus("Opening backup PayPal checkout...");
 
   try {
     if (!window.NextPrintPayPal) {
       throw new Error("PayPal checkout is not ready. Please refresh and try again.");
     }
 
-    const data = await window.NextPrintPayPal.createCheckout({
-      orderNumber,
-      amount,
-      itemName: `Next Print NY Order ${orderNumber}`,
-      source: "payments-page",
-      successPath: `/payments.html?order=${encodeURIComponent(orderNumber)}`,
-      cancelPath: `/payments.html?order=${encodeURIComponent(orderNumber)}&amount=${encodeURIComponent(amount)}`,
-    });
+    const data = await window.NextPrintPayPal.createCheckout(getPaymentPayload());
 
     window.location.href = data.url;
   } catch (error) {
@@ -70,6 +57,41 @@ paymentCheckoutForm?.addEventListener("submit", async (event) => {
     submitButton.disabled = false;
   }
 });
+
+paymentCheckoutForm?.addEventListener("input", () => {
+  setPaymentStatus("Choose PayPal or card to pay securely.");
+});
+
+function getPaymentPayload() {
+  const orderNumber = normalizePaymentOrder(paymentOrderInput?.value);
+  const amount = normalizePaymentAmount(paymentAmountInput?.value);
+
+  if (!orderNumber || !amount) {
+    throw new Error("Enter a valid order number and confirmed total.");
+  }
+
+  return {
+    orderNumber,
+    amount,
+    itemName: `Next Print NY Order ${orderNumber}`,
+    source: "payments-page",
+    successPath: `/payments.html?order=${encodeURIComponent(orderNumber)}`,
+    cancelPath: `/payments.html?order=${encodeURIComponent(orderNumber)}&amount=${encodeURIComponent(amount)}`,
+  };
+}
+
+function mountPaymentButtons() {
+  window.NextPrintPayPal?.renderButtons({
+    container: "#paymentPayPalButtons",
+    fallbackButton: "#paymentPayFallback",
+    getCheckout: getPaymentPayload,
+    setStatus: (message, isError) => setPaymentStatus(message, isError ? "error" : "success"),
+    onSuccess: (orderNumber) => {
+      if (paymentOrderNote) paymentOrderNote.textContent = orderNumber;
+      setPaymentStatus("PayPal payment received. Your order was updated.", "success");
+    },
+  });
+}
 
 function normalizePaymentOrder(value) {
   return String(value || "")

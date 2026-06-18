@@ -75,7 +75,17 @@
                 Confirmed total
                 <input id="paymentAmountInput" name="amount" type="number" min="1" step="0.01" placeholder="499.00" required />
               </label>
-              <button type="submit">Open Secure Checkout</button>
+              <section class="embedded-paypal-panel compact">
+                <div>
+                  <span>Secure embedded checkout</span>
+                  <h2>Pay with PayPal or card</h2>
+                  <p>Complete payment here without leaving this page.</p>
+                </div>
+                <div id="paymentPayPalButtons" class="paypal-buttons-shell" aria-label="PayPal checkout buttons"></div>
+                <small>Debit or credit card appears when PayPal makes it available for this checkout.</small>
+              </section>
+
+              <button id="paymentPayFallback" type="submit" hidden>Open backup PayPal checkout</button>
               <p id="paymentStatus" class="payment-status" aria-live="polite"></p>
             </form>
             <ol class="payment-steps">
@@ -145,7 +155,7 @@
       </footer>
     </div>
     <script src="script.js?v=20260617-2325"></script>
-    <script src="paypal-checkout.js?v=20260618-1500"></script>
-    <script src="payments.js?v=20260618-1500"></script>
+    <script src="paypal-checkout.js?v=20260618-embedded"></script>
+    <script src="payments.js?v=20260618-embedded"></script>
   </body>
 </html>

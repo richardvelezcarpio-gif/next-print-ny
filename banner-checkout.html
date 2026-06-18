@@ -156,7 +156,17 @@
                 <p id="bannerPickupNote" class="shirt-pickup-note" hidden>Pickup at Next Print NY. We will confirm the pickup time after payment.</p>
               </section>
 
-              <button class="action-gradient shirt-pay-button" type="submit">Pay Securely with PayPal</button>
+              <section class="embedded-paypal-panel">
+                <div>
+                  <span>Secure embedded checkout</span>
+                  <h2>Pay with PayPal or card</h2>
+                  <p>Complete payment here without leaving this page.</p>
+                </div>
+                <div id="bannerPayPalButtons" class="paypal-buttons-shell" aria-label="PayPal checkout buttons"></div>
+                <small>Debit or credit card appears when PayPal makes it available for this checkout.</small>
+              </section>
+
+              <button id="bannerPayFallback" class="action-gradient shirt-pay-button" type="submit" hidden>Open backup PayPal checkout</button>
               <p id="bannerCheckoutStatus" class="order-status" aria-live="polite"></p>
             </form>
           </section>
@@ -216,7 +226,7 @@
       </footer>
     </div>
     <script src="script.js?v=20260618-0720"></script>
-    <script src="paypal-checkout.js?v=20260618-1500"></script>
-    <script src="banner-checkout.js?v=20260618-1500"></script>
+    <script src="paypal-checkout.js?v=20260618-embedded"></script>
+    <script src="banner-checkout.js?v=20260618-embedded"></script>
   </body>
 </html>
