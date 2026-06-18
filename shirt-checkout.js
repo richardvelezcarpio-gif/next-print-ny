@@ -5,6 +5,7 @@ const detailsKey = "nextPrintTshirtDetails";
 const checkoutParams = new URLSearchParams(window.location.search);
 const checkoutStatus = checkoutParams.get("checkout");
 const returnedOrder = normalizeOrderNumber(checkoutParams.get("order"));
+const paypalToken = window.NextPrintPayPal?.paypalTokenFromParams(checkoutParams);
 
 const workspace = document.querySelector("#shirtCheckoutWorkspace");
 const missingPanel = document.querySelector("#shirtCheckoutMissing");
@@ -25,7 +26,14 @@ const selection = loadJson(selectionKey);
 const files = loadJson(filesKey) || [];
 const baseDetails = String(sessionStorage.getItem(detailsKey) || "");
 
-if (checkoutStatus === "success" && returnedOrder) {
+if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
+  window.NextPrintPayPal.captureReturn({
+    orderNumber: returnedOrder,
+    paypalOrderId: paypalToken,
+    setStatus,
+    onSuccess: showPaidState,
+  });
+} else if (checkoutStatus === "success" && returnedOrder) {
   showPaidState(returnedOrder);
 } else if (!selection?.items?.length) {
   showMissingState();
@@ -64,9 +72,13 @@ checkoutForm?.addEventListener("submit", async (event) => {
   }
 
   submitButton.disabled = true;
-  setStatus("Saving order and opening secure Stripe checkout...");
+  setStatus("Saving order and opening secure PayPal checkout...");
 
   try {
+    if (!window.NextPrintPayPal) {
+      throw new Error("PayPal checkout is not ready. Please refresh and try again.");
+    }
+
     const details = buildFullDetails(selection, baseDetails);
     const orderResponse = await fetch("/api/order", {
       method: "POST",
@@ -95,30 +107,21 @@ checkoutForm?.addEventListener("submit", async (event) => {
     }
 
     const orderNumber = orderData.orderNumber;
-    const checkoutResponse = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderNumber,
-        itemName: `Custom T-Shirts - ${selection.totalQuantity} shirt${selection.totalQuantity === 1 ? "" : "s"}`,
-        amount: orderData.amount || selection.totalPrice,
-        customerName: customer.name,
-        customerEmail: customer.email,
-        source: "tshirt-checkout",
-        paymentOption: "Full payment",
-        plan: "Custom T-Shirts",
-        fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
-        shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
-        description: details,
-        successPath: `/shirt-checkout.html?order=${encodeURIComponent(orderNumber)}`,
-        cancelPath: `/shirt-checkout.html?order=${encodeURIComponent(orderNumber)}`,
-      }),
+    const checkoutData = await window.NextPrintPayPal.createCheckout({
+      orderNumber,
+      itemName: `Custom T-Shirts - ${selection.totalQuantity} shirt${selection.totalQuantity === 1 ? "" : "s"}`,
+      amount: orderData.amount || selection.totalPrice,
+      customerName: customer.name,
+      customerEmail: customer.email,
+      source: "tshirt-checkout",
+      paymentOption: "Full payment",
+      plan: "Custom T-Shirts",
+      fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
+      shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
+      description: details,
+      successPath: `/shirt-checkout.html?order=${encodeURIComponent(orderNumber)}`,
+      cancelPath: `/shirt-checkout.html?order=${encodeURIComponent(orderNumber)}`,
     });
-    const checkoutData = await checkoutResponse.json();
-
-    if (!checkoutResponse.ok || !checkoutData.url) {
-      throw new Error(checkoutData?.error || "Could not open Stripe checkout.");
-    }
 
     window.location.href = checkoutData.url;
   } catch (error) {

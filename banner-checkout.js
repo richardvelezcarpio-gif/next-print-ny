@@ -5,6 +5,7 @@ const bannerDetailsKey = "nextBannerOrderDetails";
 const params = new URLSearchParams(window.location.search);
 const checkoutStatus = params.get("checkout");
 const returnedOrder = normalizeOrderNumber(params.get("order"));
+const paypalToken = window.NextPrintPayPal?.paypalTokenFromParams(params);
 
 const workspace = document.querySelector("#bannerCheckoutWorkspace");
 const missingPanel = document.querySelector("#bannerCheckoutMissing");
@@ -27,7 +28,14 @@ const selection = loadJson(bannerSelectionKey);
 const files = loadJson(bannerFilesKey) || [];
 const baseDetails = String(sessionStorage.getItem(bannerDetailsKey) || "");
 
-if (checkoutStatus === "success" && returnedOrder) {
+if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
+  window.NextPrintPayPal.captureReturn({
+    orderNumber: returnedOrder,
+    paypalOrderId: paypalToken,
+    setStatus,
+    onSuccess: showPaidState,
+  });
+} else if (checkoutStatus === "success" && returnedOrder) {
   showPaidState(returnedOrder);
 } else if (!selection?.product || !selection?.totalPrice) {
   showMissingState();
@@ -66,9 +74,13 @@ checkoutForm?.addEventListener("submit", async (event) => {
   }
 
   submitButton.disabled = true;
-  setStatus("Saving order and opening secure Stripe checkout...");
+  setStatus("Saving order and opening secure PayPal checkout...");
 
   try {
+    if (!window.NextPrintPayPal) {
+      throw new Error("PayPal checkout is not ready. Please refresh and try again.");
+    }
+
     const details = buildFullDetails(selection, baseDetails);
     const orderResponse = await fetch("/api/order", {
       method: "POST",
@@ -97,30 +109,21 @@ checkoutForm?.addEventListener("submit", async (event) => {
     }
 
     const orderNumber = orderData.orderNumber;
-    const checkoutResponse = await fetch("/api/create-checkout-session", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderNumber,
-        itemName: selection.label || selection.product,
-        amount: orderData.amount || selection.totalPrice,
-        customerName: customer.name,
-        customerEmail: customer.email,
-        source: "banner-checkout",
-        paymentOption: "Full payment",
-        plan: selection.label || selection.product,
-        fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
-        shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
-        description: details,
-        successPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
-        cancelPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
-      }),
+    const checkoutData = await window.NextPrintPayPal.createCheckout({
+      orderNumber,
+      itemName: selection.label || selection.product,
+      amount: orderData.amount || selection.totalPrice,
+      customerName: customer.name,
+      customerEmail: customer.email,
+      source: "banner-checkout",
+      paymentOption: "Full payment",
+      plan: selection.label || selection.product,
+      fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
+      shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
+      description: details,
+      successPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
+      cancelPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,
     });
-    const checkoutData = await checkoutResponse.json();
-
-    if (!checkoutResponse.ok || !checkoutData.url) {
-      throw new Error(checkoutData?.error || "Could not open Stripe checkout.");
-    }
 
     window.location.href = checkoutData.url;
   } catch (error) {

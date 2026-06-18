@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Complete your custom T-shirt order with secure Stripe checkout." />
+    <meta name="description" content="Complete your custom T-shirt order with secure PayPal checkout." />
     <title>T-Shirt Checkout | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
     <link rel="stylesheet" href="styles.css?v=20260618-0035" />
@@ -51,7 +51,7 @@
           <article class="shirt-checkout-intro">
             <span>Secure T-shirt checkout</span>
             <h1 id="shirtCheckoutTitle">Finish your order</h1>
-            <p id="shirtCheckoutCopy">Confirm your contact and delivery details, then pay securely with Stripe.</p>
+            <p id="shirtCheckoutCopy">Confirm your contact and delivery details, then pay securely with PayPal.</p>
           </article>
 
           <section id="shirtCheckoutSuccess" class="shirt-checkout-success" hidden>
@@ -152,7 +152,7 @@
                 <p id="shirtPickupNote" class="shirt-pickup-note" hidden>Pickup at Next Print NY. We will confirm the pickup time after payment.</p>
               </section>
 
-              <button class="action-gradient shirt-pay-button" type="submit">Pay Securely with Stripe</button>
+              <button class="action-gradient shirt-pay-button" type="submit">Pay Securely with PayPal</button>
               <p id="shirtCheckoutStatus" class="order-status" aria-live="polite"></p>
             </form>
           </section>
@@ -212,6 +212,7 @@
       </footer>
     </div>
     <script src="script.js?v=20260617-1800"></script>
-    <script src="shirt-checkout.js?v=20260618-0035"></script>
+    <script src="paypal-checkout.js?v=20260618-1500"></script>
+    <script src="shirt-checkout.js?v=20260618-1500"></script>
   </body>
 </html>

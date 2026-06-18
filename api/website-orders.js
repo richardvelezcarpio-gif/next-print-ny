@@ -1,4 +1,7 @@
 const TABLE = "business_records";
+const DOMAIN_FEE = 40;
+const MAINTENANCE_FEE = 60;
+const MONTHLY_BILLING_DAY = 15;
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -46,6 +49,7 @@ export default async function handler(req, res) {
       customerName: record.customer_name,
       customerEmail: record.customer_email,
       description: record.description,
+      paymentSchedule: paymentSchedule(order),
       records: data,
     });
   } catch (error) {
@@ -54,6 +58,7 @@ export default async function handler(req, res) {
 }
 
 function buildBusinessRecord(order, orderNumber) {
+  const schedule = paymentSchedule(order);
   const description = [
     `Order: ${orderNumber}`,
     "Source: Website Project Portal",
@@ -64,8 +69,13 @@ function buildBusinessRecord(order, orderNumber) {
     order.planDeposit ? `First payment: ${order.planDeposit}` : "",
     order.planMonthly ? `Monthly payment: ${order.planMonthly}` : "",
     order.planMonths ? `Monthly term: ${order.planMonths}` : "",
-    order.domainFee ? `Domain: ${order.domainFee}` : "",
-    order.maintenanceFee ? `Maintenance: ${order.maintenanceFee}` : "",
+    `Due today: ${money(schedule.initialPayment)} (includes ${money(DOMAIN_FEE)} domain)`,
+    `Domain: ${money(DOMAIN_FEE)} charged with initial payment`,
+    `Maintenance: ${money(MAINTENANCE_FEE)} due ${schedule.maintenanceDueDate} (15 days after purchase)`,
+    isMonthlyOrder(order)
+      ? `Monthly billing: ${order.planMonthly || "Monthly payment"} on day ${MONTHLY_BILLING_DAY} of each month`
+      : "",
+    isMonthlyOrder(order) ? `First monthly due date: ${schedule.firstMonthlyDueDate}` : "",
     order.businessCategory ? `Business category: ${order.businessCategory}` : "",
     order.contactName ? `Contact name: ${order.contactName}` : "",
     order.pagesNeeded.length ? `Pages needed: ${order.pagesNeeded.join(", ")}` : "",
@@ -84,7 +94,7 @@ function buildBusinessRecord(order, orderNumber) {
     customer_phone: order.phone,
     customer_email: order.email,
     description: clean(description, 5000),
-    amount: planAmount(order),
+    amount: schedule.initialPayment,
     quantity: 1,
     due_date: defaultDueDate(),
     file_url: "",
@@ -103,6 +113,10 @@ function sanitizeWebsiteOrder(input) {
     planMonths: clean(input.planMonths, 40),
     domainFee: clean(input.domainFee, 40),
     maintenanceFee: clean(input.maintenanceFee, 40),
+    initialPayment: clean(input.initialPayment, 40),
+    monthlyBillingDay: clean(input.monthlyBillingDay, 20),
+    firstMonthlyDueDate: clean(input.firstMonthlyDueDate, 30),
+    maintenanceDueDate: clean(input.maintenanceDueDate, 30),
     businessName: clean(input.businessName, 140),
     contactName: clean(input.contactName, 140),
     phone: clean(input.phone, 80),
@@ -125,21 +139,70 @@ function cleanList(value, maxItems, maxLength) {
 }
 
 function planAmount(order) {
-  const selectedAmount = parseMoney(order.planDeposit || order.planPrice);
+  const selectedAmount = isMonthlyOrder(order)
+    ? parseMoney(order.planDeposit)
+    : parseMoney(order.planPrice);
   if (selectedAmount) return selectedAmount;
 
   const normalized = String(order.plan || "").toLowerCase();
+  const monthly = isMonthlyOrder(order);
 
-  if (normalized.includes("basic")) return 499;
-  if (normalized.includes("growth")) return 1000;
-  if (normalized.includes("master")) return 1600;
+  if (normalized.includes("basic")) return monthly ? 300 : 499;
+  if (normalized.includes("growth")) return monthly ? 400 : 1000;
+  if (normalized.includes("master")) return monthly ? 600 : 1600;
 
   return 0;
+}
+
+function paymentSchedule(order) {
+  const planPayment = planAmount(order);
+  const fallbackInitial = parseMoney(order.initialPayment);
+  const initialPayment = planPayment ? planPayment + DOMAIN_FEE : fallbackInitial;
+  const now = new Date();
+
+  return {
+    initialPayment,
+    domainFee: DOMAIN_FEE,
+    maintenanceFee: MAINTENANCE_FEE,
+    monthlyBillingDay: MONTHLY_BILLING_DAY,
+    firstMonthlyDueDate: order.firstMonthlyDueDate || nextMonthlyBillingDate(now),
+    maintenanceDueDate: order.maintenanceDueDate || datePlusDays(now, 15),
+  };
+}
+
+function isMonthlyOrder(order) {
+  const label = `${order.paymentOption || ""} ${order.planDeposit || ""} ${order.planMonthly || ""}`.toLowerCase();
+  return Boolean(order.planDeposit || order.planMonthly || label.includes("monthly") || label.includes("/mo"));
 }
 
 function parseMoney(value) {
   const amount = Number(String(value || "").replace(/[^0-9.-]/g, ""));
   return Number.isFinite(amount) ? amount : 0;
+}
+
+function money(value) {
+  return `$${Number(value || 0).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
+}
+
+function nextMonthlyBillingDate(fromDate) {
+  const date = new Date(fromDate);
+  date.setHours(0, 0, 0, 0);
+  if (date.getDate() >= MONTHLY_BILLING_DAY) {
+    date.setMonth(date.getMonth() + 1, 1);
+  } else {
+    date.setDate(1);
+  }
+  date.setDate(MONTHLY_BILLING_DAY);
+  return toDateInputValue(date);
+}
+
+function datePlusDays(fromDate, days) {
+  const date = new Date(fromDate);
+  date.setDate(date.getDate() + days);
+  return toDateInputValue(date);
 }
 
 function defaultDueDate() {

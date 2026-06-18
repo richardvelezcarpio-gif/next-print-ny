@@ -47,6 +47,12 @@
     "api/create-checkout-session.js": {
       "maxDuration": 10
     },
+    "api/create-paypal-order.js": {
+      "maxDuration": 10
+    },
+    "api/capture-paypal-order.js": {
+      "maxDuration": 10
+    },
     "api/stripe-webhook.js": {
       "maxDuration": 10
     },
