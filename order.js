@@ -8,17 +8,14 @@ const orderNumber = document.querySelector("#orderNumber");
 const orderWhatsapp = document.querySelector("#orderWhatsapp");
 const orderTrackLink = document.querySelector("#orderTrackLink");
 const orderInvoiceLink = document.querySelector("#orderInvoiceLink");
-const orderZelleEmail = document.querySelector("#orderZelleEmail");
-const orderZelleNote = document.querySelector("#orderZelleNote");
-const orderCopyZelle = document.querySelector("#orderCopyZelle");
 const orderCopyNumber = document.querySelector("#orderCopyNumber");
-const orderPayZelle = document.querySelector("#orderPayZelle");
+const orderPaymentNote = document.querySelector("#orderPaymentNote");
+const orderPaymentLink = document.querySelector("#orderPaymentLink");
 const orderDateInput = document.querySelector("#orderDateInput");
 const deliveryDateInput = document.querySelector("#deliveryDateInput");
 const orderMaxFileSize = 4 * 1024 * 1024;
 const orderMaxTotalFileSize = 12 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
-const zelleAccount = "2393337935";
 const tshirtFilesKey = "nextPrintTshirtFiles";
 const tshirtDetailsKey = "nextPrintTshirtDetails";
 
@@ -26,8 +23,7 @@ setAutomaticOrderDates();
 prefillOrderFromCatalog();
 showAttachedTshirtDesign();
 
-orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, orderCopyZelle, "zelle.copyEmail"));
-orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
+orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "payment.copyOrder"));
 
 orderFile?.addEventListener("change", () => {
   const files = Array.from(orderFile.files || []);
@@ -104,9 +100,8 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     });
 
     orderNumber.textContent = data.orderNumber;
-    if (orderZelleEmail) orderZelleEmail.textContent = zelleAccount;
-    if (orderZelleNote) orderZelleNote.textContent = `Order ${data.orderNumber}`;
-    if (orderPayZelle) orderPayZelle.href = `payments.html?order=${encodeURIComponent(data.orderNumber)}`;
+    if (orderPaymentNote) orderPaymentNote.textContent = data.orderNumber;
+    if (orderPaymentLink) orderPaymentLink.href = buildPaymentUrl(data.orderNumber, data.amount);
     orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
       orderTrackLink.href = `tracking.html?order=${encodeURIComponent(data.orderNumber)}`;
@@ -138,6 +133,12 @@ function setOrderStatus(text, tone = "") {
   if (!orderStatus) return;
   orderStatus.textContent = text;
   orderStatus.className = `order-status ${tone}`.trim();
+}
+
+function buildPaymentUrl(orderNumber, amount) {
+  const params = new URLSearchParams({ order: orderNumber });
+  if (amount) params.set("amount", String(amount));
+  return `payments.html?${params.toString()}`;
 }
 
 function setAutomaticOrderDates() {
@@ -222,7 +223,7 @@ async function copyOrderValue(value, button, labelKey) {
     input.remove();
   }
 
-  button.textContent = getOrderText("zelle.copied", "Copied");
+  button.textContent = getOrderText("payment.copied", "Copied");
   window.setTimeout(() => {
     button.textContent = getOrderText(labelKey, button.textContent);
   }, 1300);
@@ -240,9 +241,8 @@ function getOrderText(key, fallback) {
       "order.sent": "Orden enviada.",
       "order.configError": "El formulario necesita RESEND_API_KEY en Vercel.",
       "order.error": "No se pudo enviar. Llámanos o escríbenos por WhatsApp.",
-      "zelle.copyEmail": "Copiar teléfono de Zelle",
-      "zelle.copyOrder": "Copiar número de orden",
-      "zelle.copied": "Copiado",
+      "payment.copyOrder": "Copiar número de orden",
+      "payment.copied": "Copiado",
     },
     en: {
       "order.fileHint": "PDF, JPG, PNG or design files. Optional.",
@@ -253,9 +253,8 @@ function getOrderText(key, fallback) {
       "order.sent": "Order sent.",
       "order.configError": "Order form needs RESEND_API_KEY in Vercel.",
       "order.error": "Could not send. Please call or WhatsApp us.",
-      "zelle.copyEmail": "Copy Zelle phone",
-      "zelle.copyOrder": "Copy order number",
-      "zelle.copied": "Copied",
+      "payment.copyOrder": "Copy order number",
+      "payment.copied": "Copied",
     },
   };
 

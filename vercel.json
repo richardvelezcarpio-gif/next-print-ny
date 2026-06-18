@@ -1,4 +1,30 @@
 {
+  "rewrites": [
+    {
+      "source": "/banner-designer/designer",
+      "destination": "/banner-designer/index.html"
+    },
+    {
+      "source": "/websites-demo/templates",
+      "destination": "/websites-demo/index.html"
+    },
+    {
+      "source": "/websites-demo/customize",
+      "destination": "/websites-demo/index.html"
+    },
+    {
+      "source": "/websites-demo/pricing",
+      "destination": "/websites-demo/index.html"
+    },
+    {
+      "source": "/websites-demo/summary",
+      "destination": "/websites-demo/index.html"
+    },
+    {
+      "source": "/websites-demo/success",
+      "destination": "/websites-demo/index.html"
+    }
+  ],
   "functions": {
     "api/chat.js": {
       "maxDuration": 10
@@ -13,6 +39,15 @@
       "maxDuration": 10
     },
     "api/business-records.js": {
+      "maxDuration": 10
+    },
+    "api/website-orders.js": {
+      "maxDuration": 10
+    },
+    "api/create-checkout-session.js": {
+      "maxDuration": 10
+    },
+    "api/stripe-webhook.js": {
       "maxDuration": 10
     },
     "api/order.js": {

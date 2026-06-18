@@ -422,14 +422,7 @@ async function continueOrder() {
     sessionStorage.setItem(filesKey, JSON.stringify(await buildPreviewFiles()));
   } catch {}
 
-  const orderParams = new URLSearchParams({
-    service: "Printing",
-    product: "Gildan G500 T-Shirt Mix",
-    quantity: String(selection.totalQuantity),
-    price: money(selection.totalPrice),
-    details: buildOrderDetails(selection),
-  });
-  location.href = `order.html?${orderParams.toString()}`;
+  location.href = "shirt-checkout.html";
 }
 
 async function buildPreviewFiles() {

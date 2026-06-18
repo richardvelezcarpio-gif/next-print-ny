@@ -16,7 +16,7 @@ const invoiceItems = document.querySelector("#invoiceItems");
 const invoiceNotes = document.querySelector("#invoiceNotes");
 const invoiceSubtotal = document.querySelector("#invoiceSubtotal");
 const invoiceTotal = document.querySelector("#invoiceTotal");
-const invoiceZelleNote = document.querySelector("#invoiceZelleNote");
+const invoicePaymentNote = document.querySelector("#invoicePaymentNote");
 
 const statusLabels = {
   new: "Received",
@@ -83,9 +83,9 @@ function renderInvoice(order) {
   invoiceCustomerInfo.innerHTML = [order.customerPhone, order.customerEmail].filter(Boolean).map(escapeHtml).join("<br />") || "-";
   invoiceOrderDate.textContent = formatDate(order.createdAt);
   invoiceDueDate.textContent = order.dueDate ? formatDate(order.dueDate) : "-";
-  invoicePayLink.href = `payments.html?order=${encodeURIComponent(order.orderNumber)}`;
+  invoicePayLink.href = buildPaymentUrl(order.orderNumber, amount);
   invoiceTrackLink.href = `tracking.html?order=${encodeURIComponent(order.orderNumber)}`;
-  invoiceZelleNote.textContent = `Order ${order.orderNumber}`;
+  invoicePaymentNote.textContent = order.orderNumber;
   invoiceNotes.textContent = buildNotes(order.description);
 
   invoiceItems.innerHTML = `
@@ -144,6 +144,12 @@ function normalizeOrderNumber(value) {
 function parseMoney(value) {
   const amount = Number(String(value || "").replace(/[^0-9.-]/g, ""));
   return Number.isFinite(amount) ? amount : 0;
+}
+
+function buildPaymentUrl(orderNumber, amount) {
+  const params = new URLSearchParams({ order: orderNumber });
+  if (amount) params.set("amount", String(amount));
+  return `payments.html?${params.toString()}`;
 }
 
 function formatDate(value) {
