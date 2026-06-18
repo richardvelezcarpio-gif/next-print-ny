@@ -2192,10 +2192,26 @@ textarea {
   font-size: 0.7rem;
 }
 
+.shirt-benefit-row small {
+  display: block;
+  color: #53617a;
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
 .shirt-hero-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
+}
+
+.shirt-store-hero .np-rating {
+  color: var(--navy);
+}
+
+.shirt-store-hero .np-rating span {
+  color: #53617a;
 }
 
 .shirt-outline {
@@ -2234,6 +2250,59 @@ textarea {
   border-radius: 12px;
   background: #fff;
   box-shadow: 0 20px 42px rgba(7, 20, 47, 0.18);
+}
+
+.print-products-hero {
+  margin-bottom: 28px;
+}
+
+.print-products-visual {
+  min-height: 305px;
+}
+
+.print-product-showcase {
+  position: relative;
+  z-index: 1;
+  width: min(560px, 100%);
+  min-height: 255px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 20px 42px rgba(7, 20, 47, 0.18);
+}
+
+.print-product-showcase img {
+  position: absolute;
+  width: 58%;
+  max-height: 185px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 14px 28px rgba(7, 20, 47, 0.16);
+}
+
+.print-product-showcase img:nth-child(1) {
+  z-index: 2;
+  left: 6%;
+  top: 34px;
+  transform: rotate(-5deg);
+}
+
+.print-product-showcase img:nth-child(2) {
+  z-index: 1;
+  right: 6%;
+  top: 30px;
+  transform: rotate(4deg);
+}
+
+.print-product-showcase img:nth-child(3) {
+  display: none;
+  z-index: 3;
+  left: 32%;
+  bottom: 18px;
+  width: 38%;
+  max-height: 140px;
+  transform: rotate(-1deg);
 }
 
 .perfect-for {
@@ -3254,6 +3323,16 @@ textarea {
 
   .shirt-store-hero {
     padding: 22px 8px;
+  }
+
+  .print-product-showcase {
+    min-height: 240px;
+    padding: 14px;
+  }
+
+  .print-product-showcase img {
+    width: 58%;
+    max-height: 150px;
   }
 
   .shirt-hero-copy h1 {
