@@ -146,7 +146,6 @@ let currentProduct = findInitialProduct();
 let currentQuantity = String(params.get("quantity") || currentProduct.prices[0][0]);
 let currentSide = "front";
 let selectedItemId = null;
-let uploadedFiles = [];
 let designState = {
   front: [defaultTextItem()],
   back: [defaultTextItem("Back Side")],
@@ -337,6 +336,18 @@ function renderCanvasItem(item) {
     selectedItemId = item.id;
     renderCanvas();
   });
+
+  if (item.id === selectedItemId) {
+    ["nw", "n", "ne", "e", "se", "s", "sw", "w"].forEach((handle) => {
+      const grip = document.createElement("button");
+      grip.type = "button";
+      grip.className = `print-resize-handle ${handle}`;
+      grip.dataset.resizeHandle = handle;
+      grip.setAttribute("aria-label", `Resize ${handle}`);
+      grip.addEventListener("pointerdown", (event) => startResize(event, item.id, handle));
+      node.appendChild(grip);
+    });
+  }
   return node;
 }
 
@@ -355,6 +366,65 @@ function startDrag(event, id) {
     const dy = ((moveEvent.clientY - startY) / rect.height) * 100;
     item.x = clamp(originalX + dx, 0, 100 - item.w);
     item.y = clamp(originalY + dy, 0, 100 - item.h);
+    renderCanvas();
+  };
+
+  const stop = () => {
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", stop);
+  };
+
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", stop);
+}
+
+function startResize(event, id, direction) {
+  event.preventDefault();
+  event.stopPropagation();
+  selectedItemId = id;
+  const item = findSelectedItem();
+  if (!item) return;
+  const rect = designCanvas.getBoundingClientRect();
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const original = {
+    x: item.x,
+    y: item.y,
+    w: item.w,
+    h: item.h,
+  };
+  const minW = item.type === "image" ? 8 : 12;
+  const minH = item.type === "image" ? 8 : 8;
+
+  const move = (moveEvent) => {
+    const dx = ((moveEvent.clientX - startX) / rect.width) * 100;
+    const dy = ((moveEvent.clientY - startY) / rect.height) * 100;
+    const right = original.x + original.w;
+    const bottom = original.y + original.h;
+    let nextX = original.x;
+    let nextY = original.y;
+    let nextW = original.w;
+    let nextH = original.h;
+
+    if (direction.includes("e")) {
+      nextW = clamp(original.w + dx, minW, 100 - original.x);
+    }
+    if (direction.includes("s")) {
+      nextH = clamp(original.h + dy, minH, 100 - original.y);
+    }
+    if (direction.includes("w")) {
+      nextX = clamp(original.x + dx, 0, right - minW);
+      nextW = right - nextX;
+    }
+    if (direction.includes("n")) {
+      nextY = clamp(original.y + dy, 0, bottom - minH);
+      nextH = bottom - nextY;
+    }
+
+    item.x = nextX;
+    item.y = nextY;
+    item.w = nextW;
+    item.h = nextH;
     renderCanvas();
   };
 
@@ -409,7 +479,6 @@ function handleUpload(event) {
       w: 60,
       h: 48,
     };
-    uploadedFiles.push({ name: file.name, content: src.split(",")[1] || "" });
     currentItems().push(item);
     selectedItemId = item.id;
     renderCanvas();
@@ -499,10 +568,13 @@ async function continueToCheckout() {
     const sides = availableSides();
     const files = [];
     for (const side of sides) {
-      const dataUrl = await createPreview(side);
-      files.push({ name: `${currentProduct.id}-${side}.png`, content: dataUrl.split(",")[1] || "" });
+      const dataUrl = await createPreview(side, { format: "image/jpeg", maxSize: 900, quality: 0.86 });
+      files.push({
+        name: `${currentProduct.id}-${side}.jpg`,
+        content: dataUrl.split(",")[1] || "",
+        mimeType: "image/jpeg",
+      });
     }
-    files.push(...uploadedFiles.slice(0, 3));
 
     const options = collectOptions();
     const details = buildDetails(options);
@@ -528,7 +600,8 @@ async function continueToCheckout() {
     sessionStorage.setItem(printDetailsKey, details);
     window.location.href = "print-products-checkout.html";
   } catch (error) {
-    setStatus(error.message || "Could not prepare checkout.", true);
+    const isQuotaError = error?.name === "QuotaExceededError" || /quota/i.test(error?.message || "");
+    setStatus(isQuotaError ? "The design was too large to prepare. Please use a smaller image and try again." : error.message || "Could not prepare checkout.", true);
     continueButton.disabled = false;
   }
 }
@@ -560,15 +633,16 @@ function buildDetails(options) {
     .join("\n");
 }
 
-async function createPreview(side) {
+async function createPreview(side, options = {}) {
   const canvas = document.createElement("canvas");
   const aspect = currentProduct.width / currentProduct.height;
+  const maxSize = Number(options.maxSize || 1200);
   if (aspect >= 1) {
-    canvas.width = 1200;
-    canvas.height = Math.round(1200 / aspect);
+    canvas.width = maxSize;
+    canvas.height = Math.round(maxSize / aspect);
   } else {
-    canvas.height = 1200;
-    canvas.width = Math.round(1200 * aspect);
+    canvas.height = maxSize;
+    canvas.width = Math.round(maxSize * aspect);
   }
   const ctx = canvas.getContext("2d");
   const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -601,7 +675,7 @@ async function createPreview(side) {
       wrapCanvasText(ctx, item.text || "", x + w / 2, y + h / 2, w * 0.92, Math.max(24, item.size * 2.2));
     }
   }
-  return canvas.toDataURL("image/png");
+  return canvas.toDataURL(options.format || "image/png", options.quality || 0.92);
 }
 
 function loadImage(src) {

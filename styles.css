@@ -3292,6 +3292,78 @@ textarea {
   outline-offset: 3px;
 }
 
+.print-resize-handle {
+  position: absolute;
+  z-index: 8;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #0b8df4;
+  box-shadow: 0 2px 8px rgba(5, 39, 92, 0.25);
+}
+
+.print-resize-handle.nw,
+.print-resize-handle.ne,
+.print-resize-handle.se,
+.print-resize-handle.sw {
+  width: 16px;
+  height: 16px;
+}
+
+.print-resize-handle.nw {
+  top: -10px;
+  left: -10px;
+  cursor: nwse-resize;
+}
+
+.print-resize-handle.n {
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.print-resize-handle.ne {
+  top: -10px;
+  right: -10px;
+  cursor: nesw-resize;
+}
+
+.print-resize-handle.e {
+  top: 50%;
+  right: -10px;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+
+.print-resize-handle.se {
+  right: -10px;
+  bottom: -10px;
+  cursor: nwse-resize;
+}
+
+.print-resize-handle.s {
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: ns-resize;
+}
+
+.print-resize-handle.sw {
+  bottom: -10px;
+  left: -10px;
+  cursor: nesw-resize;
+}
+
+.print-resize-handle.w {
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  cursor: ew-resize;
+}
+
 .print-canvas-item img {
   width: 100%;
   height: 100%;

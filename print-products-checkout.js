@@ -159,9 +159,9 @@ function renderCheckout(orderSelection, orderFiles) {
 
   const preview = orderSelection.uploadOnly
     ? null
-    : orderFiles.find((file) => /front\.png$/i.test(file?.name || ""));
+    : orderFiles.find((file) => /front\.(png|jpe?g|webp)$/i.test(file?.name || ""));
   if (preview?.content && previewImage) {
-    previewImage.src = `data:image/png;base64,${preview.content}`;
+    previewImage.src = `data:${preview.mimeType || mimeTypeForFile(preview.name)};base64,${preview.content}`;
     previewImage.hidden = false;
     if (nameCard) nameCard.hidden = true;
   } else {
@@ -239,6 +239,12 @@ function loadJson(key) {
   } catch {
     return null;
   }
+}
+
+function mimeTypeForFile(fileName = "") {
+  if (/\.jpe?g$/i.test(fileName)) return "image/jpeg";
+  if (/\.webp$/i.test(fileName)) return "image/webp";
+  return "image/png";
 }
 
 function setStatus(message, isError = false) {
