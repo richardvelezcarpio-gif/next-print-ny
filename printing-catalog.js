@@ -74,10 +74,12 @@ const printingProducts = [
   { name: "Business Cards", category: "cards", prices: [["100", "$35.00"], ["250", "$55.00"], ["500", "$65.00"], ["1000", "$119.00"], ["2500", "$180.00"], ["5000", "$220.00"], ["10000", "$370.00"]] },
   { name: "Flyers 4x6", category: "flyers", prices: [["100", "$49.00"], ["250", "$79.00"], ["500", "$99.00"], ["1000", "$150.00"], ["2500", "$249.00"], ["5000", "$349.00"], ["10000", "$420.00"]] },
   { name: "Flyers 5x7", category: "flyers", prices: [["100", "$95.00"], ["250", "$140.00"], ["500", "$180.00"], ["1000", "$240.00"], ["2500", "$390.00"], ["5000", "$450.00"], ["10000", "$650.00"]] },
+  { name: "Flyers 8.5x11", category: "flyers", prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
   { name: "Stickers round 2\"", category: "stickers", prices: [["100", "$70.00"], ["250", "$116.00"], ["500", "$130.00"], ["1000", "$190.00"], ["2500", "$280.00"], ["5000", "$380.00"], ["10000", "$580.00"]] },
   { name: "Stickers round 2.5\"", category: "stickers", prices: [["100", "$100.00"], ["250", "$180.00"], ["500", "$190.00"], ["1000", "$220.00"], ["2500", "$350.00"], ["5000", "$450.00"], ["10000", "$720.00"]] },
   { name: "Stickers 2x3.5", category: "stickers", prices: [["100", "$75.00"], ["250", "$110.00"], ["500", "$140.00"], ["1000", "$160.00"], ["2500", "$190.00"], ["5000", "$240.00"], ["10000", "$420.00"]] },
   { name: "Stickers 2x2", category: "stickers", prices: [["100", "$65.00"], ["250", "$95.00"], ["500", "$135.00"], ["1000", "$155.00"], ["2500", "$185.00"], ["5000", "$230.00"], ["10000", "$330.00"]] },
+  { name: "Stickers 2x4", category: "stickers", prices: [["100", "$90.00"], ["250", "$135.00"], ["500", "$160.00"], ["1000", "$185.00"], ["2500", "$230.00"], ["5000", "$295.00"], ["10000", "$480.00"]] },
   { name: "Stickers 4x4", category: "stickers", prices: [["100", "$110.00"], ["250", "$170.00"], ["500", "$190.00"], ["1000", "$220.00"], ["2500", "$350.00"], ["5000", "$470.00"], ["10000", "$750.00"]] },
   { name: "Menus 8.5x11", category: "menus", prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
   { name: "Menus 11x17", category: "menus", prices: [["100", "$315.00"], ["250", "$450.00"], ["500", "$620.00"], ["1000", "$780.00"], ["2500", "$900.00"], ["5000", "$1,120.00"], ["10000", "$1,558.00"]] },
@@ -95,11 +97,11 @@ const printingProducts = [
 
 const productGroups = [
   { name: "Business Cards", category: "cards", variants: ["Business Cards"] },
-  { name: "Flyers", category: "flyers", variants: ["Flyers 4x6", "Flyers 5x7"] },
+  { name: "Flyers", category: "flyers", variants: ["Flyers 4x6", "Flyers 5x7", "Flyers 8.5x11"] },
   {
     name: "Stickers",
     category: "stickers",
-    variants: ["Stickers round 2\"", "Stickers round 2.5\"", "Stickers 2x3.5", "Stickers 2x2", "Stickers 4x4"],
+    variants: ["Stickers round 2\"", "Stickers round 2.5\"", "Stickers 2x3.5", "Stickers 2x2", "Stickers 2x4", "Stickers 4x4"],
   },
   { name: "Menus", category: "menus", variants: ["Menus 8.5x11", "Menus 11x17"] },
   { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
@@ -383,12 +385,18 @@ function updateSelectedPrice() {
       price: selectedPrice[1],
       details,
     });
-    productOrderLink.href = `order.html?${params.toString()}`;
+    if (["cards", "flyers", "stickers"].includes(selectedGroup.category)) {
+      productOrderLink.href = `print-products-editor.html?${params.toString()}`;
+    } else if (selectedGroup.category === "banners" || selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
+      productOrderLink.href = "banner-designer/designer";
+    } else {
+      productOrderLink.href = `order.html?${params.toString()}`;
+    }
   }
 }
 
 function sizeLabel(productName, groupName) {
-  if (groupName === "Business Cards") return '2" x 3.5" (U.S. Standard)';
+  if (groupName === "Business Cards") return '3.75" x 2.25" with bleed';
   if (groupName === "Menus") return `${productName.replace(/^Menus\s*/i, "").replace(/x/i, " x ")} Take Out Menus`;
   if (groupName === "Banners") {
     const [width, height] = productName.replace(/^Banner\s*/i, "").split("x");
