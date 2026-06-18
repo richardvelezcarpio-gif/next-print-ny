@@ -387,6 +387,8 @@ function updateSelectedPrice() {
     });
     if (["cards", "flyers", "stickers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-editor.html?${params.toString()}`;
+    } else if (["menus", "hangers"].includes(selectedGroup.category)) {
+      productOrderLink.href = `print-products-upload.html?${params.toString()}`;
     } else if (selectedGroup.category === "banners" || selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
       productOrderLink.href = "banner-designer/designer";
     } else {

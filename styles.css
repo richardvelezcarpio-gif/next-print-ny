@@ -3348,6 +3348,183 @@ textarea {
   flex: 1;
 }
 
+.print-upload-page {
+  min-height: 620px;
+}
+
+.print-upload-workspace {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 18px 18px 56px;
+}
+
+.print-upload-missing {
+  max-width: 760px;
+  margin: 24px auto 56px;
+}
+
+.print-upload-card {
+  display: grid;
+  gap: 18px;
+  padding: 22px;
+}
+
+.print-upload-heading span {
+  color: var(--cyan-2);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.print-upload-heading h2 {
+  margin: 4px 0 6px;
+  color: var(--navy);
+  font-size: clamp(1.8rem, 4vw, 2.65rem);
+  line-height: 1;
+  text-align: left;
+}
+
+.print-upload-heading p {
+  max-width: 620px;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.print-readonly-details {
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid #d7e6f2;
+  border-radius: 8px;
+  background: #f8fbff;
+}
+
+.print-readonly-details div {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.45fr) minmax(0, 1fr);
+  gap: 14px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e2edf6;
+}
+
+.print-readonly-details div:last-child {
+  border-bottom: 0;
+}
+
+.print-readonly-details span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.print-readonly-details strong {
+  color: var(--navy);
+  font-size: 0.92rem;
+}
+
+.print-upload-field-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.print-upload-card label {
+  display: grid;
+  gap: 6px;
+  color: var(--navy);
+  font-size: 0.76rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.print-upload-card input {
+  min-height: 42px;
+  width: 100%;
+  padding: 0 11px;
+  border: 1px solid #cfe2f7;
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.print-upload-card input[readonly] {
+  color: var(--navy);
+  background: #f2fbff;
+}
+
+.print-upload-file-box {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #d7e6f2;
+  border-radius: 8px;
+  background: #f8fbff;
+}
+
+.print-upload-file-box h3 {
+  margin: 0 0 4px;
+  color: var(--navy);
+  font-size: 1rem;
+}
+
+.print-upload-file-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.print-upload-drop {
+  min-height: 92px;
+  place-items: center;
+  padding: 16px;
+  border: 1px dashed var(--cyan-2);
+  border-radius: 8px;
+  background: #eefcff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.print-upload-drop strong {
+  color: var(--navy);
+  font-size: 0.92rem;
+}
+
+.print-upload-drop span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: none;
+}
+
+#printUploadFiles {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.print-upload-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.print-upload-actions .action-gradient,
+.print-upload-actions .outline-button {
+  min-width: 180px;
+  justify-content: center;
+}
+
 .print-checkout-preview {
   background:
     radial-gradient(circle at top, rgba(3, 191, 231, 0.22), transparent 38%),
@@ -3360,6 +3537,40 @@ textarea {
   border-radius: 6px;
   background: #fff;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
+}
+
+.print-checkout-name-card {
+  display: grid;
+  gap: 8px;
+  width: min(86%, 320px);
+  min-height: 180px;
+  place-content: center;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  text-align: center;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.16);
+}
+
+.print-checkout-name-card span {
+  color: var(--cyan-2);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.print-checkout-name-card strong {
+  color: #fff;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  line-height: 1;
+}
+
+.print-checkout-name-card small {
+  color: #dcecff;
+  font-weight: 800;
 }
 
 .shirt-template-strip,
@@ -3599,7 +3810,8 @@ textarea {
   .shirt-checkout-grid,
   .shirt-reviews,
   .print-editor-workspace,
-  .print-bottom-panels {
+  .print-bottom-panels,
+  .print-upload-field-grid {
     grid-template-columns: 1fr;
   }
 
@@ -3671,7 +3883,8 @@ textarea {
   .shirt-checkout-fields.two,
   .shirt-checkout-fields.address,
   .shirt-fulfillment-options,
-  .print-order-summary dl div {
+  .print-order-summary dl div,
+  .print-readonly-details div {
     grid-template-columns: 1fr;
   }
 
@@ -3685,6 +3898,19 @@ textarea {
 
   .print-editor-workspace {
     padding: 12px;
+  }
+
+  .print-upload-workspace {
+    padding: 12px 12px 38px;
+  }
+
+  .print-upload-card {
+    padding: 16px;
+  }
+
+  .print-upload-actions .action-gradient,
+  .print-upload-actions .outline-button {
+    width: 100%;
   }
 
   .print-canvas-frame {

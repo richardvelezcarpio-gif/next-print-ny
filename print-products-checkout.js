@@ -16,6 +16,9 @@ const statusNode = document.querySelector("#printCheckoutStatus");
 const addressFields = document.querySelector("#printAddressFields");
 const pickupNote = document.querySelector("#printPickupNote");
 const previewImage = document.querySelector("#printCheckoutPreview");
+const nameCard = document.querySelector("#printCheckoutNameCard");
+const nameCardTitle = document.querySelector("#printCheckoutNameTitle");
+const nameCardMeta = document.querySelector("#printCheckoutNameMeta");
 const totalNode = document.querySelector("#printCheckoutTotal");
 const productNode = document.querySelector("#printCheckoutProduct");
 const sizeNode = document.querySelector("#printCheckoutSize");
@@ -149,12 +152,30 @@ function renderCheckout(orderSelection, orderFiles) {
       options.roundedCorners ? `<span><b>Rounded Corners</b>${escapeHtml(options.roundedCorners)}</span>` : "",
       options.paperType ? `<span><b>Paper / Material</b>${escapeHtml(options.paperType)}</span>` : "",
       options.coating ? `<span><b>Coating</b>${escapeHtml(options.coating)}</span>` : "",
+      options.folding ? `<span><b>Folding</b>${escapeHtml(options.folding)}</span>` : "",
+      orderFiles.length ? `<span><b>Uploaded Files</b>${orderFiles.length} file${orderFiles.length === 1 ? "" : "s"}</span>` : "",
     ].filter(Boolean).join("");
   }
 
-  const preview = orderFiles.find((file) => /front\.png$/i.test(file?.name || "")) || orderFiles[0];
+  const preview = orderSelection.uploadOnly
+    ? null
+    : orderFiles.find((file) => /front\.png$/i.test(file?.name || ""));
   if (preview?.content && previewImage) {
     previewImage.src = `data:image/png;base64,${preview.content}`;
+    previewImage.hidden = false;
+    if (nameCard) nameCard.hidden = true;
+  } else {
+    if (previewImage) {
+      previewImage.removeAttribute("src");
+      previewImage.hidden = true;
+    }
+    if (nameCard) nameCard.hidden = false;
+    if (nameCardTitle) nameCardTitle.textContent = orderSelection.label || orderSelection.product;
+    if (nameCardMeta) {
+      nameCardMeta.textContent = orderFiles.length
+        ? `${orderFiles.length} uploaded file${orderFiles.length === 1 ? "" : "s"} attached`
+        : "Upload-only print order";
+    }
   }
 
   updateFulfillmentFields();

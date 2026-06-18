@@ -6,7 +6,7 @@
     <meta name="description" content="Complete your print product order with secure Stripe checkout." />
     <title>Print Products Checkout | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260618-0815" />
+    <link rel="stylesheet" href="styles.css?v=20260618-0845" />
   </head>
   <body>
     <div class="page-shell shirt-commerce-shell">
@@ -74,6 +74,11 @@
             <aside class="shirt-checkout-summary">
               <div class="shirt-checkout-preview print-checkout-preview">
                 <img id="printCheckoutPreview" alt="Print product preview" />
+                <div id="printCheckoutNameCard" class="print-checkout-name-card" hidden>
+                  <span>Print order</span>
+                  <strong id="printCheckoutNameTitle">Print Products</strong>
+                  <small id="printCheckoutNameMeta">File upload order</small>
+                </div>
               </div>
               <div class="shirt-checkout-total">
                 <span>Total due today</span>
@@ -216,6 +221,6 @@
       </footer>
     </div>
     <script src="script.js?v=20260618-0720"></script>
-    <script src="print-products-checkout.js?v=20260618-0815"></script>
+    <script src="print-products-checkout.js?v=20260618-0845"></script>
   </body>
 </html>
