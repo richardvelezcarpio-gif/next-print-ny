@@ -6111,8 +6111,8 @@ textarea {
   padding: 32px 34px 24px;
   color: #fff;
   background:
-    radial-gradient(circle at 92% 35%, rgba(3, 191, 231, 0.28), transparent 34%),
-    linear-gradient(135deg, #031b45 0%, #05275c 58%, #04142f 100%);
+    linear-gradient(104deg, rgba(255, 255, 255, 0) 0%, rgba(220, 246, 255, 0.06) 43%, rgba(220, 246, 255, 0.25) 71%, rgba(255, 255, 255, 0.42) 100%),
+    linear-gradient(135deg, #031b45 0%, #063e73 57%, #1296c1 100%);
 }
 
 .np-hero-copy h1 {
@@ -6883,8 +6883,8 @@ textarea {
     display: block;
     padding: 10px 16px 14px;
     background:
-      radial-gradient(circle at 90% 22%, rgba(3, 191, 231, 0.22), transparent 36%),
-      linear-gradient(135deg, #031b45 0%, #05275c 62%, #04142f 100%);
+      linear-gradient(145deg, rgba(255, 255, 255, 0) 0%, rgba(220, 246, 255, 0.08) 48%, rgba(255, 255, 255, 0.25) 100%),
+      linear-gradient(135deg, #031b45 0%, #06467d 62%, #0e8eb7 100%);
   }
 
   body.home-page .np-hero-copy {
