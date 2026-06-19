@@ -64,6 +64,256 @@ const productDetails = {
   },
 };
 
+const productSlugs = {
+  cards: "business-cards",
+  flyers: "flyers",
+  stickers: "stickers",
+  menus: "menus",
+  banners: "banners",
+  hangers: "door-hangers",
+  retractable: "retractable-banners",
+  yardSigns: "yard-signs",
+  shirts: "t-shirts",
+};
+
+const productTemplateContent = {
+  cards: {
+    kicker: "Business printing",
+    titleTop: "Business",
+    titleBottom: "Cards",
+    copy: "Make every introduction feel professional with sharp, durable business cards prepared for everyday handouts, deliveries and front desk use.",
+    images: ["assets/printing-business-cards-ai.webp", "assets/catalog-business-cards.png"],
+    imageAlt: ["Business card samples", "Business card detail"],
+    benefits: [
+      ["Premium Cardstock", "Glossy or matte finish"],
+      ["Front & Back", "Clean contact details"],
+      ["Fast Reorders", "Easy repeat runs"],
+      ["Local Pickup", "Brooklyn service"],
+    ],
+    perfectFor: ["Networking", "Front desks", "Deliveries", "Realtors", "Startups", "Local Shops"],
+    sectionKicker: "Business materials",
+    sectionTitle: "Cards that make your brand easy to remember",
+    cards: [
+      ["Professional Identity", ["Business cards", "Appointment cards", "Loyalty cards"]],
+      ["Finish Options", ["High gloss", "Matte", "Rounded corners"]],
+      ["Best Uses", ["Networking", "Package inserts", "Local promotions"]],
+    ],
+    steps: ["Choose size and finish", "Upload or design artwork", "Approve the final proof", "Print and pick up locally"],
+    ctaTitle: "Need business cards fast?",
+    ctaCopy: "Send your logo, contact details and quantity so we can prepare the cleanest option.",
+    ctaButton: "Contact Next Print NY",
+  },
+  flyers: {
+    kicker: "Local promotion",
+    titleTop: "Flyers",
+    titleBottom: "That Get Seen",
+    copy: "Promote events, specials, menus, grand openings and services with bright full-color flyers in the most requested sizes.",
+    images: ["assets/printing-flyers-ai.webp", "assets/catalog-flyers.png"],
+    imageAlt: ["Flyer print samples", "Flyer design sample"],
+    benefits: [
+      ["4x6, 5x7, 8.5x11", "Popular flyer sizes"],
+      ["Full Color", "Strong visual impact"],
+      ["Bulk Pricing", "Save on quantity"],
+      ["Fast Events", "Ready for handouts"],
+    ],
+    perfectFor: ["Events", "Promotions", "Restaurants", "Churches", "Openings", "Coupons"],
+    sectionKicker: "Flyer campaigns",
+    sectionTitle: "Handouts, promos and event prints made simple",
+    cards: [
+      ["Promotion Ready", ["Grand openings", "Sales events", "Community events"]],
+      ["Size Options", ["4x6 flyers", "5x7 flyers", "8.5x11 flyers"]],
+      ["Print Finishes", ["Full color", "Front and back", "Gloss or matte"]],
+    ],
+    steps: ["Pick flyer size", "Choose quantity and finish", "Approve artwork", "Print for pickup or delivery"],
+    ctaTitle: "Need flyers for an event?",
+    ctaCopy: "Tell us the event date, size and quantity so we can recommend the right print run.",
+    ctaButton: "Request Flyer Help",
+  },
+  stickers: {
+    kicker: "Labels and decals",
+    titleTop: "Custom",
+    titleBottom: "Stickers",
+    copy: "Add your brand to packaging, cups, bags, boxes and giveaways with round, square and rectangle sticker options.",
+    images: ["assets/printing-stickers-ai.webp", "assets/catalog-stickers.png"],
+    imageAlt: ["Sticker print samples", "Sticker shapes"],
+    benefits: [
+      ["Multiple Shapes", "Round and rectangle"],
+      ["Outdoor Vinyl", "Durable material"],
+      ["Brand Labels", "Packaging ready"],
+      ["Bulk Runs", "Better unit pricing"],
+    ],
+    perfectFor: ["Packaging", "Food brands", "Giveaways", "Events", "Labels", "Small Business"],
+    sectionKicker: "Sticker products",
+    sectionTitle: "Labels and stickers for products, bags and promotions",
+    cards: [
+      ["Popular Shapes", ["Round 2 inch", "Square 2x2", "Rectangle 2x3.5"]],
+      ["Common Uses", ["Product labels", "Cup stickers", "Package branding"]],
+      ["Material", ["High gloss vinyl", "Full color", "No back printing"]],
+    ],
+    steps: ["Choose sticker shape", "Select quantity", "Upload artwork", "Approve and print"],
+    ctaTitle: "Need sticker sizing advice?",
+    ctaCopy: "Send a photo of your package or label area and we can recommend the best sticker size.",
+    ctaButton: "Ask About Stickers",
+  },
+  menus: {
+    kicker: "Restaurant printing",
+    titleTop: "Menus",
+    titleBottom: "Made Clear",
+    copy: "Print clean menus for restaurants, cafes, food trucks and takeout orders with folding and paper options.",
+    images: ["assets/printing-menus-ai.webp", "assets/catalog-menus.png"],
+    imageAlt: ["Restaurant menu printing", "Menu sample"],
+    benefits: [
+      ["Takeout Menus", "8.5x11 and 11x17"],
+      ["Folding Options", "Half, tri and more"],
+      ["Full Color", "Both sides available"],
+      ["Food Service", "Easy customer reading"],
+    ],
+    perfectFor: ["Restaurants", "Food trucks", "Cafes", "Catering", "Delivery", "Promotions"],
+    sectionKicker: "Menu printing",
+    sectionTitle: "Menus that help customers choose faster",
+    cards: [
+      ["Menu Types", ["Takeout menus", "Service menus", "Promo inserts"]],
+      ["Folds", ["Half fold", "Tri-fold", "Gate fold"]],
+      ["Restaurant Needs", ["Clear prices", "Food photos", "Special offers"]],
+    ],
+    steps: ["Choose menu size", "Select fold and finish", "Upload file", "Print and prepare"],
+    ctaTitle: "Need help setting up a menu?",
+    ctaCopy: "Send your menu file, page count and folding style and we will help prepare it.",
+    ctaButton: "Request Menu Help",
+  },
+  banners: {
+    kicker: "Large format printing",
+    titleTop: "Vinyl",
+    titleBottom: "Banners",
+    copy: "Get noticed from farther away with durable banners for storefronts, events, sales and announcements.",
+    images: ["assets/catalog-banners.png", "assets/printing-banners-ai.webp"],
+    imageAlt: ["Vinyl banner printing", "Large format banner"],
+    benefits: [
+      ["Large Sizes", "2x4 to 2x10"],
+      ["Outdoor Ready", "Vinyl material"],
+      ["Finishing", "Grommets available"],
+      ["High Visibility", "Strong storefront impact"],
+    ],
+    perfectFor: ["Storefronts", "Events", "Sales", "Real Estate", "Churches", "Campaigns"],
+    sectionKicker: "Banner printing",
+    sectionTitle: "Durable signs and banners for big announcements",
+    cards: [
+      ["Banner Uses", ["Grand openings", "Street promotions", "Event signage"]],
+      ["Finishing", ["Hem with grommets", "Pole pockets", "No treatment"]],
+      ["Production", ["Full color", "Indoor and outdoor", "Custom sizing"]],
+    ],
+    steps: ["Choose banner size", "Design or upload artwork", "Confirm finishing", "Print and prepare"],
+    ctaTitle: "Need help with a banner?",
+    ctaCopy: "Tell us where the banner will go and we will help with size, material and finishing.",
+    ctaButton: "Request Banner Help",
+  },
+  hangers: {
+    kicker: "Neighborhood marketing",
+    titleTop: "Door",
+    titleBottom: "Hangers",
+    copy: "Reach homes, apartments and local neighborhoods directly with door hangers for service offers and promotions.",
+    images: ["assets/printing-door-hangers-ai.webp", "assets/catalog-door-hangers.png"],
+    imageAlt: ["Door hanger marketing", "Door hanger print sample"],
+    benefits: [
+      ["Direct Outreach", "Neighborhood campaigns"],
+      ["Two Sizes", "4x11 and 3.5x8.5"],
+      ["Full Color", "Both sides available"],
+      ["Service Leads", "Easy local promotion"],
+    ],
+    perfectFor: ["Contractors", "Cleaning", "Real Estate", "Restaurants", "Landscaping", "Local Services"],
+    sectionKicker: "Door hanger campaigns",
+    sectionTitle: "Neighborhood print marketing that lands at the door",
+    cards: [
+      ["Best For", ["Service offers", "Local specials", "Real estate farming"]],
+      ["Setup", ["Front and back", "14 pt. cardstock", "High gloss UV"]],
+      ["Distribution", ["Neighborhood routes", "Apartments", "Storefront areas"]],
+    ],
+    steps: ["Choose hanger size", "Confirm quantity", "Upload file", "Print for distribution"],
+    ctaTitle: "Planning a local campaign?",
+    ctaCopy: "Send the neighborhood, quantity and deadline so we can help quote door hangers correctly.",
+    ctaButton: "Ask About Door Hangers",
+  },
+  retractable: {
+    kicker: "Trade show display",
+    titleTop: "Retractable",
+    titleBottom: "Banners",
+    copy: "Professional pull-up displays with stand and printed banner, ready for events, offices and presentations.",
+    images: ["assets/catalog-retractable-banners.png", "assets/catalog-banners.png"],
+    imageAlt: ["Retractable banner display", "Banner display detail"],
+    benefits: [
+      ["Stand Included", "Portable display"],
+      ["33.5 x 80", "Standard size"],
+      ["Blockout Vinyl", "Smooth material"],
+      ["Event Ready", "Set up quickly"],
+    ],
+    perfectFor: ["Trade shows", "Offices", "Events", "Presentations", "Lobbies", "Pop-ups"],
+    sectionKicker: "Display graphics",
+    sectionTitle: "Portable banners for professional presentations",
+    cards: [
+      ["Included", ["Stand", "Printed banner", "Single sided display"]],
+      ["Use Cases", ["Trade shows", "Office lobbies", "Vendor tables"]],
+      ["Material", ["Smooth blockout vinyl", "Full color", "One panel"]],
+    ],
+    steps: ["Select quantity", "Upload banner design", "Approve proof", "Pick up display"],
+    ctaTitle: "Need a retractable display?",
+    ctaCopy: "Send the event date and artwork size so we can prepare the stand and banner.",
+    ctaButton: "Request Display Help",
+  },
+  yardSigns: {
+    kicker: "Outdoor signs",
+    titleTop: "Yard",
+    titleBottom: "Signs",
+    copy: "Weather-resistant coroplast signs for campaigns, real estate, contractors, events and local visibility.",
+    images: ["assets/catalog-yard-signs.png", "assets/catalog-banners.png"],
+    imageAlt: ["Yard sign printing", "Outdoor sign display"],
+    benefits: [
+      ["18 x 24", "Popular outdoor size"],
+      ["H-Wire", "Stake included"],
+      ["Coroplast", "Weather resistant"],
+      ["High Visibility", "Street level marketing"],
+    ],
+    perfectFor: ["Real Estate", "Campaigns", "Contractors", "Events", "Schools", "Local Ads"],
+    sectionKicker: "Outdoor signage",
+    sectionTitle: "Yard signs for streets, lawns and local promotions",
+    cards: [
+      ["Materials", ["4 mm coroplast", "Full color", "Outdoor display"]],
+      ["Install", ["H-wire stake", "Easy placement", "Lightweight"]],
+      ["Best For", ["Real estate", "Political signs", "Contractor ads"]],
+    ],
+    steps: ["Pick quantity", "Confirm single or double side", "Upload file", "Print and prepare signs"],
+    ctaTitle: "Need yard signs?",
+    ctaCopy: "Tell us quantity, single or double sided, and deadline for the best recommendation.",
+    ctaButton: "Ask About Yard Signs",
+  },
+  shirts: {
+    kicker: "Custom apparel",
+    titleTop: "Custom",
+    titleBottom: "T-Shirts",
+    copy: "Start a shirt order with Gildan G500 tees, front left chest and back print options, then finish in the T-shirt designer.",
+    images: ["assets/tshirt-showcase.png", "assets/customtshirts.png"],
+    imageAlt: ["Custom T-shirt printing", "Custom shirt examples"],
+    benefits: [
+      ["Gildan G500", "Heavy cotton"],
+      ["10 Colors", "Basic color options"],
+      ["Front & Back", "Left chest and back"],
+      ["Online Designer", "Build your order"],
+    ],
+    perfectFor: ["Teams", "Events", "Schools", "Churches", "Businesses", "Organizations"],
+    sectionKicker: "Apparel printing",
+    sectionTitle: "Custom shirts connected to the online designer",
+    cards: [
+      ["Shirt Setup", ["Gildan G500", "Front left chest", "Back print"]],
+      ["Order Options", ["Sizes S to 5XL", "Multiple colors", "Quantity matrix"]],
+      ["Checkout", ["Customer info", "Shipping or pickup", "PayPal ready"]],
+    ],
+    steps: ["Open shirt designer", "Choose colors and sizes", "Approve design", "Checkout securely"],
+    ctaTitle: "Need shirts for a group?",
+    ctaCopy: "Use the T-shirt designer to build your order, or contact us for larger group pricing.",
+    ctaButton: "Start T-Shirt Order",
+    ctaHref: "tshirt.html",
+  },
+};
+
 const yardSignPrices = Array.from({ length: 100 }, (_, index) => {
   const quantity = index + 1;
   const unitPrice = quantity <= 25 ? 40 : quantity <= 50 ? 35 : 30;
@@ -111,6 +361,7 @@ const productGroups = [
   { name: "T-Shirts", category: "shirts", variants: ["Gildan G500 T-Shirt"] },
 ].map((group) => ({
   ...group,
+  slug: productSlugs[group.category] || slugify(group.name),
   variants: group.variants.map((name) => printingProducts.find((product) => product.name === name)).filter(Boolean),
 }));
 
@@ -165,13 +416,36 @@ const yardSignBackSide = document.querySelector("#yardSignBackSide");
 const yardSignMaterial = document.querySelector("#yardSignMaterial");
 const yardSignWire = document.querySelector("#yardSignWire");
 const yardSignGrommets = document.querySelector("#yardSignGrommets");
+const printingHeroKicker = document.querySelector("#printingHeroKicker");
+const printingHeroTitleTop = document.querySelector("#printingHeroTitleTop");
+const printingHeroTitleBottom = document.querySelector("#printingHeroTitleBottom");
+const printingHeroCopy = document.querySelector("#printingHeroCopy");
+const printingHeroBenefits = document.querySelector("#printingHeroBenefits");
+const printingHeroPrimary = document.querySelector("#printingHeroPrimary");
+const printingHeroSecondary = document.querySelector("#printingHeroSecondary");
+const printingHeroRating = document.querySelector("#printingHeroRating");
+const printingHeroImageOne = document.querySelector("#printingHeroImageOne");
+const printingHeroImageTwo = document.querySelector("#printingHeroImageTwo");
+const printingPerfectFor = document.querySelector("#printingPerfectFor");
+const printingSectionKicker = document.querySelector("#printingSectionKicker");
+const printingSectionTitle = document.querySelector("#printingSectionTitle");
+const printingServiceCards = document.querySelector("#printingServiceCards");
+const printingProcessSteps = document.querySelector("#printingProcessSteps");
+const printingCtaTitle = document.querySelector("#printingCtaTitle");
+const printingCtaCopy = document.querySelector("#printingCtaCopy");
+const printingCtaButton = document.querySelector("#printingCtaButton");
 
 let selectedGroup = productGroups[0];
 let selectedProduct = selectedGroup.variants[0];
 let selectedPrice = selectedProduct.prices[0];
 
 renderProductList();
-renderProductGroup(selectedGroup.name);
+renderProductGroup(groupNameFromHash() || selectedGroup.name, { updateHash: false });
+
+window.addEventListener("hashchange", () => {
+  const hashGroupName = groupNameFromHash();
+  if (hashGroupName) renderProductGroup(hashGroupName, { updateHash: false });
+});
 
 productSize?.addEventListener("change", () => {
   selectedProduct = selectedGroup.variants.find((item) => item.name === productSize.value) || selectedGroup.variants[0];
@@ -195,7 +469,7 @@ function renderProductList() {
   productList.innerHTML = productGroups
     .map(
       (group, index) => `
-        <button class="${index === 0 ? "active" : ""}" type="button" data-product-group="${escapeAttribute(group.name)}">
+        <button class="${index === 0 ? "active" : ""}" type="button" data-product-group="${escapeAttribute(group.name)}" data-product-slug="${escapeAttribute(group.slug)}">
           <span>${escapeHtml(group.name)}</span>
           ${group.stock ? `<small class="product-stock">Stock: ${escapeHtml(group.stock)}</small>` : ""}
         </button>
@@ -206,11 +480,11 @@ function renderProductList() {
   productList.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-product-group]");
     if (!button) return;
-    renderProductGroup(button.dataset.productGroup);
+    renderProductGroup(button.dataset.productGroup, { updateHash: true });
   });
 }
 
-function renderProductGroup(groupName) {
+function renderProductGroup(groupName, options = {}) {
   selectedGroup = productGroups.find((group) => group.name === groupName) || productGroups[0];
   selectedProduct = selectedGroup.variants[0];
   selectedPrice = selectedProduct.prices[0];
@@ -224,6 +498,7 @@ function renderProductGroup(groupName) {
     productKicker.textContent = `${selectedGroup.variants.length} size ${selectedGroup.variants.length === 1 ? "option" : "options"}`;
   }
   renderProductDetails(selectedProduct);
+  renderProductTemplate(selectedGroup);
   renderProductOptions();
 
   if (productSize) {
@@ -234,6 +509,7 @@ function renderProductGroup(groupName) {
 
   renderQuantityOptions();
   updateSelectedPrice();
+  updateHashForGroup(options);
 }
 
 function renderProductOptions() {
@@ -284,6 +560,78 @@ function renderProductDetails(product) {
   }
 }
 
+function renderProductTemplate(group) {
+  const template = productTemplateContent[group.category] || productTemplateContent.cards;
+
+  setText(printingHeroKicker, template.kicker);
+  setText(printingHeroTitleTop, template.titleTop);
+  setText(printingHeroTitleBottom, template.titleBottom);
+  setText(printingHeroCopy, template.copy);
+  setText(printingHeroRating, template.rating || "Trusted by local businesses and event teams");
+
+  if (printingHeroBenefits) {
+    printingHeroBenefits.innerHTML = template.benefits
+      .map(([title, copy]) => `<span><b>${escapeHtml(title)}</b><small>${escapeHtml(copy)}</small></span>`)
+      .join("");
+  }
+
+  if (printingHeroPrimary) {
+    printingHeroPrimary.href = "#productList";
+    printingHeroPrimary.textContent = "Choose product";
+  }
+
+  if (printingHeroSecondary) {
+    printingHeroSecondary.href = template.quoteHref || "quote.html";
+    printingHeroSecondary.textContent = template.secondaryText || "Request a quote";
+  }
+
+  const [imageOne, imageTwo] = template.images || [];
+  const [altOne, altTwo] = template.imageAlt || [];
+  setImage(printingHeroImageOne, imageOne, altOne || group.name);
+  setImage(printingHeroImageTwo, imageTwo || imageOne, altTwo || group.name);
+
+  if (printingPerfectFor) {
+    const chips = (template.perfectFor || []).map((label) => `<span>${escapeHtml(label)}</span>`).join("");
+    printingPerfectFor.innerHTML = `<strong>${escapeHtml(template.perfectForTitle || "Perfect for")}</strong>${chips}`;
+  }
+
+  setText(printingSectionKicker, template.sectionKicker);
+  setText(printingSectionTitle, template.sectionTitle);
+
+  if (printingServiceCards) {
+    printingServiceCards.innerHTML = template.cards
+      .map(
+        ([title, items]) => `
+          <article>
+            <h3>${escapeHtml(title)}</h3>
+            <ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+          </article>
+        `
+      )
+      .join("");
+  }
+
+  if (printingProcessSteps) {
+    printingProcessSteps.innerHTML = template.steps
+      .map(
+        (step, index) => `
+          <div>
+            <strong>${index + 1}</strong>
+            <span>${escapeHtml(step)}</span>
+          </div>
+        `
+      )
+      .join("");
+  }
+
+  setText(printingCtaTitle, template.ctaTitle);
+  setText(printingCtaCopy, template.ctaCopy);
+  if (printingCtaButton) {
+    printingCtaButton.href = template.ctaHref || "contact.html";
+    printingCtaButton.textContent = template.ctaButton || "Contact Next Print NY";
+  }
+}
+
 function renderProductVisual(type) {
   const visuals = {
     cards: `<div class="mockup-card-stack"><span>NP</span><span></span><span></span></div>`,
@@ -295,6 +643,16 @@ function renderProductVisual(type) {
     shirts: `<div class="mockup-shirt"><span>YOUR DESIGN</span></div>`,
   };
   return visuals[type] || visuals.cards;
+}
+
+function setText(element, text) {
+  if (element && text) element.textContent = text;
+}
+
+function setImage(image, src, alt) {
+  if (!image || !src) return;
+  image.src = src;
+  image.alt = alt || "";
 }
 
 function updateSelectedPrice() {
@@ -408,6 +766,30 @@ function sizeLabel(productName, groupName) {
   if (groupName === "Yard Signs") return "18 x 24 inches";
   if (groupName === "T-Shirts") return "Gildan G500 Unisex Heavy Cotton";
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
+}
+
+function groupNameFromHash() {
+  const hash = decodeURIComponent(window.location.hash || "").replace(/^#/, "").trim();
+  if (!hash) return "";
+  const normalized = slugify(hash);
+  const group = productGroups.find((item) => item.slug === normalized || slugify(item.name) === normalized || slugify(item.category) === normalized);
+  return group?.name || "";
+}
+
+function updateHashForGroup(options = {}) {
+  if (options.updateHash !== true || !selectedGroup?.slug) return;
+  const nextHash = `#${selectedGroup.slug}`;
+  if (window.location.hash === nextHash) return;
+  history.replaceState(null, "", `${window.location.pathname}${window.location.search}${nextHash}`);
+}
+
+function slugify(value) {
+  return String(value || "")
+    .replace(/([a-z])([A-Z])/g, "$1-$2")
+    .toLowerCase()
+    .replace(/&/g, "and")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function escapeHtml(value) {

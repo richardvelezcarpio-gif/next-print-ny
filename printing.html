@@ -9,9 +9,9 @@
     />
     <title>Printing Services | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260618-0845" />
+    <link rel="stylesheet" href="styles.css?v=20260618-printing-template" />
   </head>
-  <body>
+  <body class="printing-page">
     <div class="page-shell">
       <section class="reseller-strip" aria-label="Reseller program">
         <div>
@@ -53,34 +53,34 @@
         <section class="shirt-store-hero print-products-hero">
           <div class="shirt-hero-copy">
             <p class="breadcrumb" data-i18n="printingPage.breadcrumb">Home &gt; Print Products</p>
-            <span data-i18n="printingPage.kicker">Business printing</span>
+            <span id="printingHeroKicker" data-i18n="printingPage.kicker">Business printing</span>
             <h1>
-              <span data-i18n="printingPage.heroTitleTop">Print Products</span>
-              <strong data-i18n="printingPage.heroTitleBottom">Made To Impress</strong>
+              <span id="printingHeroTitleTop" data-i18n="printingPage.heroTitleTop">Print Products</span>
+              <strong id="printingHeroTitleBottom" data-i18n="printingPage.heroTitleBottom">Made To Impress</strong>
             </h1>
-            <p data-i18n="printingPage.heroCopy">
+            <p id="printingHeroCopy" data-i18n="printingPage.heroCopy">
               Business cards, flyers, menus, stickers and marketing prints prepared with clean color,
               sharp details and fast local service in Brooklyn.
             </p>
-            <div class="shirt-benefit-row" aria-label="Print product benefits">
+            <div id="printingHeroBenefits" class="shirt-benefit-row" aria-label="Print product benefits">
               <span><b data-i18n="printingPage.benefit1Title">Premium Cardstock</b><small data-i18n="printingPage.benefit1Text">Glossy or matte finish</small></span>
               <span><b data-i18n="printingPage.benefit2Title">Flyers &amp; Menus</b><small data-i18n="printingPage.benefit2Text">Promote events fast</small></span>
               <span><b data-i18n="printingPage.benefit3Title">Sharp Full Color</b><small data-i18n="printingPage.benefit3Text">Clean brand presentation</small></span>
               <span><b data-i18n="printingPage.benefit4Title">Local Turnaround</b><small data-i18n="printingPage.benefit4Text">Brooklyn pickup available</small></span>
             </div>
             <div class="shirt-hero-actions">
-              <a class="action-gradient" href="#productList" data-i18n="printingPage.quote">Choose product</a>
-              <a class="outline-button shirt-outline" href="quote.html" data-i18n="printingPage.upload">Request a quote</a>
+              <a id="printingHeroPrimary" class="action-gradient" href="#productList" data-i18n="printingPage.quote">Choose product</a>
+              <a id="printingHeroSecondary" class="outline-button shirt-outline" href="quote.html" data-i18n="printingPage.upload">Request a quote</a>
             </div>
-            <p class="np-rating">★★★★★ <span data-i18n="printingPage.rating">Trusted by local businesses and event teams</span></p>
+            <p class="np-rating">★★★★★ <span id="printingHeroRating" data-i18n="printingPage.rating">Trusted by local businesses and event teams</span></p>
           </div>
           <div class="shirt-hero-visual print-products-visual" aria-label="Print product examples">
             <div class="print-product-showcase">
-              <img src="assets/printing-business-cards-ai.webp" alt="Business cards" />
-              <img src="assets/printing-flyers-ai.webp" alt="Flyers" />
+              <img id="printingHeroImageOne" src="assets/printing-business-cards-ai.webp" alt="Business cards" />
+              <img id="printingHeroImageTwo" src="assets/printing-flyers-ai.webp" alt="Flyers" />
             </div>
-            <div class="perfect-for">
-              <strong data-i18n="printingPage.perfectFor">Perfect for</strong>
+            <div id="printingPerfectFor" class="perfect-for">
+              <strong id="printingPerfectForTitle" data-i18n="printingPage.perfectFor">Perfect for</strong>
               <span>Businesses</span>
               <span>Events</span>
               <span>Restaurants</span>
@@ -353,10 +353,10 @@
 
         <section class="service-band">
           <div class="section-heading">
-            <span data-i18n="printingPage.sectionKicker">What we print</span>
-            <h2 data-i18n="printingPage.sectionTitle">Business, event and everyday printing</h2>
+            <span id="printingSectionKicker" data-i18n="printingPage.sectionKicker">What we print</span>
+            <h2 id="printingSectionTitle" data-i18n="printingPage.sectionTitle">Business, event and everyday printing</h2>
           </div>
-          <div class="service-card-grid">
+          <div id="printingServiceCards" class="service-card-grid">
             <article>
               <h3 data-i18n="printingPage.card1Title">Business Materials</h3>
               <ul>
@@ -387,7 +387,7 @@
           </div>
         </section>
 
-        <section class="process-strip" aria-label="Printing process">
+        <section id="printingProcessSteps" class="process-strip" aria-label="Printing process">
           <div><strong>1</strong><span data-i18n="printingPage.step1">Send your file or idea</span></div>
           <div><strong>2</strong><span data-i18n="printingPage.step2">Confirm size, quantity and finish</span></div>
           <div><strong>3</strong><span data-i18n="printingPage.step3">Approve and print</span></div>
@@ -396,10 +396,10 @@
 
         <section class="service-cta">
           <div>
-            <h2 data-i18n="printingPage.ctaTitle">Need a price?</h2>
-            <p data-i18n="printingPage.ctaCopy">Send quantity, size, material, colors and deadline so we can quote it correctly.</p>
+            <h2 id="printingCtaTitle" data-i18n="printingPage.ctaTitle">Need a price?</h2>
+            <p id="printingCtaCopy" data-i18n="printingPage.ctaCopy">Send quantity, size, material, colors and deadline so we can quote it correctly.</p>
           </div>
-          <a class="action-gradient" href="contact.html" data-i18n="printingPage.ctaButton">Contact Next Print NY</a>
+          <a id="printingCtaButton" class="action-gradient" href="contact.html" data-i18n="printingPage.ctaButton">Contact Next Print NY</a>
         </section>
       </main>
 
@@ -429,9 +429,9 @@
             <h4>Services</h4>
             <a href="printing.html#banners">Banners</a>
             <a href="printing.html#banners">Vinyl Banners</a>
-            <a href="printing.html#banners">Retractable Banners</a>
-            <a href="printing.html#banners">Yard Signs</a>
-            <a href="printing.html">Decals &amp; Stickers</a>
+            <a href="printing.html#retractable-banners">Retractable Banners</a>
+            <a href="printing.html#yard-signs">Yard Signs</a>
+            <a href="printing.html#stickers">Decals &amp; Stickers</a>
             <a href="index.html#copies">Printing &amp; Copies</a>
           </section>
 
@@ -456,6 +456,6 @@
       </footer>
     </div>
     <script src="script.js?v=20260618-0720"></script>
-    <script src="printing-catalog.js?v=20260618-0845"></script>
+    <script src="printing-catalog.js?v=20260618-printing-template"></script>
   </body>
 </html>

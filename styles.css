@@ -7234,3 +7234,539 @@ textarea {
     font-size: 0.62rem;
   }
 }
+
+@media (max-width: 760px) {
+  body.printing-page {
+    padding-bottom: 0;
+    background: #eef2f7;
+  }
+
+  body.printing-page .page-shell {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.printing-page .reseller-strip {
+    display: grid;
+    gap: 8px;
+    min-height: 108px;
+    padding: 14px 18px 12px;
+    text-align: center;
+    background: linear-gradient(90deg, #05275c 0%, #03bfe7 100%);
+  }
+
+  body.printing-page .reseller-strip div {
+    display: grid;
+    justify-items: center;
+    gap: 7px;
+  }
+
+  body.printing-page .reseller-strip strong {
+    font-size: 0.8rem;
+    line-height: 1.1;
+  }
+
+  body.printing-page .reseller-strip span {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  body.printing-page .reseller-strip a {
+    width: min(100%, 280px);
+    min-height: 32px;
+    justify-self: center;
+    border-radius: 7px;
+    font-size: 0.65rem;
+  }
+
+  body.printing-page .top-nav.site-main-header {
+    grid-template-columns: minmax(82px, 1fr) 42px minmax(138px, 1.45fr);
+    gap: 7px;
+    min-height: 72px;
+    padding: 9px 9px 11px;
+    border-bottom: 5px solid #05275c;
+  }
+
+  body.printing-page .top-nav .brand {
+    min-width: 0;
+  }
+
+  body.printing-page .top-nav .brand img {
+    width: 88px;
+  }
+
+  body.printing-page .menu-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 9px;
+    background: #05275c;
+    box-shadow: 0 7px 16px rgba(5, 39, 92, 0.22);
+  }
+
+  body.printing-page .menu-toggle span {
+    width: 22px;
+    height: 3px;
+    margin: 3px 0;
+    background: #fff;
+  }
+
+  body.printing-page .top-nav .nav-actions {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  body.printing-page .phone-pill {
+    min-height: 36px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 0.58rem;
+  }
+
+  body.printing-page .language-switch {
+    min-height: 36px;
+    flex: 0 0 auto;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  body.printing-page .language-switch button {
+    min-width: 26px;
+    height: 28px;
+    font-size: 0.58rem;
+  }
+
+  body.printing-page .top-nav .menu {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  body.printing-page .top-nav .menu.open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body.printing-page .top-nav .menu a {
+    min-height: 34px;
+    padding: 8px 6px;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  body.printing-page .print-products-hero {
+    display: block;
+    min-height: 0;
+    margin: 0;
+    padding: 24px 18px 16px;
+    text-align: left;
+    background:
+      radial-gradient(circle at 92% 11%, rgba(255, 88, 172, 0.36), transparent 26%),
+      radial-gradient(circle at 64% 18%, rgba(63, 111, 255, 0.22), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f7fbff 60%, #eaf7ff 100%);
+  }
+
+  body.printing-page .shirt-hero-copy {
+    max-width: none;
+  }
+
+  body.printing-page .breadcrumb {
+    margin: 0 0 7px;
+    color: #234368;
+    font-size: 0.74rem;
+    font-weight: 900;
+  }
+
+  body.printing-page .shirt-hero-copy > span {
+    color: #08b9d7;
+    font-size: 0.72rem;
+    font-weight: 900;
+  }
+
+  body.printing-page .shirt-hero-copy h1 {
+    max-width: 340px;
+    margin: 6px 0 10px;
+    color: #05275c;
+    font-size: clamp(2.05rem, 10.5vw, 3.1rem);
+    line-height: 0.93;
+  }
+
+  body.printing-page .shirt-hero-copy h1 span,
+  body.printing-page .shirt-hero-copy h1 strong {
+    white-space: normal;
+  }
+
+  body.printing-page .shirt-hero-copy h1 strong {
+    color: #147ee8;
+  }
+
+  body.printing-page .shirt-hero-copy > p {
+    max-width: 330px;
+    margin: 0;
+    color: #102f59;
+    font-size: 0.93rem;
+    line-height: 1.35;
+  }
+
+  body.printing-page .shirt-benefit-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin: 18px 0 16px;
+  }
+
+  body.printing-page .shirt-benefit-row span {
+    min-height: 46px;
+    padding-left: 28px;
+    font-size: 0.52rem;
+    line-height: 1.1;
+  }
+
+  body.printing-page .shirt-benefit-row span::before {
+    width: 21px;
+    height: 21px;
+    border-width: 1.5px;
+  }
+
+  body.printing-page .shirt-benefit-row b,
+  body.printing-page .shirt-benefit-row small {
+    font-size: 0.52rem;
+    line-height: 1.05;
+  }
+
+  body.printing-page .shirt-hero-actions {
+    display: block;
+    max-width: 150px;
+  }
+
+  body.printing-page .shirt-hero-actions .action-gradient {
+    width: 100%;
+    min-height: 44px;
+    border-radius: 5px;
+    font-size: 0.62rem;
+  }
+
+  body.printing-page .shirt-hero-actions .outline-button {
+    display: none;
+  }
+
+  body.printing-page .shirt-store-hero .np-rating {
+    margin: 8px 0 0;
+    color: #05275c;
+    font-size: 0.95rem;
+  }
+
+  body.printing-page .shirt-store-hero .np-rating span {
+    color: #53617a;
+    font-size: 0.7rem;
+  }
+
+  body.printing-page .print-products-visual {
+    display: none;
+  }
+
+  body.printing-page .product-builder {
+    display: grid;
+    grid-template-columns: minmax(130px, 0.62fr) minmax(0, 1fr);
+    gap: 10px;
+    padding: 16px 12px 8px;
+    border-bottom: 0;
+  }
+
+  body.printing-page .product-sidebar {
+    grid-column: 1;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+    padding: 0 8px 0 0;
+  }
+
+  body.printing-page .product-sidebar > span {
+    margin-bottom: 10px;
+    font-size: 0.72rem;
+  }
+
+  body.printing-page .product-list {
+    grid-template-columns: 1fr;
+    gap: 5px;
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
+  }
+
+  body.printing-page .product-list button {
+    min-height: 29px;
+    border-radius: 5px;
+    padding: 5px 7px;
+    font-size: 0.62rem;
+    line-height: 1.05;
+  }
+
+  body.printing-page .product-stock {
+    padding: 2px 5px;
+    font-size: 0.48rem;
+  }
+
+  body.printing-page .product-detail-card {
+    display: contents;
+  }
+
+  body.printing-page .product-preview {
+    grid-column: 2;
+    display: block;
+    min-width: 0;
+  }
+
+  body.printing-page .product-art {
+    display: none;
+  }
+
+  body.printing-page .service-kicker {
+    font-size: 0.58rem;
+  }
+
+  body.printing-page .product-preview h2 {
+    font-size: clamp(1.6rem, 8vw, 2.4rem);
+    line-height: 0.94;
+  }
+
+  body.printing-page .product-preview p {
+    margin-top: 8px;
+    font-size: 0.57rem;
+    line-height: 1.35;
+  }
+
+  body.printing-page .product-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 9px;
+  }
+
+  body.printing-page .product-info-grid article {
+    padding: 8px;
+    border-radius: 5px;
+  }
+
+  body.printing-page .product-info-grid span {
+    font-size: 0.48rem;
+  }
+
+  body.printing-page .product-info-grid p,
+  body.printing-page .product-info-grid ul {
+    margin-top: 4px;
+    padding-left: 10px;
+    font-size: 0.48rem;
+    line-height: 1.25;
+  }
+
+  body.printing-page .product-order-panel,
+  body.printing-page .product-order-panel.configured-product-mode,
+  body.printing-page .product-order-panel.shirt-product-mode {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    margin: 22px 4px 0;
+    padding: 24px;
+    border-radius: 8px;
+    background: #f4f7fd;
+  }
+
+  body.printing-page .product-order-panel label,
+  body.printing-page .product-order-panel.configured-product-mode label,
+  body.printing-page .product-order-panel.configured-product-mode .selected-price {
+    grid-template-columns: 1fr;
+    gap: 7px;
+  }
+
+  body.printing-page .product-order-panel label {
+    color: #102f59;
+    font-size: 1rem;
+  }
+
+  body.printing-page .product-order-panel select {
+    min-height: 34px;
+    border-radius: 7px;
+    font-size: 0.92rem;
+    font-weight: 800;
+  }
+
+  body.printing-page .product-configuration-options {
+    gap: 13px;
+  }
+
+  body.printing-page .selected-price {
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+  }
+
+  body.printing-page .selected-price span {
+    font-size: 0.72rem;
+  }
+
+  body.printing-page .selected-price strong {
+    font-size: 1.72rem;
+  }
+
+  body.printing-page .product-order-panel .action-gradient {
+    justify-self: stretch;
+    min-height: 44px;
+    text-align: center;
+    font-size: 0.72rem;
+  }
+
+  body.printing-page .service-band {
+    padding: 30px 14px 14px;
+  }
+
+  body.printing-page .section-heading {
+    margin-bottom: 12px;
+  }
+
+  body.printing-page .section-heading span {
+    font-size: 0.5rem;
+  }
+
+  body.printing-page .section-heading h2 {
+    font-size: 1rem;
+  }
+
+  body.printing-page .service-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body.printing-page .service-card-grid article {
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  body.printing-page .service-card-grid h3 {
+    margin-bottom: 6px;
+    font-size: 0.55rem;
+  }
+
+  body.printing-page .service-card-grid ul {
+    gap: 4px;
+    padding-left: 10px;
+    font-size: 0.48rem;
+    line-height: 1.25;
+  }
+
+  body.printing-page .process-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    margin: 16px 14px 0;
+    overflow: visible;
+    background: transparent;
+  }
+
+  body.printing-page .process-strip div {
+    min-height: 58px;
+    padding: 7px 4px;
+    background: transparent;
+  }
+
+  body.printing-page .process-strip strong {
+    width: 20px;
+    height: 20px;
+    margin: 0 auto;
+    font-size: 0.55rem;
+  }
+
+  body.printing-page .process-strip span {
+    text-align: center;
+    font-size: 0.45rem;
+    line-height: 1.15;
+  }
+
+  body.printing-page .service-cta {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 14px 26px;
+    padding: 14px;
+    border-radius: 5px;
+  }
+
+  body.printing-page .service-cta h2 {
+    font-size: 0.82rem;
+  }
+
+  body.printing-page .service-cta p {
+    margin-top: 4px;
+    font-size: 0.48rem;
+    line-height: 1.25;
+  }
+
+  body.printing-page .service-cta .action-gradient {
+    min-width: 112px;
+    min-height: 30px;
+    padding: 0 8px;
+    font-size: 0.46rem;
+  }
+
+  body.printing-page .footer {
+    margin-top: 0;
+    padding: 18px 8px 0;
+    border-top: 1px solid rgba(217, 242, 255, 0.25);
+  }
+
+  body.printing-page .footer-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  body.printing-page .footer-brand,
+  body.printing-page .footer-col:nth-child(2) {
+    display: none;
+  }
+
+  body.printing-page .footer-col,
+  body.printing-page .footer-col:first-child,
+  body.printing-page .footer-col:nth-child(2) {
+    align-items: center;
+    min-height: 0;
+    padding: 0 7px;
+    border-top: 0;
+    border-left: 1px solid rgba(217, 242, 255, 0.2);
+    text-align: center;
+  }
+
+  body.printing-page .footer-col:nth-child(3) {
+    border-left: 0;
+  }
+
+  body.printing-page .footer-col h4 {
+    margin-bottom: 8px;
+    font-size: 0.78rem;
+    line-height: 1.05;
+  }
+
+  body.printing-page .footer-col p,
+  body.printing-page .footer-col a {
+    margin-bottom: 6px;
+    font-size: 0.62rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  body.printing-page .footer-bottom {
+    margin-top: 14px;
+    padding: 11px 0 13px;
+    font-size: 0.57rem;
+  }
+}
