@@ -314,6 +314,83 @@ const productTemplateContent = {
   },
 };
 
+const printCatalogOverview = {
+  en: {
+    hero: {
+      kicker: "Business Printing",
+      titleTop: "Print Products",
+      titleBottom: "Made To Impress",
+      copy: "Business cards, flyers, menus, stickers and marketing prints prepared with clean color, sharp details and fast local service in Brooklyn.",
+      benefits: [
+        ["Premium Cardstock", "Glossy or matte finish"],
+        ["Flyers & Menus", "Promote events fast"],
+        ["Sharp Full Color", "Clean brand presentation"],
+        ["Local Turnaround", "Brooklyn pickup available"]
+      ],
+      perfectFor: ["Businesses", "Events", "Restaurants", "Promotions", "Local Shops"]
+    },
+    detail: {
+      kicker: "Choose a product",
+      title: "Explore Print Products",
+      hook: "Choose a product from the menu to compare options, quantities and pricing before starting your order.",
+      material: "Business cards, flyers, stickers, menus, banners, door hangers, retractable displays, yard signs and custom apparel.",
+      benefits: ["Choose the product category", "Compare sizes and quantities", "Start your order when ready"]
+    },
+    service: {
+      title: "Business, Event and Everyday Printing",
+      cards: [
+        ["Business Materials", "Business cards\nFlyers and brochures\nPostcards and menus\nInvoices and forms"],
+        ["Signs and Display", "Banners and posters\nWindow vinyl\nYard signs\nCar signs and lettering"],
+        ["Custom Products", "Stickers and labels\nT-shirts\nEmbroidery coordination\nSpecial print requests"]
+      ],
+      steps: [
+        ["1", "Send your file or idea"],
+        ["2", "Confirm size, quantity and finish"],
+        ["3", "Approve and print"],
+        ["4", "Pick up or coordinate delivery"]
+      ],
+      cta: "Need a price?"
+    }
+  },
+  es: {
+    hero: {
+      kicker: "Impresion Comercial",
+      titleTop: "Productos de Impresion",
+      titleBottom: "Que Impactan",
+      copy: "Tarjetas, flyers, menus, stickers y materiales promocionales con color limpio, detalles definidos y servicio local rapido en Brooklyn.",
+      benefits: [
+        ["Cartulina Premium", "Acabado brillante o mate"],
+        ["Flyers y Menus", "Promociona eventos rapido"],
+        ["Color de Alta Calidad", "Presentacion clara de marca"],
+        ["Entrega Local", "Recogida disponible en Brooklyn"]
+      ],
+      perfectFor: ["Negocios", "Eventos", "Restaurantes", "Promociones", "Tiendas locales"]
+    },
+    detail: {
+      kicker: "Elige un producto",
+      title: "Explora Productos de Impresion",
+      hook: "Elige un producto del menu para comparar opciones, cantidades y precios antes de iniciar tu orden.",
+      material: "Tarjetas, flyers, stickers, menus, banners, door hangers, displays retractables, yard signs y ropa personalizada.",
+      benefits: ["Elige la categoria", "Compara medidas y cantidades", "Inicia tu orden cuando estes listo"]
+    },
+    service: {
+      title: "Impresion para Negocios, Eventos y Cada Dia",
+      cards: [
+        ["Materiales Comerciales", "Tarjetas de negocio\nFlyers y folletos\nPostales y menus\nFacturas y formularios"],
+        ["Letreros y Exhibidores", "Banners y posters\nVinilo para ventanas\nYard signs\nRotulacion de autos"],
+        ["Productos Personalizados", "Stickers y etiquetas\nT-shirts\nCoordinacion de bordado\nPedidos especiales"]
+      ],
+      steps: [
+        ["1", "Envia tu archivo o idea"],
+        ["2", "Confirma medida, cantidad y acabado"],
+        ["3", "Aprueba e imprime"],
+        ["4", "Recoge o coordina entrega"]
+      ],
+      cta: "Necesitas un precio?"
+    }
+  }
+};
+
 const yardSignPrices = Array.from({ length: 100 }, (_, index) => {
   const quantity = index + 1;
   const unitPrice = quantity <= 25 ? 40 : quantity <= 50 ? 35 : 30;
@@ -435,16 +512,25 @@ const printingCtaTitle = document.querySelector("#printingCtaTitle");
 const printingCtaCopy = document.querySelector("#printingCtaCopy");
 const printingCtaButton = document.querySelector("#printingCtaButton");
 
-let selectedGroup = productGroups[0];
-let selectedProduct = selectedGroup.variants[0];
-let selectedPrice = selectedProduct.prices[0];
+let selectedGroup = null;
+let selectedProduct = null;
+let selectedPrice = null;
 
 renderProductList();
-renderProductGroup(groupNameFromHash() || selectedGroup.name, { updateHash: false });
+const initialGroupName = groupNameFromHash();
+if (initialGroupName) {
+  renderProductGroup(initialGroupName, { updateHash: false });
+} else {
+  renderCatalogOverview();
+}
 
 window.addEventListener("hashchange", () => {
   const hashGroupName = groupNameFromHash();
-  if (hashGroupName) renderProductGroup(hashGroupName, { updateHash: false });
+  if (hashGroupName) {
+    renderProductGroup(hashGroupName, { updateHash: false });
+  } else {
+    renderCatalogOverview();
+  }
 });
 
 productSize?.addEventListener("change", () => {
@@ -468,8 +554,8 @@ function renderProductList() {
 
   productList.innerHTML = productGroups
     .map(
-      (group, index) => `
-        <button class="${index === 0 ? "active" : ""}" type="button" data-product-group="${escapeAttribute(group.name)}" data-product-slug="${escapeAttribute(group.slug)}">
+      (group) => `
+        <button class="${selectedGroup?.name === group.name ? "active" : ""}" type="button" data-product-group="${escapeAttribute(group.name)}" data-product-slug="${escapeAttribute(group.slug)}">
           <span>${escapeHtml(group.name)}</span>
           ${group.stock ? `<small class="product-stock">Stock: ${escapeHtml(group.stock)}</small>` : ""}
         </button>
@@ -488,6 +574,7 @@ function renderProductGroup(groupName, options = {}) {
   selectedGroup = productGroups.find((group) => group.name === groupName) || productGroups[0];
   selectedProduct = selectedGroup.variants[0];
   selectedPrice = selectedProduct.prices[0];
+  if (productOrderPanel) productOrderPanel.hidden = false;
 
   productList?.querySelectorAll("button").forEach((button) => {
     button.classList.toggle("active", button.dataset.productGroup === selectedGroup.name);
@@ -510,6 +597,112 @@ function renderProductGroup(groupName, options = {}) {
   renderQuantityOptions();
   updateSelectedPrice();
   updateHashForGroup(options);
+}
+
+function renderCatalogOverview() {
+  const language = localStorage.getItem("preferredLanguage") === "es" ? "es" : "en";
+  const overview = printCatalogOverview[language];
+  selectedGroup = null;
+  selectedProduct = null;
+  selectedPrice = null;
+
+  productList?.querySelectorAll("button").forEach((button) => button.classList.remove("active"));
+  if (productOrderPanel) {
+    productOrderPanel.hidden = true;
+    productOrderPanel.classList.remove("configured-product-mode", "shirt-product-mode");
+  }
+  [
+    productConfigurationOptions,
+    stickerConfigurationOptions,
+    menuConfigurationOptions,
+    bannerConfigurationOptions,
+    hangerConfigurationOptions,
+    retractableConfigurationOptions,
+    yardSignConfigurationOptions,
+    roundedCornersField
+  ].forEach((element) => {
+    if (element) element.hidden = true;
+  });
+
+  setText(printingHeroKicker, overview.hero.kicker);
+  setText(printingHeroTitleTop, overview.hero.titleTop);
+  setText(printingHeroTitleBottom, overview.hero.titleBottom);
+  setText(printingHeroCopy, overview.hero.copy);
+  setText(printingHeroRating, language === "es" ? "Con la confianza de negocios locales y equipos de eventos" : "Trusted by local businesses and event teams");
+  if (printingHeroBenefits) {
+    printingHeroBenefits.innerHTML = overview.hero.benefits
+      .map(([title, copy]) => `<span><b>${escapeHtml(title)}</b><small>${escapeHtml(copy)}</small></span>`)
+      .join("");
+  }
+  if (printingHeroPrimary) {
+    printingHeroPrimary.href = "#productList";
+    printingHeroPrimary.textContent = language === "es" ? "Elige un producto" : "Choose product";
+  }
+  if (printingHeroSecondary) {
+    printingHeroSecondary.href = "quote.html";
+    printingHeroSecondary.textContent = language === "es" ? "Solicita un presupuesto" : "Request a quote";
+  }
+  setImage(printingHeroImageOne, "assets/printing-business-cards-ai.webp", "Print products preview");
+  setImage(printingHeroImageTwo, "assets/printing-flyers-ai.webp", "Print products preview");
+  if (printingPerfectFor) {
+    printingPerfectFor.innerHTML = `<strong>${language === "es" ? "Perfecto para" : "Perfect for"}</strong>${overview.hero.perfectFor
+      .map((label) => `<span>${escapeHtml(label)}</span>`)
+      .join("")}`;
+  }
+
+  if (productArt) {
+    productArt.className = "product-art product-art-overview";
+    productArt.innerHTML = `
+      <img src="assets/printing-business-cards-ai.webp" alt="Business cards" loading="lazy" />
+      <img src="assets/printing-flyers-ai.webp" alt="Flyers" loading="lazy" />
+      <img src="assets/printing-stickers-ai.webp" alt="Stickers" loading="lazy" />
+    `;
+  }
+  setText(productKicker, overview.detail.kicker);
+  setText(productTitle, overview.detail.title);
+  setText(productHook, overview.detail.hook);
+  setText(productMaterial, overview.detail.material);
+  if (productBenefits) {
+    productBenefits.innerHTML = overview.detail.benefits.map((benefit) => `<li>${escapeHtml(benefit)}</li>`).join("");
+  }
+
+  setText(printingSectionKicker, language === "es" ? "Lo que imprimimos" : "What we print");
+  setText(printingSectionTitle, overview.service.title);
+  if (printingServiceCards) {
+    printingServiceCards.innerHTML = overview.service.cards
+      .map(
+        ([title, items]) => `
+          <article>
+            <h3>${escapeHtml(title)}</h3>
+            <ul>${items.split("\n").map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
+          </article>
+        `
+      )
+      .join("");
+  }
+  if (printingProcessSteps) {
+    printingProcessSteps.innerHTML = overview.service.steps
+      .map(
+        ([number, label]) => `
+          <div>
+            <strong>${escapeHtml(number)}</strong>
+            <span>${escapeHtml(label)}</span>
+          </div>
+        `
+      )
+      .join("");
+  }
+  setText(printingCtaTitle, overview.service.cta);
+  setText(
+    printingCtaCopy,
+    language === "es"
+      ? "Envia cantidad, medida, material, colores y fecha limite para darte un presupuesto correcto."
+      : "Send quantity, size, material, colors and deadline so we can quote it correctly."
+  );
+  if (printingCtaButton) {
+    printingCtaButton.href = "contact.html";
+    printingCtaButton.textContent = language === "es" ? "Contacta Next Print NY" : "Contact Next Print NY";
+  }
 }
 
 function renderProductOptions() {

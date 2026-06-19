@@ -4190,6 +4190,49 @@ textarea {
   content: none;
 }
 
+.product-art-overview {
+  min-height: 350px;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 84% 18%, rgba(3, 191, 231, 0.26), transparent 34%),
+    linear-gradient(145deg, #f8fbff, #e7f3fb);
+}
+
+.product-art-overview img {
+  position: absolute;
+  min-height: 0;
+  height: auto;
+  width: 62%;
+  padding: 6px;
+  border: 1px solid rgba(9, 45, 93, 0.14);
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 16px 28px rgba(5, 39, 92, 0.18);
+  object-fit: cover;
+}
+
+.product-art-overview img:nth-child(1) {
+  top: 26px;
+  left: 14px;
+  z-index: 3;
+  transform: rotate(-5deg);
+}
+
+.product-art-overview img:nth-child(2) {
+  right: 12px;
+  bottom: 28px;
+  z-index: 2;
+  transform: rotate(5deg);
+}
+
+.product-art-overview img:nth-child(3) {
+  right: 24px;
+  top: 48px;
+  z-index: 1;
+  width: 48%;
+  transform: rotate(10deg);
+}
+
 .mockup-card-stack,
 .mockup-flyers,
 .mockup-stickers,
@@ -4456,6 +4499,10 @@ textarea {
   padding: 18px;
   border-radius: 8px;
   background: var(--soft);
+}
+
+.product-order-panel[hidden] {
+  display: none !important;
 }
 
 .product-order-panel label {
