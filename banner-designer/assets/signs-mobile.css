@@ -701,6 +701,12 @@
     touch-action: none;
   }
 
+  body.np-touch-resizing,
+  body.np-touch-resizing * {
+    -webkit-user-select: none !important;
+    user-select: none !important;
+  }
+
   .canvas-item.selected [style*="resize"] {
     z-index: 999 !important;
     width: 34px !important;
