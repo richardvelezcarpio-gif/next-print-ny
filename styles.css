@@ -6881,10 +6881,10 @@ textarea {
   body.home-page .np-home-hero {
     order: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(118px, 0.72fr);
+    grid-template-columns: minmax(0, 1fr) minmax(104px, 0.64fr);
     align-items: center;
-    gap: 4px;
-    padding: 12px 12px 14px;
+    gap: 2px;
+    padding: 9px 10px 11px;
     background:
       linear-gradient(145deg, rgba(255, 255, 255, 0) 0%, rgba(220, 246, 255, 0.08) 48%, rgba(255, 255, 255, 0.25) 100%),
       linear-gradient(135deg, #031b45 0%, #06467d 62%, #0e8eb7 100%);
@@ -6897,7 +6897,7 @@ textarea {
 
   body.home-page .np-hero-copy h1 {
     margin-top: 0;
-    font-size: clamp(1.35rem, 6.6vw, 1.9rem);
+    font-size: clamp(1.18rem, 5.8vw, 1.6rem);
     line-height: 0.96;
   }
 
@@ -6909,53 +6909,53 @@ textarea {
   body.home-page .np-hero-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 8px;
-    margin-top: 12px;
+    gap: 5px;
+    margin-top: 9px;
   }
 
   body.home-page .np-hero-actions .action-gradient,
   body.home-page .np-hero-actions .outline-button {
     width: 100%;
-    min-height: 34px;
-    padding: 0 8px;
+    min-height: 29px;
+    padding: 0 5px;
     border-radius: 5px;
-    font-size: 0.55rem;
+    font-size: 0.45rem;
     line-height: 1.1;
     text-align: center;
   }
 
   body.home-page .np-hero-copy > p {
     margin: 6px 0 0;
-    font-size: 0.66rem;
+    font-size: 0.58rem;
     line-height: 1.35;
   }
 
   body.home-page .np-rating {
-    margin: 8px 0 0;
-    font-size: 0.7rem;
+    margin: 6px 0 0;
+    font-size: 0.62rem;
     white-space: nowrap;
   }
 
   body.home-page .np-rating span {
-    font-size: 0.48rem;
+    font-size: 0.43rem;
   }
 
   body.home-page .np-hero-badges {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
-    margin: 8px 0 0;
+    gap: 5px;
+    margin: 6px 0 0;
   }
 
   body.home-page .np-hero-badges span {
-    min-height: 24px;
-    padding-left: 18px;
-    font-size: 0.46rem;
+    min-height: 21px;
+    padding-left: 15px;
+    font-size: 0.4rem;
     line-height: 1.05;
   }
 
   body.home-page .np-hero-badges span::before {
-    width: 13px;
-    height: 13px;
+    width: 11px;
+    height: 11px;
     top: 0;
   }
 
@@ -6970,9 +6970,9 @@ textarea {
   }
 
   body.home-page .np-hero-main-image {
-    width: 148%;
+    width: 132%;
     max-width: none;
-    max-height: 240px;
+    max-height: 182px;
     justify-self: end;
     filter: drop-shadow(0 12px 16px rgba(0, 7, 25, 0.36));
     transform: none;
