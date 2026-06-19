@@ -513,8 +513,9 @@
   }
 
   .banner-canvas {
-    max-width: 100%;
+    max-width: none;
     border-radius: 8px;
+    touch-action: none;
   }
 
   .safe-area span {
@@ -577,6 +578,23 @@
   .details-card > .upload-btn,
   .details-card > .edit-panel {
     grid-column: 2;
+  }
+
+  .details-card > .primary-btn {
+    grid-row: 2;
+    align-self: end;
+    margin-top: 0;
+  }
+
+  .details-card > .upload-btn {
+    grid-row: 3;
+    align-self: start;
+    margin-top: 0;
+  }
+
+  .details-card > .edit-panel {
+    grid-row: 4 / span 8;
+    align-self: start;
   }
 
   .designer-card h2 {
@@ -676,5 +694,28 @@
     min-height: 40px;
     border-radius: 9px;
     font-size: 0.62rem;
+  }
+
+  .canvas-item,
+  .canvas-item * {
+    touch-action: none;
+  }
+
+  .canvas-item.selected [style*="resize"] {
+    z-index: 999 !important;
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    border: 3px solid #ffffff !important;
+    border-radius: 999px !important;
+    background: #04bfe7 !important;
+    box-shadow: 0 3px 10px rgba(5, 39, 92, 0.3) !important;
+  }
+
+  .canvas-item.selected [style*="top: -10px"],
+  .canvas-item.selected [style*="bottom: -10px"] {
+    margin-top: -2px;
+    margin-bottom: -2px;
   }
 }

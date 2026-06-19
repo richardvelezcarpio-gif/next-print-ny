@@ -124,18 +124,57 @@
     });
   }
 
+  function fitDesignerCanvas() {
+    const wrapper = document.querySelector(".canvas-wrapper");
+    const canvas = document.querySelector(".banner-canvas");
+    if (!wrapper || !canvas) return;
+
+    const styles = window.getComputedStyle(wrapper);
+    const inlineWidth = Number.parseFloat(canvas.style.width);
+    const inlineHeight = Number.parseFloat(canvas.style.height);
+    const naturalWidth = Number.isFinite(inlineWidth) && inlineWidth > 0 ? inlineWidth : canvas.offsetWidth;
+    const naturalHeight = Number.isFinite(inlineHeight) && inlineHeight > 0 ? inlineHeight : canvas.offsetHeight;
+    const horizontalPadding = Number.parseFloat(styles.paddingLeft) + Number.parseFloat(styles.paddingRight);
+    const availableWidth = Math.max(160, wrapper.clientWidth - horizontalPadding);
+
+    if (!naturalWidth || !naturalHeight || !availableWidth) return;
+
+    const scale = Math.min(1, availableWidth / naturalWidth);
+
+    canvas.style.flex = "0 0 auto";
+    canvas.style.maxWidth = "none";
+    canvas.style.transformOrigin = "top left";
+
+    if ("zoom" in canvas.style) {
+      canvas.style.zoom = scale < 1 ? String(scale) : "";
+      canvas.style.transform = "";
+      canvas.style.marginRight = "";
+      canvas.style.marginBottom = "";
+      return;
+    }
+
+    canvas.style.zoom = "";
+    canvas.style.transform = scale < 1 ? `scale(${scale})` : "";
+    canvas.style.marginRight = scale < 1 ? `${naturalWidth * (scale - 1)}px` : "";
+    canvas.style.marginBottom = scale < 1 ? `${naturalHeight * (scale - 1)}px` : "";
+  }
+
   function scheduleSync() {
     window.cancelAnimationFrame(pendingFrame);
     pendingFrame = window.requestAnimationFrame(() => {
       syncDesignerRoute();
       fixFooterLinks();
+      fitDesignerCanvas();
     });
   }
 
   document.addEventListener("DOMContentLoaded", scheduleSync);
+  window.addEventListener("resize", scheduleSync);
   new MutationObserver(scheduleSync).observe(document.documentElement, {
     childList: true,
     subtree: true,
+    attributes: true,
+    attributeFilter: ["style", "class"],
   });
   window.setTimeout(scheduleSync, 250);
   window.setTimeout(scheduleSync, 900);
