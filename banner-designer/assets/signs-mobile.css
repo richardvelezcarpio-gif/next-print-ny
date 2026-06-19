@@ -413,4 +413,268 @@
     padding: 11px 0 13px;
     font-size: 0.57rem;
   }
+
+  .container {
+    background: #eef4fa;
+  }
+
+  .container > h1 {
+    margin: 0;
+    padding: 14px 8px 12px;
+    color: #111827;
+    background: #f8fbff;
+    font-size: 1.45rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.1;
+  }
+
+  .designer-page {
+    display: flex;
+    flex-direction: column;
+    padding: 0 6px;
+    background: #eef4fa;
+  }
+
+  .designer-hero {
+    max-width: none;
+    margin: 0 4px 12px;
+    padding: 22px 16px;
+    border-radius: 10px;
+  }
+
+  .designer-hero span {
+    font-size: 0.48rem;
+  }
+
+  .designer-hero h1 {
+    margin: 4px 0;
+    font-size: clamp(1.55rem, 7.6vw, 2.35rem);
+    letter-spacing: 0;
+  }
+
+  .designer-hero p {
+    margin-top: 5px;
+    font-size: 0.58rem;
+  }
+
+  .designer-layout {
+    display: flex;
+    flex-direction: column;
+    max-width: none;
+    margin: 0;
+    gap: 0;
+  }
+
+  .designer-main {
+    display: contents;
+  }
+
+  .canvas-card {
+    order: 1;
+    padding: 8px 8px 14px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .canvas-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .canvas-top span {
+    font-size: 0.62rem;
+  }
+
+  .canvas-top h2 {
+    font-size: 1.02rem;
+    line-height: 1.15;
+  }
+
+  .save-btn {
+    width: auto;
+    min-width: 120px;
+    min-height: 42px;
+    padding: 0 12px;
+    border-radius: 9px;
+    font-size: 0.64rem;
+    white-space: nowrap;
+  }
+
+  .canvas-wrapper {
+    min-height: clamp(335px, 72vw, 520px);
+    padding: 18px;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .banner-canvas {
+    max-width: 100%;
+    border-radius: 8px;
+  }
+
+  .safe-area span {
+    top: -12px;
+    left: 10px;
+    padding: 3px 7px;
+    font-size: 0.48rem;
+  }
+
+  .details-card {
+    position: relative;
+    order: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 12px;
+    padding: 14px 8px 18px;
+    border: 0;
+    border-radius: 0;
+    background: #eef4fa;
+    box-shadow: none;
+    overflow: hidden;
+  }
+
+  .details-card::before,
+  .details-card::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    bottom: 8px;
+    z-index: 0;
+    border: 1px solid #d9e8f5;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 12px 24px rgba(5, 39, 92, 0.08);
+  }
+
+  .details-card::before {
+    left: 8px;
+    width: calc(50% - 14px);
+  }
+
+  .details-card::after {
+    right: 8px;
+    width: calc(50% - 14px);
+  }
+
+  .details-card > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .details-card > h2,
+  .details-card > label:not(.upload-btn),
+  .details-card > select,
+  .details-card > input:not([type="file"]) {
+    grid-column: 1;
+  }
+
+  .details-card > .primary-btn,
+  .details-card > .upload-btn,
+  .details-card > .edit-panel {
+    grid-column: 2;
+  }
+
+  .designer-card h2 {
+    margin-bottom: 10px;
+    font-size: 1.08rem;
+  }
+
+  .designer-card h3 {
+    margin: 8px 0 10px;
+    font-size: 0.72rem;
+  }
+
+  .designer-card label {
+    margin: 7px 0 5px;
+    font-size: 0.66rem;
+  }
+
+  .designer-card input,
+  .designer-card select {
+    height: 40px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+  }
+
+  .primary-btn,
+  .secondary-btn,
+  .danger-btn,
+  .upload-btn {
+    min-height: 40px;
+    border-radius: 9px;
+    font-size: 0.68rem;
+  }
+
+  .edit-panel {
+    margin-top: 8px;
+    padding-top: 10px;
+  }
+
+  .designer-bottom-panels {
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 8px 16px;
+    background: #eef4fa;
+  }
+
+  .summary-card,
+  .submit-card {
+    padding: 14px 12px;
+    border-radius: 10px;
+  }
+
+  .summary-row {
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .summary-row span,
+  .summary-row strong {
+    font-size: 0.56rem;
+    line-height: 1.25;
+  }
+
+  .summary-total {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 9px;
+  }
+
+  .summary-total span {
+    font-size: 0.58rem;
+  }
+
+  .summary-total strong {
+    font-size: 1.15rem;
+  }
+
+  .how-box {
+    margin: 0 0 12px;
+    padding: 12px 9px;
+    border-radius: 9px;
+  }
+
+  .how-box h3 {
+    margin-bottom: 8px;
+    font-size: 0.7rem;
+  }
+
+  .how-box p {
+    margin: 7px 0;
+    font-size: 0.55rem;
+    line-height: 1.35;
+  }
+
+  .submit-btn {
+    min-height: 40px;
+    border-radius: 9px;
+    font-size: 0.62rem;
+  }
 }

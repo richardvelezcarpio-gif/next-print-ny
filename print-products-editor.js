@@ -222,7 +222,7 @@ function getEditorRedirectTarget() {
   }
 
   if (/retractable/.test(requestedProduct) || /yard\s*signs?/.test(requestedProduct) || /\bbanners?\b/.test(requestedProduct)) {
-    return "banner-designer/designer";
+    return bannerDesignerRedirect(requestedProduct);
   }
 
   if (/t-?\s*shirts?/.test(requestedProduct) || /gildan/.test(requestedProduct)) {
@@ -230,6 +230,27 @@ function getEditorRedirectTarget() {
   }
 
   return "";
+}
+
+function bannerDesignerRedirect(requestedProduct) {
+  const normalized = String(requestedProduct || "").toLowerCase();
+  const params = new URLSearchParams();
+
+  if (/retractable/.test(normalized)) {
+    params.set("product", "Retractable Banner");
+    params.set("width", "3");
+    params.set("height", "7");
+  } else if (/yard\s*signs?/.test(normalized)) {
+    params.set("product", "Yard Sign");
+    params.set("width", "1.5");
+    params.set("height", "2");
+  } else {
+    params.set("product", "Banner");
+    params.set("width", "4");
+    params.set("height", "4");
+  }
+
+  return `banner-designer/designer?${params.toString()}`;
 }
 
 function findInitialProduct() {

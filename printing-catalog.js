@@ -748,7 +748,7 @@ function updateSelectedPrice() {
     } else if (["menus", "hangers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-upload.html?${params.toString()}`;
     } else if (selectedGroup.category === "banners" || selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
-      productOrderLink.href = "banner-designer/designer";
+      productOrderLink.href = bannerDesignerHref(selectedProduct, selectedGroup.category);
     } else {
       productOrderLink.href = `order.html?${params.toString()}`;
     }
@@ -766,6 +766,33 @@ function sizeLabel(productName, groupName) {
   if (groupName === "Yard Signs") return "18 x 24 inches";
   if (groupName === "T-Shirts") return "Gildan G500 Unisex Heavy Cotton";
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
+}
+
+function bannerDesignerHref(product, category) {
+  const params = new URLSearchParams(signDesignerParams(product, category));
+  return `banner-designer/designer?${params.toString()}`;
+}
+
+function signDesignerParams(product, category) {
+  if (category === "banners") {
+    const [width = "4", height = "4"] = String(product?.name || "")
+      .replace(/^Banner\s*/i, "")
+      .split("x")
+      .map((value) => value.trim())
+      .filter(Boolean);
+
+    return { product: "Banner", width, height };
+  }
+
+  if (category === "retractable") {
+    return { product: "Retractable Banner", width: "3", height: "7" };
+  }
+
+  if (category === "yardSigns") {
+    return { product: "Yard Sign", width: "1.5", height: "2" };
+  }
+
+  return { product: "Banner", width: "4", height: "4" };
 }
 
 function groupNameFromHash() {
