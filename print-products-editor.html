@@ -6,9 +6,9 @@
     <meta name="description" content="Design business cards, flyers and stickers online with Next Print NY." />
     <title>Print Products Editor | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260618-1255" />
+    <link rel="stylesheet" href="styles.css?v=20260619-print-editor-route" />
   </head>
-  <body>
+  <body class="print-products-editor-page">
     <div class="page-shell print-editor-shell">
       <section class="reseller-strip" aria-label="Reseller program">
         <div>
@@ -58,33 +58,35 @@
 
         <section class="print-editor-workspace">
           <aside class="print-editor-card print-editor-controls">
-            <h2>Product details</h2>
-            <label>
-              Product
-              <select id="printProductSelect"></select>
-            </label>
-            <label>
-              Size
-              <select id="printSizeSelect"></select>
-            </label>
-            <label>
-              Quantity
-              <select id="printQuantitySelect"></select>
-            </label>
-            <div id="printOptionFields" class="print-option-fields"></div>
-            <label>
-              Background color 1
-              <input id="printBgColor1" type="color" value="#dff8ff" />
-            </label>
-            <label>
-              Background color 2
-              <input id="printBgColor2" type="color" value="#ffffff" />
-            </label>
-            <button id="printAddText" class="primary-btn" type="button">Add Text</button>
-            <label class="upload-btn print-upload">
-              Upload Image
-              <input id="printUploadImage" type="file" accept="image/png,image/jpeg,image/webp" />
-            </label>
+            <div class="print-product-fields">
+              <h2>Product details</h2>
+              <label>
+                Product
+                <select id="printProductSelect"></select>
+              </label>
+              <label>
+                Size
+                <select id="printSizeSelect"></select>
+              </label>
+              <label>
+                Quantity
+                <select id="printQuantitySelect"></select>
+              </label>
+              <div id="printOptionFields" class="print-option-fields"></div>
+              <label>
+                Background color 1
+                <input id="printBgColor1" type="color" value="#dff8ff" />
+              </label>
+              <label>
+                Background color 2
+                <input id="printBgColor2" type="color" value="#ffffff" />
+              </label>
+              <button id="printAddText" class="primary-btn" type="button">Add Text</button>
+              <label class="upload-btn print-upload">
+                Upload Image
+                <input id="printUploadImage" type="file" accept="image/png,image/jpeg,image/webp" />
+              </label>
+            </div>
 
             <div class="edit-panel">
               <h3>Edit selected</h3>
@@ -190,9 +192,9 @@
             <h4>Services</h4>
             <a href="printing.html#banners">Banners</a>
             <a href="printing.html#banners">Vinyl Banners</a>
-            <a href="printing.html#banners">Retractable Banners</a>
-            <a href="printing.html#banners">Yard Signs</a>
-            <a href="printing.html">Decals &amp; Stickers</a>
+            <a href="printing.html#retractable-banners">Retractable Banners</a>
+            <a href="printing.html#yard-signs">Yard Signs</a>
+            <a href="printing.html#stickers">Decals &amp; Stickers</a>
             <a href="index.html#copies">Printing &amp; Copies</a>
           </section>
 
@@ -217,6 +219,6 @@
       </footer>
     </div>
     <script src="script.js?v=20260618-0720"></script>
-    <script src="print-products-editor.js?v=20260618-1255"></script>
+    <script src="print-products-editor.js?v=20260619-print-editor-route"></script>
   </body>
 </html>

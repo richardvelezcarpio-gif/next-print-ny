@@ -116,6 +116,11 @@ const productCatalog = [
 ];
 
 const params = new URLSearchParams(window.location.search);
+const editorRedirectTarget = getEditorRedirectTarget();
+if (editorRedirectTarget) {
+  window.location.replace(editorRedirectTarget);
+}
+
 const productSelect = document.querySelector("#printProductSelect");
 const sizeSelect = document.querySelector("#printSizeSelect");
 const quantitySelect = document.querySelector("#printQuantitySelect");
@@ -142,7 +147,7 @@ const summaryTotal = document.querySelector("#printSummaryTotal");
 const continueButton = document.querySelector("#printContinueCheckout");
 const statusNode = document.querySelector("#printEditorStatus");
 
-let currentProduct = findInitialProduct();
+let currentProduct = editorRedirectTarget ? productCatalog[0] : findInitialProduct();
 let currentQuantity = String(params.get("quantity") || currentProduct.prices[0][0]);
 let currentSide = "front";
 let selectedItemId = null;
@@ -151,9 +156,11 @@ let designState = {
   back: [defaultTextItem("Back Side")],
 };
 
-renderProductSelect();
-renderProduct();
-bindEvents();
+if (!editorRedirectTarget) {
+  renderProductSelect();
+  renderProduct();
+  bindEvents();
+}
 
 function bindEvents() {
   productSelect?.addEventListener("change", () => {
@@ -204,6 +211,25 @@ function bindEvents() {
   deleteButton?.addEventListener("click", deleteSelected);
   saveButton?.addEventListener("click", saveCurrentSidePng);
   continueButton?.addEventListener("click", continueToCheckout);
+}
+
+function getEditorRedirectTarget() {
+  const requestedProduct = `${params.get("product") || ""} ${params.get("item") || ""}`.toLowerCase();
+  if (!requestedProduct.trim()) return "";
+
+  if (/menus?/.test(requestedProduct) || /door\s*hangers?/.test(requestedProduct)) {
+    return `print-products-upload.html?${params.toString()}`;
+  }
+
+  if (/retractable/.test(requestedProduct) || /yard\s*signs?/.test(requestedProduct) || /\bbanners?\b/.test(requestedProduct)) {
+    return "banner-designer/designer";
+  }
+
+  if (/t-?\s*shirts?/.test(requestedProduct) || /gildan/.test(requestedProduct)) {
+    return "tshirt.html";
+  }
+
+  return "";
 }
 
 function findInitialProduct() {

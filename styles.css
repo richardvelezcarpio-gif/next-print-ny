@@ -3200,11 +3200,60 @@ textarea {
   gap: 10px;
 }
 
+.print-product-fields,
+.edit-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.edit-panel {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid #d9e8f5;
+}
+
+.edit-panel h3 {
+  margin: 0 0 6px;
+  color: var(--navy);
+  font-size: 1rem;
+  text-align: center;
+}
+
 .print-upload {
   min-height: 44px;
   display: grid;
   place-items: center;
   margin: 0;
+}
+
+.print-editor-controls .primary-btn,
+.print-editor-controls .secondary-btn,
+.print-editor-controls .danger-btn,
+.print-submit-card .submit-btn,
+.print-design-top .save-btn {
+  width: 100%;
+  min-height: 40px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.print-editor-controls .primary-btn,
+.print-submit-card .submit-btn,
+.print-design-top .save-btn {
+  color: #fff;
+  background: var(--navy);
+}
+
+.print-editor-controls .secondary-btn {
+  color: #fff;
+  background: #2667f0;
+}
+
+.print-editor-controls .danger-btn {
+  color: #fff;
+  background: #e52828;
 }
 
 .print-editor-main {
@@ -3462,6 +3511,17 @@ textarea {
 
 .print-submit-card .how-box {
   flex: 1;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #e4edf5;
+  color: var(--navy);
+  font-weight: 900;
 }
 
 .print-upload-page {
@@ -7765,6 +7825,445 @@ textarea {
   }
 
   body.printing-page .footer-bottom {
+    margin-top: 14px;
+    padding: 11px 0 13px;
+    font-size: 0.57rem;
+  }
+}
+
+@media (max-width: 760px) {
+  body.print-products-editor-page {
+    padding-bottom: 0;
+    background: #eef2f7;
+  }
+
+  body.print-products-editor-page .page-shell {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.print-products-editor-page .reseller-strip {
+    display: grid;
+    gap: 8px;
+    min-height: 108px;
+    padding: 14px 18px 12px;
+    text-align: center;
+    background: linear-gradient(90deg, #05275c 0%, #03bfe7 100%);
+  }
+
+  body.print-products-editor-page .reseller-strip div {
+    display: grid;
+    justify-items: center;
+    gap: 7px;
+  }
+
+  body.print-products-editor-page .reseller-strip strong {
+    font-size: 0.8rem;
+    line-height: 1.1;
+  }
+
+  body.print-products-editor-page .reseller-strip span {
+    font-size: 0.68rem;
+    line-height: 1.25;
+  }
+
+  body.print-products-editor-page .reseller-strip a {
+    width: min(100%, 280px);
+    min-height: 32px;
+    justify-self: center;
+    border-radius: 7px;
+    font-size: 0.65rem;
+  }
+
+  body.print-products-editor-page .top-nav.site-main-header {
+    grid-template-columns: minmax(82px, 1fr) 42px minmax(138px, 1.45fr);
+    gap: 7px;
+    min-height: 72px;
+    padding: 9px 9px 11px;
+    border-bottom: 5px solid #05275c;
+  }
+
+  body.print-products-editor-page .top-nav .brand {
+    min-width: 0;
+  }
+
+  body.print-products-editor-page .top-nav .brand img {
+    width: 88px;
+  }
+
+  body.print-products-editor-page .menu-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 9px;
+    background: #05275c;
+    box-shadow: 0 7px 16px rgba(5, 39, 92, 0.22);
+  }
+
+  body.print-products-editor-page .menu-toggle span {
+    width: 22px;
+    height: 3px;
+    margin: 3px 0;
+    background: #fff;
+  }
+
+  body.print-products-editor-page .top-nav .nav-actions {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  body.print-products-editor-page .phone-pill {
+    min-height: 36px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 0.58rem;
+  }
+
+  body.print-products-editor-page .language-switch {
+    min-height: 36px;
+    flex: 0 0 auto;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  body.print-products-editor-page .language-switch button {
+    min-width: 26px;
+    height: 28px;
+    font-size: 0.58rem;
+  }
+
+  body.print-products-editor-page .top-nav .menu {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  body.print-products-editor-page .top-nav .menu.open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body.print-products-editor-page .top-nav .menu a {
+    min-height: 34px;
+    padding: 8px 6px;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  body.print-products-editor-page .print-editor-page {
+    padding-bottom: 0;
+    background: #eef4fa;
+  }
+
+  body.print-products-editor-page .print-order-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 18px;
+  }
+
+  body.print-products-editor-page .print-order-hero span {
+    font-size: 0.6rem;
+  }
+
+  body.print-products-editor-page .print-order-hero h1 {
+    max-width: 360px;
+    margin: 4px 0 8px;
+    font-size: clamp(2.2rem, 11vw, 3.25rem);
+  }
+
+  body.print-products-editor-page .print-order-hero p {
+    max-width: 390px;
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
+
+  body.print-products-editor-page .print-whatsapp {
+    min-width: 104px;
+    min-height: 44px;
+    padding: 0 14px;
+    font-size: 0.62rem;
+  }
+
+  body.print-products-editor-page .print-editor-workspace {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    max-width: none;
+    padding: 0;
+  }
+
+  body.print-products-editor-page .print-editor-main {
+    display: contents;
+  }
+
+  body.print-products-editor-page .print-design-card {
+    order: 1;
+    padding: 8px 8px 14px;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.print-products-editor-page .print-design-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  body.print-products-editor-page .print-design-top span {
+    font-size: 0.62rem;
+  }
+
+  body.print-products-editor-page .print-design-top h2 {
+    font-size: 0.86rem;
+    line-height: 1.15;
+  }
+
+  body.print-products-editor-page .print-design-top .save-btn {
+    width: auto;
+    min-height: 28px;
+    padding: 0 8px;
+    border-radius: 3px;
+    font-size: 0.58rem;
+    white-space: nowrap;
+  }
+
+  body.print-products-editor-page .print-side-tabs {
+    gap: 7px;
+    margin-bottom: 10px;
+  }
+
+  body.print-products-editor-page .print-side-tabs button {
+    min-width: 58px;
+    min-height: 30px;
+    border-radius: 4px;
+    font-size: 0.68rem;
+  }
+
+  body.print-products-editor-page .print-canvas-frame {
+    min-height: clamp(280px, 70vw, 470px);
+    padding: 36px 18px;
+    border-radius: 5px;
+    background: #f3f7ff;
+    overflow: hidden;
+  }
+
+  body.print-products-editor-page .print-design-canvas {
+    width: min(100%, 560px);
+    min-height: 0;
+    border-radius: 4px;
+    box-shadow: 0 20px 34px rgba(7, 20, 47, 0.18);
+  }
+
+  body.print-products-editor-page .print-safe-zone span {
+    top: -13px;
+    left: 10px;
+    padding: 3px 7px;
+    font-size: 0.48rem;
+  }
+
+  body.print-products-editor-page .print-canvas-item {
+    padding: 2px;
+  }
+
+  body.print-products-editor-page .print-editor-controls {
+    order: 2;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 12px;
+    padding: 18px 8px;
+    border: 0;
+    border-radius: 0;
+    background: #eef4fa;
+    box-shadow: none;
+  }
+
+  body.print-products-editor-page .print-product-fields,
+  body.print-products-editor-page .edit-panel {
+    min-height: 100%;
+    padding: 14px 12px;
+    border: 1px solid #d9e8f5;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 12px 24px rgba(5, 39, 92, 0.08);
+  }
+
+  body.print-products-editor-page .edit-panel {
+    margin-top: 0;
+    border-top: 1px solid #d9e8f5;
+  }
+
+  body.print-products-editor-page .print-editor-card h2,
+  body.print-products-editor-page .edit-panel h3 {
+    margin-bottom: 10px;
+    font-size: 0.92rem;
+  }
+
+  body.print-products-editor-page .print-editor-controls label,
+  body.print-products-editor-page .print-option-fields label {
+    gap: 5px;
+    font-size: 0.55rem;
+  }
+
+  body.print-products-editor-page .print-editor-controls input,
+  body.print-products-editor-page .print-editor-controls select,
+  body.print-products-editor-page .print-option-fields select {
+    min-height: 34px;
+    padding: 0 8px;
+    border-radius: 7px;
+    font-size: 0.58rem;
+  }
+
+  body.print-products-editor-page .print-editor-controls input[type="color"] {
+    padding: 3px;
+  }
+
+  body.print-products-editor-page .print-editor-controls .primary-btn,
+  body.print-products-editor-page .print-editor-controls .secondary-btn,
+  body.print-products-editor-page .print-editor-controls .danger-btn,
+  body.print-products-editor-page .print-upload {
+    min-height: 34px;
+    border-radius: 4px;
+    font-size: 0.62rem;
+  }
+
+  body.print-products-editor-page .print-upload input {
+    width: 100%;
+    margin-top: 6px;
+    font-size: 0.5rem;
+  }
+
+  body.print-products-editor-page .print-bottom-panels {
+    order: 3;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 0 8px 16px;
+    background: #eef4fa;
+  }
+
+  body.print-products-editor-page .print-order-summary,
+  body.print-products-editor-page .print-submit-card {
+    padding: 14px 12px;
+    border-radius: 4px;
+  }
+
+  body.print-products-editor-page .print-order-summary h2,
+  body.print-products-editor-page .print-submit-card h2 {
+    margin-bottom: 12px;
+    font-size: 0.8rem;
+  }
+
+  body.print-products-editor-page .print-order-summary dl {
+    gap: 6px;
+  }
+
+  body.print-products-editor-page .print-order-summary dl div {
+    grid-template-columns: minmax(52px, 0.72fr) minmax(0, 1fr);
+    gap: 8px;
+    padding-bottom: 6px;
+  }
+
+  body.print-products-editor-page .print-order-summary dt,
+  body.print-products-editor-page .print-order-summary dd,
+  body.print-products-editor-page .summary-total span,
+  body.print-products-editor-page .summary-total strong {
+    font-size: 0.56rem;
+    line-height: 1.25;
+  }
+
+  body.print-products-editor-page .print-submit-card .how-box {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border-radius: 4px;
+    background: #f3f7fb;
+  }
+
+  body.print-products-editor-page .print-submit-card .how-box p {
+    margin: 0;
+    font-size: 0.58rem;
+    font-weight: 800;
+    line-height: 1.35;
+  }
+
+  body.print-products-editor-page .print-submit-card .submit-btn {
+    min-height: 32px;
+    margin-top: 12px;
+    border-radius: 4px;
+    font-size: 0.58rem;
+  }
+
+  body.print-products-editor-page .order-status {
+    margin-top: 8px;
+    font-size: 0.58rem;
+  }
+
+  body.print-products-editor-page .footer {
+    margin-top: 0;
+    padding: 18px 8px 0;
+    border-top: 1px solid rgba(217, 242, 255, 0.25);
+  }
+
+  body.print-products-editor-page .footer-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  body.print-products-editor-page .footer-brand,
+  body.print-products-editor-page .footer-col:nth-child(2) {
+    display: none;
+  }
+
+  body.print-products-editor-page .footer-col,
+  body.print-products-editor-page .footer-col:first-child,
+  body.print-products-editor-page .footer-col:nth-child(2) {
+    align-items: center;
+    min-height: 0;
+    padding: 0 7px;
+    border-top: 0;
+    border-left: 1px solid rgba(217, 242, 255, 0.2);
+    text-align: center;
+  }
+
+  body.print-products-editor-page .footer-col:nth-child(3) {
+    border-left: 0;
+  }
+
+  body.print-products-editor-page .footer-col h4 {
+    margin-bottom: 8px;
+    font-size: 0.78rem;
+    line-height: 1.05;
+  }
+
+  body.print-products-editor-page .footer-col p,
+  body.print-products-editor-page .footer-col a {
+    margin-bottom: 6px;
+    font-size: 0.62rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  body.print-products-editor-page .footer-bottom {
     margin-top: 14px;
     padding: 11px 0 13px;
     font-size: 0.57rem;
