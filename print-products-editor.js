@@ -186,6 +186,29 @@ const backgroundTemplates = [
   ["Charcoal", "#f2f4f7", "#27364a"],
 ];
 
+const solidBackgroundColors = [
+  ["White", "#ffffff"],
+  ["Black", "#111827"],
+  ["Navy", "#082d5e"],
+  ["Blue", "#1877f2"],
+  ["Sky", "#6ed5f6"],
+  ["Teal", "#14b8a6"],
+  ["Green", "#22a447"],
+  ["Lime", "#8bcf3f"],
+  ["Yellow", "#f5cf3a"],
+  ["Orange", "#f68b2c"],
+  ["Red", "#e33c3c"],
+  ["Pink", "#eb6ea5"],
+  ["Purple", "#7d59c8"],
+  ["Brown", "#85523a"],
+  ["Gray", "#9ca3af"],
+  ["Light Gray", "#e5e7eb"],
+  ["Cream", "#fff5d8"],
+  ["Beige", "#e8d2b5"],
+  ["Light Blue", "#e0f5ff"],
+  ["Light Green", "#e5f8e7"],
+];
+
 let currentProduct = editorRedirectTarget ? productCatalog[0] : findInitialProduct();
 let currentQuantity = String(params.get("quantity") || currentProduct.prices[0][0]);
 let currentSide = "front";
@@ -301,7 +324,7 @@ function renderEditorDrawer() {
 
   const toolContent = {
     templates: renderBackgroundTemplatePanel("Business Card Background Templates"),
-    backgrounds: renderBackgroundTemplatePanel("Backgrounds"),
+    backgrounds: renderSolidBackgroundPanel(),
     text: renderToolPanel("Text", "Add editable copy to the selected side.", '<button class="drawer-action primary" type="button" data-drawer-action="add-text">Add text</button>'),
     uploads: renderToolPanel("Upload artwork", "Add PNG, JPG or WEBP artwork to the selected side.", '<label class="drawer-upload">Choose image<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
     photos: renderToolPanel("Photos", "Upload a photo, then use Remove Background for light or white backdrops.", '<label class="drawer-upload">Upload photo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label><button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button>'),
@@ -326,6 +349,23 @@ function renderBackgroundTemplatePanel(title) {
         .map(
           ([label, color1, color2], index) => `
             <button type="button" class="background-template" data-drawer-action="background" data-template-index="${index}" style="--template-start:${escapeAttribute(color1)};--template-end:${escapeAttribute(color2)}">
+              <span>${escapeHtml(label)}</span>
+            </button>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderSolidBackgroundPanel() {
+  return `
+    <div class="drawer-heading"><div><span>Canvas color</span><h3>Solid Background Colors</h3></div><small>20 colors</small></div>
+    <div class="background-template-grid solid-background-grid">
+      ${solidBackgroundColors
+        .map(
+          ([label, color], index) => `
+            <button type="button" class="background-template solid-background" data-drawer-action="solid-background" data-solid-color-index="${index}" style="--template-start:${escapeAttribute(color)};--template-end:${escapeAttribute(color)}">
               <span>${escapeHtml(label)}</span>
             </button>
           `
@@ -363,6 +403,14 @@ function handleDrawerAction(event) {
     if (!template) return;
     if (bgColor1) bgColor1.value = template[1];
     if (bgColor2) bgColor2.value = template[2];
+    renderCanvas();
+    return;
+  }
+  if (action === "solid-background") {
+    const color = solidBackgroundColors[Number(button.dataset.solidColorIndex)]?.[1];
+    if (!color) return;
+    if (bgColor1) bgColor1.value = color;
+    if (bgColor2) bgColor2.value = color;
     renderCanvas();
     return;
   }
