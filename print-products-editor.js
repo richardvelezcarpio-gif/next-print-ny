@@ -174,6 +174,9 @@ const editorHeroImage = document.querySelector("#printEditorHeroImage");
 const editorStartButton = document.querySelector("#printEditorStart");
 const selectionCompact = document.querySelector("#printSelectionCompact");
 const changeSelectionLink = document.querySelector("#printChangeSelection");
+const studioOrder = document.querySelector("#printStudioOrder");
+const studioBack = document.querySelector("#printStudioBack");
+const studioSave = document.querySelector("#printStudioSave");
 
 const backgroundTemplates = [
   ["Ocean", "#e8fbff", "#1ab9e8"],
@@ -303,6 +306,7 @@ function bindEvents() {
   toolbarOpacity?.addEventListener("input", updateSelectedImageEffects);
   toolbarRotate?.addEventListener("input", updateSelectedImageEffects);
   saveButton?.addEventListener("click", saveCurrentSidePng);
+  studioSave?.addEventListener("click", saveCurrentSidePng);
   savePrintButton?.addEventListener("click", savePrintReadyPng);
   continueButton?.addEventListener("click", continueToCheckout);
   preflightButton?.addEventListener("click", runPreflight);
@@ -2013,10 +2017,13 @@ function updateSummary() {
 }
 
 function updateCompactSelection(price) {
-  if (selectionCompact) selectionCompact.textContent = `${currentProduct.label} · ${currentProduct.sizeLabel} · ${currentQuantity} · ${money(price)}`;
+  const summary = `${currentProduct.label} · ${currentProduct.sizeLabel} · ${currentQuantity} · ${money(price)}`;
+  if (selectionCompact) selectionCompact.textContent = summary;
+  if (studioOrder) studioOrder.textContent = summary;
   if (changeSelectionLink) {
     const groupName = { cards: "Business Cards", flyers: "Flyers", stickers: "Stickers" }[currentProduct.category] || "Business Cards";
     changeSelectionLink.href = `printing.html#${encodeURIComponent(groupName)}`;
+    if (studioBack) studioBack.href = changeSelectionLink.href;
   }
 }
 
