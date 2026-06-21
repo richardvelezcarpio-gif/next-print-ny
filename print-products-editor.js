@@ -329,6 +329,10 @@ function bindEvents() {
   editorDrawer?.addEventListener("click", handleDrawerAction);
   editorDrawer?.addEventListener("change", (event) => {
     if (event.target.matches("input[data-drawer-upload]")) handleUpload(event);
+    if (event.target.matches("[data-text-effect-control]")) updateTextEffectControl(event.target);
+  });
+  editorDrawer?.addEventListener("input", (event) => {
+    if (event.target.matches("[data-text-effect-control]")) updateTextEffectControl(event.target);
   });
   desktopToolbar?.addEventListener("click", handleCanvasToolbarAction);
   editorStartButton?.addEventListener("click", () => {
@@ -349,6 +353,7 @@ function renderEditorDrawer() {
     templates: renderBackgroundTemplatePanel("Business Card Background Templates"),
     backgrounds: renderSolidBackgroundPanel(),
     text: renderToolPanel("Text", "Add editable copy to the selected side.", '<button class="drawer-action primary" type="button" data-drawer-action="add-text">Add text</button>'),
+    textfx: renderTextEffectsPanel(),
     uploads: renderToolPanel("Upload artwork", "Add PNG, JPG or WEBP artwork to the selected side.", '<label class="drawer-upload">Choose image<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
     photos: renderToolPanel("Photos", "Upload a photo, then use Remove Background for light or white backdrops.", '<label class="drawer-upload">Upload photo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label><button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button>'),
     elements: renderToolPanel("Elements", "Add printable shapes and accents to your design.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rounded">Rounded</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="square">Square</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Circle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="line">Line</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="triangle">Triangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="diamond">Diamond</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="star">Star</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="arrow">Arrow</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="hexagon">Hexagon</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="heart">Heart</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="frame">Frame</button>'),
@@ -363,6 +368,48 @@ function renderEditorDrawer() {
 
   editorDrawer.innerHTML = toolContent[activeEditorTool] || toolContent.templates;
   editorDrawer.classList.add("is-open");
+}
+
+function renderTextEffectsPanel() {
+  const item = findSelectedItem();
+  if (!item || item.type !== "text") {
+    return renderToolPanel("Text Effects", "Select a text object, then control its outline, stroke, shadow, glow and shape.", "");
+  }
+  const value = (key, fallback) => escapeAttribute(item[key] ?? fallback);
+  const mode = item.curveMode || "straight";
+  const effectButton = (label, key) => `<button class="drawer-action ${item[key] ? "active" : ""}" type="button" data-drawer-action="toggle-text-effect" data-text-effect="${key}">${label}</button>`;
+  const modeButton = (label, key) => `<button class="drawer-action ${mode === key ? "active" : ""}" type="button" data-drawer-action="set-text-curve" data-curve-mode="${key}">${label}</button>`;
+  return `
+    <div class="drawer-heading"><div><span>Typography studio</span><h3>Text Effects</h3></div><small>Selected text</small></div>
+    <p class="drawer-copy">Choose an effect and tune its color, strength and shape for a production-ready design.</p>
+    <div class="text-fx-modes">
+      ${effectButton("Outline", "outline")}
+      ${effectButton("Shadow", "shadow")}
+      ${effectButton("Stroke", "stroke")}
+      ${effectButton("Glow", "glow")}
+    </div>
+    <div class="text-fx-grid">
+      <label>Outline color<input type="color" data-text-effect-control data-effect-key="outlineColor" value="${value("outlineColor", "#ffffff")}" /></label>
+      <label>Outline width<input type="range" min="0" max="16" value="${value("outlineWidth", 2)}" data-text-effect-control data-effect-key="outlineWidth" /><output>${value("outlineWidth", 2)} px</output></label>
+      <label>Shadow color<input type="color" data-text-effect-control data-effect-key="shadowColor" value="${value("shadowColor", "#10233d")}" /></label>
+      <label>Shadow strength<input type="range" min="0" max="36" value="${value("shadowBlur", 8)}" data-text-effect-control data-effect-key="shadowBlur" /><output>${value("shadowBlur", 8)} px</output></label>
+      <label>Stroke color<input type="color" data-text-effect-control data-effect-key="strokeColor" value="${value("strokeColor", "#0b8df4")}" /></label>
+      <label>Stroke width<input type="range" min="0" max="16" value="${value("strokeWidth", 2)}" data-text-effect-control data-effect-key="strokeWidth" /><output>${value("strokeWidth", 2)} px</output></label>
+      <label>Glow color<input type="color" data-text-effect-control data-effect-key="glowColor" value="${value("glowColor", "#12c5df")}" /></label>
+      <label>Glow strength<input type="range" min="0" max="48" value="${value("glowBlur", 14)}" data-text-effect-control data-effect-key="glowBlur" /><output>${value("glowBlur", 14)} px</output></label>
+    </div>
+    <div class="drawer-heading text-fx-shape-heading"><div><span>Text shape</span><h3>Curve & Wrap</h3></div></div>
+    <div class="text-fx-modes">
+      ${modeButton("Straight", "straight")}
+      ${modeButton("Wrap", "wrap")}
+      ${modeButton("Arc", "arc")}
+      ${modeButton("Circle", "circle")}
+      ${modeButton("Banner", "banner")}
+    </div>
+    <div class="text-fx-grid text-fx-curve-control">
+      <label>Curve amount<input type="range" min="0" max="100" value="${value("curveAmount", 65)}" data-text-effect-control data-effect-key="curveAmount" /><output>${value("curveAmount", 65)}%</output></label>
+    </div>
+  `;
 }
 
 function renderBackgroundTemplatePanel(title) {
@@ -517,6 +564,8 @@ function handleDrawerAction(event) {
   if (action === "search-ai-images") searchEditorImages("search");
   if (action === "generate-ai-image") searchEditorImages("generate");
   if (action === "add-ai-image") addAiImage(Number(button.dataset.aiImageIndex));
+  if (action === "toggle-text-effect") toggleTextStyle(button.dataset.textEffect || "outline");
+  if (action === "set-text-curve") setTextCurve(button.dataset.curveMode || "straight");
   if (action === "select-layer") {
     selectedItemId = button.dataset.layerId || null;
     renderCanvas();
@@ -1079,8 +1128,9 @@ function renderCanvasItem(item) {
     textContent.style.fontSize = `${item.size}px`;
     textContent.style.fontWeight = item.bold ? "900" : "700";
     textContent.style.fontStyle = item.italic ? "italic" : "normal";
-    textContent.style.webkitTextStroke = item.outline ? "1px #ffffff" : "0";
-    textContent.style.textShadow = item.shadow ? "2px 3px 3px rgba(0,0,0,.35)" : "none";
+    textContent.style.webkitTextStroke = item.stroke ? `${item.strokeWidth || 2}px ${item.strokeColor || "#0b8df4"}` : "0";
+    textContent.style.textShadow = textEffectShadow(item);
+    textContent.style.whiteSpace = item.wrap ? "normal" : "nowrap";
     node.appendChild(textContent);
     if (item.id === selectedItemId) {
       textContent.contentEditable = "true";
@@ -1154,7 +1204,13 @@ function renderCurvedText(item) {
   const path = document.createElementNS(namespace, "path");
   const pathId = `curve-${item.id}`;
   path.setAttribute("id", pathId);
-  path.setAttribute("d", "M 70 245 Q 500 20 930 245");
+  const amount = Number(item.curveAmount ?? 65);
+  const pathValue = item.curveMode === "circle"
+    ? "M 500 150 m -130 0 a 130 130 0 1 1 260 0 a 130 130 0 1 1 -260 0"
+    : item.curveMode === "banner"
+      ? `M 65 158 Q 280 ${158 - amount} 500 158 Q 720 ${158 + amount} 935 158`
+      : `M 70 245 Q 500 ${245 - amount * 2.7} 930 245`;
+  path.setAttribute("d", pathValue);
   path.setAttribute("fill", "none");
   const text = document.createElementNS(namespace, "text");
   text.setAttribute("fill", item.color || "#061a35");
@@ -1162,6 +1218,12 @@ function renderCurvedText(item) {
   text.setAttribute("font-size", String(Math.max(44, item.size * 2)));
   text.setAttribute("font-weight", item.bold ? "900" : "700");
   text.setAttribute("font-style", item.italic ? "italic" : "normal");
+  if (item.stroke) {
+    text.setAttribute("stroke", item.strokeColor || "#0b8df4");
+    text.setAttribute("stroke-width", String(item.strokeWidth || 2));
+    text.setAttribute("paint-order", "stroke");
+  }
+  if (item.outline || item.shadow || item.glow) text.style.filter = textEffectSvgFilter(item);
   const textPath = document.createElementNS(namespace, "textPath");
   textPath.setAttribute("href", `#${pathId}`);
   textPath.setAttribute("startOffset", "50%");
@@ -1170,6 +1232,33 @@ function renderCurvedText(item) {
   text.appendChild(textPath);
   svg.append(path, text);
   return svg;
+}
+
+function textEffectShadow(item) {
+  const effects = [];
+  if (item.outline) {
+    const width = Number(item.outlineWidth ?? 2);
+    const color = item.outlineColor || "#ffffff";
+    effects.push(`${width}px 0 ${color}`, `-${width}px 0 ${color}`, `0 ${width}px ${color}`, `0 -${width}px ${color}`);
+  }
+  if (item.shadow) {
+    const blur = Number(item.shadowBlur ?? 8);
+    effects.push(`3px 4px ${blur}px ${item.shadowColor || "#10233d"}`);
+  }
+  if (item.glow) effects.push(`0 0 ${Number(item.glowBlur ?? 14)}px ${item.glowColor || "#12c5df"}`);
+  return effects.length ? effects.join(", ") : "none";
+}
+
+function textEffectSvgFilter(item) {
+  const filters = [];
+  if (item.outline) {
+    const width = Number(item.outlineWidth ?? 2);
+    const color = item.outlineColor || "#ffffff";
+    filters.push(`drop-shadow(${width}px 0 ${color})`, `drop-shadow(-${width}px 0 ${color})`, `drop-shadow(0 ${width}px ${color})`, `drop-shadow(0 -${width}px ${color})`);
+  }
+  if (item.shadow) filters.push(`drop-shadow(3px 4px ${Number(item.shadowBlur ?? 8)}px ${item.shadowColor || "#10233d"})`);
+  if (item.glow) filters.push(`drop-shadow(0 0 ${Number(item.glowBlur ?? 14)}px ${item.glowColor || "#12c5df"})`);
+  return filters.join(" ");
 }
 
 function placeCaretAtEnd(node) {
@@ -1466,6 +1555,33 @@ function toggleTextStyle(style) {
   rememberHistory();
 }
 
+function setTextCurve(mode) {
+  const item = findSelectedItem();
+  if (!item || item.type !== "text") {
+    setStatus("Select text to shape it.", true);
+    return;
+  }
+  rememberHistory();
+  item.curveMode = mode;
+  item.curve = mode === "arc" || mode === "circle" || mode === "banner";
+  item.wrap = mode === "wrap";
+  item.curveAmount ??= 65;
+  renderCanvas();
+  renderEditorDrawer();
+  rememberHistory();
+}
+
+function updateTextEffectControl(control) {
+  const item = findSelectedItem();
+  const key = control.dataset.effectKey;
+  if (!item || item.type !== "text" || !key) return;
+  const rangeValue = control.type === "range";
+  item[key] = rangeValue ? Number(control.value) : control.value;
+  const output = control.parentElement?.querySelector("output");
+  if (output) output.textContent = `${control.value}${rangeValue ? (key === "curveAmount" ? "%" : " px") : ""}`;
+  renderCanvas();
+}
+
 function updateSelectedImageEffects() {
   const item = findSelectedItem();
   if (!item || item.type !== "image") return;
@@ -1683,21 +1799,21 @@ async function createPreview(side, options = {}) {
       drawQrPlaceholder(ctx, x, y, w, h);
     } else {
       ctx.fillStyle = item.color || "#061a35";
-      ctx.font = `900 ${Math.max(18, item.size * 2)}px ${item.font || "Arial"}`;
+      ctx.font = `${item.italic ? "italic " : ""}${item.bold ? "900" : "700"} ${Math.max(18, item.size * 2)}px ${item.font || "Arial"}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       if (item.curve) {
         drawCurvedCanvasText(ctx, item, x, y, w, h);
       } else {
-        if (item.shadow) {
-          ctx.shadowColor = "rgba(0,0,0,.35)";
-          ctx.shadowBlur = Math.max(2, item.size * 0.15);
+        if (item.shadow || item.glow) {
+          ctx.shadowColor = item.glow ? (item.glowColor || "#12c5df") : (item.shadowColor || "#10233d");
+          ctx.shadowBlur = item.glow ? Number(item.glowBlur ?? 14) : Number(item.shadowBlur ?? 8);
           ctx.shadowOffsetX = item.size * 0.08;
           ctx.shadowOffsetY = item.size * 0.1;
         }
-        if (item.outline) {
-          ctx.lineWidth = Math.max(2, item.size * 0.07);
-          ctx.strokeStyle = "#ffffff";
+        if (item.outline || item.stroke) {
+          ctx.lineWidth = item.stroke ? Number(item.strokeWidth ?? 2) * 2 : Number(item.outlineWidth ?? 2) * 2;
+          ctx.strokeStyle = item.stroke ? (item.strokeColor || "#0b8df4") : (item.outlineColor || "#ffffff");
           wrapCanvasText(ctx, item.text || "", x + w / 2, y + h / 2, w * 0.92, Math.max(24, item.size * 2.2), true);
         }
         wrapCanvasText(ctx, item.text || "", x + w / 2, y + h / 2, w * 0.92, Math.max(24, item.size * 2.2));
@@ -1778,17 +1894,33 @@ function loadImage(src) {
 
 function drawCurvedCanvasText(ctx, item, x, y, width, height) {
   const letters = Array.from(item.text || "Your Text Here");
-  const radius = Math.max(width * 0.55, height * 0.8);
   const centerX = x + width / 2;
-  const centerY = y + height * 1.2;
-  const start = Math.PI * 1.18;
-  const end = Math.PI * 1.82;
+  const centerY = y + height / 2;
+  const amount = Number(item.curveAmount ?? 65);
+  const mode = item.curveMode || "arc";
   ctx.save();
   letters.forEach((letter, index) => {
-    const angle = start + ((end - start) * index) / Math.max(1, letters.length - 1);
+    const progress = index / Math.max(1, letters.length - 1);
     ctx.save();
-    ctx.translate(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
-    ctx.rotate(angle + Math.PI / 2);
+    if (mode === "circle") {
+      const radius = Math.min(width, height) * 0.34;
+      const angle = -Math.PI * 0.86 + progress * Math.PI * 1.72;
+      ctx.translate(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+      ctx.rotate(angle + Math.PI / 2);
+    } else if (mode === "banner") {
+      const horizontal = x + width * (0.1 + progress * 0.8);
+      const wave = Math.sin((progress - 0.5) * Math.PI * 2) * amount * 0.42;
+      ctx.translate(horizontal, centerY + wave);
+      ctx.rotate(Math.cos((progress - 0.5) * Math.PI * 2) * amount * 0.007);
+    } else {
+      const radius = Math.max(width * 0.55, height * 0.8);
+      const start = Math.PI * 1.18;
+      const end = Math.PI * (1.18 + 0.64 + amount * 0.002);
+      const angle = start + (end - start) * progress;
+      const arcCenterY = y + height * (1.1 + (100 - amount) * 0.002);
+      ctx.translate(centerX + Math.cos(angle) * radius, arcCenterY + Math.sin(angle) * radius);
+      ctx.rotate(angle + Math.PI / 2);
+    }
     ctx.fillText(letter, 0, 0);
     ctx.restore();
   });

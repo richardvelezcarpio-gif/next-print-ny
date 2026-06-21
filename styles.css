@@ -535,6 +535,84 @@
     gap: 9px;
   }
 
+  body.print-products-editor-page .text-fx-modes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-bottom: 12px;
+  }
+
+  body.print-products-editor-page .text-fx-modes button {
+    min-height: 32px;
+    padding: 0 11px;
+    border: 1px solid #b9d2e6;
+    border-radius: 5px;
+    background: #fff;
+    color: #0a315d;
+    font-size: 0.72rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  body.print-products-editor-page .text-fx-modes button.active {
+    border-color: #08c2db;
+    background: #e9fcff;
+    box-shadow: inset 0 0 0 1px rgba(8, 194, 219, 0.16);
+  }
+
+  body.print-products-editor-page .text-fx-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(150px, 1fr));
+    gap: 9px;
+  }
+
+  body.print-products-editor-page .text-fx-grid label {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 5px 8px;
+    min-height: 54px;
+    padding: 7px 8px;
+    border: 1px solid #d1e2ef;
+    border-radius: 5px;
+    background: #f9fcff;
+    color: #45647e;
+    font-size: 0.67rem;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+
+  body.print-products-editor-page .text-fx-grid input[type="color"] {
+    width: 34px;
+    height: 25px;
+    padding: 1px;
+    border: 1px solid #b9d2e6;
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  body.print-products-editor-page .text-fx-grid input[type="range"] {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 0;
+    accent-color: #0abfd9;
+  }
+
+  body.print-products-editor-page .text-fx-grid output {
+    color: #0a315d;
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: none;
+  }
+
+  body.print-products-editor-page .text-fx-shape-heading {
+    margin-top: 15px;
+  }
+
+  body.print-products-editor-page .text-fx-curve-control {
+    grid-template-columns: minmax(210px, 0.4fr);
+  }
+
   body.print-products-editor-page .ai-image-controls {
     display: grid;
     grid-template-columns: minmax(220px, 1fr) auto auto auto auto;
