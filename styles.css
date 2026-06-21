@@ -13,6 +13,19 @@
 
 /* Desktop-only professional print editor. Mobile keeps its existing compact flow. */
 @media (min-width: 761px) {
+  body.print-products-editor-page {
+    overflow-x: hidden;
+  }
+
+  body.print-products-editor-page .print-editor-shell {
+    width: 100%;
+    max-width: none;
+    min-height: 100vh;
+    margin: 0;
+    border: 0;
+    box-shadow: none;
+  }
+
   body.print-products-editor-page .print-editor-page {
     padding: 0 0 72px;
   }
@@ -491,7 +504,7 @@
     display: grid;
     min-height: clamp(510px, 50vw, 690px);
     place-items: center;
-    overflow: auto;
+    overflow: hidden;
     padding: 54px 68px;
     border: 1px dashed #9ebfd8;
     border-radius: 7px;
@@ -501,7 +514,7 @@
   }
 
   body.print-products-editor-page .print-design-canvas {
-    width: clamp(700px, 72vw, 1180px);
+    width: min(100%, 1180px);
     max-width: none;
     min-height: 0;
     border: 2px solid #8845ff;
