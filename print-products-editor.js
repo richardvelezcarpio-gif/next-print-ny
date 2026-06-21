@@ -172,6 +172,8 @@ const editorHeroKicker = document.querySelector("#printEditorHeroKicker");
 const editorHeroCopy = document.querySelector("#printEditorHeroCopy");
 const editorHeroImage = document.querySelector("#printEditorHeroImage");
 const editorStartButton = document.querySelector("#printEditorStart");
+const selectionCompact = document.querySelector("#printSelectionCompact");
+const changeSelectionLink = document.querySelector("#printChangeSelection");
 
 const backgroundTemplates = [
   ["Ocean", "#e8fbff", "#1ab9e8"],
@@ -223,7 +225,7 @@ let currentProduct = editorRedirectTarget ? productCatalog[0] : findInitialProdu
 let currentQuantity = String(params.get("quantity") || currentProduct.prices[0][0]);
 let currentSide = "front";
 let selectedItemId = null;
-let activeEditorTool = "";
+let activeEditorTool = params.get("directUpload") === "1" ? "uploads" : "";
 let canvasZoom = 1;
 let guidesVisible = true;
 let aiImageResults = [];
@@ -344,6 +346,12 @@ function bindEvents() {
 
 function renderEditorDrawer() {
   if (!editorDrawer) return;
+
+  editorToolrail?.querySelectorAll("button[data-editor-tool]").forEach((button) => {
+    const isActive = button.dataset.editorTool === activeEditorTool;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
 
   if (!activeEditorTool) {
     editorDrawer.replaceChildren();
@@ -1113,10 +1121,10 @@ function renderOptionFields() {
   const isCard = currentProduct.category === "cards";
   const isSticker = currentProduct.category === "stickers";
   optionFields.innerHTML = `
-    ${isCard ? selectField("roundedCorners", "Rounded Corners", ["No", "Yes"], "No") : ""}
-    ${selectField("printedSide", "Printed Side", ["Front and Back", "Front Only"], isSticker ? "Front Only" : "Front and Back")}
-    ${selectField("paperType", isSticker ? "Material" : "Paper Type", isSticker ? ["High Gloss White Outdoor Vinyl"] : ["14 pt. Cardstock", "100 lb. Gloss Text"], isSticker ? "High Gloss White Outdoor Vinyl" : "14 pt. Cardstock")}
-    ${selectField("coating", "Coating", isSticker ? ["High Gloss"] : ["High Gloss", "Matte"], "High Gloss")}
+    ${isCard ? selectField("roundedCorners", "Rounded Corners", ["No", "Yes"], params.get("roundedCorners") || "No") : ""}
+    ${selectField("printedSide", "Printed Side", ["Front and Back", "Front Only"], params.get("printedSide") || (isSticker ? "Front Only" : "Front and Back"))}
+    ${selectField("paperType", isSticker ? "Material" : "Paper Type", isSticker ? ["High Gloss White Outdoor Vinyl"] : ["14 pt. Cardstock", "100 lb. Gloss Text"], params.get("paperType") || (isSticker ? "High Gloss White Outdoor Vinyl" : "14 pt. Cardstock"))}
+    ${selectField("coating", "Coating", isSticker ? ["High Gloss"] : ["High Gloss", "Matte"], params.get("coating") || "High Gloss")}
   `;
 }
 
@@ -2001,6 +2009,15 @@ function updateSummary() {
   if (summaryQuantity) summaryQuantity.textContent = currentQuantity;
   if (summarySides) summarySides.textContent = document.querySelector("#printedSide")?.value || "Front and Back";
   if (summaryTotal) summaryTotal.textContent = money(price);
+  updateCompactSelection(price);
+}
+
+function updateCompactSelection(price) {
+  if (selectionCompact) selectionCompact.textContent = `${currentProduct.label} · ${currentProduct.sizeLabel} · ${currentQuantity} · ${money(price)}`;
+  if (changeSelectionLink) {
+    const groupName = { cards: "Business Cards", flyers: "Flyers", stickers: "Stickers" }[currentProduct.category] || "Business Cards";
+    changeSelectionLink.href = `printing.html#${encodeURIComponent(groupName)}`;
+  }
 }
 
 function selectedPrice() {

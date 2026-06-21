@@ -453,6 +453,7 @@ const productSize = document.querySelector("#productSize");
 const productQuantity = document.querySelector("#productQuantity");
 const productPrice = document.querySelector("#productPrice");
 const productOrderLink = document.querySelector("#productOrderLink");
+const productUploadLink = document.querySelector("#productUploadLink");
 const productOrderPanel = document.querySelector(".product-order-panel");
 const productConfigurationOptions = document.querySelector("#productConfigurationOptions");
 const roundedCornersField = document.querySelector("#roundedCornersField");
@@ -855,9 +856,10 @@ function updateSelectedPrice() {
       productPrice.innerHTML = `$14.00 <small>${localStorage.getItem("preferredLanguage") === "es" ? "cada una" : "each"}</small>`;
       productOrderLink.href = "tshirt.html";
       productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Diseñar camiseta" : "Design T-shirt";
+      if (productUploadLink) productUploadLink.hidden = true;
       return;
     }
-    productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Iniciar orden con este producto" : "Start order with this product";
+    productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Diseñar en línea" : "Design online";
     const info = productDetails[selectedProduct.category] || productDetails.cards;
     const configuration = [];
     if (selectedGroup.category === "cards") {
@@ -936,14 +938,27 @@ function updateSelectedPrice() {
       price: selectedPrice[1],
       details,
     });
+    params.set("roundedCorners", cardRoundedCorners?.value || "No");
+    params.set("printedSide", cardPrintedSide?.value || "Front and Back");
+    params.set("paperType", cardPaperType?.value || "14 pt. Cardstock");
+    params.set("coating", cardCoating?.value || "High Gloss");
     if (["cards", "flyers", "stickers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-editor.html?${params.toString()}`;
+      if (productUploadLink) {
+        const uploadParams = new URLSearchParams(params);
+        uploadParams.set("directUpload", "1");
+        productUploadLink.href = `print-products-editor.html?${uploadParams.toString()}`;
+        productUploadLink.hidden = false;
+      }
     } else if (["menus", "hangers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-upload.html?${params.toString()}`;
+      if (productUploadLink) productUploadLink.hidden = true;
     } else if (selectedGroup.category === "banners" || selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
       productOrderLink.href = bannerDesignerHref(selectedProduct, selectedGroup.category);
+      if (productUploadLink) productUploadLink.hidden = true;
     } else {
       productOrderLink.href = `order.html?${params.toString()}`;
+      if (productUploadLink) productUploadLink.hidden = true;
     }
   }
 }

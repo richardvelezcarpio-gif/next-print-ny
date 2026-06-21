@@ -899,6 +899,10 @@
     border-radius: 8px;
   }
 
+  body.print-products-editor-page .print-editor-controls[hidden] {
+    display: none !important;
+  }
+
   body.print-products-editor-page .print-product-fields {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -1020,8 +1024,23 @@
 
   body.print-products-editor-page .print-bottom-panels {
     grid-column: 2;
-    grid-row: 3;
+    grid-row: 2;
     max-width: none;
+  }
+
+  body.print-products-editor-page .print-selection-compact {
+    margin: 4px 0 2px;
+    color: #567088;
+    font-size: 0.67rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  body.print-products-editor-page .print-change-selection {
+    color: #078daf;
+    font-size: 0.66rem;
+    font-weight: 900;
+    text-decoration: none;
   }
 
   body.print-products-editor-page .print-shape-item {
@@ -5773,6 +5792,29 @@ textarea {
 .product-order-panel.configured-product-mode .action-gradient {
   justify-self: stretch;
   text-align: center;
+}
+
+.product-upload-link {
+  display: grid;
+  min-height: 44px;
+  place-items: center;
+  border: 1px solid #0b315c;
+  border-radius: 7px;
+  color: #0b315c;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-align: center;
+  text-decoration: none;
+}
+
+.product-upload-link:hover {
+  border-color: var(--cyan);
+  background: #effcff;
+}
+
+.product-upload-link[hidden] {
+  display: none;
 }
 
 .product-order-panel.shirt-product-mode {
