@@ -701,6 +701,49 @@
     border-radius: 50%;
   }
 
+  body.print-products-editor-page .print-shape-item.shape-rounded {
+    border-radius: 18px;
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-square {
+    aspect-ratio: 1;
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-triangle {
+    border: 0;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-diamond {
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-star {
+    border: 0;
+    clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 56%, 79% 92%, 50% 70%, 21% 92%, 32% 56%, 2% 35%, 39% 35%);
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-arrow {
+    border: 0;
+    clip-path: polygon(0 35%, 58% 35%, 58% 0, 100% 50%, 58% 100%, 58% 65%, 0 65%);
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-hexagon {
+    border: 0;
+    clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-heart {
+    border: 0;
+    clip-path: polygon(50% 100%, 0 48%, 0 24%, 13% 5%, 32% 4%, 50% 22%, 68% 4%, 87% 5%, 100% 24%, 100% 48%);
+  }
+
+  body.print-products-editor-page .print-shape-item.shape-frame {
+    background: transparent !important;
+    border: 5px solid currentColor;
+    color: #0b8df4;
+  }
+
   body.print-products-editor-page .print-shape-item.shape-line {
     height: 8px !important;
     min-height: 8px;

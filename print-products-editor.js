@@ -328,7 +328,7 @@ function renderEditorDrawer() {
     text: renderToolPanel("Text", "Add editable copy to the selected side.", '<button class="drawer-action primary" type="button" data-drawer-action="add-text">Add text</button>'),
     uploads: renderToolPanel("Upload artwork", "Add PNG, JPG or WEBP artwork to the selected side.", '<label class="drawer-upload">Choose image<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
     photos: renderToolPanel("Photos", "Upload a photo, then use Remove Background for light or white backdrops.", '<label class="drawer-upload">Upload photo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label><button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button>'),
-    elements: renderToolPanel("Elements", "Add simple printable elements.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Circle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="line">Line</button>'),
+    elements: renderToolPanel("Elements", "Add printable shapes and accents to your design.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rounded">Rounded</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="square">Square</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Circle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="line">Line</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="triangle">Triangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="diamond">Diamond</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="star">Star</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="arrow">Arrow</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="hexagon">Hexagon</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="heart">Heart</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="frame">Frame</button>'),
     shapes: renderToolPanel("Shapes", "Add a color block or line behind your artwork.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Add rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Add circle</button>'),
     icons: renderToolPanel("Icons", "Insert a simple icon as editable text.", '<button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="★">Star</button><button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="✓">Check</button><button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="☎">Phone</button>'),
     logos: renderToolPanel("Logos", "Upload your business logo and place it on the card.", '<label class="drawer-upload">Upload logo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
@@ -477,8 +477,8 @@ function addShape(shape) {
     color: "#0b8df4",
     x: 30,
     y: 32,
-    w: shape === "line" ? 42 : 28,
-    h: shape === "line" ? 4 : 26,
+    w: shape === "line" ? 42 : shape === "square" || shape === "circle" || shape === "diamond" || shape === "star" || shape === "heart" ? 24 : 28,
+    h: shape === "line" ? 4 : shape === "square" || shape === "circle" || shape === "diamond" || shape === "star" || shape === "heart" ? 24 : 26,
   };
   currentItems().push(item);
   selectedItemId = item.id;
@@ -1206,14 +1206,7 @@ async function createPreview(side, options = {}) {
         ctx.drawImage(image, x, y, w, h);
       }
     } else if (item.type === "shape") {
-      ctx.fillStyle = item.color || "#0b8df4";
-      if (item.shape === "circle") {
-        ctx.beginPath();
-        ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
-        ctx.fill();
-      } else {
-        ctx.fillRect(x, y, w, h);
-      }
+      drawPreviewShape(ctx, item.shape, x, y, w, h, item.color || "#0b8df4");
     } else if (item.type === "qr") {
       drawQrPlaceholder(ctx, x, y, w, h);
     } else {
@@ -1225,6 +1218,51 @@ async function createPreview(side, options = {}) {
     }
   }
   return canvas.toDataURL(options.format || "image/png", options.quality || 0.92);
+}
+
+function drawPreviewShape(context, shape, x, y, width, height, color) {
+  context.fillStyle = color;
+  context.strokeStyle = color;
+  if (shape === "line") {
+    context.lineWidth = Math.max(5, height);
+    context.beginPath();
+    context.moveTo(x, y + height / 2);
+    context.lineTo(x + width, y + height / 2);
+    context.stroke();
+    return;
+  }
+  if (shape === "circle") {
+    context.beginPath();
+    context.ellipse(x + width / 2, y + height / 2, width / 2, height / 2, 0, 0, Math.PI * 2);
+    context.fill();
+    return;
+  }
+  if (shape === "frame") {
+    context.lineWidth = Math.max(4, Math.min(width, height) * 0.1);
+    context.strokeRect(x, y, width, height);
+    return;
+  }
+  const points = {
+    triangle: [[0.5, 0], [1, 1], [0, 1]],
+    diamond: [[0.5, 0], [1, 0.5], [0.5, 1], [0, 0.5]],
+    arrow: [[0, 0.35], [0.58, 0.35], [0.58, 0], [1, 0.5], [0.58, 1], [0.58, 0.65], [0, 0.65]],
+    hexagon: [[0.25, 0], [0.75, 0], [1, 0.5], [0.75, 1], [0.25, 1], [0, 0.5]],
+    heart: [[0.5, 1], [0, 0.48], [0, 0.24], [0.13, 0.05], [0.32, 0.04], [0.5, 0.22], [0.68, 0.04], [0.87, 0.05], [1, 0.24], [1, 0.48]],
+    star: [[0.5, 0], [0.61, 0.35], [0.98, 0.35], [0.68, 0.56], [0.79, 0.92], [0.5, 0.7], [0.21, 0.92], [0.32, 0.56], [0.02, 0.35], [0.39, 0.35]],
+  }[shape];
+  if (!points) {
+    context.fillRect(x, y, width, height);
+    return;
+  }
+  context.beginPath();
+  points.forEach(([px, py], index) => {
+    const pointX = x + px * width;
+    const pointY = y + py * height;
+    if (index === 0) context.moveTo(pointX, pointY);
+    else context.lineTo(pointX, pointY);
+  });
+  context.closePath();
+  context.fill();
 }
 
 function drawQrPlaceholder(context, x, y, width, height) {
