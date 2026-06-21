@@ -401,7 +401,7 @@ function addEditorText() {
   selectedItemId = item.id;
   renderCanvas();
   requestAnimationFrame(() => {
-    const editableNode = designCanvas?.querySelector(`[data-id="${CSS.escape(item.id)}"]`);
+    const editableNode = designCanvas?.querySelector(`[data-id="${CSS.escape(item.id)}"] .print-canvas-text-content`);
     editableNode?.focus();
     placeCaretAtEnd(editableNode);
   });
@@ -666,23 +666,27 @@ function renderCanvasItem(item) {
     qr.setAttribute("aria-label", "QR placeholder");
     node.appendChild(qr);
   } else {
-    node.textContent = item.text;
-    node.style.color = item.color;
-    node.style.fontFamily = item.font;
-    node.style.fontSize = `${item.size}px`;
+    const textContent = document.createElement("span");
+    textContent.className = "print-canvas-text-content";
+    textContent.textContent = item.text;
+    textContent.style.color = item.color;
+    textContent.style.fontFamily = item.font;
+    textContent.style.fontSize = `${item.size}px`;
+    node.appendChild(textContent);
     if (item.id === selectedItemId) {
-      node.contentEditable = "true";
-      node.spellcheck = false;
-      node.setAttribute("aria-label", "Editable text");
-      node.addEventListener("input", () => {
-        item.text = node.textContent || "";
+      textContent.contentEditable = "true";
+      textContent.spellcheck = false;
+      textContent.setAttribute("aria-label", "Editable text");
+      textContent.addEventListener("input", () => {
+        item.text = textContent.textContent || "";
         syncSelectedControls();
       });
-      node.addEventListener("keydown", (event) => {
+      textContent.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-          node.blur();
+          textContent.blur();
           event.preventDefault();
         }
+        if (event.key === "Enter") event.preventDefault();
       });
     }
   }
@@ -694,7 +698,7 @@ function renderCanvasItem(item) {
     if (item.type === "text") {
       renderCanvas();
       requestAnimationFrame(() => {
-        const editableNode = designCanvas.querySelector(`[data-id="${CSS.escape(item.id)}"]`);
+        const editableNode = designCanvas.querySelector(`[data-id="${CSS.escape(item.id)}"] .print-canvas-text-content`);
         editableNode?.focus();
         placeCaretAtEnd(editableNode);
       });
@@ -704,11 +708,22 @@ function renderCanvasItem(item) {
   });
 
   if (item.id === selectedItemId) {
+    if (item.type === "text") {
+      const moveHandle = document.createElement("button");
+      moveHandle.type = "button";
+      moveHandle.className = "print-move-handle";
+      moveHandle.textContent = "Move";
+      moveHandle.contentEditable = "false";
+      moveHandle.setAttribute("aria-label", "Move text");
+      moveHandle.addEventListener("pointerdown", (event) => startDrag(event, item.id));
+      node.appendChild(moveHandle);
+    }
     ["nw", "n", "ne", "e", "se", "s", "sw", "w"].forEach((handle) => {
       const grip = document.createElement("button");
       grip.type = "button";
       grip.className = `print-resize-handle ${handle}`;
       grip.dataset.resizeHandle = handle;
+      grip.contentEditable = "false";
       grip.setAttribute("aria-label", `Resize ${handle}`);
       grip.addEventListener("pointerdown", (event) => startResize(event, item.id, handle));
       node.appendChild(grip);
@@ -768,6 +783,7 @@ function startResize(event, id, direction) {
     y: item.y,
     w: item.w,
     h: item.h,
+    size: item.size,
   };
   const minW = item.type === "image" ? 8 : 12;
   const minH = item.type === "image" ? 8 : 8;
@@ -801,6 +817,12 @@ function startResize(event, id, direction) {
     item.y = nextY;
     item.w = nextW;
     item.h = nextH;
+    if (item.type === "text") {
+      const horizontalScale = nextW / original.w;
+      const verticalScale = nextH / original.h;
+      const scale = direction === "n" || direction === "s" ? verticalScale : horizontalScale;
+      item.size = clamp(Math.round(original.size * scale), 12, 250);
+    }
     renderCanvas();
   };
 

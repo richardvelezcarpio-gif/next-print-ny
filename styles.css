@@ -714,9 +714,37 @@
     border: 5px solid #fff;
   }
 
-  body.print-products-editor-page .print-canvas-item[contenteditable="true"] {
+  body.print-products-editor-page .print-canvas-text-content {
+    display: inline-block;
+    max-width: 100%;
+    overflow: visible;
+    white-space: nowrap;
+    word-break: normal;
+  }
+
+  body.print-products-editor-page .print-canvas-text-content[contenteditable="true"] {
     cursor: text;
     outline: 0;
+    user-select: text;
+  }
+
+  body.print-products-editor-page .print-move-handle {
+    position: absolute;
+    z-index: 9;
+    top: -30px;
+    left: 50%;
+    min-width: 48px;
+    min-height: 23px;
+    padding: 0 7px;
+    border: 0;
+    border-radius: 4px;
+    background: #0b8df4;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 800;
+    line-height: 23px;
+    cursor: move;
+    transform: translateX(-50%);
   }
 
   body.print-products-editor-page .print-canvas-item img.flipped {
