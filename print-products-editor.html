@@ -7,6 +7,9 @@
     <title>Print Products Editor | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
     <link rel="stylesheet" href="styles.css?v=20260621-desktop-print-editor" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Anton&family=Bebas+Neue&family=Cinzel:wght@400;700&family=Lobster&family=Oswald:wght@400;700&family=Pacifico&family=Playfair+Display:wght@400;700;900&family=Poppins:wght@400;600;700;900&family=Righteous&display=swap" rel="stylesheet" />
   </head>
   <body class="print-products-editor-page">
     <div class="page-shell print-editor-shell">
@@ -139,6 +142,16 @@
                 Font
                 <select id="printSelectedFont">
                   <option>Arial</option>
+                  <option>Poppins</option>
+                  <option>Oswald</option>
+                  <option>Bebas Neue</option>
+                  <option>Anton</option>
+                  <option>Playfair Display</option>
+                  <option>Cinzel</option>
+                  <option>Abril Fatface</option>
+                  <option>Lobster</option>
+                  <option>Pacifico</option>
+                  <option>Righteous</option>
                   <option>Impact</option>
                   <option>Georgia</option>
                   <option>Montserrat</option>
@@ -168,7 +181,17 @@
                   <label>
                     Font
                     <select id="printToolbarFont">
-                      <option>Arial</option>
+                    <option>Arial</option>
+                    <option>Poppins</option>
+                    <option>Oswald</option>
+                    <option>Bebas Neue</option>
+                    <option>Anton</option>
+                    <option>Playfair Display</option>
+                    <option>Cinzel</option>
+                    <option>Abril Fatface</option>
+                    <option>Lobster</option>
+                    <option>Pacifico</option>
+                    <option>Righteous</option>
                       <option>Impact</option>
                       <option>Georgia</option>
                       <option>Montserrat</option>
@@ -186,6 +209,13 @@
                   <button id="printToolbarDuplicate" class="duplicate" type="button">Duplicate Object</button>
                   <button id="printToolbarFlip" type="button">Flip</button>
                   <button id="printToolbarRemoveBg" type="button">BG Remove</button>
+                  <button id="printToolbarBold" type="button">Bold</button>
+                  <button id="printToolbarItalic" type="button">Italic</button>
+                  <button id="printToolbarCurve" type="button">Curve</button>
+                  <button id="printToolbarOutline" type="button">Outline</button>
+                  <button id="printToolbarShadow" type="button">Shadow</button>
+                  <label class="image-control">Transparency <input id="printToolbarOpacity" type="range" min="10" max="100" value="100" /></label>
+                  <label class="image-control">Rotate <input id="printToolbarRotate" type="range" min="-180" max="180" value="0" /></label>
                 </div>
                 <div class="print-desktop-toolbar" aria-label="Canvas controls">
                   <button type="button" data-canvas-action="undo" aria-label="Undo">Undo</button>

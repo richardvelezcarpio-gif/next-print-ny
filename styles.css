@@ -316,6 +316,12 @@
     padding: 2px;
   }
 
+  body.print-products-editor-page .print-object-toolbar input[type="range"] {
+    min-height: 30px;
+    padding: 0;
+    accent-color: #10badc;
+  }
+
   body.print-products-editor-page .print-object-toolbar button {
     align-self: end;
     cursor: pointer;
@@ -338,6 +344,12 @@
   body.print-products-editor-page .print-object-toolbar select:disabled {
     cursor: not-allowed;
     opacity: 0.44;
+  }
+
+  body.print-products-editor-page .print-object-toolbar button.active {
+    border-color: #11c5dd;
+    background: #e8fcff;
+    color: #082d5e;
   }
 
   body.print-products-editor-page .print-desktop-toolbar {
@@ -867,6 +879,14 @@
     cursor: text;
     outline: 0;
     user-select: text;
+  }
+
+  body.print-products-editor-page .print-curved-text {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
   }
 
   body.print-products-editor-page .print-move-handle {

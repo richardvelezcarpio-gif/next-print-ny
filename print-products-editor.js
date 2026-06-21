@@ -159,6 +159,13 @@ const toolbarDelete = document.querySelector("#printToolbarDelete");
 const toolbarDuplicate = document.querySelector("#printToolbarDuplicate");
 const toolbarFlip = document.querySelector("#printToolbarFlip");
 const toolbarRemoveBg = document.querySelector("#printToolbarRemoveBg");
+const toolbarBold = document.querySelector("#printToolbarBold");
+const toolbarItalic = document.querySelector("#printToolbarItalic");
+const toolbarCurve = document.querySelector("#printToolbarCurve");
+const toolbarOutline = document.querySelector("#printToolbarOutline");
+const toolbarShadow = document.querySelector("#printToolbarShadow");
+const toolbarOpacity = document.querySelector("#printToolbarOpacity");
+const toolbarRotate = document.querySelector("#printToolbarRotate");
 const editorHeroTitle = document.querySelector("#printEditorHeroTitle");
 const editorHeroKicker = document.querySelector("#printEditorHeroKicker");
 const editorHeroCopy = document.querySelector("#printEditorHeroCopy");
@@ -285,6 +292,13 @@ function bindEvents() {
   toolbarDuplicate?.addEventListener("click", duplicateSelected);
   toolbarFlip?.addEventListener("click", flipSelectedItem);
   toolbarRemoveBg?.addEventListener("click", removeBackgroundSelected);
+  toolbarBold?.addEventListener("click", () => toggleTextStyle("bold"));
+  toolbarItalic?.addEventListener("click", () => toggleTextStyle("italic"));
+  toolbarCurve?.addEventListener("click", () => toggleTextStyle("curve"));
+  toolbarOutline?.addEventListener("click", () => toggleTextStyle("outline"));
+  toolbarShadow?.addEventListener("click", () => toggleTextStyle("shadow"));
+  toolbarOpacity?.addEventListener("input", updateSelectedImageEffects);
+  toolbarRotate?.addEventListener("input", updateSelectedImageEffects);
   saveButton?.addEventListener("click", saveCurrentSidePng);
   continueButton?.addEventListener("click", continueToCheckout);
   preflightButton?.addEventListener("click", runPreflight);
@@ -998,6 +1012,8 @@ function renderCanvasItem(item) {
     img.alt = item.name || "Uploaded artwork";
     if (item.flipX) img.classList.add("flipped");
     node.appendChild(img);
+    node.style.opacity = String(item.opacity ?? 1);
+    node.style.transform = `rotate(${item.rotation || 0}deg)`;
   } else if (item.type === "shape") {
     node.classList.add("print-shape-item", `shape-${item.shape || "rect"}`);
     node.style.background = item.color || "#0b8df4";
@@ -1007,12 +1023,26 @@ function renderCanvasItem(item) {
     qr.setAttribute("aria-label", "QR placeholder");
     node.appendChild(qr);
   } else {
+    if (item.curve) {
+      node.appendChild(renderCurvedText(item));
+      node.style.transform = `rotate(${item.rotation || 0}deg)`;
+      node.addEventListener("click", (event) => {
+        event.stopPropagation();
+        selectedItemId = item.id;
+        renderCanvas();
+      });
+      return appendObjectHandles(node, item);
+    }
     const textContent = document.createElement("span");
     textContent.className = "print-canvas-text-content";
     textContent.textContent = item.text;
     textContent.style.color = item.color;
     textContent.style.fontFamily = item.font;
     textContent.style.fontSize = `${item.size}px`;
+    textContent.style.fontWeight = item.bold ? "900" : "700";
+    textContent.style.fontStyle = item.italic ? "italic" : "normal";
+    textContent.style.webkitTextStroke = item.outline ? "1px #ffffff" : "0";
+    textContent.style.textShadow = item.shadow ? "2px 3px 3px rgba(0,0,0,.35)" : "none";
     node.appendChild(textContent);
     if (item.id === selectedItemId) {
       textContent.contentEditable = "true";
@@ -1048,6 +1078,10 @@ function renderCanvasItem(item) {
     }
   });
 
+  return appendObjectHandles(node, item);
+}
+
+function appendObjectHandles(node, item) {
   if (item.id === selectedItemId) {
     if (item.type === "text") {
       const moveHandle = document.createElement("button");
@@ -1071,6 +1105,33 @@ function renderCanvasItem(item) {
     });
   }
   return node;
+}
+
+function renderCurvedText(item) {
+  const namespace = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(namespace, "svg");
+  svg.classList.add("print-curved-text");
+  svg.setAttribute("viewBox", "0 0 1000 300");
+  svg.setAttribute("aria-label", item.text || "Curved text");
+  const path = document.createElementNS(namespace, "path");
+  const pathId = `curve-${item.id}`;
+  path.setAttribute("id", pathId);
+  path.setAttribute("d", "M 70 245 Q 500 20 930 245");
+  path.setAttribute("fill", "none");
+  const text = document.createElementNS(namespace, "text");
+  text.setAttribute("fill", item.color || "#061a35");
+  text.setAttribute("font-family", item.font || "Arial");
+  text.setAttribute("font-size", String(Math.max(44, item.size * 2)));
+  text.setAttribute("font-weight", item.bold ? "900" : "700");
+  text.setAttribute("font-style", item.italic ? "italic" : "normal");
+  const textPath = document.createElementNS(namespace, "textPath");
+  textPath.setAttribute("href", `#${pathId}`);
+  textPath.setAttribute("startOffset", "50%");
+  textPath.setAttribute("text-anchor", "middle");
+  textPath.textContent = item.text || "Your Text Here";
+  text.appendChild(textPath);
+  svg.append(path, text);
+  return svg;
 }
 
 function placeCaretAtEnd(node) {
@@ -1317,6 +1378,20 @@ function syncSelectedControls() {
   if (objectToolbar) objectToolbar.classList.toggle("has-text-selection", isText);
   if (toolbarFlip) toolbarFlip.disabled = item?.type !== "image";
   if (toolbarRemoveBg) toolbarRemoveBg.disabled = item?.type !== "image";
+  [toolbarBold, toolbarItalic, toolbarCurve, toolbarOutline, toolbarShadow].forEach((button) => {
+    if (!button) return;
+    const key = button === toolbarBold ? "bold" : button === toolbarItalic ? "italic" : button === toolbarCurve ? "curve" : button === toolbarOutline ? "outline" : "shadow";
+    button.disabled = !isText;
+    button.classList.toggle("active", Boolean(item?.[key]));
+  });
+  if (toolbarOpacity) {
+    toolbarOpacity.value = String(Math.round((item?.type === "image" ? item.opacity ?? 1 : 1) * 100));
+    toolbarOpacity.disabled = item?.type !== "image";
+  }
+  if (toolbarRotate) {
+    toolbarRotate.value = String(item?.type === "image" ? item.rotation || 0 : 0);
+    toolbarRotate.disabled = item?.type !== "image";
+  }
 }
 
 function updateSelectedText(source = "sidebar") {
@@ -1339,6 +1414,28 @@ function flipSelectedItem() {
   item.flipX = !item.flipX;
   renderCanvas();
   setStatus("Image flipped horizontally.");
+}
+
+function toggleTextStyle(style) {
+  const item = findSelectedItem();
+  if (!item || item.type !== "text") {
+    setStatus("Select text to use this text tool.", true);
+    return;
+  }
+  rememberHistory();
+  item[style] = !item[style];
+  renderCanvas();
+  rememberHistory();
+}
+
+function updateSelectedImageEffects() {
+  const item = findSelectedItem();
+  if (!item || item.type !== "image") return;
+  rememberHistory();
+  item.opacity = Number(toolbarOpacity?.value || 100) / 100;
+  item.rotation = Number(toolbarRotate?.value || 0);
+  renderCanvas();
+  rememberHistory();
 }
 
 function duplicateSelected() {
@@ -1527,15 +1624,21 @@ async function createPreview(side, options = {}) {
     const h = (item.h / 100) * canvas.height;
     if (item.type === "image") {
       const image = await loadImage(item.src);
+      ctx.save();
+      ctx.globalAlpha = item.opacity ?? 1;
+      if (item.rotation) {
+        ctx.translate(x + w / 2, y + h / 2);
+        ctx.rotate((Number(item.rotation) * Math.PI) / 180);
+        ctx.translate(-(x + w / 2), -(y + h / 2));
+      }
       if (item.flipX) {
-        ctx.save();
         ctx.translate(x + w, y);
         ctx.scale(-1, 1);
         ctx.drawImage(image, 0, 0, w, h);
-        ctx.restore();
       } else {
         ctx.drawImage(image, x, y, w, h);
       }
+      ctx.restore();
     } else if (item.type === "shape") {
       drawPreviewShape(ctx, item.shape, x, y, w, h, item.color || "#0b8df4");
     } else if (item.type === "qr") {
@@ -1545,7 +1648,23 @@ async function createPreview(side, options = {}) {
       ctx.font = `900 ${Math.max(18, item.size * 2)}px ${item.font || "Arial"}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      wrapCanvasText(ctx, item.text || "", x + w / 2, y + h / 2, w * 0.92, Math.max(24, item.size * 2.2));
+      if (item.curve) {
+        drawCurvedCanvasText(ctx, item, x, y, w, h);
+      } else {
+        if (item.shadow) {
+          ctx.shadowColor = "rgba(0,0,0,.35)";
+          ctx.shadowBlur = Math.max(2, item.size * 0.15);
+          ctx.shadowOffsetX = item.size * 0.08;
+          ctx.shadowOffsetY = item.size * 0.1;
+        }
+        if (item.outline) {
+          ctx.lineWidth = Math.max(2, item.size * 0.07);
+          ctx.strokeStyle = "#ffffff";
+          wrapCanvasText(ctx, item.text || "", x + w / 2, y + h / 2, w * 0.92, Math.max(24, item.size * 2.2), true);
+        }
+        wrapCanvasText(ctx, item.text || "", x + w / 2, y + h / 2, w * 0.92, Math.max(24, item.size * 2.2));
+        ctx.shadowColor = "transparent";
+      }
     }
   }
   return canvas.toDataURL(options.format || "image/png", options.quality || 0.92);
@@ -1619,7 +1738,26 @@ function loadImage(src) {
   });
 }
 
-function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+function drawCurvedCanvasText(ctx, item, x, y, width, height) {
+  const letters = Array.from(item.text || "Your Text Here");
+  const radius = Math.max(width * 0.55, height * 0.8);
+  const centerX = x + width / 2;
+  const centerY = y + height * 1.2;
+  const start = Math.PI * 1.18;
+  const end = Math.PI * 1.82;
+  ctx.save();
+  letters.forEach((letter, index) => {
+    const angle = start + ((end - start) * index) / Math.max(1, letters.length - 1);
+    ctx.save();
+    ctx.translate(centerX + Math.cos(angle) * radius, centerY + Math.sin(angle) * radius);
+    ctx.rotate(angle + Math.PI / 2);
+    ctx.fillText(letter, 0, 0);
+    ctx.restore();
+  });
+  ctx.restore();
+}
+
+function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight, stroke = false) {
   const words = String(text).split(/\s+/);
   const lines = [];
   let line = "";
@@ -1634,7 +1772,7 @@ function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
   });
   if (line) lines.push(line);
   const startY = y - ((lines.length - 1) * lineHeight) / 2;
-  lines.forEach((row, index) => ctx.fillText(row, x, startY + index * lineHeight));
+  lines.forEach((row, index) => stroke ? ctx.strokeText(row, x, startY + index * lineHeight) : ctx.fillText(row, x, startY + index * lineHeight));
 }
 
 function setStatus(message, isError = false) {
