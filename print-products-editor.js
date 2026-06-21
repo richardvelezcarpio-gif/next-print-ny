@@ -388,6 +388,11 @@ function renderCropPanel() {
   return `
     <div class="drawer-heading"><div><span>Photo edit</span><h3>Crop image</h3></div><small>Selected photo</small></div>
     <p class="drawer-copy">Apply a non-destructive crop shape. You can restore Original at any time.</p>
+    <div class="drawer-actions crop-manual-actions">
+      <button class="drawer-action primary" type="button" data-drawer-action="start-custom-crop">Custom crop</button>
+      ${item.cropDraft ? '<button class="drawer-action primary" type="button" data-drawer-action="apply-custom-crop">Apply crop</button><button class="drawer-action" type="button" data-drawer-action="cancel-custom-crop">Cancel</button>' : ""}
+      ${item.customCrop ? '<button class="drawer-action" type="button" data-drawer-action="reset-custom-crop">Reset manual crop</button>' : ""}
+    </div>
     <div class="crop-shape-grid">
       ${shapes.map(([shape, label]) => `<button class="drawer-action ${item.cropShape === shape ? "active" : ""}" type="button" data-drawer-action="set-crop" data-crop-shape="${shape}"><span class="crop-shape-preview crop-${shape || "original"}"></span>${escapeHtml(label)}</button>`).join("")}
     </div>
@@ -640,6 +645,10 @@ function handleDrawerAction(event) {
   if (action === "set-text-curve") setTextCurve(button.dataset.curveMode || "straight");
   if (action === "set-fill-mode") setSelectedFillMode(button.dataset.fillMode || "solid");
   if (action === "set-crop") setSelectedCrop(button.dataset.cropShape || "");
+  if (action === "start-custom-crop") startCustomCrop();
+  if (action === "apply-custom-crop") applyCustomCrop();
+  if (action === "cancel-custom-crop") cancelCustomCrop();
+  if (action === "reset-custom-crop") resetCustomCrop();
   if (action === "eyedropper") openEyedropper();
   if (action === "sample-image-color") sampleSelectedImageColor();
   if (action === "align-selected") alignSelectedItem(button.dataset.align || "align-center");
@@ -1181,7 +1190,20 @@ function renderCanvasItem(item) {
     if (item.cropShape) img.classList.add(`crop-${item.cropShape}`);
     img.style.clipPath = cropClipPath(item.cropShape);
     img.style.filter = imageFilterStyle(item);
+    if (item.customCrop && !item.cropDraft) {
+      const crop = item.customCrop;
+      node.classList.add("has-custom-crop");
+      node.style.overflow = "hidden";
+      img.style.position = "absolute";
+      img.style.maxWidth = "none";
+      img.style.width = `${100 / crop.w}%`;
+      img.style.height = `${100 / crop.h}%`;
+      img.style.left = `${(-crop.x / crop.w) * 100}%`;
+      img.style.top = `${(-crop.y / crop.h) * 100}%`;
+      img.style.objectFit = "fill";
+    }
     node.appendChild(img);
+    if (item.cropDraft) node.appendChild(renderCustomCropSelection(item));
     node.style.opacity = String(item.opacity ?? 1);
     node.style.transform = `rotate(${item.rotation || 0}deg)`;
   } else if (item.type === "shape") {
@@ -1256,6 +1278,26 @@ function renderCanvasItem(item) {
   });
 
   return appendObjectHandles(node, item);
+}
+
+function renderCustomCropSelection(item) {
+  const crop = item.cropDraft;
+  const selection = document.createElement("div");
+  selection.className = "print-custom-crop-selection";
+  selection.style.left = `${crop.x}%`;
+  selection.style.top = `${crop.y}%`;
+  selection.style.width = `${crop.w}%`;
+  selection.style.height = `${crop.h}%`;
+  selection.addEventListener("pointerdown", (event) => startCustomCropDrag(event, item.id));
+  ["nw", "ne", "se", "sw"].forEach((direction) => {
+    const handle = document.createElement("button");
+    handle.type = "button";
+    handle.className = `print-crop-handle ${direction}`;
+    handle.setAttribute("aria-label", "Resize crop selection");
+    handle.addEventListener("pointerdown", (event) => startCustomCropResize(event, item.id, direction));
+    selection.appendChild(handle);
+  });
+  return selection;
 }
 
 function appendObjectHandles(node, item) {
@@ -1729,6 +1771,114 @@ function setSelectedCrop(shape) {
   rememberHistory();
 }
 
+function startCustomCrop() {
+  const item = findSelectedItem();
+  if (!item || item.type !== "image") {
+    setStatus("Select a photo to create a custom crop.", true);
+    return;
+  }
+  const saved = item.customCrop || { x: 8, y: 8, w: 84, h: 84 };
+  item.cropDraft = { ...saved };
+  renderCanvas();
+  renderEditorDrawer();
+  setStatus("Drag the crop window or its corners, then choose Apply crop.");
+}
+
+function applyCustomCrop() {
+  const item = findSelectedItem();
+  if (!item?.cropDraft) return;
+  rememberHistory();
+  item.customCrop = { ...item.cropDraft };
+  delete item.cropDraft;
+  renderCanvas();
+  renderEditorDrawer();
+  rememberHistory();
+  setStatus("Custom crop applied. You can reset it any time.");
+}
+
+function cancelCustomCrop() {
+  const item = findSelectedItem();
+  if (!item?.cropDraft) return;
+  delete item.cropDraft;
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function resetCustomCrop() {
+  const item = findSelectedItem();
+  if (!item?.customCrop) return;
+  rememberHistory();
+  delete item.customCrop;
+  delete item.cropDraft;
+  renderCanvas();
+  renderEditorDrawer();
+  rememberHistory();
+}
+
+function startCustomCropDrag(event, id) {
+  event.preventDefault();
+  event.stopPropagation();
+  const item = currentItems().find((entry) => entry.id === id);
+  const crop = item?.cropDraft;
+  if (!item || !crop) return;
+  const node = designCanvas.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  const rect = node?.getBoundingClientRect();
+  if (!rect) return;
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const original = { ...crop };
+  const move = (moveEvent) => {
+    const dx = ((moveEvent.clientX - startX) / rect.width) * 100;
+    const dy = ((moveEvent.clientY - startY) / rect.height) * 100;
+    item.cropDraft.x = clamp(original.x + dx, 0, 100 - original.w);
+    item.cropDraft.y = clamp(original.y + dy, 0, 100 - original.h);
+    renderCanvas();
+  };
+  const stop = () => {
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", stop);
+  };
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", stop);
+}
+
+function startCustomCropResize(event, id, direction) {
+  event.preventDefault();
+  event.stopPropagation();
+  const item = currentItems().find((entry) => entry.id === id);
+  const crop = item?.cropDraft;
+  if (!item || !crop) return;
+  const node = designCanvas.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  const rect = node?.getBoundingClientRect();
+  if (!rect) return;
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const original = { ...crop };
+  const minSize = 12;
+  const move = (moveEvent) => {
+    const dx = ((moveEvent.clientX - startX) / rect.width) * 100;
+    const dy = ((moveEvent.clientY - startY) / rect.height) * 100;
+    const right = original.x + original.w;
+    const bottom = original.y + original.h;
+    let x = original.x;
+    let y = original.y;
+    let w = original.w;
+    let h = original.h;
+    if (direction.includes("e")) w = clamp(original.w + dx, minSize, 100 - original.x);
+    if (direction.includes("s")) h = clamp(original.h + dy, minSize, 100 - original.y);
+    if (direction.includes("w")) { x = clamp(original.x + dx, 0, right - minSize); w = right - x; }
+    if (direction.includes("n")) { y = clamp(original.y + dy, 0, bottom - minSize); h = bottom - y; }
+    item.cropDraft = { x, y, w, h };
+    renderCanvas();
+  };
+  const stop = () => {
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", stop);
+  };
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", stop);
+}
+
 function toggleSelectedLock() {
   const item = findSelectedItem();
   if (!item) return;
@@ -2005,12 +2155,17 @@ async function createPreview(side, options = {}) {
         ctx.translate(-(x + w / 2), -(y + h / 2));
       }
       clipPreviewImage(ctx, item.cropShape, x, y, w, h);
+      const crop = item.customCrop;
+      const sourceX = crop ? (image.naturalWidth || image.width) * (crop.x / 100) : 0;
+      const sourceY = crop ? (image.naturalHeight || image.height) * (crop.y / 100) : 0;
+      const sourceW = crop ? (image.naturalWidth || image.width) * (crop.w / 100) : (image.naturalWidth || image.width);
+      const sourceH = crop ? (image.naturalHeight || image.height) * (crop.h / 100) : (image.naturalHeight || image.height);
       if (item.flipX) {
         ctx.translate(x + w, y);
         ctx.scale(-1, 1);
-        ctx.drawImage(image, 0, 0, w, h);
+        ctx.drawImage(image, sourceX, sourceY, sourceW, sourceH, 0, 0, w, h);
       } else {
-        ctx.drawImage(image, x, y, w, h);
+        ctx.drawImage(image, sourceX, sourceY, sourceW, sourceH, x, y, w, h);
       }
       ctx.restore();
     } else if (item.type === "shape") {

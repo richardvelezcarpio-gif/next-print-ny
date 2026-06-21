@@ -1145,6 +1145,37 @@
     object-position: center;
   }
 
+  body.print-products-editor-page .print-canvas-item.has-custom-crop {
+    display: block;
+    padding: 0;
+  }
+
+  body.print-products-editor-page .print-custom-crop-selection {
+    position: absolute;
+    z-index: 12;
+    box-sizing: border-box;
+    border: 2px solid #12c5df;
+    background: rgba(18, 197, 223, 0.08);
+    box-shadow: 0 0 0 9999px rgba(2, 20, 45, 0.4);
+    cursor: move;
+  }
+
+  body.print-products-editor-page .print-crop-handle {
+    position: absolute;
+    z-index: 2;
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: #0b8df4;
+  }
+
+  body.print-products-editor-page .print-crop-handle.nw { top: -8px; left: -8px; cursor: nwse-resize; }
+  body.print-products-editor-page .print-crop-handle.ne { top: -8px; right: -8px; cursor: nesw-resize; }
+  body.print-products-editor-page .print-crop-handle.se { right: -8px; bottom: -8px; cursor: nwse-resize; }
+  body.print-products-editor-page .print-crop-handle.sw { bottom: -8px; left: -8px; cursor: nesw-resize; }
+
   body.print-products-editor-page .print-ready-btn {
     background: #0f8b55 !important;
   }
