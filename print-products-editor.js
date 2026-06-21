@@ -149,6 +149,11 @@ const statusNode = document.querySelector("#printEditorStatus");
 const editorToolrail = document.querySelector(".print-editor-toolrail");
 const editorDrawer = document.querySelector("#printEditorDrawer");
 const desktopToolbar = document.querySelector(".print-desktop-toolbar");
+const editorHeroTitle = document.querySelector("#printEditorHeroTitle");
+const editorHeroKicker = document.querySelector("#printEditorHeroKicker");
+const editorHeroCopy = document.querySelector("#printEditorHeroCopy");
+const editorHeroImage = document.querySelector("#printEditorHeroImage");
+const editorStartButton = document.querySelector("#printEditorStart");
 
 const backgroundTemplates = [
   ["Ocean", "#e8fbff", "#1ab9e8"],
@@ -177,7 +182,7 @@ let currentProduct = editorRedirectTarget ? productCatalog[0] : findInitialProdu
 let currentQuantity = String(params.get("quantity") || currentProduct.prices[0][0]);
 let currentSide = "front";
 let selectedItemId = null;
-let activeEditorTool = "templates";
+let activeEditorTool = "";
 let canvasZoom = 1;
 let guidesVisible = true;
 let designState = {
@@ -245,9 +250,10 @@ function bindEvents() {
   editorToolrail?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-editor-tool]");
     if (!button) return;
-    activeEditorTool = button.dataset.editorTool || "templates";
+    const requestedTool = button.dataset.editorTool || "templates";
+    activeEditorTool = activeEditorTool === requestedTool ? "" : requestedTool;
     editorToolrail.querySelectorAll("button").forEach((item) => {
-      const isActive = item === button;
+      const isActive = item === button && Boolean(activeEditorTool);
       item.classList.toggle("active", isActive);
       item.setAttribute("aria-pressed", String(isActive));
     });
@@ -259,10 +265,19 @@ function bindEvents() {
     if (event.target.matches("input[data-drawer-upload]")) handleUpload(event);
   });
   desktopToolbar?.addEventListener("click", handleCanvasToolbarAction);
+  editorStartButton?.addEventListener("click", () => {
+    document.querySelector(".print-design-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
 }
 
 function renderEditorDrawer() {
   if (!editorDrawer) return;
+
+  if (!activeEditorTool) {
+    editorDrawer.replaceChildren();
+    editorDrawer.classList.remove("is-open");
+    return;
+  }
 
   const toolContent = {
     templates: renderBackgroundTemplatePanel("Business Card Background Templates"),
@@ -280,6 +295,7 @@ function renderEditorDrawer() {
   };
 
   editorDrawer.innerHTML = toolContent[activeEditorTool] || toolContent.templates;
+  editorDrawer.classList.add("is-open");
 }
 
 function renderBackgroundTemplatePanel(title) {
@@ -496,7 +512,24 @@ function renderProduct() {
   renderSideTabs();
   renderCanvas();
   renderEditorDrawer();
+  updateEditorHero();
   updateSummary();
+}
+
+function updateEditorHero() {
+  if (editorHeroKicker) editorHeroKicker.textContent = currentProduct.category === "cards" ? "Business printing" : "Custom print products";
+  if (editorHeroTitle) {
+    const words = currentProduct.label.split(" ");
+    const splitAt = Math.max(1, Math.ceil(words.length / 2));
+    const first = words.slice(0, splitAt).join(" ");
+    const second = words.slice(splitAt).join(" ") || first;
+    editorHeroTitle.innerHTML = `${escapeHtml(first)}<br /><strong>${escapeHtml(second)}</strong>`;
+  }
+  if (editorHeroCopy) editorHeroCopy.textContent = `Create sharp, polished ${currentProduct.label.toLowerCase()} with the size, quantity and finish your business needs.`;
+  if (editorHeroImage) {
+    editorHeroImage.src = currentProduct.image;
+    editorHeroImage.alt = `${currentProduct.label} from Next Print NY`;
+  }
 }
 
 function renderSizeSelect() {
