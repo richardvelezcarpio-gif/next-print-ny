@@ -357,6 +357,7 @@ function renderEditorDrawer() {
     logos: renderToolPanel("Logos", "Upload your business logo and place it on the card.", '<label class="drawer-upload">Upload logo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
     qr: renderQrPanel(),
     layers: renderLayersPanel(),
+    mockups: renderMockupPanel(),
     ai: renderAiImagePanel(),
   };
 
@@ -428,6 +429,24 @@ function renderQrPanel() {
   `;
 }
 
+function renderMockupPanel() {
+  const mockups = [
+    ["card", "Business Card"],
+    ["stack", "Card Stack"],
+    ["poster", "Poster / Flyer"],
+    ["phone", "Smartphone"],
+    ["screen", "Desktop Screen"],
+    ["sign", "Store Sign"],
+  ];
+  return `
+    <div class="drawer-heading"><div><span>Preview</span><h3>Design Mockups</h3></div></div>
+    <p class="drawer-copy">See your current design in a realistic presentation without leaving the editor.</p>
+    <div class="mockup-option-grid">
+      ${mockups.map(([type, label]) => `<button type="button" class="mockup-option mockup-${type}" data-drawer-action="show-mockup" data-mockup-type="${type}"><span></span>${escapeHtml(label)}</button>`).join("")}
+    </div>
+  `;
+}
+
 function renderAiImagePanel() {
   const results = aiImageResults.length
     ? `<div class="ai-image-results">${aiImageResults
@@ -492,6 +511,7 @@ function handleDrawerAction(event) {
   if (action === "add-icon") addEditorIcon(button.dataset.icon || "★");
   if (action === "add-qr") addQrPlaceholder();
   if (action === "generate-qr") generateQrCode();
+  if (action === "show-mockup") showMockupPreview(button.dataset.mockupType || "card");
   if (action === "remove-background") removeBackgroundSelected();
   if (action === "center-selected") centerSelectedItem();
   if (action === "search-ai-images") searchEditorImages("search");
@@ -515,6 +535,24 @@ function handleDrawerAction(event) {
   if (action === "layer-down") moveSelectedLayer(-1);
   if (action === "save-project") saveProject();
   if (action === "load-project") loadProject();
+}
+
+async function showMockupPreview(type) {
+  try {
+    setStatus("Preparing mockup preview...");
+    const preview = await createPreview(currentSide, { maxSize: 1000, includeGuides: false });
+    document.querySelector(".mockup-preview-modal")?.remove();
+    const modal = document.createElement("div");
+    modal.className = "mockup-preview-modal";
+    modal.innerHTML = `<div class="mockup-preview-dialog"><button type="button" class="mockup-close" aria-label="Close mockup">Close</button><h2>${escapeHtml(type.replace(/-/g, " "))} mockup</h2><div class="mockup-stage mockup-stage-${escapeAttribute(type)}"><div class="mockup-art"><img src="${preview}" alt="Current design mockup" /></div></div><p>Preview only. Your original design stays editable.</p></div>`;
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal || event.target.closest(".mockup-close")) modal.remove();
+    });
+    document.body.appendChild(modal);
+    setStatus("Mockup preview opened.");
+  } catch (error) {
+    setStatus("Could not prepare the mockup preview.", true);
+  }
 }
 
 function saveProject() {
@@ -1594,7 +1632,7 @@ async function createPreview(side, options = {}) {
   gradient.addColorStop(1, bgColor2?.value || "#ffffff");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  if (guidesVisible) {
+  if (options.includeGuides ?? guidesVisible) {
     ctx.lineWidth = Math.max(4, canvas.width * 0.004);
     ctx.strokeStyle = "rgba(231, 63, 92, 0.55)";
     ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
