@@ -149,6 +149,14 @@ const statusNode = document.querySelector("#printEditorStatus");
 const editorToolrail = document.querySelector(".print-editor-toolrail");
 const editorDrawer = document.querySelector("#printEditorDrawer");
 const desktopToolbar = document.querySelector(".print-desktop-toolbar");
+const objectToolbar = document.querySelector(".print-object-toolbar");
+const toolbarFont = document.querySelector("#printToolbarFont");
+const toolbarSize = document.querySelector("#printToolbarSize");
+const toolbarColor = document.querySelector("#printToolbarColor");
+const toolbarDelete = document.querySelector("#printToolbarDelete");
+const toolbarDuplicate = document.querySelector("#printToolbarDuplicate");
+const toolbarFlip = document.querySelector("#printToolbarFlip");
+const toolbarRemoveBg = document.querySelector("#printToolbarRemoveBg");
 const editorHeroTitle = document.querySelector("#printEditorHeroTitle");
 const editorHeroKicker = document.querySelector("#printEditorHeroKicker");
 const editorHeroCopy = document.querySelector("#printEditorHeroCopy");
@@ -230,12 +238,7 @@ function bindEvents() {
     input?.addEventListener("input", renderCanvas);
   });
 
-  addTextButton?.addEventListener("click", () => {
-    const item = defaultTextItem("Your Text Here");
-    designState[currentSide].push(item);
-    selectedItemId = item.id;
-    renderCanvas();
-  });
+  addTextButton?.addEventListener("click", addEditorText);
 
   uploadInput?.addEventListener("change", handleUpload);
   selectedText?.addEventListener("input", updateSelectedText);
@@ -244,6 +247,13 @@ function bindEvents() {
   selectedColor?.addEventListener("input", updateSelectedText);
   duplicateButton?.addEventListener("click", duplicateSelected);
   deleteButton?.addEventListener("click", deleteSelected);
+  toolbarFont?.addEventListener("change", () => updateSelectedText("toolbar"));
+  toolbarSize?.addEventListener("input", () => updateSelectedText("toolbar"));
+  toolbarColor?.addEventListener("input", () => updateSelectedText("toolbar"));
+  toolbarDelete?.addEventListener("click", deleteSelected);
+  toolbarDuplicate?.addEventListener("click", duplicateSelected);
+  toolbarFlip?.addEventListener("click", flipSelectedItem);
+  toolbarRemoveBg?.addEventListener("click", removeBackgroundSelected);
   saveButton?.addEventListener("click", saveCurrentSidePng);
   continueButton?.addEventListener("click", continueToCheckout);
 
@@ -251,6 +261,16 @@ function bindEvents() {
     const button = event.target.closest("button[data-editor-tool]");
     if (!button) return;
     const requestedTool = button.dataset.editorTool || "templates";
+    if (requestedTool === "text") {
+      activeEditorTool = "";
+      editorToolrail.querySelectorAll("button").forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-pressed", "false");
+      });
+      renderEditorDrawer();
+      addEditorText();
+      return;
+    }
     activeEditorTool = activeEditorTool === requestedTool ? "" : requestedTool;
     editorToolrail.querySelectorAll("button").forEach((item) => {
       const isActive = item === button && Boolean(activeEditorTool);
@@ -380,6 +400,11 @@ function addEditorText() {
   currentItems().push(item);
   selectedItemId = item.id;
   renderCanvas();
+  requestAnimationFrame(() => {
+    const editableNode = designCanvas?.querySelector(`[data-id="${CSS.escape(item.id)}"]`);
+    editableNode?.focus();
+    placeCaretAtEnd(editableNode);
+  });
   renderEditorDrawer();
 }
 
@@ -630,6 +655,7 @@ function renderCanvasItem(item) {
     const img = document.createElement("img");
     img.src = item.src;
     img.alt = item.name || "Uploaded artwork";
+    if (item.flipX) img.classList.add("flipped");
     node.appendChild(img);
   } else if (item.type === "shape") {
     node.classList.add("print-shape-item", `shape-${item.shape || "rect"}`);
@@ -644,13 +670,37 @@ function renderCanvasItem(item) {
     node.style.color = item.color;
     node.style.fontFamily = item.font;
     node.style.fontSize = `${item.size}px`;
+    if (item.id === selectedItemId) {
+      node.contentEditable = "true";
+      node.spellcheck = false;
+      node.setAttribute("aria-label", "Editable text");
+      node.addEventListener("input", () => {
+        item.text = node.textContent || "";
+        syncSelectedControls();
+      });
+      node.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+          node.blur();
+          event.preventDefault();
+        }
+      });
+    }
   }
 
-  node.addEventListener("pointerdown", (event) => startDrag(event, item.id));
+  if (item.type !== "text") node.addEventListener("pointerdown", (event) => startDrag(event, item.id));
   node.addEventListener("click", (event) => {
     event.stopPropagation();
     selectedItemId = item.id;
-    renderCanvas();
+    if (item.type === "text") {
+      renderCanvas();
+      requestAnimationFrame(() => {
+        const editableNode = designCanvas.querySelector(`[data-id="${CSS.escape(item.id)}"]`);
+        editableNode?.focus();
+        placeCaretAtEnd(editableNode);
+      });
+    } else {
+      renderCanvas();
+    }
   });
 
   if (item.id === selectedItemId) {
@@ -665,6 +715,16 @@ function renderCanvasItem(item) {
     });
   }
   return node;
+}
+
+function placeCaretAtEnd(node) {
+  if (!node || !window.getSelection) return;
+  const range = document.createRange();
+  range.selectNodeContents(node);
+  range.collapse(false);
+  const selection = window.getSelection();
+  selection?.removeAllRanges();
+  selection?.addRange(range);
 }
 
 function startDrag(event, id) {
@@ -867,16 +927,43 @@ function syncSelectedControls() {
     selectedColor.value = isText ? item.color : "#061a35";
     selectedColor.disabled = !isText;
   }
+  if (toolbarFont) {
+    toolbarFont.value = isText ? item.font : "Arial";
+    toolbarFont.disabled = !isText;
+  }
+  if (toolbarSize) {
+    toolbarSize.value = isText ? item.size : 32;
+    toolbarSize.disabled = !isText;
+  }
+  if (toolbarColor) {
+    toolbarColor.value = isText ? item.color : "#061a35";
+    toolbarColor.disabled = !isText;
+  }
+  if (objectToolbar) objectToolbar.classList.toggle("has-text-selection", isText);
+  if (toolbarFlip) toolbarFlip.disabled = item?.type !== "image";
+  if (toolbarRemoveBg) toolbarRemoveBg.disabled = item?.type !== "image";
 }
 
-function updateSelectedText() {
+function updateSelectedText(source = "sidebar") {
   const item = findSelectedItem();
   if (!item || item.type !== "text") return;
-  item.text = selectedText?.value || "";
-  item.font = selectedFont?.value || "Arial";
-  item.size = Number(selectedSize?.value || 32);
-  item.color = selectedColor?.value || "#061a35";
+  const isToolbar = source === "toolbar";
+  item.text = selectedText?.value || item.text || "";
+  item.font = (isToolbar ? toolbarFont?.value : selectedFont?.value) || "Arial";
+  item.size = Number((isToolbar ? toolbarSize?.value : selectedSize?.value) || 32);
+  item.color = (isToolbar ? toolbarColor?.value : selectedColor?.value) || "#061a35";
   renderCanvas();
+}
+
+function flipSelectedItem() {
+  const item = findSelectedItem();
+  if (!item || item.type !== "image") {
+    setStatus("Select an image to flip it.", true);
+    return;
+  }
+  item.flipX = !item.flipX;
+  renderCanvas();
+  setStatus("Image flipped horizontally.");
 }
 
 function duplicateSelected() {
@@ -1039,7 +1126,15 @@ async function createPreview(side, options = {}) {
     const h = (item.h / 100) * canvas.height;
     if (item.type === "image") {
       const image = await loadImage(item.src);
-      ctx.drawImage(image, x, y, w, h);
+      if (item.flipX) {
+        ctx.save();
+        ctx.translate(x + w, y);
+        ctx.scale(-1, 1);
+        ctx.drawImage(image, 0, 0, w, h);
+        ctx.restore();
+      } else {
+        ctx.drawImage(image, x, y, w, h);
+      }
     } else if (item.type === "shape") {
       ctx.fillStyle = item.color || "#0b8df4";
       if (item.shape === "circle") {

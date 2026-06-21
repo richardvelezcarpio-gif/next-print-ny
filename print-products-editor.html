@@ -164,6 +164,29 @@
                   <span>Design area</span>
                   <h2 id="printDesignSize">3.75 x 2.25 in</h2>
                 </div>
+                <div class="print-object-toolbar" aria-label="Selected object controls">
+                  <label>
+                    Font
+                    <select id="printToolbarFont">
+                      <option>Arial</option>
+                      <option>Impact</option>
+                      <option>Georgia</option>
+                      <option>Montserrat</option>
+                    </select>
+                  </label>
+                  <label>
+                    Color
+                    <input id="printToolbarColor" type="color" value="#061a35" />
+                  </label>
+                  <label>
+                    Font size
+                    <input id="printToolbarSize" type="number" min="12" max="96" value="32" />
+                  </label>
+                  <button id="printToolbarDelete" class="danger" type="button">Delete Object</button>
+                  <button id="printToolbarDuplicate" class="duplicate" type="button">Duplicate Object</button>
+                  <button id="printToolbarFlip" type="button">Flip</button>
+                  <button id="printToolbarRemoveBg" type="button">BG Remove</button>
+                </div>
                 <div class="print-desktop-toolbar" aria-label="Canvas controls">
                   <button type="button" data-canvas-action="zoom-out" aria-label="Zoom out">−</button>
                   <button type="button" data-canvas-action="zoom-in" aria-label="Zoom in">+</button>

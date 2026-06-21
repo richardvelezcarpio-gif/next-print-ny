@@ -256,18 +256,81 @@
   }
 
   body.print-products-editor-page .print-design-top {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(165px, 0.42fr) minmax(0, 1.58fr);
     align-items: center;
     gap: 18px;
   }
 
   body.print-products-editor-page .print-design-top h2 {
-    margin-right: auto;
+    margin-right: 0;
+  }
+
+  body.print-products-editor-page .print-object-toolbar {
+    display: grid;
+    grid-template-columns: minmax(92px, 1.2fr) minmax(72px, 0.8fr) minmax(72px, 0.7fr) repeat(4, minmax(68px, 0.85fr));
+    gap: 6px;
+    align-items: end;
+  }
+
+  body.print-products-editor-page .print-object-toolbar label {
+    display: grid;
+    gap: 3px;
+    color: #5b7187;
+    font-size: 0.57rem;
+    font-weight: 900;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  body.print-products-editor-page .print-object-toolbar input,
+  body.print-products-editor-page .print-object-toolbar select,
+  body.print-products-editor-page .print-object-toolbar button {
+    width: 100%;
+    min-width: 0;
+    min-height: 30px;
+    padding: 0 6px;
+    border: 1px solid #c9dced;
+    border-radius: 4px;
+    background: #fff;
+    color: #082d5e;
+    font-size: 0.62rem;
+    font-weight: 800;
+  }
+
+  body.print-products-editor-page .print-object-toolbar input[type="color"] {
+    padding: 2px;
+  }
+
+  body.print-products-editor-page .print-object-toolbar button {
+    align-self: end;
+    cursor: pointer;
+  }
+
+  body.print-products-editor-page .print-object-toolbar button.duplicate {
+    border-color: #2667f0;
+    background: #2667f0;
+    color: #fff;
+  }
+
+  body.print-products-editor-page .print-object-toolbar button.danger {
+    border-color: #e52828;
+    background: #e52828;
+    color: #fff;
+  }
+
+  body.print-products-editor-page .print-object-toolbar button:disabled,
+  body.print-products-editor-page .print-object-toolbar input:disabled,
+  body.print-products-editor-page .print-object-toolbar select:disabled {
+    cursor: not-allowed;
+    opacity: 0.44;
   }
 
   body.print-products-editor-page .print-desktop-toolbar {
     display: flex;
     align-items: center;
+    grid-column: 2;
+    justify-self: end;
     gap: 7px;
   }
 
@@ -605,14 +668,7 @@
   }
 
   body.print-products-editor-page .edit-panel {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    align-content: start;
-    margin: 0;
-    padding: 0 0 0 16px;
-    border-top: 0;
-    border-left: 1px solid #dbe8f2;
+    display: none;
   }
 
   body.print-products-editor-page .edit-panel h2,
@@ -657,6 +713,15 @@
     background: repeating-conic-gradient(#0b315c 0 25%, #fff 0 50%) 50% / 24% 24%;
     border: 5px solid #fff;
   }
+
+  body.print-products-editor-page .print-canvas-item[contenteditable="true"] {
+    cursor: text;
+    outline: 0;
+  }
+
+  body.print-products-editor-page .print-canvas-item img.flipped {
+    transform: scaleX(-1);
+  }
 }
 
 @media (max-width: 760px) {
@@ -666,6 +731,7 @@
 
   body.print-products-editor-page .print-editor-toolrail,
   body.print-products-editor-page .print-editor-drawer,
+  body.print-products-editor-page .print-object-toolbar,
   body.print-products-editor-page .print-trim-line,
   body.print-products-editor-page .print-bleed-line {
     display: none !important;
