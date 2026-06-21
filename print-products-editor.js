@@ -146,11 +146,40 @@ const summarySides = document.querySelector("#printSummarySides");
 const summaryTotal = document.querySelector("#printSummaryTotal");
 const continueButton = document.querySelector("#printContinueCheckout");
 const statusNode = document.querySelector("#printEditorStatus");
+const editorToolrail = document.querySelector(".print-editor-toolrail");
+const editorDrawer = document.querySelector("#printEditorDrawer");
+const desktopToolbar = document.querySelector(".print-desktop-toolbar");
+
+const backgroundTemplates = [
+  ["Ocean", "#e8fbff", "#1ab9e8"],
+  ["Navy", "#061a35", "#1667a8"],
+  ["Sky", "#f6fdff", "#7bdcf2"],
+  ["Mint", "#f2fff9", "#4ed5b2"],
+  ["Sunset", "#fff1ed", "#ff9b78"],
+  ["Rose", "#fff4fa", "#ef84bd"],
+  ["Lavender", "#f6f1ff", "#9277e8"],
+  ["Lemon", "#fffde9", "#f5c84b"],
+  ["Coral", "#fff0ed", "#ff6b5f"],
+  ["Forest", "#effcf6", "#16966b"],
+  ["Midnight", "#111a38", "#384f9b"],
+  ["Cobalt", "#edf4ff", "#2f6cea"],
+  ["Sand", "#fff9ef", "#dca15f"],
+  ["Plum", "#fbf1ff", "#8d4cb7"],
+  ["Ice", "#ffffff", "#c8eff8"],
+  ["Slate", "#f3f6fa", "#71849a"],
+  ["Berry", "#fff2f6", "#bd3f6b"],
+  ["Teal", "#effefd", "#24bfb8"],
+  ["Peach", "#fff6ed", "#f4ae66"],
+  ["Charcoal", "#f2f4f7", "#27364a"],
+];
 
 let currentProduct = editorRedirectTarget ? productCatalog[0] : findInitialProduct();
 let currentQuantity = String(params.get("quantity") || currentProduct.prices[0][0]);
 let currentSide = "front";
 let selectedItemId = null;
+let activeEditorTool = "templates";
+let canvasZoom = 1;
+let guidesVisible = true;
 let designState = {
   front: [defaultTextItem()],
   back: [defaultTextItem("Back Side")],
@@ -160,6 +189,7 @@ if (!editorRedirectTarget) {
   renderProductSelect();
   renderProduct();
   bindEvents();
+  renderEditorDrawer();
 }
 
 function bindEvents() {
@@ -211,6 +241,198 @@ function bindEvents() {
   deleteButton?.addEventListener("click", deleteSelected);
   saveButton?.addEventListener("click", saveCurrentSidePng);
   continueButton?.addEventListener("click", continueToCheckout);
+
+  editorToolrail?.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-editor-tool]");
+    if (!button) return;
+    activeEditorTool = button.dataset.editorTool || "templates";
+    editorToolrail.querySelectorAll("button").forEach((item) => {
+      const isActive = item === button;
+      item.classList.toggle("active", isActive);
+      item.setAttribute("aria-pressed", String(isActive));
+    });
+    renderEditorDrawer();
+  });
+
+  editorDrawer?.addEventListener("click", handleDrawerAction);
+  editorDrawer?.addEventListener("change", (event) => {
+    if (event.target.matches("input[data-drawer-upload]")) handleUpload(event);
+  });
+  desktopToolbar?.addEventListener("click", handleCanvasToolbarAction);
+}
+
+function renderEditorDrawer() {
+  if (!editorDrawer) return;
+
+  const toolContent = {
+    templates: renderBackgroundTemplatePanel("Business Card Background Templates"),
+    backgrounds: renderBackgroundTemplatePanel("Backgrounds"),
+    text: renderToolPanel("Text", "Add editable copy to the selected side.", '<button class="drawer-action primary" type="button" data-drawer-action="add-text">Add text</button>'),
+    uploads: renderToolPanel("Upload artwork", "Add PNG, JPG or WEBP artwork to the selected side.", '<label class="drawer-upload">Choose image<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
+    photos: renderToolPanel("Photos", "Upload a photo, then use Remove Background for light or white backdrops.", '<label class="drawer-upload">Upload photo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label><button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button>'),
+    elements: renderToolPanel("Elements", "Add simple printable elements.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Circle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="line">Line</button>'),
+    shapes: renderToolPanel("Shapes", "Add a color block or line behind your artwork.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Add rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Add circle</button>'),
+    icons: renderToolPanel("Icons", "Insert a simple icon as editable text.", '<button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="★">Star</button><button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="✓">Check</button><button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="☎">Phone</button>'),
+    logos: renderToolPanel("Logos", "Upload your business logo and place it on the card.", '<label class="drawer-upload">Upload logo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
+    qr: renderToolPanel("QR Code", "Add a scannable-style placeholder and replace it later with your real QR image if needed.", '<button class="drawer-action" type="button" data-drawer-action="add-qr">Add QR placeholder</button>'),
+    layers: renderLayersPanel(),
+    ai: renderToolPanel("AI tools", "Use a clean artwork photo for the best result.", '<button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button><button class="drawer-action" type="button" data-drawer-action="center-selected">Center selected</button>'),
+  };
+
+  editorDrawer.innerHTML = toolContent[activeEditorTool] || toolContent.templates;
+}
+
+function renderBackgroundTemplatePanel(title) {
+  return `
+    <div class="drawer-heading"><div><span>Business Cards</span><h3>${title}</h3></div><small>20 backgrounds</small></div>
+    <div class="background-template-grid">
+      ${backgroundTemplates
+        .map(
+          ([label, color1, color2], index) => `
+            <button type="button" class="background-template" data-drawer-action="background" data-template-index="${index}" style="--template-start:${escapeAttribute(color1)};--template-end:${escapeAttribute(color2)}">
+              <span>${escapeHtml(label)}</span>
+            </button>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function renderToolPanel(title, copy, actions) {
+  return `<div class="drawer-heading"><div><span>Editor tool</span><h3>${escapeHtml(title)}</h3></div></div><p class="drawer-copy">${escapeHtml(copy)}</p><div class="drawer-actions">${actions}</div>`;
+}
+
+function renderLayersPanel() {
+  const items = currentItems();
+  const layerRows = items.length
+    ? items
+        .slice()
+        .reverse()
+        .map(
+          (item) => `<button type="button" class="layer-row ${item.id === selectedItemId ? "active" : ""}" data-drawer-action="select-layer" data-layer-id="${escapeAttribute(item.id)}"><span>${escapeHtml(layerName(item))}</span><small>${escapeHtml(item.type)}</small></button>`
+        )
+        .join("")
+    : '<p class="drawer-copy">No objects on this side yet.</p>';
+  return `<div class="drawer-heading"><div><span>Arrange</span><h3>Layers</h3></div></div><div class="layer-actions"><button class="drawer-action" type="button" data-drawer-action="layer-up">Bring forward</button><button class="drawer-action" type="button" data-drawer-action="layer-down">Send backward</button></div><div class="layer-list">${layerRows}</div>`;
+}
+
+function handleDrawerAction(event) {
+  const button = event.target.closest("[data-drawer-action]");
+  if (!button) return;
+  const action = button.dataset.drawerAction;
+
+  if (action === "background") {
+    const template = backgroundTemplates[Number(button.dataset.templateIndex)];
+    if (!template) return;
+    if (bgColor1) bgColor1.value = template[1];
+    if (bgColor2) bgColor2.value = template[2];
+    renderCanvas();
+    return;
+  }
+  if (action === "add-text") addEditorText();
+  if (action === "add-shape") addShape(button.dataset.shape || "rect");
+  if (action === "add-icon") addEditorIcon(button.dataset.icon || "★");
+  if (action === "add-qr") addQrPlaceholder();
+  if (action === "remove-background") removeBackgroundSelected();
+  if (action === "center-selected") centerSelectedItem();
+  if (action === "select-layer") {
+    selectedItemId = button.dataset.layerId || null;
+    renderCanvas();
+    renderEditorDrawer();
+  }
+  if (action === "layer-up") moveSelectedLayer(1);
+  if (action === "layer-down") moveSelectedLayer(-1);
+}
+
+function handleCanvasToolbarAction(event) {
+  const button = event.target.closest("button[data-canvas-action]");
+  if (!button) return;
+  const action = button.dataset.canvasAction;
+  if (action === "zoom-in") canvasZoom = clamp(canvasZoom + 0.1, 0.8, 1.3);
+  if (action === "zoom-out") canvasZoom = clamp(canvasZoom - 0.1, 0.8, 1.3);
+  if (action === "center") centerSelectedItem();
+  if (action === "toggle-guides") {
+    guidesVisible = !guidesVisible;
+    designCanvas?.classList.toggle("guides-hidden", !guidesVisible);
+  }
+  renderCanvas();
+}
+
+function addEditorText() {
+  const item = defaultTextItem("Your Text Here");
+  currentItems().push(item);
+  selectedItemId = item.id;
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function addEditorIcon(icon) {
+  const item = defaultTextItem(icon);
+  item.x = 40;
+  item.y = 38;
+  item.w = 20;
+  item.h = 24;
+  item.size = 52;
+  currentItems().push(item);
+  selectedItemId = item.id;
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function addShape(shape) {
+  const item = {
+    id: `shape-${Date.now()}`,
+    type: "shape",
+    shape,
+    color: "#0b8df4",
+    x: 30,
+    y: 32,
+    w: shape === "line" ? 42 : 28,
+    h: shape === "line" ? 4 : 26,
+  };
+  currentItems().push(item);
+  selectedItemId = item.id;
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function addQrPlaceholder() {
+  const item = { id: `qr-${Date.now()}`, type: "qr", x: 68, y: 62, w: 18, h: 24 };
+  currentItems().push(item);
+  selectedItemId = item.id;
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function centerSelectedItem() {
+  const item = findSelectedItem();
+  if (!item) {
+    setStatus("Select an object to center.", true);
+    return;
+  }
+  item.x = clamp((100 - item.w) / 2, 0, 100 - item.w);
+  item.y = clamp((100 - item.h) / 2, 0, 100 - item.h);
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function moveSelectedLayer(direction) {
+  const items = currentItems();
+  const index = items.findIndex((item) => item.id === selectedItemId);
+  if (index < 0) return;
+  const nextIndex = clamp(index + direction, 0, items.length - 1);
+  if (nextIndex === index) return;
+  [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function layerName(item) {
+  if (item.type === "text") return item.text || "Text";
+  if (item.type === "image") return item.name || "Image";
+  if (item.type === "qr") return "QR placeholder";
+  return item.shape === "circle" ? "Circle" : item.shape === "line" ? "Line" : "Rectangle";
 }
 
 function getEditorRedirectTarget() {
@@ -273,6 +495,7 @@ function renderProduct() {
   renderOptionFields();
   renderSideTabs();
   renderCanvas();
+  renderEditorDrawer();
   updateSummary();
 }
 
@@ -345,11 +568,16 @@ function renderCanvas() {
   const aspect = currentProduct.width / currentProduct.height;
   designCanvas.style.aspectRatio = `${currentProduct.width} / ${currentProduct.height}`;
   designCanvas.style.background = `linear-gradient(135deg, ${bgColor1?.value || "#dff8ff"}, ${bgColor2?.value || "#ffffff"})`;
+  designCanvas.style.transform = `scale(${canvasZoom})`;
+  designCanvas.style.transformOrigin = "center";
   designCanvas.classList.toggle("round-product", currentProduct.shape === "round");
+  designCanvas.classList.toggle("business-card-canvas", currentProduct.category === "cards");
+  designCanvas.classList.toggle("guides-hidden", !guidesVisible);
   if (designSizeNode) designSizeNode.textContent = `${currentProduct.sizeLabel} - ${currentSide === "front" ? "Front" : "Back"}`;
 
+  const isDesktopEditor = window.matchMedia("(min-width: 761px)").matches;
   const width = Math.min(620, Math.max(280, aspect >= 1 ? 620 : 440));
-  designCanvas.style.maxWidth = `${width}px`;
+  designCanvas.style.maxWidth = isDesktopEditor ? "none" : `${width}px`;
 
   designCanvas.querySelectorAll(".print-canvas-item").forEach((node) => node.remove());
   currentItems().forEach((item) => designCanvas.appendChild(renderCanvasItem(item)));
@@ -370,6 +598,14 @@ function renderCanvasItem(item) {
     img.src = item.src;
     img.alt = item.name || "Uploaded artwork";
     node.appendChild(img);
+  } else if (item.type === "shape") {
+    node.classList.add("print-shape-item", `shape-${item.shape || "rect"}`);
+    node.style.background = item.color || "#0b8df4";
+  } else if (item.type === "qr") {
+    const qr = document.createElement("span");
+    qr.className = "print-qr-art";
+    qr.setAttribute("aria-label", "QR placeholder");
+    node.appendChild(qr);
   } else {
     node.textContent = item.text;
     node.style.color = item.color;
@@ -535,6 +771,50 @@ function handleUpload(event) {
   event.target.value = "";
 }
 
+async function removeBackgroundSelected() {
+  const item = findSelectedItem();
+  if (!item || item.type !== "image") {
+    setStatus("Select a photo first to remove its background.", true);
+    return;
+  }
+
+  try {
+    setStatus("Removing light background...");
+    const image = await loadImage(item.src);
+    const scale = Math.min(1, 1600 / Math.max(image.naturalWidth || image.width, image.naturalHeight || image.height));
+    const width = Math.max(1, Math.round((image.naturalWidth || image.width) * scale));
+    const height = Math.max(1, Math.round((image.naturalHeight || image.height) * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    context.drawImage(image, 0, 0, width, height);
+    const pixels = context.getImageData(0, 0, width, height);
+
+    for (let index = 0; index < pixels.data.length; index += 4) {
+      const red = pixels.data[index];
+      const green = pixels.data[index + 1];
+      const blue = pixels.data[index + 2];
+      const lightest = Math.max(red, green, blue);
+      const darkest = Math.min(red, green, blue);
+      const brightness = (red + green + blue) / 3;
+      const isLowSaturation = lightest - darkest < 34;
+      if (brightness > 236 && isLowSaturation) {
+        pixels.data[index + 3] = 0;
+      } else if (brightness > 214 && isLowSaturation) {
+        pixels.data[index + 3] = Math.round(((236 - brightness) / 22) * pixels.data[index + 3]);
+      }
+    }
+
+    context.putImageData(pixels, 0, 0);
+    item.src = canvas.toDataURL("image/png");
+    renderCanvas();
+    setStatus("Light background removed. Review the edges before checkout.");
+  } catch (error) {
+    setStatus("Could not remove this background. Try a clear JPG or PNG photo.", true);
+  }
+}
+
 function syncSelectedControls() {
   const item = findSelectedItem();
   const isText = item?.type === "text";
@@ -697,13 +977,26 @@ async function createPreview(side, options = {}) {
   gradient.addColorStop(1, bgColor2?.value || "#ffffff");
   ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.strokeStyle = "rgba(5, 39, 92, 0.25)";
-  ctx.lineWidth = Math.max(4, canvas.width * 0.006);
-  ctx.strokeRect(16, 16, canvas.width - 32, canvas.height - 32);
-  ctx.setLineDash([18, 14]);
-  ctx.strokeStyle = "rgba(5, 39, 92, 0.4)";
-  ctx.strokeRect(canvas.width * 0.08, canvas.height * 0.08, canvas.width * 0.84, canvas.height * 0.84);
-  ctx.setLineDash([]);
+  if (guidesVisible) {
+    ctx.lineWidth = Math.max(4, canvas.width * 0.004);
+    ctx.strokeStyle = "rgba(231, 63, 92, 0.55)";
+    ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4);
+    ctx.setLineDash([16, 12]);
+    if (currentProduct.category === "cards") {
+      const trimX = canvas.width * 0.033333;
+      const trimY = canvas.height * 0.055556;
+      const safeX = canvas.width * 0.066667;
+      const safeY = canvas.height * 0.111111;
+      ctx.strokeStyle = "rgba(26, 154, 216, 0.68)";
+      ctx.strokeRect(trimX, trimY, canvas.width - trimX * 2, canvas.height - trimY * 2);
+      ctx.strokeStyle = "rgba(46, 166, 104, 0.72)";
+      ctx.strokeRect(safeX, safeY, canvas.width - safeX * 2, canvas.height - safeY * 2);
+    } else {
+      ctx.strokeStyle = "rgba(46, 166, 104, 0.72)";
+      ctx.strokeRect(canvas.width * 0.08, canvas.height * 0.08, canvas.width * 0.84, canvas.height * 0.84);
+    }
+    ctx.setLineDash([]);
+  }
 
   const sideItems = designState[side] || [];
   for (const item of sideItems) {
@@ -714,6 +1007,17 @@ async function createPreview(side, options = {}) {
     if (item.type === "image") {
       const image = await loadImage(item.src);
       ctx.drawImage(image, x, y, w, h);
+    } else if (item.type === "shape") {
+      ctx.fillStyle = item.color || "#0b8df4";
+      if (item.shape === "circle") {
+        ctx.beginPath();
+        ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(x, y, w, h);
+      }
+    } else if (item.type === "qr") {
+      drawQrPlaceholder(ctx, x, y, w, h);
     } else {
       ctx.fillStyle = item.color || "#061a35";
       ctx.font = `900 ${Math.max(18, item.size * 2)}px ${item.font || "Arial"}`;
@@ -723,6 +1027,20 @@ async function createPreview(side, options = {}) {
     }
   }
   return canvas.toDataURL(options.format || "image/png", options.quality || 0.92);
+}
+
+function drawQrPlaceholder(context, x, y, width, height) {
+  const cell = Math.max(4, Math.floor(Math.min(width, height) / 9));
+  context.fillStyle = "#ffffff";
+  context.fillRect(x, y, width, height);
+  context.fillStyle = "#061a35";
+  for (let row = 0; row < 9; row += 1) {
+    for (let column = 0; column < 9; column += 1) {
+      const corner = (row < 3 && column < 3) || (row < 3 && column > 5) || (row > 5 && column < 3);
+      const pattern = (row * 5 + column * 3) % 4 === 0;
+      if (corner || pattern) context.fillRect(x + column * cell, y + row * cell, cell, cell);
+    }
+  }
 }
 
 function loadImage(src) {

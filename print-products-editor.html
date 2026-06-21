@@ -57,6 +57,21 @@
         </section>
 
         <section class="print-editor-workspace">
+          <aside class="print-editor-toolrail" aria-label="Desktop editor tools">
+            <button class="active" type="button" data-editor-tool="templates" aria-pressed="true"><span>▦</span>Templates</button>
+            <button type="button" data-editor-tool="backgrounds" aria-pressed="false"><span>◒</span>Backgrounds</button>
+            <button type="button" data-editor-tool="text" aria-pressed="false"><span>T</span>Text</button>
+            <button type="button" data-editor-tool="uploads" aria-pressed="false"><span>⇧</span>Uploads</button>
+            <button type="button" data-editor-tool="photos" aria-pressed="false"><span>▣</span>Photos</button>
+            <button type="button" data-editor-tool="elements" aria-pressed="false"><span>●</span>Elements</button>
+            <button type="button" data-editor-tool="shapes" aria-pressed="false"><span>◇</span>Shapes</button>
+            <button type="button" data-editor-tool="icons" aria-pressed="false"><span>★</span>Icons</button>
+            <button type="button" data-editor-tool="logos" aria-pressed="false"><span>NP</span>Logos</button>
+            <button type="button" data-editor-tool="qr" aria-pressed="false"><span>▦</span>QR Code</button>
+            <button type="button" data-editor-tool="layers" aria-pressed="false"><span>≡</span>Layers</button>
+            <button type="button" data-editor-tool="ai" aria-pressed="false"><span>✦</span>AI Tools</button>
+          </aside>
+
           <aside class="print-editor-card print-editor-controls">
             <div class="print-product-fields">
               <h2>Product details</h2>
@@ -123,14 +138,22 @@
                   <span>Design area</span>
                   <h2 id="printDesignSize">3.75 x 2.25 in</h2>
                 </div>
-                <button id="printSaveDesign" class="save-btn" type="button">Save Design PNG</button>
+                <div class="print-desktop-toolbar" aria-label="Canvas controls">
+                  <button type="button" data-canvas-action="zoom-out" aria-label="Zoom out">−</button>
+                  <button type="button" data-canvas-action="zoom-in" aria-label="Zoom in">+</button>
+                  <button type="button" data-canvas-action="center" aria-label="Center selected object">Center</button>
+                  <button type="button" data-canvas-action="toggle-guides" aria-label="Show or hide guides">Guides</button>
+                  <button id="printSaveDesign" class="save-btn" type="button">Save Design PNG</button>
+                </div>
               </div>
 
               <div id="printSideTabs" class="print-side-tabs" aria-label="Design side selector"></div>
+              <section id="printEditorDrawer" class="print-editor-drawer" aria-live="polite"></section>
               <div class="print-canvas-frame">
                 <div id="printDesignCanvas" class="print-design-canvas" aria-label="Print product design canvas">
-                  <div class="print-bleed-line"></div>
-                  <div class="print-safe-zone"><span>Safe Area</span></div>
+                  <div class="print-bleed-line"><span>Bleed 3.75 x 2.25</span></div>
+                  <div class="print-trim-line"><span>Trim 3.50 x 2.00</span></div>
+                  <div class="print-safe-zone"><span>Safe Zone 3.25 x 1.75</span></div>
                 </div>
               </div>
             </article>
