@@ -735,6 +735,47 @@
     display: none;
   }
 
+  body.print-products-editor-page .crop-shape-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  body.print-products-editor-page .crop-shape-grid button {
+    display: grid;
+    min-height: 72px;
+    place-items: center;
+    gap: 4px;
+    padding: 7px;
+    border: 1px solid #b9d2e6;
+    border-radius: 5px;
+    background: #fff;
+    color: #0a315d;
+    font-size: 0.67rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  body.print-products-editor-page .crop-shape-grid button.active {
+    border-color: #0abfd9;
+    background: #e9fcff;
+  }
+
+  body.print-products-editor-page .crop-shape-preview {
+    display: block;
+    width: 34px;
+    height: 25px;
+    background: linear-gradient(135deg, #0b8df4, #12c5df);
+  }
+
+  body.print-products-editor-page .crop-shape-preview.crop-circle { border-radius: 50%; }
+  body.print-products-editor-page .crop-shape-preview.crop-rounded { border-radius: 8px; }
+  body.print-products-editor-page .crop-shape-preview.crop-triangle { clip-path: polygon(50% 0, 100% 100%, 0 100%); }
+  body.print-products-editor-page .crop-shape-preview.crop-diamond { clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+  body.print-products-editor-page .crop-shape-preview.crop-hexagon { clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+  body.print-products-editor-page .crop-shape-preview.crop-star { clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 56%, 79% 92%, 50% 70%, 21% 92%, 32% 56%, 2% 35%, 39% 35%); }
+  body.print-products-editor-page .crop-shape-preview.crop-heart { clip-path: polygon(50% 100%, 0 50%, 0 24%, 14% 5%, 32% 5%, 50% 22%, 68% 5%, 86% 5%, 100% 24%, 100% 50%); }
+
   body.print-products-editor-page .print-layer-list,
   body.print-products-editor-page .layer-list {
     display: grid;
