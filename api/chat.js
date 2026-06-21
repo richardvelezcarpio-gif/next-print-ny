@@ -27,6 +27,17 @@ export default async function handler(req, res) {
     return;
   }
 
+  const action = String(req.body?.action || "chat");
+  if (action === "image-search") {
+    await searchPexelsImages(req, res);
+    return;
+  }
+
+  if (action === "image-generate") {
+    await generateEditorImage(req, res);
+    return;
+  }
+
   const apiKey = process.env.OPENAI_API_KEY;
   const message = String(req.body?.message || "").trim();
   const language = req.body?.language === "en" ? "English" : "Español";
@@ -85,6 +96,92 @@ export default async function handler(req, res) {
     res.status(200).json({ reply });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+}
+
+async function searchPexelsImages(req, res) {
+  const query = safeText(req.body?.query).slice(0, 120);
+  const apiKey = process.env.PEXELS_API_KEY;
+  if (!query) {
+    res.status(400).json({ error: "Enter an image search." });
+    return;
+  }
+  if (!apiKey) {
+    res.status(500).json({ error: "PEXELS_API_KEY is not configured in Vercel." });
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=12`, {
+      headers: { Authorization: apiKey },
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      res.status(response.status).json({ error: data?.error || "Could not search photos." });
+      return;
+    }
+    const images = Array.isArray(data.photos)
+      ? data.photos.map((photo) => ({
+          id: String(photo.id || ""),
+          preview: photo.src?.medium || photo.src?.large || "",
+          src: photo.src?.large2x || photo.src?.large || photo.src?.original || "",
+          alt: safeText(photo.alt || query),
+          credit: safeText(photo.photographer || "Pexels"),
+        })).filter((image) => image.src)
+      : [];
+    res.status(200).json({ images });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Could not search photos." });
+  }
+}
+
+async function generateEditorImage(req, res) {
+  const prompt = safeText(req.body?.prompt).slice(0, 600);
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!prompt) {
+    res.status(400).json({ error: "Describe the image you want to generate." });
+    return;
+  }
+  if (!apiKey) {
+    res.status(500).json({ error: "OPENAI_API_KEY is not configured in Vercel." });
+    return;
+  }
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: process.env.OPENAI_IMAGE_MODEL || "gpt-image-1",
+        prompt: `Create a clean, print-ready marketing image. No text unless explicitly requested. ${prompt}`,
+        size: "1024x1024",
+        quality: "low",
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      res.status(response.status).json({ error: data?.error?.message || "Could not generate the image." });
+      return;
+    }
+    const base64 = data.data?.[0]?.b64_json;
+    if (!base64) {
+      res.status(500).json({ error: "The image service did not return an image." });
+      return;
+    }
+    res.status(200).json({
+      images: [{
+        id: `ai-${Date.now()}`,
+        preview: `data:image/png;base64,${base64}`,
+        src: `data:image/png;base64,${base64}`,
+        alt: prompt,
+        credit: "Generated with AI",
+      }],
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message || "Could not generate the image." });
   }
 }
 

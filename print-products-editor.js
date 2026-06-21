@@ -216,6 +216,7 @@ let selectedItemId = null;
 let activeEditorTool = "";
 let canvasZoom = 1;
 let guidesVisible = true;
+let aiImageResults = [];
 let designState = {
   front: [defaultTextItem()],
   back: [defaultTextItem("Back Side")],
@@ -334,7 +335,7 @@ function renderEditorDrawer() {
     logos: renderToolPanel("Logos", "Upload your business logo and place it on the card.", '<label class="drawer-upload">Upload logo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
     qr: renderToolPanel("QR Code", "Add a scannable-style placeholder and replace it later with your real QR image if needed.", '<button class="drawer-action" type="button" data-drawer-action="add-qr">Add QR placeholder</button>'),
     layers: renderLayersPanel(),
-    ai: renderToolPanel("AI tools", "Use a clean artwork photo for the best result.", '<button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button><button class="drawer-action" type="button" data-drawer-action="center-selected">Center selected</button>'),
+    ai: renderAiImagePanel(),
   };
 
   editorDrawer.innerHTML = toolContent[activeEditorTool] || toolContent.templates;
@@ -393,6 +394,26 @@ function renderIconPanel() {
   );
 }
 
+function renderAiImagePanel() {
+  const results = aiImageResults.length
+    ? `<div class="ai-image-results">${aiImageResults
+        .map((image, index) => `<button type="button" class="ai-image-result" data-drawer-action="add-ai-image" data-ai-image-index="${index}" title="Add ${escapeAttribute(image.alt)}"><img src="${escapeAttribute(image.preview)}" alt="${escapeAttribute(image.alt)}" /><span>${escapeHtml(image.credit || "Image")}</span></button>`)
+        .join("")}</div>`
+    : '<p class="drawer-copy">Search real photos or generate a new image without leaving the editor.</p>';
+  return `
+    <div class="drawer-heading"><div><span>AI tools</span><h3>Find or Generate Images</h3></div></div>
+    <div class="ai-image-controls">
+      <input id="printAiImagePrompt" type="search" maxlength="120" placeholder="Search or describe an image..." />
+      <button class="drawer-action" type="button" data-drawer-action="search-ai-images">Search Photos</button>
+      <button class="drawer-action primary" type="button" data-drawer-action="generate-ai-image">Generate with AI</button>
+      <button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button>
+      <button class="drawer-action" type="button" data-drawer-action="center-selected">Center selected</button>
+    </div>
+    <p id="printAiImageStatus" class="drawer-copy" aria-live="polite"></p>
+    ${results}
+  `;
+}
+
 function renderLayersPanel() {
   const items = currentItems();
   const layerRows = items.length
@@ -434,6 +455,9 @@ function handleDrawerAction(event) {
   if (action === "add-qr") addQrPlaceholder();
   if (action === "remove-background") removeBackgroundSelected();
   if (action === "center-selected") centerSelectedItem();
+  if (action === "search-ai-images") searchEditorImages("search");
+  if (action === "generate-ai-image") searchEditorImages("generate");
+  if (action === "add-ai-image") addAiImage(Number(button.dataset.aiImageIndex));
   if (action === "select-layer") {
     selectedItemId = button.dataset.layerId || null;
     renderCanvas();
@@ -441,6 +465,67 @@ function handleDrawerAction(event) {
   }
   if (action === "layer-up") moveSelectedLayer(1);
   if (action === "layer-down") moveSelectedLayer(-1);
+}
+
+async function searchEditorImages(mode) {
+  const promptInput = document.querySelector("#printAiImagePrompt");
+  const status = document.querySelector("#printAiImageStatus");
+  const prompt = String(promptInput?.value || "").trim();
+  if (!prompt) {
+    if (status) status.textContent = "Write what you want to search or generate first.";
+    return;
+  }
+  if (status) status.textContent = mode === "generate" ? "Generating image..." : "Searching photos...";
+  try {
+    const response = await fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: mode === "generate" ? "image-generate" : "image-search", [mode === "generate" ? "prompt" : "query"]: prompt }),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data?.error || "Could not find images.");
+    aiImageResults = Array.isArray(data.images) ? data.images.slice(0, 12) : [];
+    renderEditorDrawer();
+  } catch (error) {
+    if (status) status.textContent = error.message || "Could not find images.";
+  }
+}
+
+async function addAiImage(index) {
+  const image = aiImageResults[index];
+  if (!image?.src) return;
+  try {
+    setStatus("Adding image to the design...");
+    const src = image.src.startsWith("data:") ? image.src : await remoteImageToDataUrl(image.src);
+    const item = {
+      id: `ai-image-${Date.now()}`,
+      type: "image",
+      name: image.alt || "AI image",
+      src,
+      x: 20,
+      y: 20,
+      w: 60,
+      h: 48,
+    };
+    currentItems().push(item);
+    selectedItemId = item.id;
+    renderCanvas();
+    setStatus("Image added to the design.");
+  } catch (error) {
+    setStatus("Could not add this image. Try another result.", true);
+  }
+}
+
+async function remoteImageToDataUrl(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error("Could not download image.");
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
 }
 
 function handleCanvasToolbarAction(event) {
