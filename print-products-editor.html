@@ -188,6 +188,13 @@
                   <button id="printToolbarRemoveBg" type="button">BG Remove</button>
                 </div>
                 <div class="print-desktop-toolbar" aria-label="Canvas controls">
+                  <button type="button" data-canvas-action="undo" aria-label="Undo">Undo</button>
+                  <button type="button" data-canvas-action="redo" aria-label="Redo">Redo</button>
+                  <button type="button" data-canvas-action="align-left" aria-label="Align left">Left</button>
+                  <button type="button" data-canvas-action="align-center" aria-label="Align center">Center X</button>
+                  <button type="button" data-canvas-action="align-right" aria-label="Align right">Right</button>
+                  <button type="button" data-canvas-action="align-middle" aria-label="Align middle">Center Y</button>
+                  <button type="button" data-canvas-action="toggle-snap" aria-label="Toggle snap">Snap</button>
                   <button type="button" data-canvas-action="zoom-out" aria-label="Zoom out">−</button>
                   <button type="button" data-canvas-action="zoom-in" aria-label="Zoom in">+</button>
                   <button type="button" data-canvas-action="center" aria-label="Center selected object">Center</button>
@@ -230,6 +237,8 @@
                   <p>3. Continue to checkout</p>
                   <p>4. Pay securely with PayPal</p>
                 </div>
+                <button id="printRunPreflight" class="preflight-btn" type="button">Check Print Ready</button>
+                <p id="printPreflightResult" class="order-status" aria-live="polite"></p>
                 <button id="printContinueCheckout" class="submit-btn" type="button">Continue to Checkout</button>
                 <p id="printEditorStatus" class="order-status" aria-live="polite"></p>
               </article>

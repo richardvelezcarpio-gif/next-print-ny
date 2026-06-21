@@ -345,6 +345,8 @@
     align-items: center;
     grid-column: 2;
     justify-self: end;
+    flex-wrap: wrap;
+    justify-content: flex-end;
     gap: 7px;
   }
 
@@ -363,6 +365,11 @@
   body.print-products-editor-page .print-desktop-toolbar button:hover {
     border-color: #19c6dc;
     background: #eefbff;
+  }
+
+  body.print-products-editor-page .print-desktop-toolbar button.active {
+    border-color: #12c5df;
+    background: #e9fcff;
   }
 
   body.print-products-editor-page .print-desktop-toolbar .save-btn {
@@ -883,6 +890,23 @@
 
   body.print-products-editor-page .print-canvas-item img.flipped {
     transform: scaleX(-1);
+  }
+
+  body.print-products-editor-page .preflight-btn {
+    width: 100%;
+    min-height: 36px;
+    margin-top: 8px;
+    border: 1px solid #19a060;
+    border-radius: 5px;
+    background: #effcf5;
+    color: #15733f;
+    font-size: 0.76rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  body.print-products-editor-page #printPreflightResult.has-warning {
+    color: #b35218;
   }
 }
 

@@ -146,6 +146,8 @@ const summarySides = document.querySelector("#printSummarySides");
 const summaryTotal = document.querySelector("#printSummaryTotal");
 const continueButton = document.querySelector("#printContinueCheckout");
 const statusNode = document.querySelector("#printEditorStatus");
+const preflightButton = document.querySelector("#printRunPreflight");
+const preflightResult = document.querySelector("#printPreflightResult");
 const editorToolrail = document.querySelector(".print-editor-toolrail");
 const editorDrawer = document.querySelector("#printEditorDrawer");
 const desktopToolbar = document.querySelector(".print-desktop-toolbar");
@@ -217,6 +219,10 @@ let activeEditorTool = "";
 let canvasZoom = 1;
 let guidesVisible = true;
 let aiImageResults = [];
+let snapEnabled = true;
+let undoHistory = [];
+let redoHistory = [];
+let historyTimer = null;
 let designState = {
   front: [defaultTextItem()],
   back: [defaultTextItem("Back Side")],
@@ -227,6 +233,7 @@ if (!editorRedirectTarget) {
   renderProduct();
   bindEvents();
   renderEditorDrawer();
+  rememberHistory();
 }
 
 function bindEvents() {
@@ -280,6 +287,7 @@ function bindEvents() {
   toolbarRemoveBg?.addEventListener("click", removeBackgroundSelected);
   saveButton?.addEventListener("click", saveCurrentSidePng);
   continueButton?.addEventListener("click", continueToCheckout);
+  preflightButton?.addEventListener("click", runPreflight);
 
   editorToolrail?.addEventListener("click", (event) => {
     const button = event.target.closest("button[data-editor-tool]");
@@ -333,7 +341,7 @@ function renderEditorDrawer() {
     shapes: renderToolPanel("Shapes", "Add a color block or line behind your artwork.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Add rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Add circle</button>'),
     icons: renderIconPanel(),
     logos: renderToolPanel("Logos", "Upload your business logo and place it on the card.", '<label class="drawer-upload">Upload logo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
-    qr: renderToolPanel("QR Code", "Add a scannable-style placeholder and replace it later with your real QR image if needed.", '<button class="drawer-action" type="button" data-drawer-action="add-qr">Add QR placeholder</button>'),
+    qr: renderQrPanel(),
     layers: renderLayersPanel(),
     ai: renderAiImagePanel(),
   };
@@ -394,6 +402,18 @@ function renderIconPanel() {
   );
 }
 
+function renderQrPanel() {
+  return `
+    <div class="drawer-heading"><div><span>QR code</span><h3>Create a Functional QR</h3></div></div>
+    <div class="ai-image-controls">
+      <input id="printQrValue" type="url" placeholder="https://your-link.com or phone number" />
+      <button class="drawer-action primary" type="button" data-drawer-action="generate-qr">Generate QR</button>
+      <button class="drawer-action" type="button" data-drawer-action="add-qr">Add sample</button>
+    </div>
+    <p class="drawer-copy">Use a URL, phone number, menu link, Instagram profile or payment link.</p>
+  `;
+}
+
 function renderAiImagePanel() {
   const results = aiImageResults.length
     ? `<div class="ai-image-results">${aiImageResults
@@ -421,11 +441,11 @@ function renderLayersPanel() {
         .slice()
         .reverse()
         .map(
-          (item) => `<button type="button" class="layer-row ${item.id === selectedItemId ? "active" : ""}" data-drawer-action="select-layer" data-layer-id="${escapeAttribute(item.id)}"><span>${escapeHtml(layerName(item))}</span><small>${escapeHtml(item.type)}</small></button>`
+          (item) => `<div class="layer-row ${item.id === selectedItemId ? "active" : ""}"><button type="button" data-drawer-action="select-layer" data-layer-id="${escapeAttribute(item.id)}"><span>${escapeHtml(layerName(item))}</span><small>${escapeHtml(item.type)}</small></button><button type="button" data-drawer-action="toggle-layer-visible" data-layer-id="${escapeAttribute(item.id)}">${item.visible === false ? "Show" : "Hide"}</button><button type="button" data-drawer-action="toggle-layer-lock" data-layer-id="${escapeAttribute(item.id)}">${item.locked ? "Unlock" : "Lock"}</button></div>`
         )
         .join("")
     : '<p class="drawer-copy">No objects on this side yet.</p>';
-  return `<div class="drawer-heading"><div><span>Arrange</span><h3>Layers</h3></div></div><div class="layer-actions"><button class="drawer-action" type="button" data-drawer-action="layer-up">Bring forward</button><button class="drawer-action" type="button" data-drawer-action="layer-down">Send backward</button></div><div class="layer-list">${layerRows}</div>`;
+  return `<div class="drawer-heading"><div><span>Arrange</span><h3>Layers & Projects</h3></div></div><div class="layer-actions"><button class="drawer-action" type="button" data-drawer-action="layer-up">Bring forward</button><button class="drawer-action" type="button" data-drawer-action="layer-down">Send backward</button><button class="drawer-action" type="button" data-drawer-action="save-project">Save project</button><button class="drawer-action" type="button" data-drawer-action="load-project">Load saved</button></div><div class="layer-list">${layerRows}</div>`;
 }
 
 function handleDrawerAction(event) {
@@ -436,23 +456,28 @@ function handleDrawerAction(event) {
   if (action === "background") {
     const template = backgroundTemplates[Number(button.dataset.templateIndex)];
     if (!template) return;
+    rememberHistory();
     if (bgColor1) bgColor1.value = template[1];
     if (bgColor2) bgColor2.value = template[2];
     renderCanvas();
+    rememberHistory();
     return;
   }
   if (action === "solid-background") {
     const color = solidBackgroundColors[Number(button.dataset.solidColorIndex)]?.[1];
     if (!color) return;
+    rememberHistory();
     if (bgColor1) bgColor1.value = color;
     if (bgColor2) bgColor2.value = color;
     renderCanvas();
+    rememberHistory();
     return;
   }
   if (action === "add-text") addEditorText();
   if (action === "add-shape") addShape(button.dataset.shape || "rect");
   if (action === "add-icon") addEditorIcon(button.dataset.icon || "★");
   if (action === "add-qr") addQrPlaceholder();
+  if (action === "generate-qr") generateQrCode();
   if (action === "remove-background") removeBackgroundSelected();
   if (action === "center-selected") centerSelectedItem();
   if (action === "search-ai-images") searchEditorImages("search");
@@ -463,8 +488,79 @@ function handleDrawerAction(event) {
     renderCanvas();
     renderEditorDrawer();
   }
+  if (action === "toggle-layer-visible" || action === "toggle-layer-lock") {
+    const item = currentItems().find((entry) => entry.id === button.dataset.layerId);
+    if (!item) return;
+    rememberHistory();
+    if (action === "toggle-layer-visible") item.visible = item.visible === false;
+    if (action === "toggle-layer-lock") item.locked = !item.locked;
+    renderCanvas();
+    renderEditorDrawer();
+  }
   if (action === "layer-up") moveSelectedLayer(1);
   if (action === "layer-down") moveSelectedLayer(-1);
+  if (action === "save-project") saveProject();
+  if (action === "load-project") loadProject();
+}
+
+function saveProject() {
+  const project = {
+    productId: currentProduct.id,
+    quantity: currentQuantity,
+    designState,
+    color1: bgColor1?.value || "#dff8ff",
+    color2: bgColor2?.value || "#ffffff",
+    savedAt: new Date().toISOString(),
+  };
+  try {
+    localStorage.setItem("nextPrintSavedEditorProject", JSON.stringify(project));
+    setStatus("Project saved on this device.");
+  } catch (error) {
+    setStatus("Project is too large to save on this device.", true);
+  }
+}
+
+function loadProject() {
+  try {
+    const saved = JSON.parse(localStorage.getItem("nextPrintSavedEditorProject") || "null");
+    if (!saved?.designState) {
+      setStatus("No saved project found on this device.", true);
+      return;
+    }
+    const product = productCatalog.find((item) => item.id === saved.productId);
+    if (product) currentProduct = product;
+    currentQuantity = String(saved.quantity || currentProduct.prices[0][0]);
+    designState = saved.designState;
+    selectedItemId = null;
+    if (bgColor1) bgColor1.value = saved.color1 || "#dff8ff";
+    if (bgColor2) bgColor2.value = saved.color2 || "#ffffff";
+    renderProduct();
+    rememberHistory();
+    setStatus("Saved project loaded.");
+  } catch (error) {
+    setStatus("Could not load the saved project.", true);
+  }
+}
+
+async function generateQrCode() {
+  const value = String(document.querySelector("#printQrValue")?.value || "").trim();
+  if (!value) {
+    setStatus("Enter a link or phone number for the QR code.", true);
+    return;
+  }
+  try {
+    setStatus("Generating QR code...");
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=900x900&format=png&data=${encodeURIComponent(value)}`;
+    const src = await remoteImageToDataUrl(url);
+    rememberHistory();
+    const item = { id: `qr-${Date.now()}`, type: "image", name: "Functional QR code", src, x: 68, y: 62, w: 18, h: 24 };
+    currentItems().push(item);
+    selectedItemId = item.id;
+    renderCanvas();
+    setStatus("Functional QR code added.");
+  } catch (error) {
+    setStatus("Could not generate the QR code. Try again.", true);
+  }
 }
 
 async function searchEditorImages(mode) {
@@ -532,6 +628,24 @@ function handleCanvasToolbarAction(event) {
   const button = event.target.closest("button[data-canvas-action]");
   if (!button) return;
   const action = button.dataset.canvasAction;
+  if (action === "undo") {
+    undoDesign();
+    return;
+  }
+  if (action === "redo") {
+    redoDesign();
+    return;
+  }
+  if (action.startsWith("align-")) {
+    alignSelectedItem(action);
+    return;
+  }
+  if (action === "toggle-snap") {
+    snapEnabled = !snapEnabled;
+    button.classList.toggle("active", snapEnabled);
+    setStatus(snapEnabled ? "Smart snap enabled." : "Smart snap disabled.");
+    return;
+  }
   if (action === "zoom-in") canvasZoom = clamp(canvasZoom + 0.1, 0.8, 1.3);
   if (action === "zoom-out") canvasZoom = clamp(canvasZoom - 0.1, 0.8, 1.3);
   if (action === "center") centerSelectedItem();
@@ -540,13 +654,83 @@ function handleCanvasToolbarAction(event) {
     designCanvas?.classList.toggle("guides-hidden", !guidesVisible);
   }
   renderCanvas();
+  rememberHistory();
+}
+
+function designSnapshot() {
+  return JSON.stringify({
+    designState,
+    currentSide,
+    selectedItemId,
+    color1: bgColor1?.value || "#dff8ff",
+    color2: bgColor2?.value || "#ffffff",
+  });
+}
+
+function rememberHistory() {
+  const snapshot = designSnapshot();
+  if (undoHistory.at(-1) === snapshot) return;
+  undoHistory.push(snapshot);
+  if (undoHistory.length > 30) undoHistory.shift();
+  redoHistory = [];
+}
+
+function restoreHistory(snapshot) {
+  const state = JSON.parse(snapshot);
+  designState = state.designState || { front: [], back: [] };
+  currentSide = state.currentSide || "front";
+  selectedItemId = state.selectedItemId || null;
+  if (bgColor1) bgColor1.value = state.color1 || "#dff8ff";
+  if (bgColor2) bgColor2.value = state.color2 || "#ffffff";
+  renderSideTabs();
+  renderCanvas();
+  renderEditorDrawer();
+}
+
+function undoDesign() {
+  if (undoHistory.length < 2) {
+    setStatus("Nothing to undo yet.", true);
+    return;
+  }
+  const current = undoHistory.pop();
+  redoHistory.push(current);
+  restoreHistory(undoHistory.at(-1));
+  setStatus("Last change undone.");
+}
+
+function redoDesign() {
+  const next = redoHistory.pop();
+  if (!next) {
+    setStatus("Nothing to redo yet.", true);
+    return;
+  }
+  undoHistory.push(next);
+  restoreHistory(next);
+  setStatus("Change restored.");
+}
+
+function alignSelectedItem(action) {
+  const item = findSelectedItem();
+  if (!item) {
+    setStatus("Select an object to align it.", true);
+    return;
+  }
+  rememberHistory();
+  if (action === "align-left") item.x = 0;
+  if (action === "align-center") item.x = (100 - item.w) / 2;
+  if (action === "align-right") item.x = 100 - item.w;
+  if (action === "align-middle") item.y = (100 - item.h) / 2;
+  renderCanvas();
+  rememberHistory();
 }
 
 function addEditorText() {
+  rememberHistory();
   const item = defaultTextItem("Your Text Here");
   currentItems().push(item);
   selectedItemId = item.id;
   renderCanvas();
+  rememberHistory();
   requestAnimationFrame(() => {
     const editableNode = designCanvas?.querySelector(`[data-id="${CSS.escape(item.id)}"] .print-canvas-text-content`);
     editableNode?.focus();
@@ -556,6 +740,7 @@ function addEditorText() {
 }
 
 function addEditorIcon(icon) {
+  rememberHistory();
   const item = defaultTextItem(icon);
   item.x = 40;
   item.y = 38;
@@ -565,10 +750,12 @@ function addEditorIcon(icon) {
   currentItems().push(item);
   selectedItemId = item.id;
   renderCanvas();
+  rememberHistory();
   renderEditorDrawer();
 }
 
 function addShape(shape) {
+  rememberHistory();
   const item = {
     id: `shape-${Date.now()}`,
     type: "shape",
@@ -582,14 +769,17 @@ function addShape(shape) {
   currentItems().push(item);
   selectedItemId = item.id;
   renderCanvas();
+  rememberHistory();
   renderEditorDrawer();
 }
 
 function addQrPlaceholder() {
+  rememberHistory();
   const item = { id: `qr-${Date.now()}`, type: "qr", x: 68, y: 62, w: 18, h: 24 };
   currentItems().push(item);
   selectedItemId = item.id;
   renderCanvas();
+  rememberHistory();
   renderEditorDrawer();
 }
 
@@ -599,9 +789,11 @@ function centerSelectedItem() {
     setStatus("Select an object to center.", true);
     return;
   }
+  rememberHistory();
   item.x = clamp((100 - item.w) / 2, 0, 100 - item.w);
   item.y = clamp((100 - item.h) / 2, 0, 100 - item.h);
   renderCanvas();
+  rememberHistory();
   renderEditorDrawer();
 }
 
@@ -611,8 +803,10 @@ function moveSelectedLayer(direction) {
   if (index < 0) return;
   const nextIndex = clamp(index + direction, 0, items.length - 1);
   if (nextIndex === index) return;
+  rememberHistory();
   [items[index], items[nextIndex]] = [items[nextIndex], items[index]];
   renderCanvas();
+  rememberHistory();
   renderEditorDrawer();
 }
 
@@ -785,7 +979,7 @@ function renderCanvas() {
   designCanvas.style.maxWidth = isDesktopEditor ? "none" : `${width}px`;
 
   designCanvas.querySelectorAll(".print-canvas-item").forEach((node) => node.remove());
-  currentItems().forEach((item) => designCanvas.appendChild(renderCanvasItem(item)));
+  currentItems().filter((item) => item.visible !== false).forEach((item) => designCanvas.appendChild(renderCanvasItem(item)));
   syncSelectedControls();
 }
 
@@ -893,6 +1087,8 @@ function startDrag(event, id) {
   event.preventDefault();
   selectedItemId = id;
   const item = findSelectedItem();
+  if (!item || item.locked) return;
+  rememberHistory();
   const rect = designCanvas.getBoundingClientRect();
   const startX = event.clientX;
   const startY = event.clientY;
@@ -902,14 +1098,15 @@ function startDrag(event, id) {
   const move = (moveEvent) => {
     const dx = ((moveEvent.clientX - startX) / rect.width) * 100;
     const dy = ((moveEvent.clientY - startY) / rect.height) * 100;
-    item.x = clamp(originalX + dx, 0, 100 - item.w);
-    item.y = clamp(originalY + dy, 0, 100 - item.h);
+    item.x = snapPercent(clamp(originalX + dx, 0, 100 - item.w));
+    item.y = snapPercent(clamp(originalY + dy, 0, 100 - item.h));
     renderCanvas();
   };
 
   const stop = () => {
     window.removeEventListener("pointermove", move);
     window.removeEventListener("pointerup", stop);
+    rememberHistory();
   };
 
   window.addEventListener("pointermove", move);
@@ -922,6 +1119,8 @@ function startResize(event, id, direction) {
   selectedItemId = id;
   const item = findSelectedItem();
   if (!item) return;
+  if (item.locked) return;
+  rememberHistory();
   const rect = designCanvas.getBoundingClientRect();
   const startX = event.clientX;
   const startY = event.clientY;
@@ -960,10 +1159,10 @@ function startResize(event, id, direction) {
       nextH = bottom - nextY;
     }
 
-    item.x = nextX;
-    item.y = nextY;
-    item.w = nextW;
-    item.h = nextH;
+    item.x = snapPercent(nextX);
+    item.y = snapPercent(nextY);
+    item.w = snapPercent(nextW);
+    item.h = snapPercent(nextH);
     if (item.type === "text") {
       const horizontalScale = nextW / original.w;
       const verticalScale = nextH / original.h;
@@ -976,10 +1175,17 @@ function startResize(event, id, direction) {
   const stop = () => {
     window.removeEventListener("pointermove", move);
     window.removeEventListener("pointerup", stop);
+    rememberHistory();
   };
 
   window.addEventListener("pointermove", move);
   window.addEventListener("pointerup", stop);
+}
+
+function snapPercent(value) {
+  if (!snapEnabled) return value;
+  const snapped = Math.round(value / 2) * 2;
+  return Math.abs(snapped - value) < 0.85 ? snapped : value;
 }
 
 function currentItems() {
@@ -1146,9 +1352,34 @@ function duplicateSelected() {
 
 function deleteSelected() {
   if (!selectedItemId) return;
+  rememberHistory();
   designState[currentSide] = currentItems().filter((item) => item.id !== selectedItemId);
   selectedItemId = null;
   renderCanvas();
+}
+
+function runPreflight() {
+  const warnings = [];
+  const items = currentItems();
+  const isCard = currentProduct.category === "cards";
+  const safe = isCard ? { x: 6.6667, y: 11.1111, width: 86.6666, height: 77.7778 } : { x: 8, y: 8, width: 84, height: 84 };
+  const safeRight = safe.x + safe.width;
+  const safeBottom = safe.y + safe.height;
+
+  if (!items.length) warnings.push("Add at least one design object.");
+  items.forEach((item) => {
+    if (item.type === "text" && !String(item.text || "").trim()) warnings.push("Remove or fill an empty text object.");
+    if (item.x < safe.x || item.y < safe.y || item.x + item.w > safeRight || item.y + item.h > safeBottom) {
+      warnings.push(`${layerName(item)} extends outside the safe zone.`);
+    }
+  });
+
+  const message = warnings.length
+    ? `Review before printing: ${[...new Set(warnings)].slice(0, 3).join(" ")}`
+    : "Print ready: all objects are inside the safe zone.";
+  if (preflightResult) preflightResult.textContent = message;
+  preflightResult?.classList.toggle("has-warning", Boolean(warnings.length));
+  setStatus(message, Boolean(warnings.length));
 }
 
 function findSelectedItem() {
@@ -1289,6 +1520,7 @@ async function createPreview(side, options = {}) {
 
   const sideItems = designState[side] || [];
   for (const item of sideItems) {
+    if (item.visible === false) continue;
     const x = (item.x / 100) * canvas.width;
     const y = (item.y / 100) * canvas.height;
     const w = (item.w / 100) * canvas.width;
