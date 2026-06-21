@@ -330,7 +330,7 @@ function renderEditorDrawer() {
     photos: renderToolPanel("Photos", "Upload a photo, then use Remove Background for light or white backdrops.", '<label class="drawer-upload">Upload photo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label><button class="drawer-action" type="button" data-drawer-action="remove-background">Remove Background</button>'),
     elements: renderToolPanel("Elements", "Add printable shapes and accents to your design.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rounded">Rounded</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="square">Square</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Circle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="line">Line</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="triangle">Triangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="diamond">Diamond</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="star">Star</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="arrow">Arrow</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="hexagon">Hexagon</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="heart">Heart</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="frame">Frame</button>'),
     shapes: renderToolPanel("Shapes", "Add a color block or line behind your artwork.", '<button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="rect">Add rectangle</button><button class="drawer-action" type="button" data-drawer-action="add-shape" data-shape="circle">Add circle</button>'),
-    icons: renderToolPanel("Icons", "Insert a simple icon as editable text.", '<button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="★">Star</button><button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="✓">Check</button><button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="☎">Phone</button>'),
+    icons: renderIconPanel(),
     logos: renderToolPanel("Logos", "Upload your business logo and place it on the card.", '<label class="drawer-upload">Upload logo<input type="file" data-drawer-upload accept="image/png,image/jpeg,image/webp" /></label>'),
     qr: renderToolPanel("QR Code", "Add a scannable-style placeholder and replace it later with your real QR image if needed.", '<button class="drawer-action" type="button" data-drawer-action="add-qr">Add QR placeholder</button>'),
     layers: renderLayersPanel(),
@@ -377,6 +377,20 @@ function renderSolidBackgroundPanel() {
 
 function renderToolPanel(title, copy, actions) {
   return `<div class="drawer-heading"><div><span>Editor tool</span><h3>${escapeHtml(title)}</h3></div></div><p class="drawer-copy">${escapeHtml(copy)}</p><div class="drawer-actions">${actions}</div>`;
+}
+
+function renderIconPanel() {
+  const icons = [
+    ["Star", "★"], ["Check", "✓"], ["Heart", "♥"], ["Phone", "☎"], ["Email", "✉"], ["Location", "⌖"],
+    ["Clock", "◷"], ["Calendar", "▣"], ["Globe", "◎"], ["Camera", "▧"], ["User", "●"], ["Home", "⌂"],
+    ["Arrow right", "→"], ["Arrow left", "←"], ["Arrow up", "↑"], ["Arrow down", "↓"], ["Plus", "+"], ["Info", "i"],
+    ["Dollar", "$"], ["Percent", "%"], ["Instagram", "◎"], ["Facebook", "f"], ["WhatsApp", "WA"], ["Chat", "…"],
+  ];
+  return renderToolPanel(
+    "Icons",
+    "Insert an editable icon, then move or resize it on the design.",
+    icons.map(([label, icon]) => `<button class="drawer-action" type="button" data-drawer-action="add-icon" data-icon="${escapeAttribute(icon)}">${escapeHtml(icon)} ${escapeHtml(label)}</button>`).join("")
+  );
 }
 
 function renderLayersPanel() {
