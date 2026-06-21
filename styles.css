@@ -30,6 +30,14 @@
     padding: 0 0 72px;
   }
 
+  /* Full-screen desktop workspace: editor controls stay visible while designing. */
+  body.print-products-editor-page .reseller-strip,
+  body.print-products-editor-page .site-main-header,
+  body.print-products-editor-page .desktop-print-editor-hero,
+  body.print-products-editor-page .print-order-hero {
+    display: none !important;
+  }
+
   body.print-products-editor-page .print-order-hero {
     display: none;
   }
@@ -188,22 +196,24 @@
   body.print-products-editor-page .print-editor-workspace {
     display: grid;
     grid-template-columns: 82px minmax(0, 1fr);
-    grid-template-rows: auto auto auto;
+    grid-template-rows: minmax(0, 1fr) auto auto;
     gap: 16px;
     max-width: none;
-    padding: 32px clamp(18px, 3vw, 56px) 0;
+    min-height: 100vh;
+    padding: 8px clamp(10px, 1.5vw, 28px) 0;
   }
 
   body.print-products-editor-page .print-editor-toolrail {
     position: sticky;
-    top: 18px;
+    top: 8px;
     z-index: 3;
     grid-column: 1;
     grid-row: 1 / span 3;
     display: flex;
     flex-direction: column;
     align-self: start;
-    overflow: hidden;
+    max-height: calc(100vh - 16px);
+    overflow-y: auto;
     border: 1px solid #1ccde3;
     border-radius: 8px;
     background: linear-gradient(180deg, #0fbae0, #0874b4);
@@ -212,7 +222,7 @@
 
   body.print-products-editor-page .print-editor-toolrail button {
     display: grid;
-    min-height: 58px;
+    min-height: 45px;
     place-content: center;
     gap: 4px;
     padding: 7px 4px;
@@ -251,7 +261,11 @@
     grid-column: 2;
     grid-row: 1;
     max-width: none;
-    padding: 18px;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    height: calc(100vh - 16px);
+    min-height: 560px;
+    padding: 12px;
     border-radius: 8px;
   }
 
@@ -259,7 +273,7 @@
     display: grid;
     grid-template-columns: minmax(165px, 0.42fr) minmax(0, 1.58fr);
     align-items: center;
-    gap: 18px;
+    gap: 10px;
   }
 
   body.print-products-editor-page .print-design-top h2 {
@@ -639,10 +653,11 @@
 
   body.print-products-editor-page .print-canvas-frame {
     display: grid;
-    min-height: clamp(510px, 50vw, 690px);
+    min-height: 0;
+    height: 100%;
     place-items: center;
     overflow: hidden;
-    padding: 54px 68px;
+    padding: 38px 48px;
     border: 1px dashed #9ebfd8;
     border-radius: 7px;
     background-color: #f0f6fb;
@@ -651,8 +666,10 @@
   }
 
   body.print-products-editor-page .print-design-canvas {
-    width: min(100%, 1180px);
-    max-width: none;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     min-height: 0;
     border: 2px solid #8845ff;
     border-radius: 0;
