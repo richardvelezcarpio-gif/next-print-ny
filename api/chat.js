@@ -101,7 +101,7 @@ export default async function handler(req, res) {
 
 async function searchPexelsImages(req, res) {
   const query = safeText(req.body?.query).slice(0, 120);
-  const apiKey = process.env.PEXELS_API_KEY;
+  const apiKey = normalizePexelsKey(process.env.PEXELS_API_KEY);
   if (!query) {
     res.status(400).json({ error: "Enter an image search." });
     return;
@@ -112,12 +112,18 @@ async function searchPexelsImages(req, res) {
   }
 
   try {
-    const response = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=12`, {
-      headers: { Authorization: apiKey },
+    const response = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=12&page=1`, {
+      headers: {
+        Authorization: apiKey,
+        Accept: "application/json",
+      },
     });
     const data = await response.json();
     if (!response.ok) {
-      res.status(response.status).json({ error: data?.error || "Could not search photos." });
+      const error = response.status === 401 || response.status === 403
+        ? "Pexels rejected PEXELS_API_KEY. In Vercel, paste only the key value with no quotes or Bearer prefix."
+        : data?.error || "Could not search photos.";
+      res.status(response.status).json({ error });
       return;
     }
     const images = Array.isArray(data.photos)
@@ -135,6 +141,13 @@ async function searchPexelsImages(req, res) {
   }
 }
 
+function normalizePexelsKey(value) {
+  return String(value || "")
+    .trim()
+    .replace(/^Bearer\s+/i, "")
+    .replace(/^['"]|['"]$/g, "");
+}
+
 async function generateEditorImage(req, res) {
   const prompt = safeText(req.body?.prompt).slice(0, 600);
   const apiKey = process.env.OPENAI_API_KEY;
@@ -147,6 +160,11 @@ async function generateEditorImage(req, res) {
     return;
   }
 
+  const requestedModel = String(process.env.OPENAI_IMAGE_MODEL || "").trim();
+  const model = ["gpt-image-1", "gpt-image-1-mini", "gpt-image-1.5"].includes(requestedModel)
+    ? requestedModel
+    : "gpt-image-1";
+
   try {
     const response = await fetch("https://api.openai.com/v1/images/generations", {
       method: "POST",
@@ -155,7 +173,7 @@ async function generateEditorImage(req, res) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: process.env.OPENAI_IMAGE_MODEL || "gpt-image-1",
+        model,
         prompt: `Create a clean, print-ready marketing image. No text unless explicitly requested. ${prompt}`,
         size: "1024x1024",
         quality: "low",
@@ -163,7 +181,12 @@ async function generateEditorImage(req, res) {
     });
     const data = await response.json();
     if (!response.ok) {
-      res.status(response.status).json({ error: data?.error?.message || "Could not generate the image." });
+      const message = data?.error?.message || "Could not generate the image.";
+      res.status(response.status).json({
+        error: /string did not match expected pattern/i.test(message)
+          ? "Image generation configuration is invalid. Check OPENAI_API_KEY and use gpt-image-1, gpt-image-1-mini, or gpt-image-1.5 for OPENAI_IMAGE_MODEL."
+          : message,
+      });
       return;
     }
     const base64 = data.data?.[0]?.b64_json;
