@@ -395,10 +395,11 @@
     display: none;
     position: absolute;
     z-index: 10;
-    top: 74px;
-    right: 28px;
-    left: 112px;
-    max-height: 250px;
+    top: 112px;
+    right: 14px;
+    left: auto;
+    width: min(310px, 25vw);
+    max-height: calc(100% - 126px);
     overflow: auto;
     margin: 0;
     padding: 13px;
@@ -410,6 +411,10 @@
 
   body.print-products-editor-page .print-editor-drawer.is-open {
     display: block;
+  }
+
+  body.print-products-editor-page .print-design-card:has(.print-editor-drawer.is-open) .print-canvas-frame {
+    padding-right: min(360px, 29vw);
   }
 
   body.print-products-editor-page .print-drawer-head {
@@ -603,6 +608,23 @@
     font-size: 0.7rem;
     font-weight: 900;
     text-transform: none;
+  }
+
+  body.print-products-editor-page .text-fx-grid select {
+    grid-column: 1 / -1;
+    min-width: 0;
+    min-height: 30px;
+    padding: 0 7px;
+    border: 1px solid #b9d2e6;
+    border-radius: 4px;
+    background: #fff;
+    color: #0a315d;
+    font-weight: 800;
+  }
+
+  body.print-products-editor-page .fx-fill-grid,
+  body.print-products-editor-page .fx-photo-grid {
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
   }
 
   body.print-products-editor-page .text-fx-shape-heading {
@@ -1069,6 +1091,21 @@
 
   body.print-products-editor-page .print-canvas-item img.flipped {
     transform: scaleX(-1);
+  }
+
+  body.print-products-editor-page .print-canvas-item img.crop-circle {
+    border-radius: 50%;
+  }
+
+  body.print-products-editor-page .print-canvas-item img.crop-square {
+    width: min(100%, 100%);
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  body.print-products-editor-page .print-ready-btn {
+    background: #0f8b55 !important;
   }
 
   body.print-products-editor-page .preflight-btn {

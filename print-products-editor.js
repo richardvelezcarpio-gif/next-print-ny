@@ -166,6 +166,7 @@ const toolbarOutline = document.querySelector("#printToolbarOutline");
 const toolbarShadow = document.querySelector("#printToolbarShadow");
 const toolbarOpacity = document.querySelector("#printToolbarOpacity");
 const toolbarRotate = document.querySelector("#printToolbarRotate");
+const savePrintButton = document.querySelector("#printSavePrint");
 const editorHeroTitle = document.querySelector("#printEditorHeroTitle");
 const editorHeroKicker = document.querySelector("#printEditorHeroKicker");
 const editorHeroCopy = document.querySelector("#printEditorHeroCopy");
@@ -300,6 +301,7 @@ function bindEvents() {
   toolbarOpacity?.addEventListener("input", updateSelectedImageEffects);
   toolbarRotate?.addEventListener("input", updateSelectedImageEffects);
   saveButton?.addEventListener("click", saveCurrentSidePng);
+  savePrintButton?.addEventListener("click", savePrintReadyPng);
   continueButton?.addEventListener("click", continueToCheckout);
   preflightButton?.addEventListener("click", runPreflight);
 
@@ -329,10 +331,10 @@ function bindEvents() {
   editorDrawer?.addEventListener("click", handleDrawerAction);
   editorDrawer?.addEventListener("change", (event) => {
     if (event.target.matches("input[data-drawer-upload]")) handleUpload(event);
-    if (event.target.matches("[data-text-effect-control]")) updateTextEffectControl(event.target);
+    if (event.target.matches("[data-object-effect-control]")) updateObjectEffectControl(event.target);
   });
   editorDrawer?.addEventListener("input", (event) => {
-    if (event.target.matches("[data-text-effect-control]")) updateTextEffectControl(event.target);
+    if (event.target.matches("[data-object-effect-control]")) updateObjectEffectControl(event.target);
   });
   desktopToolbar?.addEventListener("click", handleCanvasToolbarAction);
   editorStartButton?.addEventListener("click", () => {
@@ -372,16 +374,42 @@ function renderEditorDrawer() {
 
 function renderTextEffectsPanel() {
   const item = findSelectedItem();
-  if (!item || item.type !== "text") {
-    return renderToolPanel("Text Effects", "Select a text object, then control its outline, stroke, shadow, glow and shape.", "");
+  if (!item) {
+    return renderToolPanel("FX Studio", "Select text, a photo, or a shape to edit its fill, effects and print settings.", "");
   }
   const value = (key, fallback) => escapeAttribute(item[key] ?? fallback);
   const mode = item.curveMode || "straight";
   const effectButton = (label, key) => `<button class="drawer-action ${item[key] ? "active" : ""}" type="button" data-drawer-action="toggle-text-effect" data-text-effect="${key}">${label}</button>`;
   const modeButton = (label, key) => `<button class="drawer-action ${mode === key ? "active" : ""}" type="button" data-drawer-action="set-text-curve" data-curve-mode="${key}">${label}</button>`;
-  return `
-    <div class="drawer-heading"><div><span>Typography studio</span><h3>Text Effects</h3></div><small>Selected text</small></div>
-    <p class="drawer-copy">Choose an effect and tune its color, strength and shape for a production-ready design.</p>
+  const fillControls = item.type !== "image" ? `
+    <div class="drawer-heading text-fx-shape-heading"><div><span>Color</span><h3>Fill & Gradient</h3></div></div>
+    <div class="text-fx-modes">
+      <button class="drawer-action ${item.fillMode !== "gradient" ? "active" : ""}" type="button" data-drawer-action="set-fill-mode" data-fill-mode="solid">Solid</button>
+      <button class="drawer-action ${item.fillMode === "gradient" ? "active" : ""}" type="button" data-drawer-action="set-fill-mode" data-fill-mode="gradient">Gradient</button>
+      <button class="drawer-action" type="button" data-drawer-action="eyedropper">Eyedropper</button>
+      <button class="drawer-action" type="button" data-drawer-action="sample-image-color">Sample image</button>
+    </div>
+    <div class="text-fx-grid fx-fill-grid">
+      <label>Fill color<input type="color" data-object-effect-control data-effect-key="color" value="${value("color", "#061a35")}" /></label>
+      <label>Gradient start<input type="color" data-object-effect-control data-effect-key="fillStart" value="${value("fillStart", item.color || "#061a35")}" /></label>
+      <label>Gradient end<input type="color" data-object-effect-control data-effect-key="fillEnd" value="${value("fillEnd", "#12c5df")}" /></label>
+    </div>` : "";
+  const imageControls = item.type === "image" ? `
+    <div class="drawer-heading text-fx-shape-heading"><div><span>Photo edit</span><h3>Crop & Adjust</h3></div></div>
+    <div class="text-fx-modes">
+      <button class="drawer-action ${item.cropShape === "circle" ? "active" : ""}" type="button" data-drawer-action="set-crop" data-crop-shape="circle">Crop circle</button>
+      <button class="drawer-action ${item.cropShape === "square" ? "active" : ""}" type="button" data-drawer-action="set-crop" data-crop-shape="square">Crop square</button>
+      <button class="drawer-action ${!item.cropShape ? "active" : ""}" type="button" data-drawer-action="set-crop" data-crop-shape="">Reset crop</button>
+      <button class="drawer-action" type="button" data-drawer-action="eyedropper">Eyedropper</button>
+    </div>
+    <div class="text-fx-grid fx-photo-grid">
+      <label>Brightness<input type="range" min="0" max="200" value="${value("brightness", 100)}" data-object-effect-control data-effect-key="brightness" /><output>${value("brightness", 100)}%</output></label>
+      <label>Saturation<input type="range" min="0" max="200" value="${value("saturation", 100)}" data-object-effect-control data-effect-key="saturation" /><output>${value("saturation", 100)}%</output></label>
+      <label>Blur<input type="range" min="0" max="24" value="${value("blur", 0)}" data-object-effect-control data-effect-key="blur" /><output>${value("blur", 0)} px</output></label>
+      <label>Filter<select data-object-effect-control data-effect-key="filterPreset"><option value="normal"${(item.filterPreset || "normal") === "normal" ? " selected" : ""}>Normal</option><option value="grayscale"${item.filterPreset === "grayscale" ? " selected" : ""}>Grayscale</option><option value="sepia"${item.filterPreset === "sepia" ? " selected" : ""}>Sepia</option><option value="vintage"${item.filterPreset === "vintage" ? " selected" : ""}>Vintage</option><option value="cool"${item.filterPreset === "cool" ? " selected" : ""}>Cool</option><option value="contrast"${item.filterPreset === "contrast" ? " selected" : ""}>High contrast</option></select></label>
+    </div>` : "";
+  const textControls = item.type === "text" ? `
+    <div class="drawer-heading text-fx-shape-heading"><div><span>Typography studio</span><h3>Text Effects</h3></div><small>Selected text</small></div>
     <div class="text-fx-modes">
       ${effectButton("Outline", "outline")}
       ${effectButton("Shadow", "shadow")}
@@ -389,14 +417,14 @@ function renderTextEffectsPanel() {
       ${effectButton("Glow", "glow")}
     </div>
     <div class="text-fx-grid">
-      <label>Outline color<input type="color" data-text-effect-control data-effect-key="outlineColor" value="${value("outlineColor", "#ffffff")}" /></label>
-      <label>Outline width<input type="range" min="0" max="16" value="${value("outlineWidth", 2)}" data-text-effect-control data-effect-key="outlineWidth" /><output>${value("outlineWidth", 2)} px</output></label>
-      <label>Shadow color<input type="color" data-text-effect-control data-effect-key="shadowColor" value="${value("shadowColor", "#10233d")}" /></label>
-      <label>Shadow strength<input type="range" min="0" max="36" value="${value("shadowBlur", 8)}" data-text-effect-control data-effect-key="shadowBlur" /><output>${value("shadowBlur", 8)} px</output></label>
-      <label>Stroke color<input type="color" data-text-effect-control data-effect-key="strokeColor" value="${value("strokeColor", "#0b8df4")}" /></label>
-      <label>Stroke width<input type="range" min="0" max="16" value="${value("strokeWidth", 2)}" data-text-effect-control data-effect-key="strokeWidth" /><output>${value("strokeWidth", 2)} px</output></label>
-      <label>Glow color<input type="color" data-text-effect-control data-effect-key="glowColor" value="${value("glowColor", "#12c5df")}" /></label>
-      <label>Glow strength<input type="range" min="0" max="48" value="${value("glowBlur", 14)}" data-text-effect-control data-effect-key="glowBlur" /><output>${value("glowBlur", 14)} px</output></label>
+      <label>Outline color<input type="color" data-object-effect-control data-effect-key="outlineColor" value="${value("outlineColor", "#ffffff")}" /></label>
+      <label>Outline width<input type="range" min="0" max="16" value="${value("outlineWidth", 2)}" data-object-effect-control data-effect-key="outlineWidth" /><output>${value("outlineWidth", 2)} px</output></label>
+      <label>Shadow color<input type="color" data-object-effect-control data-effect-key="shadowColor" value="${value("shadowColor", "#10233d")}" /></label>
+      <label>Shadow strength<input type="range" min="0" max="36" value="${value("shadowBlur", 8)}" data-object-effect-control data-effect-key="shadowBlur" /><output>${value("shadowBlur", 8)} px</output></label>
+      <label>Stroke color<input type="color" data-object-effect-control data-effect-key="strokeColor" value="${value("strokeColor", "#0b8df4")}" /></label>
+      <label>Stroke width<input type="range" min="0" max="16" value="${value("strokeWidth", 2)}" data-object-effect-control data-effect-key="strokeWidth" /><output>${value("strokeWidth", 2)} px</output></label>
+      <label>Glow color<input type="color" data-object-effect-control data-effect-key="glowColor" value="${value("glowColor", "#12c5df")}" /></label>
+      <label>Glow strength<input type="range" min="0" max="48" value="${value("glowBlur", 14)}" data-object-effect-control data-effect-key="glowBlur" /><output>${value("glowBlur", 14)} px</output></label>
     </div>
     <div class="drawer-heading text-fx-shape-heading"><div><span>Text shape</span><h3>Curve & Wrap</h3></div></div>
     <div class="text-fx-modes">
@@ -406,8 +434,22 @@ function renderTextEffectsPanel() {
       ${modeButton("Circle", "circle")}
       ${modeButton("Banner", "banner")}
     </div>
-    <div class="text-fx-grid text-fx-curve-control">
-      <label>Curve amount<input type="range" min="0" max="100" value="${value("curveAmount", 65)}" data-text-effect-control data-effect-key="curveAmount" /><output>${value("curveAmount", 65)}%</output></label>
+    <div class="text-fx-grid text-fx-curve-control"><label>Curve amount<input type="range" min="0" max="100" value="${value("curveAmount", 65)}" data-object-effect-control data-effect-key="curveAmount" /><output>${value("curveAmount", 65)}%</output></label></div>` : "";
+  return `
+    <div class="drawer-heading"><div><span>Professional editor</span><h3>FX Studio</h3></div><small>${escapeHtml(item.type)}</small></div>
+    <p class="drawer-copy">Fill, image adjustments, crop, effects, alignment and print production controls.</p>
+    ${fillControls}
+    ${imageControls}
+    ${textControls}
+    <div class="drawer-heading text-fx-shape-heading"><div><span>Arrange</span><h3>Align, lock & print</h3></div></div>
+    <div class="text-fx-modes fx-arrange-actions">
+      <button class="drawer-action" type="button" data-drawer-action="align-selected" data-align="align-left">Left</button>
+      <button class="drawer-action" type="button" data-drawer-action="align-selected" data-align="align-center">Center</button>
+      <button class="drawer-action" type="button" data-drawer-action="align-selected" data-align="align-right">Right</button>
+      <button class="drawer-action" type="button" data-drawer-action="align-selected" data-align="align-middle">Middle</button>
+      <button class="drawer-action ${item.locked ? "active" : ""}" type="button" data-drawer-action="toggle-selected-lock">${item.locked ? "Unlock layer" : "Lock layer"}</button>
+      <button class="drawer-action primary" type="button" data-drawer-action="run-preflight">Check bleed</button>
+      <button class="drawer-action primary" type="button" data-drawer-action="save-print-ready">Export 300 DPI</button>
     </div>
   `;
 }
@@ -566,6 +608,14 @@ function handleDrawerAction(event) {
   if (action === "add-ai-image") addAiImage(Number(button.dataset.aiImageIndex));
   if (action === "toggle-text-effect") toggleTextStyle(button.dataset.textEffect || "outline");
   if (action === "set-text-curve") setTextCurve(button.dataset.curveMode || "straight");
+  if (action === "set-fill-mode") setSelectedFillMode(button.dataset.fillMode || "solid");
+  if (action === "set-crop") setSelectedCrop(button.dataset.cropShape || "");
+  if (action === "eyedropper") openEyedropper();
+  if (action === "sample-image-color") sampleSelectedImageColor();
+  if (action === "align-selected") alignSelectedItem(button.dataset.align || "align-center");
+  if (action === "toggle-selected-lock") toggleSelectedLock();
+  if (action === "run-preflight") runPreflight();
+  if (action === "save-print-ready") savePrintReadyPng();
   if (action === "select-layer") {
     selectedItemId = button.dataset.layerId || null;
     renderCanvas();
@@ -1098,12 +1148,14 @@ function renderCanvasItem(item) {
     img.src = item.src;
     img.alt = item.name || "Uploaded artwork";
     if (item.flipX) img.classList.add("flipped");
+    if (item.cropShape) img.classList.add(`crop-${item.cropShape}`);
+    img.style.filter = imageFilterStyle(item);
     node.appendChild(img);
     node.style.opacity = String(item.opacity ?? 1);
     node.style.transform = `rotate(${item.rotation || 0}deg)`;
   } else if (item.type === "shape") {
     node.classList.add("print-shape-item", `shape-${item.shape || "rect"}`);
-    node.style.background = item.color || "#0b8df4";
+    node.style.background = itemFillStyle(item);
   } else if (item.type === "qr") {
     const qr = document.createElement("span");
     qr.className = "print-qr-art";
@@ -1131,6 +1183,12 @@ function renderCanvasItem(item) {
     textContent.style.webkitTextStroke = item.stroke ? `${item.strokeWidth || 2}px ${item.strokeColor || "#0b8df4"}` : "0";
     textContent.style.textShadow = textEffectShadow(item);
     textContent.style.whiteSpace = item.wrap ? "normal" : "nowrap";
+    if (item.fillMode === "gradient") {
+      textContent.style.background = itemFillStyle(item);
+      textContent.style.webkitBackgroundClip = "text";
+      textContent.style.backgroundClip = "text";
+      textContent.style.color = "transparent";
+    }
     node.appendChild(textContent);
     if (item.id === selectedItemId) {
       textContent.contentEditable = "true";
@@ -1247,6 +1305,23 @@ function textEffectShadow(item) {
   }
   if (item.glow) effects.push(`0 0 ${Number(item.glowBlur ?? 14)}px ${item.glowColor || "#12c5df"}`);
   return effects.length ? effects.join(", ") : "none";
+}
+
+function itemFillStyle(item) {
+  if (item.fillMode === "gradient") return `linear-gradient(135deg, ${item.fillStart || item.color || "#061a35"}, ${item.fillEnd || "#12c5df"})`;
+  return item.color || "#0b8df4";
+}
+
+function imageFilterStyle(item) {
+  const preset = {
+    normal: "",
+    grayscale: "grayscale(1)",
+    sepia: "sepia(.85)",
+    vintage: "sepia(.45) contrast(1.1)",
+    cool: "hue-rotate(165deg) saturate(1.2)",
+    contrast: "contrast(1.35) saturate(1.1)",
+  }[item.filterPreset || "normal"] || "";
+  return `brightness(${item.brightness ?? 100}%) saturate(${item.saturation ?? 100}%) blur(${item.blur ?? 0}px) ${preset}`.trim();
 }
 
 function textEffectSvgFilter(item) {
@@ -1571,15 +1646,103 @@ function setTextCurve(mode) {
   rememberHistory();
 }
 
-function updateTextEffectControl(control) {
+function updateObjectEffectControl(control) {
   const item = findSelectedItem();
   const key = control.dataset.effectKey;
-  if (!item || item.type !== "text" || !key) return;
+  if (!item || !key) return;
   const rangeValue = control.type === "range";
   item[key] = rangeValue ? Number(control.value) : control.value;
+  if (key === "filterPreset") item[key] = control.value;
   const output = control.parentElement?.querySelector("output");
-  if (output) output.textContent = `${control.value}${rangeValue ? (key === "curveAmount" ? "%" : " px") : ""}`;
+  if (output) {
+    const suffix = key === "curveAmount" || key === "brightness" || key === "saturation" ? "%" : " px";
+    output.textContent = `${control.value}${rangeValue ? suffix : ""}`;
+  }
   renderCanvas();
+}
+
+function setSelectedFillMode(mode) {
+  const item = findSelectedItem();
+  if (!item || item.type === "image") return;
+  rememberHistory();
+  item.fillMode = mode;
+  item.fillStart ||= item.color || "#061a35";
+  item.fillEnd ||= "#12c5df";
+  renderCanvas();
+  renderEditorDrawer();
+  rememberHistory();
+}
+
+function setSelectedCrop(shape) {
+  const item = findSelectedItem();
+  if (!item || item.type !== "image") {
+    setStatus("Select a photo to crop it.", true);
+    return;
+  }
+  rememberHistory();
+  item.cropShape = shape || "";
+  renderCanvas();
+  renderEditorDrawer();
+  rememberHistory();
+}
+
+function toggleSelectedLock() {
+  const item = findSelectedItem();
+  if (!item) return;
+  item.locked = !item.locked;
+  renderCanvas();
+  renderEditorDrawer();
+  setStatus(item.locked ? "Layer locked." : "Layer unlocked.");
+}
+
+async function openEyedropper() {
+  if (typeof window.EyeDropper !== "function") {
+    setStatus("Your browser does not support the screen eyedropper. Use Sample image instead.", true);
+    return;
+  }
+  try {
+    const picker = new window.EyeDropper();
+    const result = await picker.open();
+    applySampledColor(result.sRGBHex);
+  } catch (error) {
+    if (error?.name !== "AbortError") setStatus("Could not pick that color.", true);
+  }
+}
+
+async function sampleSelectedImageColor() {
+  const item = findSelectedItem();
+  const source = item?.type === "image" ? item : currentItems().find((entry) => entry.type === "image");
+  if (!source) {
+    setStatus("Add or select an image first, then use Sample image.", true);
+    return;
+  }
+  try {
+    const image = await loadImage(source.src);
+    const canvas = document.createElement("canvas");
+    canvas.width = 1;
+    canvas.height = 1;
+    const context = canvas.getContext("2d", { willReadFrequently: true });
+    context.drawImage(image, 0, 0, 1, 1);
+    const [red, green, blue] = context.getImageData(0, 0, 1, 1).data;
+    applySampledColor(`#${[red, green, blue].map((value) => value.toString(16).padStart(2, "0")).join("")}`);
+  } catch (error) {
+    setStatus("Could not sample this image color.", true);
+  }
+}
+
+function applySampledColor(color) {
+  const item = findSelectedItem();
+  if (!item || item.type === "image") {
+    setStatus(`Sampled ${color}. Select text or a shape to apply it.`, true);
+    return;
+  }
+  item.color = color;
+  item.fillStart = color;
+  if (toolbarColor) toolbarColor.value = color;
+  if (selectedColor) selectedColor.value = color;
+  renderCanvas();
+  renderEditorDrawer();
+  setStatus(`Applied sampled color ${color}.`);
 }
 
 function updateSelectedImageEffects() {
@@ -1631,6 +1794,7 @@ function runPreflight() {
   if (preflightResult) preflightResult.textContent = message;
   preflightResult?.classList.toggle("has-warning", Boolean(warnings.length));
   setStatus(message, Boolean(warnings.length));
+  return warnings;
 }
 
 function findSelectedItem() {
@@ -1657,6 +1821,17 @@ async function saveCurrentSidePng() {
   link.download = `${currentProduct.id}-${currentSide}.png`;
   link.click();
   setStatus("Design PNG saved.");
+}
+
+async function savePrintReadyPng() {
+  const warnings = runPreflight();
+  const maxSize = Math.max(currentProduct.width, currentProduct.height) * 300;
+  const dataUrl = await createPreview(currentSide, { maxSize, includeGuides: false });
+  const link = document.createElement("a");
+  link.href = dataUrl;
+  link.download = `${currentProduct.id}-${currentSide}-print-300dpi.png`;
+  link.click();
+  setStatus(warnings.length ? "300 DPI export saved. Review the bleed and safe-zone warnings before production." : "Print-ready 300 DPI PNG saved. Bleed and safe zone passed.", Boolean(warnings.length));
 }
 
 async function continueToCheckout() {
@@ -1780,10 +1955,21 @@ async function createPreview(side, options = {}) {
       const image = await loadImage(item.src);
       ctx.save();
       ctx.globalAlpha = item.opacity ?? 1;
+      ctx.filter = imageFilterStyle(item);
       if (item.rotation) {
         ctx.translate(x + w / 2, y + h / 2);
         ctx.rotate((Number(item.rotation) * Math.PI) / 180);
         ctx.translate(-(x + w / 2), -(y + h / 2));
+      }
+      if (item.cropShape === "circle") {
+        ctx.beginPath();
+        ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+        ctx.clip();
+      } else if (item.cropShape === "square") {
+        const side = Math.min(w, h);
+        ctx.beginPath();
+        ctx.rect(x + (w - side) / 2, y + (h - side) / 2, side, side);
+        ctx.clip();
       }
       if (item.flipX) {
         ctx.translate(x + w, y);
@@ -1794,11 +1980,16 @@ async function createPreview(side, options = {}) {
       }
       ctx.restore();
     } else if (item.type === "shape") {
-      drawPreviewShape(ctx, item.shape, x, y, w, h, item.color || "#0b8df4");
+      const fill = item.fillMode === "gradient"
+        ? (() => { const gradient = ctx.createLinearGradient(x, y, x + w, y + h); gradient.addColorStop(0, item.fillStart || item.color || "#0b8df4"); gradient.addColorStop(1, item.fillEnd || "#12c5df"); return gradient; })()
+        : item.color || "#0b8df4";
+      drawPreviewShape(ctx, item.shape, x, y, w, h, fill);
     } else if (item.type === "qr") {
       drawQrPlaceholder(ctx, x, y, w, h);
     } else {
-      ctx.fillStyle = item.color || "#061a35";
+      ctx.fillStyle = item.fillMode === "gradient"
+        ? (() => { const gradient = ctx.createLinearGradient(x, y, x + w, y + h); gradient.addColorStop(0, item.fillStart || item.color || "#061a35"); gradient.addColorStop(1, item.fillEnd || "#12c5df"); return gradient; })()
+        : item.color || "#061a35";
       ctx.font = `${item.italic ? "italic " : ""}${item.bold ? "900" : "700"} ${Math.max(18, item.size * 2)}px ${item.font || "Arial"}`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
