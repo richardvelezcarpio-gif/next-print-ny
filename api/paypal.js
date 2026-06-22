@@ -216,6 +216,12 @@ async function handlePayPalWebhook(req, res) {
       return;
     }
 
+    if (String(event.event_type || "").startsWith("BILLING.SUBSCRIPTION.")) {
+      const membershipResult = await updateMemberSubscription(event);
+      res.status(200).json({ received: true, membership: true, ...membershipResult, eventType: event.event_type || "" });
+      return;
+    }
+
     const orderNumber = orderNumberFromPayPalEvent(event);
     if (!orderNumber) {
       res.status(200).json({ received: true, ignored: true, reason: "No Next Print NY order number in event." });
@@ -241,6 +247,34 @@ async function handlePayPalWebhook(req, res) {
   } catch (error) {
     res.status(500).json({ error: error.message || "Could not process PayPal webhook." });
   }
+}
+
+async function updateMemberSubscription(event) {
+  if (!hasSupabaseConfig()) return { saved: false, warning: "Supabase is not configured." };
+  const resource = event.resource || {};
+  const subscriptionId = clean(resource.id, 160);
+  const userId = clean(resource.custom_id, 80);
+  const statusMap = { ACTIVE: "active", SUSPENDED: "suspended", CANCELLED: "cancelled", EXPIRED: "suspended", APPROVAL_PENDING: "approval_pending" };
+  const status = statusMap[String(resource.status || "").toUpperCase()] || "approval_pending";
+  const record = {
+    status,
+    paypal_subscription_id: subscriptionId,
+    paypal_plan_id: clean(resource.plan_id, 160),
+    current_period_start: resource.start_time || null,
+    current_period_end: resource.billing_info?.next_billing_time || null,
+    updated_at: new Date().toISOString(),
+  };
+  const filter = userId
+    ? `user_id=eq.${encodeURIComponent(userId)}`
+    : `paypal_subscription_id=eq.${encodeURIComponent(subscriptionId)}`;
+  const response = await supabaseFetch(`member_memberships?${filter}`, {
+    method: "PATCH",
+    headers: { Prefer: "return=representation" },
+    body: JSON.stringify(record),
+  });
+  const data = await response.json().catch(() => []);
+  if (!response.ok) return { saved: false, warning: data?.message || "Could not update membership." };
+  return { saved: true, status, subscriptionId };
 }
 
 async function updatePaidRecordIfPossible(orderNumber, paypalOrderId, payment, req) {

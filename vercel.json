@@ -26,6 +26,9 @@
     },
     "api/track-order.js": {
       "maxDuration": 10
+    },
+    "api/member.js": {
+      "maxDuration": 10
     }
   }
 }

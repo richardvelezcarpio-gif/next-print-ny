@@ -94,6 +94,7 @@ renderColors();
 renderSizeRows();
 loadMockup();
 updateSelection();
+loadMemberShirtDesign();
 
 document.querySelectorAll("[data-shirt-lang]").forEach((button) =>
   button.addEventListener("click", () => {
@@ -109,6 +110,7 @@ form.addEventListener("submit", (event) => {
 });
 
 document.querySelector("#approveDesignOrder").addEventListener("click", continueOrder);
+document.querySelector("#saveShirtDesign")?.addEventListener("click", saveShirtDesignToDashboard);
 
 [frontSideButton, backSideButton].forEach((button) => {
   button.addEventListener("click", () => {
@@ -133,6 +135,7 @@ document.querySelector("#designFile").addEventListener("change", async (event) =
   if (!file) return;
   if (file.size > 4 * 1024 * 1024) return setStatus("The image must be under 4 MB.", true);
   originalArtwork = { name: file.name, content: await fileToBase64(file) };
+  designs[state.activeSide].artworkData = originalArtwork;
   const image = new Image();
   image.onload = () => {
     designs[state.activeSide].artwork = image;
@@ -538,6 +541,72 @@ function setStatus(text, error = false) {
   const node = document.querySelector("#designerStatus");
   node.textContent = text;
   node.classList.toggle("error", error);
+}
+
+function serializeShirtDesign() {
+  const cleanDesign = (design) => ({
+    text: design.text,
+    color: design.color,
+    size: design.size,
+    shape: design.shape,
+    scale: design.scale,
+    position: design.position,
+    artworkData: design.artworkData || null,
+  });
+  return {
+    state: JSON.parse(JSON.stringify(state)),
+    designs: { front: cleanDesign(designs.front), back: cleanDesign(designs.back) },
+    savedAt: new Date().toISOString(),
+  };
+}
+
+async function saveShirtDesignToDashboard() {
+  const payload = serializeShirtDesign();
+  try { localStorage.setItem("nextPrintSavedShirtDesign", JSON.stringify(payload)); } catch {}
+  setStatus("Saving editable shirt design...");
+  try {
+    const existingId = new URLSearchParams(location.search).get("design") || "";
+    const response = await fetch("/api/member?action=design", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: existingId, name: `Custom T-Shirt - ${new Date().toLocaleDateString()}`, editorType: "tshirt", product: "Gildan G500 T-Shirt", designData: payload, assets: [payload.designs.front.artworkData, payload.designs.back.artworkData].filter(Boolean).map((asset) => ({ ...asset, type: "image/png" })) }),
+    });
+    const data = await response.json();
+    if (response.status === 401) {
+      setStatus("Saved on this device. Sign in to save permanently.", true);
+      if (window.confirm("Sign in to save this editable T-shirt design in your dashboard?")) location.href = `member-login.html?return=${encodeURIComponent(location.href)}`;
+      return;
+    }
+    if (!response.ok) throw new Error(data.error || "Could not save design.");
+    if (!existingId && data.design?.id) { const url = new URL(location.href); url.searchParams.set("design", data.design.id); history.replaceState({}, "", url); }
+    setStatus(data.membershipActive ? "Design saved to your member dashboard." : "Design saved. Activate membership for unlimited designs.");
+  } catch (error) { setStatus(error.message || "Could not save this design.", true); }
+}
+
+async function loadMemberShirtDesign() {
+  const designId = new URLSearchParams(location.search).get("design");
+  if (!designId) return;
+  try {
+    const response = await fetch(`/api/member?action=design&id=${encodeURIComponent(designId)}`);
+    const data = await response.json();
+    const saved = data.design?.design_data;
+    if (!response.ok || !saved?.state || !saved?.designs) return;
+    Object.assign(state, saved.state);
+    for (const side of ["front", "back"]) {
+      Object.assign(designs[side], saved.designs[side] || {}, { artwork: null });
+      const artworkData = saved.designs[side]?.artworkData;
+      if (artworkData?.content) {
+        const image = new Image();
+        image.onload = () => { designs[side].artwork = image; if (state.activeSide === side) draw(); };
+        image.src = `data:image/png;base64,${artworkData.content}`;
+      }
+    }
+    shirtColors.querySelectorAll("[data-color]").forEach((button) => {
+      button.classList.toggle("active", button.dataset.color === state.color);
+    });
+    renderSizeRows(); setPrintUi(); loadSideControls(); loadMockup(); updateSelection();
+    setStatus("Saved dashboard design loaded.");
+  } catch {}
 }
 
 function fileToBase64(file) {

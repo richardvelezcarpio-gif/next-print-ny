@@ -268,6 +268,7 @@ if (!editorRedirectTarget) {
   bindEvents();
   renderEditorDrawer();
   rememberHistory();
+  loadMemberDesignFromQuery();
 }
 
 function bindEvents() {
@@ -327,7 +328,7 @@ function bindEvents() {
   toolbarOpacity?.addEventListener("input", updateSelectedImageEffects);
   toolbarRotate?.addEventListener("input", updateSelectedImageEffects);
   saveButton?.addEventListener("click", saveCurrentSidePng);
-  studioSave?.addEventListener("click", saveCurrentSidePng);
+  studioSave?.addEventListener("click", saveProjectToDashboard);
   savePrintButton?.addEventListener("click", savePrintReadyPng);
   continueButton?.addEventListener("click", continueToCheckout);
   preflightButton?.addEventListener("click", runPreflight);
@@ -726,8 +727,8 @@ async function showMockupPreview(type) {
   }
 }
 
-function saveProject() {
-  const project = {
+function buildEditableProject() {
+  return {
     productId: currentProduct.id,
     quantity: currentQuantity,
     designState,
@@ -735,12 +736,75 @@ function saveProject() {
     color2: bgColor2?.value || "#ffffff",
     savedAt: new Date().toISOString(),
   };
+}
+
+function saveProject() {
+  const project = buildEditableProject();
   try {
     localStorage.setItem("nextPrintSavedEditorProject", JSON.stringify(project));
     setStatus("Project saved on this device.");
   } catch (error) {
     setStatus("Project is too large to save on this device.", true);
   }
+}
+
+async function saveProjectToDashboard() {
+  const project = buildEditableProject();
+  try { localStorage.setItem("nextPrintSavedEditorProject", JSON.stringify(project)); } catch {}
+  setStatus("Saving editable design to your dashboard...");
+  try {
+    const existingId = new URLSearchParams(location.search).get("design") || "";
+    const response = await fetch("/api/member?action=design", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: existingId,
+        name: `${currentProduct.name} - ${new Date().toLocaleDateString()}`,
+        editorType: "print-products",
+        product: currentProduct.name,
+        designData: project,
+        assets: Object.values(project.designState || {}).flat().filter((item) => item.type === "image" && item.src?.startsWith("data:")).map((item) => ({ name: item.name || "design-artwork.png", type: item.src.slice(5, item.src.indexOf(";")) || "image/png", content: item.src.split(",").pop() })),
+      }),
+    });
+    const data = await response.json();
+    if (response.status === 401) {
+      setStatus("Saved on this device. Sign in to save permanently.", true);
+      if (window.confirm("Sign in to save this editable design in your dashboard?")) {
+        location.href = `member-login.html?return=${encodeURIComponent(location.href)}`;
+      }
+      return;
+    }
+    if (!response.ok) throw new Error(data.error || "Could not save design.");
+    if (!existingId && data.design?.id) {
+      const url = new URL(location.href);
+      url.searchParams.set("design", data.design.id);
+      history.replaceState({}, "", url);
+    }
+    setStatus(data.membershipActive ? "Design saved to your member dashboard." : "Design saved. Activate membership for unlimited designs.");
+  } catch (error) {
+    setStatus(error.message || "Could not save this design.", true);
+  }
+}
+
+async function loadMemberDesignFromQuery() {
+  const designId = new URLSearchParams(location.search).get("design");
+  if (!designId) return;
+  try {
+    const response = await fetch(`/api/member?action=design&id=${encodeURIComponent(designId)}`);
+    const data = await response.json();
+    if (!response.ok || !data.design?.design_data) return;
+    const saved = data.design.design_data;
+    const product = productCatalog.find((item) => item.id === saved.productId);
+    if (product) currentProduct = product;
+    currentQuantity = String(saved.quantity || currentProduct.prices[0][0]);
+    designState = saved.designState || designState;
+    selectedItemId = null;
+    if (bgColor1) bgColor1.value = saved.color1 || "#dff8ff";
+    if (bgColor2) bgColor2.value = saved.color2 || "#ffffff";
+    renderProduct();
+    rememberHistory();
+    setStatus("Saved dashboard design loaded.");
+  } catch {}
 }
 
 function loadProject() {
