@@ -8,6 +8,7 @@ const paymentOrder = normalizePaymentOrder(paymentParams.get("order"));
 const paymentAmount = normalizePaymentAmount(paymentParams.get("amount"));
 const paymentCheckoutStatus = paymentParams.get("checkout");
 const paymentPaypalToken = window.NextPrintPayPal?.paypalTokenFromParams(paymentParams);
+const paymentReturnPath = normalizeReturnPath(paymentParams.get("return"));
 
 if (paymentOrder && paymentOrderNote) {
   paymentOrderNote.textContent = paymentOrder;
@@ -27,8 +28,7 @@ if (paymentCheckoutStatus === "paypal-return" && paymentOrder && paymentPaypalTo
     paypalOrderId: paymentPaypalToken,
     setStatus: (message, isError) => setPaymentStatus(message, isError ? "error" : "success"),
     onSuccess: (orderNumber) => {
-      if (paymentOrderNote) paymentOrderNote.textContent = orderNumber;
-      setPaymentStatus("PayPal payment received. Your order was updated.", "success");
+      finishPayment(orderNumber);
     },
   });
 } else if (paymentCheckoutStatus === "success" && paymentOrder) {
@@ -75,8 +75,8 @@ function getPaymentPayload() {
     amount,
     itemName: `Next Print NY Order ${orderNumber}`,
     source: "payments-page",
-    successPath: `/payments.html?order=${encodeURIComponent(orderNumber)}`,
-    cancelPath: `/payments.html?order=${encodeURIComponent(orderNumber)}&amount=${encodeURIComponent(amount)}`,
+    successPath: `/payments.html?order=${encodeURIComponent(orderNumber)}${paymentReturnPath ? `&return=${encodeURIComponent(paymentReturnPath)}` : ""}`,
+    cancelPath: `/payments.html?order=${encodeURIComponent(orderNumber)}&amount=${encodeURIComponent(amount)}${paymentReturnPath ? `&return=${encodeURIComponent(paymentReturnPath)}` : ""}`,
   };
 }
 
@@ -87,8 +87,7 @@ function mountPaymentButtons() {
     getCheckout: getPaymentPayload,
     setStatus: (message, isError) => setPaymentStatus(message, isError ? "error" : "success"),
     onSuccess: (orderNumber) => {
-      if (paymentOrderNote) paymentOrderNote.textContent = orderNumber;
-      setPaymentStatus("PayPal payment received. Your order was updated.", "success");
+      finishPayment(orderNumber);
     },
   });
 }
@@ -104,6 +103,21 @@ function normalizePaymentOrder(value) {
 function normalizePaymentAmount(value) {
   const amount = Number(String(value || "").replace(/[^0-9.]/g, ""));
   return Number.isFinite(amount) && amount > 0 ? amount.toFixed(2) : "";
+}
+
+function normalizeReturnPath(value) {
+  const path = String(value || "").trim();
+  return path.startsWith("/") && !path.startsWith("//") ? path : "";
+}
+
+function finishPayment(orderNumber) {
+  if (paymentOrderNote) paymentOrderNote.textContent = orderNumber;
+  if (paymentReturnPath) {
+    const separator = paymentReturnPath.includes("?") ? "&" : "?";
+    window.location.href = `${paymentReturnPath}${separator}order=${encodeURIComponent(orderNumber)}&checkout=success`;
+    return;
+  }
+  setPaymentStatus("PayPal payment received. Your order was updated.", "success");
 }
 
 function setPaymentStatus(message, tone = "") {
