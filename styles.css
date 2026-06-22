@@ -5828,6 +5828,33 @@ textarea {
   gap: 14px;
 }
 
+.banner-custom-size-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.banner-custom-size-fields[hidden] {
+  display: none;
+}
+
+.banner-custom-size-fields input {
+  width: 100%;
+  min-height: 48px;
+  box-sizing: border-box;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
+}
+
+.product-order-panel.configured-product-mode .banner-custom-size-fields label {
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
 .product-configuration-options[hidden],
 .product-configuration-options label[hidden] {
   display: none;
@@ -9055,6 +9082,11 @@ textarea {
   }
 
   body.printing-page .product-configuration-options {
+    gap: 13px;
+  }
+
+  body.printing-page .banner-custom-size-fields {
+    grid-template-columns: 1fr;
     gap: 13px;
   }
 

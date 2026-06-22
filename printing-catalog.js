@@ -432,6 +432,7 @@ const productGroups = [
   },
   { name: "Menus", category: "menus", variants: ["Menus 8.5x11", "Menus 11x17"] },
   { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
+  { name: "Window Vinyl", category: "banners", materialPreset: "Window Vinyl", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
   { name: "Door Hangers", category: "hangers", variants: ["Door Hangers 4x11", "Door Hangers 3.5x8.5"] },
   { name: "Retractable Banners", category: "retractable", stock: 10, variants: ["Retractable Banner"] },
   { name: "Yard Signs", category: "yardSigns", variants: ["Yard Sign"] },
@@ -451,6 +452,10 @@ const productMaterial = document.querySelector("#productMaterial");
 const productBenefits = document.querySelector("#productBenefits");
 const productSize = document.querySelector("#productSize");
 const productQuantity = document.querySelector("#productQuantity");
+const bannerCustomSizeFields = document.querySelector("#bannerCustomSizeFields");
+const bannerCustomWidth = document.querySelector("#bannerCustomWidth");
+const bannerCustomHeight = document.querySelector("#bannerCustomHeight");
+const bannerCustomQuantity = document.querySelector("#bannerCustomQuantity");
 const productPrice = document.querySelector("#productPrice");
 const productOrderLink = document.querySelector("#productOrderLink");
 const productUploadLink = document.querySelector("#productUploadLink");
@@ -546,8 +551,24 @@ productQuantity?.addEventListener("change", () => {
   updateSelectedPrice();
 });
 
+[bannerCustomWidth, bannerCustomHeight, bannerCustomQuantity].forEach((input) => {
+  input?.addEventListener("input", () => {
+    if (!isCustomBannerGroup()) return;
+    selectedPrice = customBannerPrice();
+    updateSelectedPrice();
+  });
+});
+
 [cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating, retractableDisplayOptions, retractableBannerStand, retractableFrontSide, retractableBackSide, retractableMaterial, retractablePanels, yardSignFrontSide, yardSignBackSide, yardSignMaterial, yardSignWire, yardSignGrommets].forEach((select) => {
-  select?.addEventListener("change", updateSelectedPrice);
+  select?.addEventListener("change", () => {
+    if (select === bannerMaterial && bannerTreatment) {
+      const isWindowVinyl = bannerMaterial.value === "Window Vinyl";
+      bannerTreatment.disabled = isWindowVinyl;
+      if (isWindowVinyl) bannerTreatment.value = "Not available";
+      else if (bannerTreatment.value === "Not available") bannerTreatment.value = "None";
+    }
+    updateSelectedPrice();
+  });
 });
 
 function renderProductList() {
@@ -593,6 +614,21 @@ function renderProductGroup(groupName, options = {}) {
     productSize.innerHTML = selectedGroup.variants
       .map((variant) => `<option value="${escapeAttribute(variant.name)}">${escapeHtml(sizeLabel(variant.name, selectedGroup.name))}</option>`)
       .join("");
+  }
+
+  if (isCustomBannerGroup()) {
+    if (productKicker) productKicker.textContent = "Custom size";
+    const [width = "2", height = "4"] = String(selectedProduct.name).replace(/^Banner\s*/i, "").split("x");
+    if (bannerCustomWidth) bannerCustomWidth.value = Number(width) || 2;
+    if (bannerCustomHeight) bannerCustomHeight.value = Number(height) || 4;
+    if (bannerCustomQuantity) bannerCustomQuantity.value = "1";
+    if (bannerMaterial) bannerMaterial.value = selectedGroup.materialPreset || "13 oz. Standard Vinyl";
+    if (bannerTreatment) {
+      const isWindowVinyl = bannerMaterial?.value === "Window Vinyl";
+      bannerTreatment.disabled = isWindowVinyl;
+      bannerTreatment.value = isWindowVinyl ? "Not available" : "None";
+    }
+    selectedPrice = customBannerPrice();
   }
 
   renderQuantityOptions();
@@ -726,6 +762,9 @@ function renderProductOptions() {
   if (retractableConfigurationOptions) retractableConfigurationOptions.hidden = !isRetractable;
   if (yardSignConfigurationOptions) yardSignConfigurationOptions.hidden = !isYardSigns;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
+  if (bannerCustomSizeFields) bannerCustomSizeFields.hidden = !isBanners;
+  if (productSize?.closest("label")) productSize.closest("label").hidden = isBanners;
+  if (productQuantity?.closest("label")) productQuantity.closest("label").hidden = isBanners;
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
   productOrderPanel?.classList.toggle("shirt-product-mode", isTshirts);
 }
@@ -733,9 +772,32 @@ function renderProductOptions() {
 function renderQuantityOptions() {
   if (!productQuantity) return;
 
+  if (isCustomBannerGroup()) {
+    productQuantity.innerHTML = '<option value="1">1</option>';
+    return;
+  }
+
   productQuantity.innerHTML = selectedProduct.prices
     .map(([quantity]) => `<option value="${escapeAttribute(quantity)}">${escapeHtml(quantity)}</option>`)
     .join("");
+}
+
+function isCustomBannerGroup() {
+  return selectedGroup?.category === "banners";
+}
+
+function customBannerDimensions() {
+  return {
+    width: Math.max(1, Number(bannerCustomWidth?.value || 2)),
+    height: Math.max(1, Number(bannerCustomHeight?.value || 4)),
+    quantity: Math.max(1, Math.round(Number(bannerCustomQuantity?.value || 1))),
+  };
+}
+
+function customBannerPrice() {
+  const { width, height, quantity } = customBannerDimensions();
+  const total = width * height * 7 * quantity;
+  return [String(quantity), `$${total.toFixed(2)}`];
 }
 
 function renderProductDetails(product) {
@@ -850,6 +912,7 @@ function setImage(image, src, alt) {
 }
 
 function updateSelectedPrice() {
+  if (isCustomBannerGroup()) selectedPrice = customBannerPrice();
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
     if (selectedGroup.category === "shirts") {
@@ -923,9 +986,11 @@ function updateSelectedPrice() {
         `Grommets: ${yardSignGrommets?.value || "None"}`
       );
     }
+    const bannerSize = isCustomBannerGroup() ? `${customBannerDimensions().width} ft x ${customBannerDimensions().height} ft` : sizeLabel(selectedProduct.name, selectedGroup.name);
+    const bannerProduct = isCustomBannerGroup() ? `${bannerMaterial?.value || "13 oz. Standard Vinyl"} ${bannerSize}` : selectedProduct.name;
     const details = [
-      `Product: ${selectedProduct.name}`,
-      `Size: ${sizeLabel(selectedProduct.name, selectedGroup.name)}`,
+      `Product: ${bannerProduct}`,
+      `Size: ${bannerSize}`,
       ...configuration,
       `Quantity: ${selectedPrice[0]}`,
       `Suggested sale price: ${selectedPrice[1]}`,
@@ -933,7 +998,7 @@ function updateSelectedPrice() {
     ].join("\n");
     const params = new URLSearchParams({
       service: "Printing",
-      product: selectedProduct.name,
+      product: bannerProduct,
       quantity: selectedPrice[0],
       price: selectedPrice[1],
       details,
@@ -953,7 +1018,22 @@ function updateSelectedPrice() {
     } else if (["menus", "hangers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-upload.html?${params.toString()}`;
       if (productUploadLink) productUploadLink.hidden = true;
-    } else if (selectedGroup.category === "banners" || selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
+    } else if (selectedGroup.category === "banners") {
+      const banner = customBannerDimensions();
+      params.set("customBanner", "1");
+      params.set("width", banner.width);
+      params.set("height", banner.height);
+      params.set("quantity", banner.quantity);
+      params.set("material", bannerMaterial?.value || "13 oz. Standard Vinyl");
+      params.set("treatment", bannerTreatment?.value || "None");
+      productOrderLink.href = `print-products-editor.html?${params.toString()}`;
+      if (productUploadLink) {
+        const uploadParams = new URLSearchParams(params);
+        uploadParams.set("directUpload", "1");
+        productUploadLink.href = `print-products-editor.html?${uploadParams.toString()}`;
+        productUploadLink.hidden = false;
+      }
+    } else if (selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
       productOrderLink.href = bannerDesignerHref(selectedProduct, selectedGroup.category);
       if (productUploadLink) productUploadLink.hidden = true;
     } else {

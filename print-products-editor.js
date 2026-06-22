@@ -116,6 +116,27 @@ const productCatalog = [
 ];
 
 const params = new URLSearchParams(window.location.search);
+if (params.get("customBanner") === "1") {
+  const width = clamp(Number(params.get("width") || 2), 1, 100);
+  const height = clamp(Number(params.get("height") || 4), 1, 100);
+  const quantity = Math.max(1, Math.round(Number(params.get("quantity") || 1)));
+  const material = params.get("material") || "13 oz. Standard Vinyl";
+  const price = Number(String(params.get("price") || "").replace(/[^0-9.]/g, "")) || width * height * 7 * quantity;
+  productCatalog.unshift({
+    id: "custom-banner",
+    product: params.get("product") || `${material} ${width} ft x ${height} ft`,
+    label: material === "Window Vinyl" ? "Window Vinyl" : "Custom Banner",
+    category: "banners",
+    sizeLabel: `${width} ft x ${height} ft`,
+    trimLabel: material === "Window Vinyl" ? "Window vinyl - no banner treatment" : "Custom vinyl banner",
+    width,
+    height,
+    prices: [[quantity, price]],
+    image: "assets/catalog-banners.png",
+    material,
+    treatment: params.get("treatment") || "None",
+  });
+}
 const editorRedirectTarget = getEditorRedirectTarget();
 if (editorRedirectTarget) {
   window.location.replace(editorRedirectTarget);
@@ -1124,11 +1145,12 @@ function renderOptionFields() {
   if (!optionFields) return;
   const isCard = currentProduct.category === "cards";
   const isSticker = currentProduct.category === "stickers";
+  const isBanner = currentProduct.category === "banners";
   optionFields.innerHTML = `
     ${isCard ? selectField("roundedCorners", "Rounded Corners", ["No", "Yes"], params.get("roundedCorners") || "No") : ""}
-    ${selectField("printedSide", "Printed Side", ["Front and Back", "Front Only"], params.get("printedSide") || (isSticker ? "Front Only" : "Front and Back"))}
-    ${selectField("paperType", isSticker ? "Material" : "Paper Type", isSticker ? ["High Gloss White Outdoor Vinyl"] : ["14 pt. Cardstock", "100 lb. Gloss Text"], params.get("paperType") || (isSticker ? "High Gloss White Outdoor Vinyl" : "14 pt. Cardstock"))}
-    ${selectField("coating", "Coating", isSticker ? ["High Gloss"] : ["High Gloss", "Matte"], params.get("coating") || "High Gloss")}
+    ${selectField("printedSide", "Printed Side", isBanner ? ["Front Only"] : ["Front and Back", "Front Only"], params.get("printedSide") || (isSticker || isBanner ? "Front Only" : "Front and Back"))}
+    ${selectField("paperType", isBanner ? "Material" : isSticker ? "Material" : "Paper Type", isBanner ? [currentProduct.material || "13 oz. Standard Vinyl"] : isSticker ? ["High Gloss White Outdoor Vinyl"] : ["14 pt. Cardstock", "100 lb. Gloss Text"], isBanner ? (currentProduct.material || "13 oz. Standard Vinyl") : params.get("paperType") || (isSticker ? "High Gloss White Outdoor Vinyl" : "14 pt. Cardstock"))}
+    ${selectField("coating", isBanner ? "Treatment" : "Coating", isBanner ? [currentProduct.treatment || "None"] : isSticker ? ["High Gloss"] : ["High Gloss", "Matte"], isBanner ? (currentProduct.treatment || "None") : params.get("coating") || "High Gloss")}
   `;
 }
 
@@ -2102,6 +2124,8 @@ function collectOptions() {
     printedSide: document.querySelector("#printedSide")?.value || "Front and Back",
     paperType: document.querySelector("#paperType")?.value || "",
     coating: document.querySelector("#coating")?.value || "",
+    material: currentProduct.material || "",
+    treatment: currentProduct.treatment || "",
   };
 }
 
@@ -2116,6 +2140,8 @@ function buildDetails(options) {
     options.roundedCorners ? `Rounded Corners: ${options.roundedCorners}` : "",
     options.paperType ? `Paper / Material: ${options.paperType}` : "",
     options.coating ? `Coating: ${options.coating}` : "",
+    options.material ? `Material: ${options.material}` : "",
+    options.treatment ? `Treatment: ${options.treatment}` : "",
     `Design sides submitted: ${availableSides().join(", ")}`,
     `Checkout amount: ${money(selectedPrice())}`,
   ]
