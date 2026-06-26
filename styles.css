@@ -11647,18 +11647,21 @@ img {
 
 .printing-fast-benefits {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 10px;
-  padding: 10px clamp(28px, 4vw, 68px) 16px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+  padding: 14px clamp(28px, 4vw, 68px) 18px;
 }
 
 .printing-fast-benefits article {
   display: grid;
-  grid-template-columns: 38px 1fr;
+  grid-template-columns: 38px minmax(0, 1fr);
   gap: 10px;
   align-items: center;
-  padding: 14px;
+  min-width: 0;
+  padding: 14px 16px;
   border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(9, 38, 76, 0.06);
 }
 
 .printing-fast-benefits strong {
@@ -11673,18 +11676,26 @@ img {
 
 .printing-fast-benefits h2,
 .printing-fast-benefits p {
+  grid-column: 2;
   margin: 0;
+  min-width: 0;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .printing-fast-benefits h2 {
-  font-size: 0.72rem;
+  align-self: end;
+  color: var(--navy);
+  font-size: 0.78rem;
+  line-height: 1.1;
 }
 
 .printing-fast-benefits p {
+  align-self: start;
   color: #52647d;
-  font-size: 0.64rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.28;
 }
 
 .printing-membership-cta {
@@ -12012,12 +12023,12 @@ img {
   }
 
   .printing-fast-benefits {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(160px, 1fr));
     padding: 4px 10px 12px;
   }
 
   .printing-fast-benefits article {
-    grid-template-columns: 28px 1fr;
+    grid-template-columns: 28px minmax(0, 1fr);
     padding: 9px;
   }
 
@@ -12032,7 +12043,8 @@ img {
   }
 
   .printing-fast-benefits p {
-    font-size: 0.52rem;
+    font-size: 0.54rem;
+    line-height: 1.25;
   }
 
   .printing-membership-cta {
@@ -12070,6 +12082,13 @@ img {
     padding: 12px;
   }
 }
+
+@media (max-width: 420px) {
+  .printing-fast-benefits {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Premium print product upload / design-online bridge */
 body.print-product-upload-premium-page {
   background: #f3f8ff;
