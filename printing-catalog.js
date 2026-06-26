@@ -1033,15 +1033,7 @@ function updateSelectedPrice() {
     params.set("printedSide", cardPrintedSide?.value || "Front and Back");
     params.set("paperType", cardPaperType?.value || "14 pt. Cardstock");
     params.set("coating", cardCoating?.value || "High Gloss");
-    if (["cards", "flyers", "stickers"].includes(selectedGroup.category)) {
-      productOrderLink.href = `print-products-editor.html?${params.toString()}`;
-      if (productUploadLink) {
-        const uploadParams = new URLSearchParams(params);
-        uploadParams.set("directUpload", "1");
-        productUploadLink.href = `print-products-editor.html?${uploadParams.toString()}`;
-        productUploadLink.hidden = false;
-      }
-    } else if (["menus", "hangers"].includes(selectedGroup.category)) {
+    if (["cards", "flyers", "stickers", "menus", "hangers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-upload.html?${params.toString()}`;
       if (productUploadLink) productUploadLink.hidden = true;
     } else if (selectedGroup.category === "banners") {
@@ -1052,15 +1044,10 @@ function updateSelectedPrice() {
       params.set("quantity", banner.quantity);
       params.set("material", bannerMaterial?.value || "13 oz. Standard Vinyl");
       params.set("treatment", bannerTreatment?.value || "None");
-      productOrderLink.href = `print-products-editor.html?${params.toString()}`;
-      if (productUploadLink) {
-        const uploadParams = new URLSearchParams(params);
-        uploadParams.set("directUpload", "1");
-        productUploadLink.href = `print-products-editor.html?${uploadParams.toString()}`;
-        productUploadLink.hidden = false;
-      }
+      productOrderLink.href = `print-products-upload.html?${params.toString()}`;
+      if (productUploadLink) productUploadLink.hidden = true;
     } else if (selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
-      productOrderLink.href = bannerDesignerHref(selectedProduct, selectedGroup.category);
+      productOrderLink.href = `print-products-upload.html?${params.toString()}`;
       if (productUploadLink) productUploadLink.hidden = true;
     } else {
       productOrderLink.href = `order.html?${params.toString()}`;

@@ -15,10 +15,25 @@ const memberPrice = parseMoney(memberPriceText);
 const workspace = document.querySelector("#printUploadWorkspace");
 const missingPanel = document.querySelector("#printUploadMissing");
 const titleNode = document.querySelector("#printUploadTitle");
+const crumbNode = document.querySelector("#printUploadCrumb");
+const subtitleNode = document.querySelector("#printUploadSubtitle");
+const optionCountNode = document.querySelector("#printUploadOptionCount");
+const optionsTitleNode = document.querySelector("#printUploadOptionsTitle");
 const detailsNode = document.querySelector("#printUploadDetails");
 const orderDateNode = document.querySelector("#printUploadOrderDate");
 const dueDateNode = document.querySelector("#printUploadDueDate");
 const priceNode = document.querySelector("#printUploadPrice");
+const totalNode = document.querySelector("#printUploadTotal");
+const retailPriceNode = document.querySelector("#printUploadRetailPrice");
+const memberPriceNode = document.querySelector("#printUploadMemberPrice");
+const savingsNode = document.querySelector("#printUploadSavings");
+const tableRetailNode = document.querySelector("#printUploadTableRetail");
+const tableMemberNode = document.querySelector("#printUploadTableMember");
+const imageNode = document.querySelector("#printUploadImage");
+const thumbOneNode = document.querySelector("#printUploadThumbOne");
+const thumbTwoNode = document.querySelector("#printUploadThumbTwo");
+const thumbThreeNode = document.querySelector("#printUploadThumbThree");
+const designOnlineLink = document.querySelector("#printUploadDesignOnline");
 const fileInput = document.querySelector("#printUploadFiles");
 const fileText = document.querySelector("#printUploadFileText");
 const continueButton = document.querySelector("#printUploadContinue");
@@ -86,12 +101,31 @@ continueButton?.addEventListener("click", async () => {
 });
 
 function renderUploadOrder() {
+  const displayPrice = Number.isFinite(memberPrice) && memberPrice > 0 ? memberPrice : totalPrice;
+  const savings = Number.isFinite(memberPrice) && memberPrice > 0 ? Math.max(0, totalPrice - memberPrice) : 0;
+  const assetSet = productAssets(product);
+
   if (workspace) workspace.hidden = false;
   if (missingPanel) missingPanel.hidden = true;
   if (titleNode) titleNode.textContent = product;
+  if (crumbNode) crumbNode.textContent = product;
+  if (optionsTitleNode) optionsTitleNode.textContent = `Customize your ${product}`;
+  if (optionCountNode) optionCountNode.textContent = detailsMap.Size ? "Selected size option" : "Selected print product";
+  if (subtitleNode) subtitleNode.textContent = productCopy(product);
   if (orderDateNode) orderDateNode.value = orderDate;
   if (dueDateNode) dueDateNode.value = dueDate;
   if (priceNode) priceNode.value = money(totalPrice);
+  if (totalNode) totalNode.textContent = money(displayPrice);
+  if (retailPriceNode) retailPriceNode.textContent = money(totalPrice);
+  if (memberPriceNode) memberPriceNode.textContent = money(displayPrice);
+  if (savingsNode) savingsNode.textContent = money(savings);
+  if (tableRetailNode) tableRetailNode.textContent = money(totalPrice);
+  if (tableMemberNode) tableMemberNode.textContent = money(displayPrice);
+  if (imageNode) imageNode.src = assetSet[0];
+  if (thumbOneNode) thumbOneNode.src = assetSet[0];
+  if (thumbTwoNode) thumbTwoNode.src = assetSet[1];
+  if (thumbThreeNode) thumbThreeNode.src = assetSet[2];
+  if (designOnlineLink) designOnlineLink.href = designOnlineHref();
 
   if (detailsNode) {
     const rows = detailsText
@@ -203,6 +237,48 @@ function inferSize(name) {
   const hanger = String(name || "").match(/Door Hangers\s+(.+)/i);
   if (hanger) return hanger[1].replace(/x/i, " x ");
   return "Custom size";
+}
+
+function productCopy(name) {
+  const value = String(name || "").toLowerCase();
+  if (value.includes("business")) return "Make the first impression feel professional with sharp cards, premium finish, and fast local service.";
+  if (value.includes("flyer")) return "Promote events, specials, and services with full color flyers that are ready to share.";
+  if (value.includes("sticker")) return "Custom stickers and labels for packaging, branding, giveaways, and daily business needs.";
+  if (value.includes("menu")) return "Clean, full color menus for restaurants, takeout, cafes, and food service promotions.";
+  if (value.includes("door")) return "Door hangers designed to get noticed in neighborhoods, buildings, and local campaigns.";
+  if (value.includes("poster")) return "Vibrant posters for events, storefronts, promotions, announcements, and displays.";
+  if (value.includes("invoice")) return "Professional invoice and form printing for organized business paperwork.";
+  if (value.includes("brochure")) return "Folded brochures with clear information, strong presentation, and premium color.";
+  if (value.includes("banner") || value.includes("vinyl")) return "Large format printing for storefronts, events, promotions, and brand visibility.";
+  if (value.includes("yard")) return "Durable yard signs for campaigns, real estate, events, and local advertising.";
+  return "Review your print order, compare member savings, and choose design online or file upload.";
+}
+
+function productAssets(name) {
+  const value = String(name || "").toLowerCase();
+  if (value.includes("flyer")) return ["assets/printing-premium-flyers.png", "assets/catalog-flyers.png", "assets/home-product-flyers.png"];
+  if (value.includes("sticker")) return ["assets/printing-premium-stickers.png", "assets/catalog-stickers.png", "assets/home-product-stickers.png"];
+  if (value.includes("menu")) return ["assets/printing-premium-menus.png", "assets/catalog-menus.png", "assets/printing-menus-ai.webp"];
+  if (value.includes("door")) return ["assets/printing-premium-doorhangers.png", "assets/catalog-door-hangers.png", "assets/home-product-doorhangers.png"];
+  if (value.includes("poster")) return ["assets/printing-premium-posters.png", "assets/home-product-posters.png", "assets/printing-premium-posters.png"];
+  if (value.includes("invoice")) return ["assets/printing-premium-invoices.png", "assets/home-product-invoices.png", "assets/printing-premium-invoices.png"];
+  if (value.includes("brochure")) return ["assets/printing-premium-brochures.png", "assets/printing-premium-brochures.png", "assets/catalog-flyers.png"];
+  if (value.includes("retractable")) return ["assets/printing-premium-retractables.png", "assets/catalog-retractable-banners.png", "assets/signandbanners.png"];
+  if (value.includes("banner") || value.includes("vinyl")) return ["assets/printing-premium-banners.png", "assets/catalog-banners.png", "assets/printing-banners-ai.webp"];
+  if (value.includes("yard")) return ["assets/catalog-yard-signs.png", "assets/printing-premium-banners.png", "assets/signandbanners.png"];
+  if (value.includes("t-shirt") || value.includes("shirt")) return ["assets/printing-premium-tshirts.png", "assets/customtshirts.png", "assets/home-card-shirts.png"];
+  return ["assets/printing-premium-businesscards.png", "assets/catalog-business-cards.png", "assets/home-product-businesscards.png"];
+}
+
+function designOnlineHref() {
+  const nextParams = new URLSearchParams(window.location.search);
+  if (!nextParams.get("product") && product) nextParams.set("product", product);
+  if (!nextParams.get("quantity") && quantity) nextParams.set("quantity", quantity);
+  if (!nextParams.get("price") && priceText) nextParams.set("price", priceText);
+  if (!nextParams.get("memberPrice") && memberPriceText) nextParams.set("memberPrice", memberPriceText);
+  if (!nextParams.get("details") && detailsText) nextParams.set("details", detailsText);
+  nextParams.delete("directUpload");
+  return `print-products-editor.html?${nextParams.toString()}`;
 }
 
 function daysFromNow(days) {

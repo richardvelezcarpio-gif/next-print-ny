@@ -3,19 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Upload menu and door hanger print files, then continue to secure checkout with Next Print NY." />
-    <title>Upload Print Order | Next Print NY</title>
+    <meta name="description" content="Review print product pricing, compare member savings, upload print-ready files, or design online with Next Print NY." />
+    <title>Print Product Order | Next Print NY</title>
     <link rel="icon" href="assets/logo.png" />
-    <link rel="stylesheet" href="styles.css?v=20260618-0845" />
+    <link rel="stylesheet" href="styles.css?v=20260626-upload-premium" />
+    <link rel="stylesheet" href="full-wide.css?v=20260621" />
   </head>
-  <body>
-    <div class="page-shell print-editor-shell">
+  <body class="print-product-upload-premium-page">
+    <div class="page-shell print-upload-premium-shell">
       <section class="reseller-strip" aria-label="Reseller program">
         <div>
-          <strong data-i18n="home.reseller.title">🔥 Reseller Program Available</strong>
-          <span data-i18n="home.reseller.copy">Get wholesale pricing and grow your own print business.</span>
+          <strong>🔥 Reseller Program Available</strong>
+          <span>Get wholesale pricing and grow your own print business.</span>
         </div>
-        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer" data-i18n="home.reseller.button">Apply for Wholesale</a>
+        <a href="membership.html">Apply for Reseller</a>
       </section>
 
       <header class="top-nav site-main-header">
@@ -28,17 +29,16 @@
           <span></span>
         </button>
         <nav id="menu" class="menu" aria-label="Main navigation">
-          <a href="index.html" data-i18n="home.nav.home">Home</a>
-          <a href="banner-designer/" data-i18n="home.nav.signs">Signs & Banners</a>
-          <a href="tshirt.html" data-i18n="home.nav.shirts">T-Shirts & Apparel</a>
-          <a href="index.html#copies" data-i18n="home.nav.copies">Bulk Copies</a>
-          <a class="active" href="printing.html" data-i18n="home.nav.products">Print Products</a>
-          <a href="websites-demo/" data-i18n="home.nav.websites">Websites</a>
-          <a href="tracking.html" data-i18n="tracking.nav">Track Order</a>
-          <a href="about.html" data-i18n="home.nav.about">About Us</a>
+          <a href="index.html">Home</a>
+          <a href="banner-designer/">Signs &amp; Banners</a>
+          <a href="tshirt.html">T-Shirts &amp; Apparel</a>
+          <a class="active" href="printing.html">Print Products</a>
+          <a href="websites-demo/">Websites &amp; AI</a>
+          <a href="tracking.html">Track Order</a>
+          <a href="about.html">About Us</a>
         </nav>
         <div class="nav-actions">
-          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <a class="phone-pill" href="tel:+19293376200">929 337 6200</a>
           <div class="language-switch" aria-label="Change language">
             <button type="button" class="active" data-lang="en">EN</button>
             <button type="button" data-lang="es">ES</button>
@@ -46,65 +46,176 @@
         </div>
       </header>
 
-      <main class="print-editor-page print-upload-page">
-        <section class="print-order-hero">
-          <div>
-            <span>Fast online request</span>
-            <h1>Start your printing order.</h1>
-            <p>Review your selected product, upload your print file, and continue to secure checkout.</p>
-          </div>
-          <a class="outline-button print-whatsapp" href="https://wa.me/12393337935?text=I%20need%20help%20with%20a%20print%20product%20order" target="_blank" rel="noreferrer">WhatsApp</a>
-        </section>
-
+      <main class="print-upload-premium-page">
         <section id="printUploadMissing" class="shirt-checkout-missing print-upload-missing" hidden>
           <h2>No print product selected</h2>
-          <p>Please choose a menu or door hanger product first.</p>
+          <p>Please choose a print product first.</p>
           <a class="action-gradient" href="printing.html">Choose product</a>
         </section>
 
-        <section id="printUploadWorkspace" class="print-upload-workspace">
-          <article class="print-editor-card print-upload-card">
-            <div class="print-upload-heading">
-              <span>Printing details</span>
-              <h2 id="printUploadTitle">Print order</h2>
-              <p>These details come from the product you selected. Upload your print-ready file below, then continue to checkout.</p>
-            </div>
+        <section id="printUploadWorkspace" class="print-upload-premium-workspace">
+          <div class="print-upload-breadcrumb">
+            <a href="index.html">Home</a>
+            <span>Print Products</span>
+            <strong id="printUploadCrumb">Selected Product</strong>
+          </div>
 
-            <div id="printUploadDetails" class="print-readonly-details" aria-label="Selected print details"></div>
+          <div class="print-upload-progress" aria-label="Order progress">
+            <span class="active">1 Choose Options</span>
+            <span>2 Design Online</span>
+            <span>3 Checkout</span>
+            <span>4 Print &amp; Delivery</span>
+          </div>
 
-            <div class="print-upload-field-grid">
-              <label>
-                Order date
-                <input id="printUploadOrderDate" type="text" readonly />
-              </label>
-              <label>
-                Delivery date
-                <input id="printUploadDueDate" type="text" readonly />
-              </label>
-              <label>
-                Price
-                <input id="printUploadPrice" type="text" readonly />
-              </label>
-            </div>
-
-            <div class="print-upload-file-box">
-              <div>
-                <h3>Upload file</h3>
-                <p>PDF, JPG, PNG, AI, PSD or design files. Optional now, but recommended before checkout.</p>
+          <section class="print-upload-hero-grid">
+            <article class="print-upload-gallery-card">
+              <span class="print-upload-badge">Premium Quality</span>
+              <div class="print-upload-product-image">
+                <img id="printUploadImage" src="assets/printing-premium-businesscards.png" alt="Selected print product" />
               </div>
-              <label class="print-upload-drop" for="printUploadFiles">
-                <strong>Choose file</strong>
-                <span id="printUploadFileText">No file selected</span>
-              </label>
-              <input id="printUploadFiles" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.ai,.psd,.eps,.svg,.zip" />
-            </div>
+              <div class="print-upload-thumbs" aria-label="Product preview thumbnails">
+                <button type="button" aria-label="Preview 1"><img id="printUploadThumbOne" src="assets/printing-premium-businesscards.png" alt="" /></button>
+                <button type="button" aria-label="Preview 2"><img id="printUploadThumbTwo" src="assets/catalog-business-cards.png" alt="" /></button>
+                <button type="button" aria-label="Preview 3"><img id="printUploadThumbThree" src="assets/home-product-businesscards.png" alt="" /></button>
+              </div>
+            </article>
 
-            <div class="print-upload-actions">
-              <a class="outline-button" href="printing.html">Back to products</a>
-              <button id="printUploadContinue" class="action-gradient" type="button">Continue to Checkout</button>
+            <article class="print-upload-product-panel">
+              <p class="print-upload-kicker" id="printUploadOptionCount">Selected print product</p>
+              <h1 id="printUploadTitle">Print order</h1>
+              <p id="printUploadSubtitle">Review pricing, upload print-ready files, or open the online editor to customize your design.</p>
+              <div class="print-upload-rating">★★★★★ <strong>4.9</strong> <span>(500+ reviews)</span></div>
+
+              <div class="print-upload-feature-row">
+                <div><span>▣</span><strong>Premium Quality</strong><small>Top materials</small></div>
+                <div><span>↻</span><strong>Fast Turnaround</strong><small>Ready when you need it</small></div>
+                <div><span>⌖</span><strong>Local Pickup</strong><small>Brooklyn, NY</small></div>
+                <div><span>$</span><strong>Member Pricing</strong><small>Save every order</small></div>
+              </div>
+
+              <div class="print-upload-price-compare" aria-label="Price comparison">
+                <div>
+                  <span>Retail Price</span>
+                  <strong id="printUploadRetailPrice">$0.00</strong>
+                </div>
+                <div>
+                  <span>Member Price</span>
+                  <strong id="printUploadMemberPrice">$0.00</strong>
+                </div>
+                <div>
+                  <span>You Save</span>
+                  <strong id="printUploadSavings">$0.00</strong>
+                </div>
+              </div>
+
+              <a class="print-upload-unlock" href="membership.html">Unlock exclusive pricing and save more with membership.</a>
+            </article>
+          </section>
+
+          <section class="print-upload-config-grid">
+            <article class="print-upload-options-card">
+              <div class="print-upload-heading">
+                <span>Customize your order</span>
+                <h2 id="printUploadOptionsTitle">Selected options</h2>
+                <p>These choices came from the product page. Price updates automatically from the selected product and quantity.</p>
+              </div>
+
+              <div id="printUploadDetails" class="print-readonly-details print-upload-premium-details" aria-label="Selected print details"></div>
+
+              <div class="print-upload-field-grid print-upload-meta-grid">
+                <label>
+                  Order date
+                  <input id="printUploadOrderDate" type="text" readonly />
+                </label>
+                <label>
+                  Delivery date
+                  <input id="printUploadDueDate" type="text" readonly />
+                </label>
+                <label>
+                  Total today
+                  <input id="printUploadPrice" type="text" readonly />
+                </label>
+              </div>
+
+              <p class="print-upload-live-note">↻ Price and membership savings update from your selected product options.</p>
+            </article>
+
+            <aside class="print-upload-action-card">
+              <span>Your total</span>
+              <strong id="printUploadTotal">$0.00</strong>
+              <p>Ready in 2-5 business days. Free pickup in Brooklyn.</p>
+              <a id="printUploadDesignOnline" class="action-gradient" href="print-products-editor.html">Design Online</a>
+              <div class="print-upload-divider"><span>or</span></div>
+
+              <div class="print-upload-file-box print-upload-premium-file-box">
+                <h3>Upload print-ready file</h3>
+                <p>PDF, JPG, PNG, AI, PSD, EPS, SVG, or ZIP files accepted.</p>
+                <label class="print-upload-drop" for="printUploadFiles">
+                  <strong>Choose file</strong>
+                  <span id="printUploadFileText">No file selected</span>
+                </label>
+                <input id="printUploadFiles" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.webp,.ai,.psd,.eps,.svg,.zip" />
+              </div>
+
+              <button id="printUploadContinue" class="outline-button print-upload-checkout-button" type="button">Continue to Checkout</button>
+              <p id="printUploadStatus" class="order-status" aria-live="polite"></p>
+              <small>Secure checkout. PayPal, cards, and pickup options continue on the next page.</small>
+            </aside>
+          </section>
+
+          <section class="print-upload-member-card">
+            <div>
+              <span>♛</span>
+              <h2>Members save more</h2>
+              <p>Join Next Print NY Membership and save on every reorder.</p>
+              <a class="outline-button" href="membership.html">Join Membership</a>
             </div>
-            <p id="printUploadStatus" class="order-status" aria-live="polite"></p>
-          </article>
+            <table>
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Without Membership</th>
+                  <th>With Membership</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Price</td>
+                  <td id="printUploadTableRetail">$0.00</td>
+                  <td id="printUploadTableMember">$0.00</td>
+                </tr>
+                <tr>
+                  <td>File Upload</td>
+                  <td>Upload every time</td>
+                  <td>Saved for reorder</td>
+                </tr>
+                <tr>
+                  <td>Design Storage</td>
+                  <td>Not available</td>
+                  <td>Unlimited storage</td>
+                </tr>
+                <tr>
+                  <td>Exclusive Discounts</td>
+                  <td>Standard process</td>
+                  <td>Member-only pricing</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="print-upload-member-price">
+              <span>Starting at</span>
+              <strong>$35</strong>
+              <small>/month</small>
+              <p>Exclusive pricing, saved designs, faster reorders, and priority support.</p>
+            </div>
+          </section>
+
+          <section class="print-upload-proof-row">
+            <div><strong>Same Day Printing</strong><span>Most orders ready fast.</span></div>
+            <div><strong>No Minimum Orders</strong><span>Order only what you need.</span></div>
+            <div><strong>Free Design Help</strong><span>Our team is here to help.</span></div>
+            <div><strong>Wholesale Prices</strong><span>Save more with membership.</span></div>
+            <div><strong>Secure Checkout</strong><span>Your information is safe.</span></div>
+          </section>
         </section>
       </main>
 
@@ -112,55 +223,48 @@
         <div class="footer-container">
           <section class="footer-col footer-brand">
             <img class="footer-logo" src="assets/logo-clear.svg" alt="Next Print NY" />
-            <p>Printing, Signs, Banners & Custom Design Solutions for your business, events and brand.</p>
+            <p>Your one-stop shop for printing, websites, and marketing solutions in Brooklyn, NY.</p>
             <div class="socials">
               <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
               <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
               <a href="mailto:nextprintny@gmail.com" aria-label="Email">✉</a>
             </div>
           </section>
-
           <section class="footer-col">
             <h4>Quick Links</h4>
-            <a href="index.html">Main Site</a>
+            <a href="index.html">Home</a>
             <a href="banner-designer/">Signs &amp; Banners</a>
-            <a href="banner-designer/designer">Banner Designer</a>
             <a href="tshirt.html">T-Shirts &amp; Apparel</a>
             <a href="printing.html">Print Products</a>
-            <a href="contact.html">Contact Us</a>
+            <a href="websites-demo/">Websites &amp; AI</a>
           </section>
-
           <section class="footer-col">
-            <h4>Services</h4>
+            <h4>Print Products</h4>
+            <a href="printing.html#business-cards">Business Cards</a>
+            <a href="printing.html#flyers">Flyers</a>
+            <a href="printing.html#stickers">Stickers &amp; Labels</a>
             <a href="printing.html#banners">Banners</a>
-            <a href="printing.html#banners">Vinyl Banners</a>
-            <a href="printing.html#retractable-banners">Retractable Banners</a>
-            <a href="printing.html#yard-signs">Yard Signs</a>
-            <a href="printing.html#stickers">Decals &amp; Stickers</a>
-            <a href="index.html#copies">Printing &amp; Copies</a>
+            <a href="printing.html#door-hangers">Door Hangers</a>
           </section>
-
           <section class="footer-col footer-contact">
-            <h4>Contact</h4>
-            <p>☎ 239 333 7935</p>
+            <h4>Contact Us</h4>
+            <p>☎ 929 337 6200</p>
+            <p>✉ info@nextprintny.com</p>
             <p>📍 Brooklyn, NY</p>
             <p>🕘 Mon - Sat: 9AM - 7PM</p>
-            <p>✉ nextprintny@gmail.com</p>
           </section>
-
           <section class="footer-col footer-why">
             <h4>Why Next Print NY?</h4>
             <p>✔ High Quality Printing</p>
             <p>✔ Fast Turnaround</p>
-            <p>✔ Competitive Pricing</p>
-            <p>✔ Excellent Customer Service</p>
+            <p>✔ Member Pricing</p>
+            <p>✔ Real Human Support</p>
           </section>
         </div>
-
         <div class="footer-bottom">© 2026 Next Print NY. All Rights Reserved.</div>
       </footer>
     </div>
     <script src="script.js?v=20260618-0720"></script>
-    <script src="print-products-upload.js?v=20260618-0845"></script>
+    <script src="print-products-upload.js?v=20260626-premium"></script>
   </body>
 </html>
