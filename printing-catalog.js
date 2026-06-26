@@ -398,28 +398,27 @@ const yardSignPrices = Array.from({ length: 100 }, (_, index) => {
 });
 
 const printingProducts = [
-  { name: "Business Cards", category: "cards", prices: [["100", "$35.00"], ["250", "$55.00"], ["500", "$65.00"], ["1000", "$119.00"], ["2500", "$180.00"], ["5000", "$220.00"], ["10000", "$370.00"]] },
-  { name: "Flyers 4x6", category: "flyers", prices: [["100", "$49.00"], ["250", "$79.00"], ["500", "$99.00"], ["1000", "$150.00"], ["2500", "$249.00"], ["5000", "$349.00"], ["10000", "$420.00"]] },
-  { name: "Flyers 5x7", category: "flyers", prices: [["100", "$95.00"], ["250", "$140.00"], ["500", "$180.00"], ["1000", "$240.00"], ["2500", "$390.00"], ["5000", "$450.00"], ["10000", "$650.00"]] },
-  { name: "Flyers 8.5x11", category: "flyers", prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
-  { name: "Stickers round 2\"", category: "stickers", prices: [["100", "$70.00"], ["250", "$116.00"], ["500", "$130.00"], ["1000", "$190.00"], ["2500", "$280.00"], ["5000", "$380.00"], ["10000", "$580.00"]] },
-  { name: "Stickers round 2.5\"", category: "stickers", prices: [["100", "$100.00"], ["250", "$180.00"], ["500", "$190.00"], ["1000", "$220.00"], ["2500", "$350.00"], ["5000", "$450.00"], ["10000", "$720.00"]] },
-  { name: "Stickers 2x3.5", category: "stickers", prices: [["100", "$75.00"], ["250", "$110.00"], ["500", "$140.00"], ["1000", "$160.00"], ["2500", "$190.00"], ["5000", "$240.00"], ["10000", "$420.00"]] },
-  { name: "Stickers 2x2", category: "stickers", prices: [["100", "$65.00"], ["250", "$95.00"], ["500", "$135.00"], ["1000", "$155.00"], ["2500", "$185.00"], ["5000", "$230.00"], ["10000", "$330.00"]] },
-  { name: "Stickers 2x4", category: "stickers", prices: [["100", "$90.00"], ["250", "$135.00"], ["500", "$160.00"], ["1000", "$185.00"], ["2500", "$230.00"], ["5000", "$295.00"], ["10000", "$480.00"]] },
-  { name: "Stickers 4x4", category: "stickers", prices: [["100", "$110.00"], ["250", "$170.00"], ["500", "$190.00"], ["1000", "$220.00"], ["2500", "$350.00"], ["5000", "$470.00"], ["10000", "$750.00"]] },
-  { name: "Menus 8.5x11", category: "menus", prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
-  { name: "Menus 11x17", category: "menus", prices: [["100", "$315.00"], ["250", "$450.00"], ["500", "$620.00"], ["1000", "$780.00"], ["2500", "$900.00"], ["5000", "$1,120.00"], ["10000", "$1,558.00"]] },
+  { name: "Business Cards", category: "cards", memberPrices: [["100", "$25.75"], ["250", "$29.87"], ["500", "$31.93"], ["1000", "$42.28"], ["2500", "$85.50"], ["5000", "$116.40"], ["10000", "$254.40"]], prices: [["100", "$35.00"], ["250", "$45.00"], ["500", "$55.00"], ["1000", "$70.00"], ["2500", "$110.00"], ["5000", "$155.00"], ["10000", "$303.00"]] },
+  { name: "Flyers 4x6", category: "flyers", memberPrices: [["100", "$28.84"], ["250", "$50.43"], ["500", "$58.67"], ["1000", "$69.02"], ["2500", "$149.35"], ["5000", "$178.22"], ["10000", "$278.81"]], prices: [["100", "$41.00"], ["250", "$65.00"], ["500", "$75.00"], ["1000", "$85.00"], ["2500", "$170.00"], ["5000", "$210.00"], ["10000", "$340.00"]] },
+  { name: "Flyers 5x7", category: "flyers", memberPrices: [["100", "$59.70"], ["250", "$87.51"], ["500", "$102.95"], ["1000", "$118.46"], ["2500", "$227.62"], ["5000", "$295.28"], ["10000", "$413.02"]], prices: [["100", "$75.00"], ["250", "$104.00"], ["500", "$126.00"], ["1000", "$149.00"], ["2500", "$285.00"], ["5000", "$371.00"], ["10000", "$523.00"]] },
+  { name: "Flyers 8.5x11", category: "flyers", memberPrices: [["100", "$130.21"], ["250", "$147.74"], ["500", "$164.29"], ["1000", "$220.10"], ["2500", "$335.76"], ["5000", "$380.03"], ["10000", "$665.32"]], prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
+  { name: "Stickers round 2\"", category: "stickers", memberPrices: [["100", "$42.25"], ["250", "$74.12"], ["500", "$62.79"], ["1000", "$72.06"], ["2500", "$113.31"], ["5000", "$184.32"], ["10000", "$322.01"]], prices: [["100", "$52.00"], ["250", "$85.00"], ["500", "$90.00"], ["1000", "$96.00"], ["2500", "$145.00"], ["5000", "$226.00"], ["10000", "$399.00"]] },
+  { name: "Stickers round 2.5\"", category: "stickers", memberPrices: [["100", "$52.49"], ["250", "$102.95"], ["500", "$107.08"], ["1000", "$115.37"], ["2500", "$166.84"], ["5000", "$255.43"], ["10000", "$425.39"]], prices: [["100", "$62.00"], ["250", "$123.00"], ["500", "$128.00"], ["1000", "$138.00"], ["2500", "$204.00"], ["5000", "$314.00"], ["10000", "$533.00"]] },
+  { name: "Stickers 2x3.5", category: "stickers", memberPrices: [["100", "$27.78"], ["250", "$46.31"], ["500", "$48.37"], ["1000", "$52.49"], ["2500", "$80.30"], ["5000", "$125.64"], ["10000", "$216.27"]], prices: [["100", "$38.00"], ["250", "$56.00"], ["500", "$62.00"], ["1000", "$65.00"], ["2500", "$110.00"], ["5000", "$153.00"], ["10000", "$267.00"]] },
+  { name: "Stickers 2x2", category: "stickers", memberPrices: [["100", "$23.66"], ["250", "$31.93"], ["500", "$32.97"], ["1000", "$37.05"], ["2500", "$57.64"], ["5000", "$90.60"], ["10000", "$156.51"]], prices: [["100", "$28.00"], ["250", "$38.00"], ["500", "$48.00"], ["1000", "$56.00"], ["2500", "$70.00"], ["5000", "$109.00"], ["10000", "$191.00"]] },
+  { name: "Stickers 4x4", category: "stickers", memberPrices: [["100", "$53.52"], ["250", "$94.72"], ["500", "$99.88"], ["1000", "$109.86"], ["2500", "$169.90"], ["5000", "$261.56"], ["10000", "$435.61"]], prices: [["100", "$65.00"], ["250", "$115.00"], ["500", "$123.00"], ["1000", "$133.00"], ["2500", "$207.00"], ["5000", "$322.00"], ["10000", "$542.00"]] },
+  { name: "Menus 8.5x11", category: "menus", memberPrices: [["100", "$130.21"], ["250", "$147.74"], ["500", "$164.29"], ["1000", "$220.10"], ["2500", "$335.76"], ["5000", "$380.03"], ["10000", "$665.32"]], prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
+  { name: "Menus 11x17", category: "menus", memberPrices: [["100", "$268.39"], ["250", "$363.72"], ["500", "$485.55"], ["1000", "$556.97"], ["2500", "$720.19"], ["5000", "$871.89"], ["10000", "$1,290.45"]], prices: [["100", "$333.00"], ["250", "$453.00"], ["500", "$606.00"], ["1000", "$696.00"], ["2500", "$904.00"], ["5000", "$1,096.00"], ["10000", "$1,622.00"]] },
   { name: "Banner 2x4", category: "banners", prices: [["1", "$88.00"]] },
   { name: "Banner 2x6", category: "banners", prices: [["1", "$120.00"]] },
   { name: "Banner 3x6", category: "banners", prices: [["1", "$180.00"]] },
   { name: "Banner 2x8", category: "banners", prices: [["1", "$221.33"]] },
   { name: "Banner 2x10", category: "banners", prices: [["1", "$267.33"]] },
-  { name: "Door Hangers 4x11", category: "hangers", prices: [["100", "$202.00"], ["250", "$236.00"], ["500", "$277.00"], ["1000", "$310.00"], ["2500", "$483.00"], ["5000", "$560.00"], ["10000", "$1,050.00"]] },
-  { name: "Door Hangers 3.5x8.5", category: "hangers", prices: [["100", "$160.00"], ["250", "$197.00"], ["500", "$219.00"], ["1000", "$240.00"], ["2500", "$367.00"], ["5000", "$485.00"], ["10000", "$775.00"]] },
+  { name: "Door Hangers 4x11", category: "hangers", memberPrices: [["100", "$110.90"], ["250", "$144.36"], ["500", "$166.35"], ["1000", "$184.16"], ["2500", "$367.43"], ["5000", "$412.48"], ["10000", "$813.31"]], prices: [["100", "$133.00"], ["250", "$174.00"], ["500", "$201.00"], ["1000", "$223.00"], ["2500", "$451.00"], ["5000", "$508.00"], ["10000", "$1,007.00"]] },
+  { name: "Door Hangers 3.5x8.5", category: "hangers", memberPrices: [["100", "$83.64"], ["250", "$107.73"], ["500", "$123.40"], ["1000", "$134.96"], ["2500", "$269.86"], ["5000", "$301.98"], ["10000", "$594.31"]], prices: [["100", "$127.00"], ["250", "$166.00"], ["500", "$192.00"], ["1000", "$213.00"], ["2500", "$428.00"], ["5000", "$483.00"], ["10000", "$958.00"]] },
   { name: "Retractable Banner", category: "retractable", prices: [["1", "$180.00"], ["2", "$360.00"], ["3", "$540.00"], ["4", "$720.00"], ["5", "$900.00"], ["6", "$1,080.00"], ["7", "$1,260.00"], ["8", "$1,440.00"], ["9", "$1,620.00"], ["10", "$1,800.00"]] },
   { name: "Yard Sign", category: "yardSigns", prices: yardSignPrices },
-  { name: "Gildan G500 T-Shirt", category: "shirts", prices: [["1", "$14.00"]] },
+  { name: "Gildan G500 T-Shirt", category: "shirts", memberPrices: [["1", "$15.00"]], prices: [["1", "$35.00"]] },
 ];
 
 const productGroups = [
@@ -428,7 +427,7 @@ const productGroups = [
   {
     name: "Stickers",
     category: "stickers",
-    variants: ["Stickers round 2\"", "Stickers round 2.5\"", "Stickers 2x3.5", "Stickers 2x2", "Stickers 2x4", "Stickers 4x4"],
+    variants: ["Stickers round 2\"", "Stickers round 2.5\"", "Stickers 2x3.5", "Stickers 2x2", "Stickers 4x4"],
   },
   { name: "Menus", category: "menus", variants: ["Menus 8.5x11", "Menus 11x17"] },
   { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
@@ -796,8 +795,30 @@ function customBannerDimensions() {
 
 function customBannerPrice() {
   const { width, height, quantity } = customBannerDimensions();
+  const total = width * height * 9 * quantity;
+  return [String(quantity), `$${total.toFixed(2)}`];
+}
+
+function customBannerMemberPrice() {
+  const { width, height, quantity } = customBannerDimensions();
   const total = width * height * 7 * quantity;
   return [String(quantity), `$${total.toFixed(2)}`];
+}
+
+function selectedMemberPrice() {
+  if (!selectedProduct) return selectedPrice;
+  if (isCustomBannerGroup()) return customBannerMemberPrice();
+  const prices = selectedProduct.memberPrices || selectedProduct.prices;
+  return prices.find((item) => item[0] === selectedPrice?.[0]) || prices[0] || selectedPrice;
+}
+
+function moneyNumber(value) {
+  return Number(String(value || "").replace(/[^0-9.]/g, ""));
+}
+
+function moneyDiff(regular, member) {
+  const amount = Math.max(0, moneyNumber(regular) - moneyNumber(member));
+  return `$${amount.toFixed(2)}`;
 }
 
 function renderProductDetails(product) {
@@ -916,7 +937,7 @@ function updateSelectedPrice() {
   if (productPrice) productPrice.textContent = selectedPrice[1];
   if (productOrderLink) {
     if (selectedGroup.category === "shirts") {
-      productPrice.innerHTML = `$14.00 <small>${localStorage.getItem("preferredLanguage") === "es" ? "cada una" : "each"}</small>`;
+      productPrice.innerHTML = `$35.00 <small>${localStorage.getItem("preferredLanguage") === "es" ? "regular" : "regular"}</small>`;
       productOrderLink.href = "tshirt.html";
       productOrderLink.textContent = localStorage.getItem("preferredLanguage") === "es" ? "Diseñar camiseta" : "Design T-shirt";
       if (productUploadLink) productUploadLink.hidden = true;
@@ -988,19 +1009,24 @@ function updateSelectedPrice() {
     }
     const bannerSize = isCustomBannerGroup() ? `${customBannerDimensions().width} ft x ${customBannerDimensions().height} ft` : sizeLabel(selectedProduct.name, selectedGroup.name);
     const bannerProduct = isCustomBannerGroup() ? `${bannerMaterial?.value || "13 oz. Standard Vinyl"} ${bannerSize}` : selectedProduct.name;
+    const memberPrice = selectedMemberPrice();
+    const memberSavings = moneyDiff(selectedPrice[1], memberPrice?.[1]);
     const details = [
       `Product: ${bannerProduct}`,
       `Size: ${bannerSize}`,
       ...configuration,
       `Quantity: ${selectedPrice[0]}`,
-      `Suggested sale price: ${selectedPrice[1]}`,
+      `Regular customer price: ${selectedPrice[1]}`,
+      memberPrice?.[1] ? `Member price: ${memberPrice[1]}` : "",
+      memberPrice?.[1] ? `Membership savings: ${memberSavings}` : "",
       `Product information: ${info.material}`,
-    ].join("\n");
+    ].filter(Boolean).join("\n");
     const params = new URLSearchParams({
       service: "Printing",
       product: bannerProduct,
       quantity: selectedPrice[0],
       price: selectedPrice[1],
+      memberPrice: memberPrice?.[1] || selectedPrice[1],
       details,
     });
     params.set("roundedCorners", cardRoundedCorners?.value || "No");

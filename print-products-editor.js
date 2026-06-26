@@ -12,7 +12,8 @@ const productCatalog = [
     trimLabel: 'Trim: 3.5" x 2"',
     width: 3.75,
     height: 2.25,
-    prices: [[100, 35], [250, 55], [500, 65], [1000, 119], [2500, 180], [5000, 220], [10000, 370]],
+    memberPrices: [[100, 25.75], [250, 29.87], [500, 31.93], [1000, 42.28], [2500, 85.5], [5000, 116.4], [10000, 254.4]],
+    prices: [[100, 35], [250, 45], [500, 55], [1000, 70], [2500, 110], [5000, 155], [10000, 303]],
     image: "assets/printing-business-cards-ai.webp",
   },
   {
@@ -24,7 +25,8 @@ const productCatalog = [
     trimLabel: "Standard postcard flyer",
     width: 4,
     height: 6,
-    prices: [[100, 49], [250, 79], [500, 99], [1000, 150], [2500, 249], [5000, 349], [10000, 420]],
+    memberPrices: [[100, 28.84], [250, 50.43], [500, 58.67], [1000, 69.02], [2500, 149.35], [5000, 178.22], [10000, 278.81]],
+    prices: [[100, 41], [250, 65], [500, 75], [1000, 85], [2500, 170], [5000, 210], [10000, 340]],
     image: "assets/printing-flyers-ai.webp",
   },
   {
@@ -36,7 +38,8 @@ const productCatalog = [
     trimLabel: "Premium handout flyer",
     width: 5,
     height: 7,
-    prices: [[100, 95], [250, 140], [500, 180], [1000, 240], [2500, 390], [5000, 450], [10000, 650]],
+    memberPrices: [[100, 59.7], [250, 87.51], [500, 102.95], [1000, 118.46], [2500, 227.62], [5000, 295.28], [10000, 413.02]],
+    prices: [[100, 75], [250, 104], [500, 126], [1000, 149], [2500, 285], [5000, 371], [10000, 523]],
     image: "assets/printing-flyers-ai.webp",
   },
   {
@@ -48,6 +51,7 @@ const productCatalog = [
     trimLabel: "Full page flyer",
     width: 8.5,
     height: 11,
+    memberPrices: [[100, 130.21], [250, 147.74], [500, 164.29], [1000, 220.1], [2500, 335.76], [5000, 380.03], [10000, 665.32]],
     prices: [[100, 160], [250, 200], [500, 280], [1000, 370], [2500, 550], [5000, 596], [10000, 890]],
     image: "assets/printing-flyers-ai.webp",
   },
@@ -61,7 +65,8 @@ const productCatalog = [
     width: 2,
     height: 2,
     shape: "round",
-    prices: [[100, 70], [250, 116], [500, 130], [1000, 190], [2500, 280], [5000, 380], [10000, 580]],
+    memberPrices: [[100, 42.25], [250, 74.12], [500, 62.79], [1000, 72.06], [2500, 113.31], [5000, 184.32], [10000, 322.01]],
+    prices: [[100, 52], [250, 85], [500, 90], [1000, 96], [2500, 145], [5000, 226], [10000, 399]],
     image: "assets/printing-stickers-ai.webp",
   },
   {
@@ -74,7 +79,8 @@ const productCatalog = [
     width: 2.5,
     height: 2.5,
     shape: "round",
-    prices: [[100, 100], [250, 180], [500, 190], [1000, 220], [2500, 350], [5000, 450], [10000, 720]],
+    memberPrices: [[100, 52.49], [250, 102.95], [500, 107.08], [1000, 115.37], [2500, 166.84], [5000, 255.43], [10000, 425.39]],
+    prices: [[100, 62], [250, 123], [500, 128], [1000, 138], [2500, 204], [5000, 314], [10000, 533]],
     image: "assets/printing-stickers-ai.webp",
   },
   {
@@ -86,7 +92,8 @@ const productCatalog = [
     trimLabel: "Rectangle sticker",
     width: 3.5,
     height: 2,
-    prices: [[100, 75], [250, 110], [500, 140], [1000, 160], [2500, 190], [5000, 240], [10000, 420]],
+    memberPrices: [[100, 27.78], [250, 46.31], [500, 48.37], [1000, 52.49], [2500, 80.3], [5000, 125.64], [10000, 216.27]],
+    prices: [[100, 38], [250, 56], [500, 62], [1000, 65], [2500, 110], [5000, 153], [10000, 267]],
     image: "assets/printing-stickers-ai.webp",
   },
   {
@@ -98,19 +105,21 @@ const productCatalog = [
     trimLabel: "Square sticker",
     width: 2,
     height: 2,
-    prices: [[100, 65], [250, 95], [500, 135], [1000, 155], [2500, 185], [5000, 230], [10000, 330]],
+    memberPrices: [[100, 23.66], [250, 31.93], [500, 32.97], [1000, 37.05], [2500, 57.64], [5000, 90.6], [10000, 156.51]],
+    prices: [[100, 28], [250, 38], [500, 48], [1000, 56], [2500, 70], [5000, 109], [10000, 191]],
     image: "assets/printing-stickers-ai.webp",
   },
   {
-    id: "stickers-2x4",
-    product: "Stickers 2x4",
-    label: 'Stickers 2" x 4"',
+    id: "stickers-4x4",
+    product: "Stickers 4x4",
+    label: 'Stickers 4" x 4"',
     category: "stickers",
-    sizeLabel: '2" x 4"',
+    sizeLabel: '4" x 4"',
     trimLabel: "Rectangle sticker",
     width: 4,
-    height: 2,
-    prices: [[100, 90], [250, 135], [500, 160], [1000, 185], [2500, 230], [5000, 295], [10000, 480]],
+    height: 4,
+    memberPrices: [[100, 53.52], [250, 94.72], [500, 99.88], [1000, 109.86], [2500, 169.9], [5000, 261.56], [10000, 435.61]],
+    prices: [[100, 65], [250, 115], [500, 123], [1000, 133], [2500, 207], [5000, 322], [10000, 542]],
     image: "assets/printing-stickers-ai.webp",
   },
 ];
@@ -121,7 +130,8 @@ if (params.get("customBanner") === "1") {
   const height = clamp(Number(params.get("height") || 4), 1, 100);
   const quantity = Math.max(1, Math.round(Number(params.get("quantity") || 1)));
   const material = params.get("material") || "13 oz. Standard Vinyl";
-  const price = Number(String(params.get("price") || "").replace(/[^0-9.]/g, "")) || width * height * 7 * quantity;
+  const memberPrice = Number(String(params.get("memberPrice") || "").replace(/[^0-9.]/g, "")) || width * height * 7 * quantity;
+  const price = Number(String(params.get("price") || "").replace(/[^0-9.]/g, "")) || width * height * 9 * quantity;
   productCatalog.unshift({
     id: "custom-banner",
     product: params.get("product") || `${material} ${width} ft x ${height} ft`,
@@ -131,6 +141,7 @@ if (params.get("customBanner") === "1") {
     trimLabel: material === "Window Vinyl" ? "Window vinyl - no banner treatment" : "Custom vinyl banner",
     width,
     height,
+    memberPrices: [[quantity, memberPrice]],
     prices: [[quantity, price]],
     image: "assets/catalog-banners.png",
     material,
@@ -165,6 +176,9 @@ const summarySize = document.querySelector("#printSummarySize");
 const summaryQuantity = document.querySelector("#printSummaryQuantity");
 const summarySides = document.querySelector("#printSummarySides");
 const summaryTotal = document.querySelector("#printSummaryTotal");
+const summaryMemberPrice = document.querySelector("#printSummaryMemberPrice");
+const summaryRegularPrice = document.querySelector("#printSummaryRegularPrice");
+const summarySavings = document.querySelector("#printSummarySavings");
 const continueButton = document.querySelector("#printContinueCheckout");
 const statusNode = document.querySelector("#printEditorStatus");
 const preflightButton = document.querySelector("#printRunPreflight");
@@ -2094,11 +2108,16 @@ function findSelectedItem() {
 
 function updateSummary() {
   const price = selectedPrice();
+  const memberPrice = selectedMemberPrice();
+  const savings = Math.max(0, price - memberPrice);
   if (summaryProduct) summaryProduct.textContent = currentProduct.label;
   if (summarySize) summarySize.textContent = currentProduct.sizeLabel;
   if (summaryQuantity) summaryQuantity.textContent = currentQuantity;
   if (summarySides) summarySides.textContent = document.querySelector("#printedSide")?.value || "Front and Back";
   if (summaryTotal) summaryTotal.textContent = money(price);
+  if (summaryMemberPrice) summaryMemberPrice.textContent = money(memberPrice);
+  if (summaryRegularPrice) summaryRegularPrice.textContent = money(price);
+  if (summarySavings) summarySavings.textContent = money(savings);
   updateCompactSelection(price);
 }
 
@@ -2115,6 +2134,11 @@ function updateCompactSelection(price) {
 
 function selectedPrice() {
   return Number(currentProduct.prices.find(([quantity]) => String(quantity) === String(currentQuantity))?.[1] || currentProduct.prices[0][1]);
+}
+
+function selectedMemberPrice() {
+  const prices = currentProduct.memberPrices || currentProduct.prices;
+  return Number(prices.find(([quantity]) => String(quantity) === String(currentQuantity))?.[1] || prices[0]?.[1] || selectedPrice());
 }
 
 async function saveCurrentSidePng() {
@@ -2163,6 +2187,9 @@ async function continueToCheckout() {
       trimLabel: currentProduct.trimLabel,
       quantity: String(currentQuantity),
       totalPrice: selectedPrice(),
+      memberPrice: selectedMemberPrice(),
+      regularPrice: selectedPrice(),
+      membershipSavings: Math.max(0, selectedPrice() - selectedMemberPrice()),
       sides: options.printedSide,
       options,
       background: {

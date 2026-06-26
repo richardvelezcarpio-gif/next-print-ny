@@ -26,6 +26,10 @@ const sizeNode = document.querySelector("#printCheckoutSize");
 const quantityNode = document.querySelector("#printCheckoutQty");
 const sidesNode = document.querySelector("#printCheckoutSides");
 const itemsNode = document.querySelector("#printCheckoutItems");
+const memberCompareNode = document.querySelector("#printCheckoutMemberCompare");
+const memberPriceNode = document.querySelector("#printCheckoutMemberPrice");
+const regularPriceNode = document.querySelector("#printCheckoutRegularPrice");
+const savingsNode = document.querySelector("#printCheckoutSavings");
 
 const selection = loadJson(printSelectionKey);
 const files = loadJson(printFilesKey) || [];
@@ -80,6 +84,7 @@ function renderCheckout(orderSelection, orderFiles) {
   if (successPanel) successPanel.hidden = true;
 
   if (totalNode) totalNode.textContent = money(orderSelection.totalPrice);
+  renderMemberComparison(orderSelection);
   if (productNode) productNode.textContent = orderSelection.label || orderSelection.product;
   if (sizeNode) sizeNode.textContent = orderSelection.sizeLabel || "Custom size";
   if (quantityNode) quantityNode.textContent = String(orderSelection.quantity);
@@ -118,6 +123,19 @@ function renderCheckout(orderSelection, orderFiles) {
 
   updateFulfillmentFields();
   mountPayPalButtons();
+}
+
+function renderMemberComparison(orderSelection) {
+  const regularPrice = Number(orderSelection.regularPrice || orderSelection.totalPrice || 0);
+  const memberPrice = Number(orderSelection.memberPrice || 0);
+  const savings = Math.max(0, regularPrice - memberPrice);
+  const hasMemberPrice = Number.isFinite(memberPrice) && memberPrice > 0 && savings > 0;
+
+  if (memberCompareNode) memberCompareNode.hidden = !hasMemberPrice;
+  if (!hasMemberPrice) return;
+  if (memberPriceNode) memberPriceNode.textContent = money(memberPrice);
+  if (regularPriceNode) regularPriceNode.textContent = money(regularPrice);
+  if (savingsNode) savingsNode.textContent = money(savings);
 }
 
 function showPaidState(orderNumber) {
@@ -249,6 +267,9 @@ function buildFullDetails(orderSelection, details) {
     `Size: ${orderSelection.sizeLabel || ""}`,
     `Quantity: ${orderSelection.quantity}`,
     `Checkout amount: ${money(orderSelection.totalPrice)}`,
+    orderSelection.memberPrice ? `Member price: ${money(orderSelection.memberPrice)}` : "",
+    orderSelection.regularPrice ? `Regular customer price: ${money(orderSelection.regularPrice)}` : "",
+    orderSelection.membershipSavings ? `Membership savings: ${money(orderSelection.membershipSavings)}` : "",
   ]
     .filter(Boolean)
     .join("\n");

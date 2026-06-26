@@ -6,9 +6,11 @@ const params = new URLSearchParams(window.location.search);
 const product = clean(params.get("product"));
 const quantity = clean(params.get("quantity"));
 const priceText = clean(params.get("price"));
+const memberPriceText = clean(params.get("memberPrice"));
 const detailsText = cleanMultiline(params.get("details"));
 const detailsMap = parseDetails(detailsText);
 const totalPrice = parseMoney(priceText);
+const memberPrice = parseMoney(memberPriceText);
 
 const workspace = document.querySelector("#printUploadWorkspace");
 const missingPanel = document.querySelector("#printUploadMissing");
@@ -62,6 +64,9 @@ continueButton?.addEventListener("click", async () => {
       sizeLabel: detailsMap.Size || inferSize(product),
       quantity,
       totalPrice,
+      memberPrice: Number.isFinite(memberPrice) && memberPrice > 0 ? memberPrice : null,
+      regularPrice: totalPrice,
+      membershipSavings: Number.isFinite(memberPrice) && memberPrice > 0 ? Math.max(0, totalPrice - memberPrice) : null,
       sides: buildSidesLabel(detailsMap),
       options: {
         frontSide: detailsMap["Front Side"] || "",
@@ -95,11 +100,15 @@ function renderUploadOrder() {
         ["Product", product],
         ["Size", inferSize(product)],
         ["Quantity", quantity],
-        ["Suggested sale price", money(totalPrice)],
       ];
+    rows.push(
+      ["Regular customer price", money(totalPrice)],
+      Number.isFinite(memberPrice) && memberPrice > 0 ? ["Member price", money(memberPrice)] : null,
+      Number.isFinite(memberPrice) && memberPrice > 0 ? ["Membership savings", money(Math.max(0, totalPrice - memberPrice))] : null,
+    );
 
     detailsNode.innerHTML = rows
-      .filter(([, value]) => value)
+      .filter((row) => row?.[1])
       .map(([label, value]) => `<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`)
       .join("");
   }

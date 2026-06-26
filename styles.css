@@ -4815,6 +4815,40 @@ textarea {
   font-weight: 900;
 }
 
+.member-price-compare {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid #cfe8f4;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #f5fcff, #eef8ff);
+}
+
+.member-price-compare div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.member-price-compare span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.member-price-compare strong {
+  color: var(--navy);
+  font-size: 0.9rem;
+}
+
+.member-price-compare div:first-child strong,
+.member-price-compare div:last-child strong {
+  color: #0a9b6d;
+}
+
 .print-upload-page {
   min-height: 620px;
 }
