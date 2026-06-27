@@ -11216,10 +11216,10 @@ img {
 
 .printing-premium-hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr);
   gap: clamp(22px, 4vw, 58px);
   align-items: center;
-  padding: clamp(32px, 4vw, 56px) clamp(28px, 4vw, 68px) 26px;
+  padding: clamp(24px, 3vw, 38px) clamp(28px, 4vw, 68px) 18px;
   background:
     radial-gradient(circle at 68% 38%, rgba(10, 104, 255, 0.18), transparent 24%),
     radial-gradient(circle at 84% 16%, rgba(255, 149, 211, 0.36), transparent 22%),
@@ -11237,7 +11237,7 @@ img {
   max-width: 620px;
   margin: 0;
   color: #08245a;
-  font-size: clamp(3rem, 6vw, 6.5rem);
+  font-size: clamp(3rem, 4.2vw, 4.85rem);
   line-height: 0.9;
   text-transform: uppercase;
 }
@@ -11249,7 +11249,7 @@ img {
 
 .printing-hero-copy > p:not(.breadcrumb):not(.printing-rating) {
   max-width: 640px;
-  margin: 20px 0 24px;
+  margin: 16px 0 20px;
   color: #08245a;
   font-size: clamp(1.02rem, 1.35vw, 1.35rem);
   font-weight: 700;
@@ -11265,8 +11265,8 @@ img {
 
 .printing-hero-perks span {
   display: grid;
-  grid-template-columns: 38px 1fr;
-  column-gap: 10px;
+  grid-template-columns: 30px 1fr;
+  column-gap: 9px;
   align-items: center;
   min-width: 0;
   color: #0a285b;
@@ -11274,12 +11274,25 @@ img {
 }
 
 .printing-hero-perks span::before {
+  display: none;
   content: "";
-  width: 34px;
-  height: 34px;
-  border: 3px solid #0d70ff;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #0d70ff;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.68);
+  background:
+    radial-gradient(circle, #0d70ff 0 4px, transparent 5px),
+    rgba(255, 255, 255, 0.75);
+  box-shadow: 0 6px 16px rgba(13, 112, 255, 0.12);
+}
+
+.printing-hero-perks img {
+  grid-row: 1 / span 2;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 7px 16px rgba(13, 112, 255, 0.16);
 }
 
 .printing-hero-perks b,
@@ -11326,7 +11339,7 @@ img {
 
 .printing-hero-art {
   position: relative;
-  min-height: 420px;
+  min-height: 330px;
 }
 
 .printing-hero-art > img {
@@ -11357,10 +11370,21 @@ img {
   z-index: 3;
 }
 
+.printing-hero-art > .printing-hero-main-image {
+  left: 0;
+  top: 0;
+  z-index: 2;
+  width: min(82%, 980px);
+  height: 318px;
+  object-fit: contain;
+  object-position: center;
+  filter: drop-shadow(0 24px 28px rgba(6, 23, 58, 0.2));
+}
+
 .printing-member-card {
   position: absolute;
   right: 0;
-  bottom: 12%;
+  bottom: 9%;
   z-index: 4;
   width: min(250px, 40%);
   padding: 24px;
@@ -11429,29 +11453,44 @@ img {
 
 .printing-stats article {
   display: grid;
-  grid-template-columns: 42px 1fr;
-  gap: 12px;
+  grid-template-columns: 34px 1fr;
+  grid-template-rows: auto auto;
+  gap: 10px;
   align-items: center;
 }
 
 .printing-stats article::before {
-  content: "✦";
-  display: grid;
-  width: 38px;
-  height: 38px;
+  content: none;
+  display: none;
+  width: 30px;
+  height: 30px;
   place-items: center;
   border-radius: 50%;
   color: #075cff;
   background: #eef5ff;
+  font-size: 0.68rem;
   font-weight: 900;
 }
 
+.printing-stats img {
+  grid-row: 1 / span 2;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eef5ff;
+  box-shadow: 0 8px 18px rgba(7, 92, 255, 0.12);
+}
+
 .printing-stats strong {
+  grid-column: 2;
   color: #075cff;
   font-size: 1.3rem;
+  line-height: 1;
 }
 
 .printing-stats span {
+  grid-column: 2;
   color: #213554;
   font-size: 0.75rem;
   font-weight: 800;
@@ -11579,16 +11618,21 @@ img {
 .printing-product-card {
   overflow: hidden;
   display: grid;
-  grid-template-rows: 150px auto auto auto auto;
-  min-height: 286px;
+  grid-template-rows: 164px auto auto auto auto;
+  min-height: 300px;
   border-radius: 12px;
 }
 
 .printing-product-card img {
   width: 100%;
-  height: 150px;
-  object-fit: cover;
-  background: #eef6ff;
+  height: 164px;
+  padding: 8px;
+  object-fit: contain;
+  object-position: center;
+  box-sizing: border-box;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(20, 190, 218, 0.1), transparent 52%),
+    linear-gradient(145deg, #f8fbff, #eaf4ff);
 }
 
 .printing-product-card h2,
@@ -11700,7 +11744,7 @@ img {
 
 .printing-membership-cta {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto auto 88px;
   gap: 22px;
   align-items: center;
   margin: 0 clamp(28px, 4vw, 68px) 18px;
@@ -11750,6 +11794,14 @@ img {
   font-weight: 900;
   text-decoration: none;
   text-transform: uppercase;
+}
+
+.printing-membership-crown {
+  width: 86px;
+  max-width: 100%;
+  justify-self: end;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.22));
+  transform: rotate(-4deg);
 }
 
 .printing-reviews {
@@ -11817,7 +11869,12 @@ img {
   }
 
   .printing-hero-art {
-    min-height: 320px;
+    min-height: 280px;
+  }
+
+  .printing-hero-art > .printing-hero-main-image {
+    width: min(76%, 620px);
+    height: 270px;
   }
 
   .printing-catalog-layout {
@@ -11909,13 +11966,20 @@ img {
   }
 
   .printing-hero-art {
-    min-height: 230px;
+    min-height: 210px;
+  }
+
+  .printing-hero-art > .printing-hero-main-image {
+    left: -3%;
+    top: 4px;
+    width: 72%;
+    height: 198px;
   }
 
   .printing-member-card {
     right: 3%;
-    bottom: 4%;
-    width: 43%;
+    bottom: 7%;
+    width: 39%;
     padding: 12px;
     border-radius: 10px;
   }
@@ -11993,12 +12057,13 @@ img {
   }
 
   .printing-product-card {
-    grid-template-rows: 96px auto auto auto auto;
+    grid-template-rows: 104px auto auto auto auto;
     min-height: 218px;
   }
 
   .printing-product-card img {
-    height: 96px;
+    height: 104px;
+    padding: 6px;
   }
 
   .printing-product-card h2 {
@@ -12048,7 +12113,7 @@ img {
   }
 
   .printing-membership-cta {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) 64px;
     gap: 10px;
     margin: 0 10px 12px;
     padding: 16px;
@@ -12067,8 +12132,16 @@ img {
   }
 
   .printing-membership-cta a {
+    grid-column: 1 / -1;
     min-height: 40px;
     min-width: 0;
+  }
+
+  .printing-membership-crown {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    width: 62px;
+    align-self: center;
   }
 
   .printing-reviews {
