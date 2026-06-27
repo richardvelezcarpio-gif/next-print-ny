@@ -402,9 +402,7 @@ function memberFreeShippingEligible(name) {
     "menu",
     "door",
     "poster",
-    "invoice",
     "brochure",
-    "bookmark",
   ].some((keyword) => value.includes(keyword));
 }
 

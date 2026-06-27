@@ -4165,6 +4165,44 @@ textarea {
   line-height: 1;
 }
 
+.print-checkout-cost-breakdown {
+  display: grid;
+  gap: 7px;
+  margin: -4px 0 10px;
+  padding: 11px 12px;
+  border: 1px solid #d7e8fa;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.print-checkout-cost-breakdown div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
+.print-checkout-cost-breakdown strong {
+  color: var(--navy);
+}
+
+.print-shipping-message {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: #087a39;
+  background: #ecfff4;
+  font-size: 0.84rem;
+  font-weight: 900;
+}
+
+.print-shipping-message.error {
+  color: #b42318;
+  background: #fff1f0;
+}
+
 .shirt-checkout-summary dl {
   display: grid;
   gap: 8px;
@@ -4260,7 +4298,7 @@ textarea {
 
 .shirt-fulfillment-options {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 

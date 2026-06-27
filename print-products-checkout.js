@@ -21,6 +21,10 @@ const nameCard = document.querySelector("#printCheckoutNameCard");
 const nameCardTitle = document.querySelector("#printCheckoutNameTitle");
 const nameCardMeta = document.querySelector("#printCheckoutNameMeta");
 const totalNode = document.querySelector("#printCheckoutTotal");
+const subtotalNode = document.querySelector("#printCheckoutSubtotal");
+const taxNode = document.querySelector("#printCheckoutTax");
+const shippingNode = document.querySelector("#printCheckoutShipping");
+const shippingMessageNode = document.querySelector("#printShippingMessage");
 const productNode = document.querySelector("#printCheckoutProduct");
 const sizeNode = document.querySelector("#printCheckoutSize");
 const quantityNode = document.querySelector("#printCheckoutQty");
@@ -35,6 +39,8 @@ const selection = loadJson(printSelectionKey);
 const files = loadJson(printFilesKey) || [];
 const baseDetails = String(sessionStorage.getItem(printDetailsKey) || "");
 let preparedCheckoutPayload = null;
+let currentTotals = null;
+let memberActive = false;
 
 if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
   window.NextPrintPayPal.captureReturn({
@@ -49,6 +55,7 @@ if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
   showMissingState();
 } else {
   renderCheckout(selection, files);
+  detectMemberStatus();
 }
 
 checkoutForm?.addEventListener("submit", async (event) => {
@@ -73,6 +80,8 @@ checkoutForm?.addEventListener("submit", async (event) => {
 
 checkoutForm?.addEventListener("input", resetPreparedCheckout);
 checkoutForm?.addEventListener("change", resetPreparedCheckout);
+checkoutForm?.addEventListener("input", updateCheckoutTotals);
+checkoutForm?.addEventListener("change", updateCheckoutTotals);
 
 document.querySelectorAll("input[name='fulfillment']").forEach((input) => {
   input.addEventListener("change", updateFulfillmentFields);
@@ -83,7 +92,6 @@ function renderCheckout(orderSelection, orderFiles) {
   if (missingPanel) missingPanel.hidden = true;
   if (successPanel) successPanel.hidden = true;
 
-  if (totalNode) totalNode.textContent = money(orderSelection.totalPrice);
   renderMemberComparison(orderSelection);
   if (productNode) productNode.textContent = orderSelection.label || orderSelection.product;
   if (sizeNode) sizeNode.textContent = orderSelection.sizeLabel || "Custom size";
@@ -122,6 +130,7 @@ function renderCheckout(orderSelection, orderFiles) {
   }
 
   updateFulfillmentFields();
+  updateCheckoutTotals();
   mountPayPalButtons();
 }
 
@@ -156,15 +165,49 @@ function showMissingState() {
 }
 
 function updateFulfillmentFields() {
-  const fulfillment = document.querySelector("input[name='fulfillment']:checked")?.value || "shipping";
-  const isShipping = fulfillment === "shipping";
-  if (addressFields) addressFields.hidden = !isShipping;
-  if (pickupNote) pickupNote.hidden = isShipping;
+  const fulfillment = selectedFulfillment();
+  const needsAddress = fulfillment !== "pickup";
+  if (addressFields) addressFields.hidden = !needsAddress;
+  if (pickupNote) pickupNote.hidden = needsAddress;
   addressFields?.querySelectorAll("input").forEach((input) => {
     const required = ["street", "city", "state", "zip"].includes(input.name);
-    input.required = isShipping && required;
-    input.disabled = !isShipping;
+    input.required = needsAddress && required;
+    input.disabled = !needsAddress;
   });
+  updateCheckoutTotals();
+}
+
+function updateCheckoutTotals() {
+  if (!selection?.product || !window.NextPrintShippingCalculator?.calculateShipping) return;
+  const destination = readDestination();
+  currentTotals = window.NextPrintShippingCalculator.calculateShipping({
+    productName: selection.product,
+    method: selectedFulfillment(),
+    destination,
+    isMember: memberActive,
+    subtotal: selection.totalPrice,
+    quantity: selection.quantity,
+  });
+
+  if (subtotalNode) subtotalNode.textContent = money(currentTotals.subtotal);
+  if (taxNode) taxNode.textContent = money(currentTotals.tax);
+  if (shippingNode) shippingNode.textContent = currentTotals.available ? money(currentTotals.shipping) : "--";
+  if (totalNode) totalNode.textContent = money(currentTotals.total);
+  if (shippingMessageNode) {
+    shippingMessageNode.textContent = currentTotals.unavailableReason || currentTotals.message;
+    shippingMessageNode.classList.toggle("error", !currentTotals.available);
+  }
+}
+
+async function detectMemberStatus() {
+  try {
+    const response = await fetch("/api/member?action=dashboard");
+    if (!response.ok) return;
+    const data = await response.json();
+    memberActive = Boolean(data?.membership?.active);
+    resetPreparedCheckout();
+    updateCheckoutTotals();
+  } catch {}
 }
 
 async function prepareCheckoutPayload() {
@@ -180,8 +223,9 @@ async function prepareCheckoutPayload() {
     phone: clean(form.get("phone")),
     email: clean(form.get("email")),
   };
-  const fulfillment = form.get("fulfillment") === "pickup" ? "pickup" : "shipping";
-  const address = fulfillment === "shipping" ? {
+  const fulfillment = selectedFulfillment();
+  const needsAddress = fulfillment !== "pickup";
+  const address = needsAddress ? {
     street: clean(form.get("street")),
     apartment: clean(form.get("apartment")),
     city: clean(form.get("city")),
@@ -193,12 +237,17 @@ async function prepareCheckoutPayload() {
     throw new Error("Please complete your name, phone, and email.");
   }
 
-  if (fulfillment === "shipping" && (!address.street || !address.city || !address.state || !address.zip)) {
-    throw new Error("Please complete the full shipping address.");
+  if (needsAddress && (!address.street || !address.city || !address.state || !address.zip)) {
+    throw new Error("Please complete the full delivery address.");
+  }
+
+  updateCheckoutTotals();
+  if (!currentTotals?.available) {
+    throw new Error(currentTotals?.unavailableReason || "This delivery option is not available for this address.");
   }
 
   setStatus("Saving your order before payment...");
-  const details = buildFullDetails(selection, baseDetails);
+  const details = buildFullDetails(selection, baseDetails, currentTotals);
   const orderResponse = await fetch("/api/order", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -210,12 +259,23 @@ async function prepareCheckoutPayload() {
       details,
       orderDate: toDateInputValue(new Date()),
       dueDate: toDateInputValue(daysFromNow(5)),
-      budget: money(selection.totalPrice),
+      budget: money(currentTotals.total),
       name: customer.name,
       phone: customer.phone,
       email: customer.email,
       fulfillment,
       address,
+      shipping: {
+        provider: currentTotals.provider,
+        method: fulfillment,
+        message: currentTotals.message,
+        category: currentTotals.shippingCategory,
+        cost: currentTotals.shipping,
+        freeShippingApplied: currentTotals.freeShippingApplied,
+        subtotal: currentTotals.subtotal,
+        tax: currentTotals.tax,
+        total: currentTotals.total,
+      },
       files,
     }),
   });
@@ -229,14 +289,14 @@ async function prepareCheckoutPayload() {
   preparedCheckoutPayload = {
     orderNumber,
     itemName: `${selection.label || selection.product} - ${selection.quantity}`,
-    amount: orderData.amount || selection.totalPrice,
+    amount: orderData.amount || currentTotals.total,
     customerName: customer.name,
     customerEmail: customer.email,
     source: "print-products-checkout",
     paymentOption: "Full payment",
     plan: selection.label || selection.product,
-    fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
-    shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
+    fulfillment: fulfillmentLabel(fulfillment),
+    shippingAddress: needsAddress ? formatAddress(address) : "",
     description: details,
     successPath: `/print-products-checkout.html?order=${encodeURIComponent(orderNumber)}`,
     cancelPath: `/print-products-checkout.html?order=${encodeURIComponent(orderNumber)}`,
@@ -259,20 +319,48 @@ function resetPreparedCheckout() {
   preparedCheckoutPayload = null;
 }
 
-function buildFullDetails(orderSelection, details) {
+function buildFullDetails(orderSelection, details, totals) {
   return [
     details,
     "",
     `Product: ${orderSelection.product}`,
     `Size: ${orderSelection.sizeLabel || ""}`,
     `Quantity: ${orderSelection.quantity}`,
-    `Checkout amount: ${money(orderSelection.totalPrice)}`,
+    `Subtotal: ${money(totals?.subtotal || orderSelection.totalPrice)}`,
+    `Tax: ${money(totals?.tax || 0)}`,
+    `Shipping: ${money(totals?.shipping || 0)}`,
+    `Checkout amount: ${money(totals?.total || orderSelection.totalPrice)}`,
+    totals?.message ? `Shipping message: ${totals.message}` : "",
+    totals?.shippingCategory ? `Shipping category: ${totals.shippingCategory}` : "",
     orderSelection.memberPrice ? `Member price: ${money(orderSelection.memberPrice)}` : "",
     orderSelection.regularPrice ? `Regular customer price: ${money(orderSelection.regularPrice)}` : "",
     orderSelection.membershipSavings ? `Membership savings: ${money(orderSelection.membershipSavings)}` : "",
   ]
     .filter(Boolean)
     .join("\n");
+}
+
+function selectedFulfillment() {
+  return document.querySelector("input[name='fulfillment']:checked")?.value || "standard";
+}
+
+function readDestination() {
+  const form = checkoutForm ? new FormData(checkoutForm) : new FormData();
+  return {
+    street: clean(form.get("street")),
+    apartment: clean(form.get("apartment")),
+    city: clean(form.get("city")),
+    borough: clean(form.get("city")),
+    state: clean(form.get("state")).toUpperCase(),
+    zip: clean(form.get("zip")),
+  };
+}
+
+function fulfillmentLabel(value) {
+  if (value === "pickup") return "Store Pickup";
+  if (value === "local_delivery") return "Local Delivery";
+  if (value === "express") return "Express Shipping";
+  return "Standard Shipping";
 }
 
 function formatAddress(address) {

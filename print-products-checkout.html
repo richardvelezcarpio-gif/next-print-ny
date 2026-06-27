@@ -85,6 +85,12 @@
                 <span>Total due today</span>
                 <strong id="printCheckoutTotal">$0.00</strong>
               </div>
+              <div class="print-checkout-cost-breakdown">
+                <div><span>Subtotal</span><strong id="printCheckoutSubtotal">$0.00</strong></div>
+                <div><span>Tax</span><strong id="printCheckoutTax">$0.00</strong></div>
+                <div><span>Shipping</span><strong id="printCheckoutShipping">$0.00</strong></div>
+              </div>
+              <p id="printShippingMessage" class="print-shipping-message">Standard Shipping</p>
               <div id="printCheckoutMemberCompare" class="member-price-compare print-checkout-member-compare" hidden>
                 <div><span>Member price</span><strong id="printCheckoutMemberPrice">$0.00</strong></div>
                 <div><span>Regular customer</span><strong id="printCheckoutRegularPrice">$0.00</strong></div>
@@ -134,12 +140,20 @@
                 <h2>Delivery option</h2>
                 <div class="shirt-fulfillment-options">
                   <label>
-                    <input type="radio" name="fulfillment" value="shipping" checked />
-                    <span><strong>Shipping</strong> Send to my address</span>
+                    <input type="radio" name="fulfillment" value="pickup" />
+                    <span><strong>Store Pickup</strong> Free</span>
                   </label>
                   <label>
-                    <input type="radio" name="fulfillment" value="pickup" />
-                    <span><strong>Pickup store</strong> Pick up at Next Print NY</span>
+                    <input type="radio" name="fulfillment" value="local_delivery" />
+                    <span><strong>Local Delivery</strong> Brooklyn/Queens only</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="fulfillment" value="standard" checked />
+                    <span><strong>Standard Shipping</strong> Calculated by weight</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="fulfillment" value="express" />
+                    <span><strong>Express Shipping</strong> Faster delivery + extra charge</span>
                   </label>
                 </div>
                 <div id="printAddressFields" class="shirt-checkout-fields address">
@@ -237,7 +251,10 @@
       </footer>
     </div>
     <script src="script.js?v=20260618-0720"></script>
+    <script src="src/data/shippingProfiles.js?v=20260627-shipping"></script>
+    <script src="src/lib/shippingRules.js?v=20260627-shipping"></script>
+    <script src="src/lib/calculateShipping.js?v=20260627-shipping"></script>
     <script src="paypal-checkout.js?v=20260618-embedded"></script>
-    <script src="print-products-checkout.js?v=20260618-embedded"></script>
+    <script src="print-products-checkout.js?v=20260627-shipping"></script>
   </body>
 </html>
