@@ -314,6 +314,11 @@
     color: #fff;
   }
 
+  body.print-products-editor-page.is-editor-panning,
+  body.print-products-editor-page.is-editor-panning * {
+    cursor: grab !important;
+  }
+
   body.print-products-editor-page .print-editor-main {
     display: contents;
   }
@@ -593,6 +598,73 @@
     margin: 0 0 10px;
     color: #587087;
     font-size: 0.78rem;
+  }
+
+  body.print-products-editor-page .print-ready-score {
+    display: grid;
+    min-width: 48px;
+    min-height: 36px;
+    place-items: center;
+    border-radius: 999px;
+    background: #eafcff;
+    color: #0694b9;
+    font-size: 0.9rem;
+    font-weight: 900;
+  }
+
+  body.print-products-editor-page .print-ready-meter {
+    height: 8px;
+    margin: 8px 0 12px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e7f0f8;
+  }
+
+  body.print-products-editor-page .print-ready-meter span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #0b62ff, #11cbd7);
+  }
+
+  body.print-products-editor-page .print-warning-list {
+    margin: 0 0 12px;
+    padding-left: 18px;
+    color: #27435e;
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  body.print-products-editor-page .price-calculator-panel {
+    display: grid;
+    gap: 8px;
+  }
+
+  body.print-products-editor-page .price-calculator-panel div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 10px;
+    border: 1px solid #d4e4f1;
+    border-radius: 6px;
+    background: #f7fbff;
+    color: #526b85;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  body.print-products-editor-page .price-calculator-panel strong {
+    color: #082d5e;
+  }
+
+  body.print-products-editor-page .price-calculator-panel .savings strong {
+    color: #148d27;
+  }
+
+  body.print-products-editor-page .version-list {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
   }
 
   body.print-products-editor-page .drawer-actions,
@@ -879,6 +951,7 @@
     height: 100%;
     place-items: center;
     overflow: hidden;
+    touch-action: none;
     padding: 38px 48px;
     border: 1px dashed #9ebfd8;
     border-radius: 7px;
@@ -1168,6 +1241,40 @@
     height: 100%;
     background: repeating-conic-gradient(#0b315c 0 25%, #fff 0 50%) 50% / 24% 24%;
     border: 5px solid #fff;
+  }
+
+  body.print-products-editor-page .print-context-menu {
+    position: fixed;
+    z-index: 10000;
+    display: grid;
+    min-width: 174px;
+    overflow: hidden;
+    border: 1px solid #bdd4e7;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 18px 42px rgba(7, 38, 72, 0.22);
+  }
+
+  body.print-products-editor-page .print-context-menu button {
+    min-height: 34px;
+    padding: 0 13px;
+    border: 0;
+    border-bottom: 1px solid #e2edf6;
+    background: #fff;
+    color: #082d5e;
+    font-size: 0.76rem;
+    font-weight: 850;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  body.print-products-editor-page .print-context-menu button:last-child {
+    border-bottom: 0;
+    color: #d62929;
+  }
+
+  body.print-products-editor-page .print-context-menu button:hover {
+    background: #ecfbff;
   }
 
   body.print-products-editor-page .print-canvas-text-content {

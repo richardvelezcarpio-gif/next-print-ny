@@ -265,6 +265,10 @@ let currentSide = "front";
 let selectedItemId = null;
 let activeEditorTool = params.get("directUpload") === "1" ? "uploads" : "";
 let canvasZoom = 1;
+let canvasPan = { x: 0, y: 0 };
+let isSpacePanning = false;
+let editorClipboard = null;
+let lastPreflightWarnings = [];
 let guidesVisible = true;
 let aiImageResults = [];
 let snapEnabled = true;
@@ -379,6 +383,17 @@ function bindEvents() {
     if (event.target.matches("[data-object-effect-control]")) updateObjectEffectControl(event.target);
   });
   desktopToolbar?.addEventListener("click", handleCanvasToolbarAction);
+  designCanvas?.addEventListener("wheel", handleCanvasWheel, { passive: false });
+  designCanvas?.addEventListener("pointerdown", startCanvasPan);
+  designCanvas?.addEventListener("contextmenu", openEditorContextMenu);
+  document.addEventListener("keydown", handleEditorShortcuts);
+  document.addEventListener("keyup", (event) => {
+    if (event.code === "Space") {
+      isSpacePanning = false;
+      document.body.classList.remove("is-editor-panning");
+    }
+  });
+  document.addEventListener("click", closeEditorContextMenu);
   editorStartButton?.addEventListener("click", () => {
     document.querySelector(".print-design-card")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -413,6 +428,9 @@ function renderEditorDrawer() {
     logos: renderUploadPanel("Logos", "Upload your business logo and place it on the card."),
     qr: renderQrPanel(),
     layers: renderLayersPanel(),
+    printstudio: renderPrintStudioPanel(),
+    history: renderHistoryPanel(),
+    calculator: renderCalculatorPanel(),
     mockups: renderMockupPanel(),
     ai: renderAiImagePanel(),
   };
@@ -647,6 +665,62 @@ function renderLayersPanel() {
   return `<div class="drawer-heading"><div><span>Arrange</span><h3>Layers & Projects</h3></div></div><div class="layer-actions"><button class="drawer-action" type="button" data-drawer-action="layer-up">Bring forward</button><button class="drawer-action" type="button" data-drawer-action="layer-down">Send backward</button><button class="drawer-action" type="button" data-drawer-action="save-project">Save project</button><button class="drawer-action" type="button" data-drawer-action="load-project">Load saved</button></div><div class="layer-list">${layerRows}</div>`;
 }
 
+function renderPrintStudioPanel() {
+  const warnings = lastPreflightWarnings.length ? lastPreflightWarnings : getPreflightWarnings();
+  const score = Math.max(0, 100 - warnings.length * 18);
+  const warningRows = warnings.length
+    ? warnings.slice(0, 6).map((warning) => `<li>${escapeHtml(warning)}</li>`).join("")
+    : "<li>Bleed and safety zones look ready.</li><li>Export at 300 DPI for production.</li>";
+  return `
+    <div class="drawer-heading"><div><span>Production</span><h3>Print Studio</h3></div><b class="print-ready-score">${score}%</b></div>
+    <p class="drawer-copy">Live print checks for bleed, safety zone and production export.</p>
+    <div class="print-ready-meter"><span style="width:${score}%"></span></div>
+    <ul class="print-warning-list">${warningRows}</ul>
+    <div class="drawer-actions">
+      <button class="drawer-action" type="button" data-drawer-action="run-preflight">Run preflight</button>
+      <button class="drawer-action primary" type="button" data-drawer-action="save-print-ready">Export 300 DPI</button>
+    </div>
+  `;
+}
+
+function renderHistoryPanel() {
+  const versions = getAutosaveVersions();
+  const rows = versions.length
+    ? versions
+        .slice()
+        .reverse()
+        .map((version, index) => `<button class="drawer-action" type="button" data-drawer-action="load-version" data-version-index="${versions.length - 1 - index}">${escapeHtml(new Date(version.savedAt).toLocaleString())}</button>`)
+        .join("")
+    : '<p class="drawer-copy">Autosave versions will appear here as you work.</p>';
+  return `
+    <div class="drawer-heading"><div><span>Timeline</span><h3>History & Autosave</h3></div></div>
+    <div class="layer-actions">
+      <button class="drawer-action" type="button" data-drawer-action="undo">Undo</button>
+      <button class="drawer-action" type="button" data-drawer-action="redo">Redo</button>
+      <button class="drawer-action" type="button" data-drawer-action="save-project">Save project</button>
+      <button class="drawer-action" type="button" data-drawer-action="load-project">Load saved</button>
+    </div>
+    <div class="version-list">${rows}</div>
+  `;
+}
+
+function renderCalculatorPanel() {
+  const regular = selectedPrice();
+  const member = selectedMemberPrice();
+  const savings = Math.max(0, regular - member);
+  return `
+    <div class="drawer-heading"><div><span>Pricing</span><h3>Order Calculator</h3></div></div>
+    <div class="price-calculator-panel">
+      <div><span>Product</span><strong>${escapeHtml(currentProduct.label)}</strong></div>
+      <div><span>Quantity</span><strong>${escapeHtml(String(currentQuantity))}</strong></div>
+      <div><span>Regular</span><strong>${money(regular)}</strong></div>
+      <div><span>Member</span><strong>${money(member)}</strong></div>
+      <div class="savings"><span>You save</span><strong>${money(savings)}</strong></div>
+    </div>
+    <p class="drawer-copy">Members keep lower pricing, saved artwork and fast reorder access.</p>
+  `;
+}
+
 function handleDrawerAction(event) {
   const button = event.target.closest("[data-drawer-action]");
   if (!button) return;
@@ -719,6 +793,9 @@ function handleDrawerAction(event) {
   }
   if (action === "layer-up") moveSelectedLayer(1);
   if (action === "layer-down") moveSelectedLayer(-1);
+  if (action === "undo") undoDesign();
+  if (action === "redo") redoDesign();
+  if (action === "load-version") loadAutosaveVersion(Number(button.dataset.versionIndex));
   if (action === "save-project") saveProject();
   if (action === "load-project") loadProject();
 }
@@ -947,15 +1024,204 @@ function handleCanvasToolbarAction(event) {
     setStatus(snapEnabled ? "Smart snap enabled." : "Smart snap disabled.");
     return;
   }
-  if (action === "zoom-in") canvasZoom = clamp(canvasZoom + 0.1, 0.8, 1.3);
-  if (action === "zoom-out") canvasZoom = clamp(canvasZoom - 0.1, 0.8, 1.3);
-  if (action === "center") centerSelectedItem();
+  if (action === "zoom-in") canvasZoom = clamp(canvasZoom + 0.15, 0.35, 4);
+  if (action === "zoom-out") canvasZoom = clamp(canvasZoom - 0.15, 0.35, 4);
+  if (action === "center") {
+    if (selectedItemId) centerSelectedItem();
+    else {
+      canvasPan = { x: 0, y: 0 };
+      canvasZoom = 1;
+    }
+  }
   if (action === "toggle-guides") {
     guidesVisible = !guidesVisible;
     designCanvas?.classList.toggle("guides-hidden", !guidesVisible);
   }
   renderCanvas();
   rememberHistory();
+}
+
+function handleCanvasWheel(event) {
+  if (!event.ctrlKey && !event.metaKey) return;
+  event.preventDefault();
+  const previousZoom = canvasZoom;
+  const direction = event.deltaY > 0 ? -1 : 1;
+  canvasZoom = clamp(canvasZoom + direction * 0.12, 0.35, 4);
+  const rect = designCanvas.getBoundingClientRect();
+  const cursorX = event.clientX - rect.left - rect.width / 2;
+  const cursorY = event.clientY - rect.top - rect.height / 2;
+  const ratio = canvasZoom / previousZoom - 1;
+  canvasPan.x -= cursorX * ratio;
+  canvasPan.y -= cursorY * ratio;
+  renderCanvas();
+}
+
+function startCanvasPan(event) {
+  if (event.button !== 1 && !(isSpacePanning && event.button === 0)) return;
+  event.preventDefault();
+  const startX = event.clientX;
+  const startY = event.clientY;
+  const original = { ...canvasPan };
+  document.body.classList.add("is-editor-panning");
+
+  const move = (moveEvent) => {
+    canvasPan = {
+      x: original.x + moveEvent.clientX - startX,
+      y: original.y + moveEvent.clientY - startY,
+    };
+    renderCanvas();
+  };
+  const stop = () => {
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", stop);
+    document.body.classList.remove("is-editor-panning");
+  };
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", stop);
+}
+
+function handleEditorShortcuts(event) {
+  const target = event.target;
+  const isTyping = target?.matches?.("input, textarea, select, [contenteditable='true']");
+  const item = findSelectedItem();
+
+  if (event.code === "Space" && !isTyping) {
+    isSpacePanning = true;
+    document.body.classList.add("is-editor-panning");
+    event.preventDefault();
+    return;
+  }
+  if (event.key === "Escape") {
+    target?.blur?.();
+    closeEditorContextMenu();
+    return;
+  }
+  if (isTyping) return;
+
+  const command = event.metaKey || event.ctrlKey;
+  const key = event.key.toLowerCase();
+  if (command && key === "z") {
+    event.preventDefault();
+    event.shiftKey ? redoDesign() : undoDesign();
+    return;
+  }
+  if (command && key === "y") {
+    event.preventDefault();
+    redoDesign();
+    return;
+  }
+  if (command && key === "c") {
+    event.preventDefault();
+    copySelectedItem();
+    return;
+  }
+  if (command && key === "v") {
+    event.preventDefault();
+    pasteClipboardItem();
+    return;
+  }
+  if (command && key === "x") {
+    event.preventDefault();
+    copySelectedItem();
+    deleteSelected();
+    return;
+  }
+  if (command && key === "d") {
+    event.preventDefault();
+    duplicateSelected();
+    return;
+  }
+  if (command && key === "s") {
+    event.preventDefault();
+    saveProjectToDashboard();
+    return;
+  }
+  if (command && key === "p") {
+    event.preventDefault();
+    savePrintReadyPng();
+    return;
+  }
+  if (command && key === "a") {
+    event.preventDefault();
+    selectedItemId = currentItems().at(-1)?.id || null;
+    renderCanvas();
+    setStatus("Top layer selected. Layers panel keeps every object organized.");
+    return;
+  }
+  if ((event.key === "Delete" || event.key === "Backspace") && item) {
+    event.preventDefault();
+    deleteSelected();
+    return;
+  }
+  if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.key) && item && !item.locked) {
+    event.preventDefault();
+    const step = event.shiftKey ? 2 : 0.35;
+    rememberHistory();
+    if (event.key === "ArrowLeft") item.x = clamp(item.x - step, 0, 100 - item.w);
+    if (event.key === "ArrowRight") item.x = clamp(item.x + step, 0, 100 - item.w);
+    if (event.key === "ArrowUp") item.y = clamp(item.y - step, 0, 100 - item.h);
+    if (event.key === "ArrowDown") item.y = clamp(item.y + step, 0, 100 - item.h);
+    renderCanvas();
+    rememberHistory();
+  }
+}
+
+function copySelectedItem() {
+  const item = findSelectedItem();
+  if (!item) return;
+  editorClipboard = JSON.parse(JSON.stringify(item));
+  setStatus(`${layerName(item)} copied.`);
+}
+
+function pasteClipboardItem() {
+  if (!editorClipboard) return;
+  rememberHistory();
+  const clone = {
+    ...JSON.parse(JSON.stringify(editorClipboard)),
+    id: `item-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    x: clamp((editorClipboard.x || 0) + 4, 0, 100 - (editorClipboard.w || 20)),
+    y: clamp((editorClipboard.y || 0) + 4, 0, 100 - (editorClipboard.h || 20)),
+  };
+  currentItems().push(clone);
+  selectedItemId = clone.id;
+  renderCanvas();
+  rememberHistory();
+}
+
+function openEditorContextMenu(event) {
+  const itemNode = event.target.closest?.(".print-canvas-item");
+  if (!itemNode) return;
+  event.preventDefault();
+  selectedItemId = itemNode.dataset.id || selectedItemId;
+  renderCanvas();
+  closeEditorContextMenu();
+  const menu = document.createElement("div");
+  menu.className = "print-context-menu";
+  menu.style.left = `${event.clientX}px`;
+  menu.style.top = `${event.clientY}px`;
+  menu.innerHTML = `
+    <button type="button" data-context-action="duplicate">Duplicate</button>
+    <button type="button" data-context-action="copy">Copy</button>
+    <button type="button" data-context-action="bring-forward">Bring forward</button>
+    <button type="button" data-context-action="send-backward">Send backward</button>
+    <button type="button" data-context-action="lock">Lock / Unlock</button>
+    <button type="button" data-context-action="delete">Delete</button>
+  `;
+  menu.addEventListener("click", (clickEvent) => {
+    const action = clickEvent.target.closest("button")?.dataset.contextAction;
+    if (action === "duplicate") duplicateSelected();
+    if (action === "copy") copySelectedItem();
+    if (action === "bring-forward") moveSelectedLayer(1);
+    if (action === "send-backward") moveSelectedLayer(-1);
+    if (action === "lock") toggleSelectedLock();
+    if (action === "delete") deleteSelected();
+    closeEditorContextMenu();
+  });
+  document.body.appendChild(menu);
+}
+
+function closeEditorContextMenu() {
+  document.querySelector(".print-context-menu")?.remove();
 }
 
 function designSnapshot() {
@@ -972,8 +1238,41 @@ function rememberHistory() {
   const snapshot = designSnapshot();
   if (undoHistory.at(-1) === snapshot) return;
   undoHistory.push(snapshot);
-  if (undoHistory.length > 30) undoHistory.shift();
+  if (undoHistory.length > 80) undoHistory.shift();
   redoHistory = [];
+  scheduleAutosave();
+}
+
+function scheduleAutosave() {
+  clearTimeout(historyTimer);
+  historyTimer = setTimeout(() => {
+    try {
+      const versions = getAutosaveVersions();
+      versions.push({
+        savedAt: new Date().toISOString(),
+        snapshot: designSnapshot(),
+      });
+      localStorage.setItem("nextPrintEditorVersions", JSON.stringify(versions.slice(-12)));
+      localStorage.setItem("nextPrintEditorAutosave", designSnapshot());
+    } catch {}
+  }, 500);
+}
+
+function getAutosaveVersions() {
+  try {
+    const versions = JSON.parse(localStorage.getItem("nextPrintEditorVersions") || "[]");
+    return Array.isArray(versions) ? versions.filter((version) => version?.snapshot) : [];
+  } catch {
+    return [];
+  }
+}
+
+function loadAutosaveVersion(index) {
+  const version = getAutosaveVersions()[index];
+  if (!version?.snapshot) return;
+  restoreHistory(version.snapshot);
+  setStatus("Autosave version restored.");
+  renderEditorDrawer();
 }
 
 function restoreHistory(snapshot) {
@@ -1269,7 +1568,7 @@ function renderCanvas() {
   const aspect = currentProduct.width / currentProduct.height;
   designCanvas.style.aspectRatio = `${currentProduct.width} / ${currentProduct.height}`;
   designCanvas.style.background = `linear-gradient(135deg, ${bgColor1?.value || "#dff8ff"}, ${bgColor2?.value || "#ffffff"})`;
-  designCanvas.style.transform = `scale(${canvasZoom})`;
+  designCanvas.style.transform = `translate(${canvasPan.x}px, ${canvasPan.y}px) scale(${canvasZoom})`;
   designCanvas.style.transformOrigin = "center";
   designCanvas.classList.toggle("round-product", currentProduct.shape === "round");
   designCanvas.classList.toggle("business-card-canvas", currentProduct.category === "cards");
@@ -1544,11 +1843,22 @@ function placeCaretAtEnd(node) {
 }
 
 function startDrag(event, id) {
+  if (isSpacePanning) return;
   event.preventDefault();
   selectedItemId = id;
-  const item = findSelectedItem();
+  let item = findSelectedItem();
   if (!item || item.locked) return;
   rememberHistory();
+  if (event.altKey) {
+    item = {
+      ...JSON.parse(JSON.stringify(item)),
+      id: `item-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      x: clamp(item.x + 3, 0, 100 - item.w),
+      y: clamp(item.y + 3, 0, 100 - item.h),
+    };
+    currentItems().push(item);
+    selectedItemId = item.id;
+  }
   const rect = designCanvas.getBoundingClientRect();
   const startX = event.clientX;
   const startY = event.clientY;
@@ -1623,6 +1933,14 @@ function startResize(event, id, direction) {
     item.y = snapPercent(nextY);
     item.w = snapPercent(nextW);
     item.h = snapPercent(nextH);
+    if (moveEvent.shiftKey && original.w && original.h) {
+      const ratio = original.w / original.h;
+      if (Math.abs(nextW - original.w) >= Math.abs(nextH - original.h)) {
+        item.h = clamp(item.w / ratio, minH, 100 - item.y);
+      } else {
+        item.w = clamp(item.h * ratio, minW, 100 - item.x);
+      }
+    }
     if (item.type === "text") {
       const horizontalScale = nextW / original.w;
       const verticalScale = nextH / original.h;
@@ -1671,11 +1989,6 @@ function defaultTextItem(text = "Your Text Here") {
 function handleUpload(event) {
   const file = event.target.files?.[0];
   if (!file) return;
-  if (file.size > 4 * 1024 * 1024) {
-    setStatus("Please upload an image smaller than 4 MB.", true);
-    event.target.value = "";
-    return;
-  }
 
   const reader = new FileReader();
   reader.onload = () => {
@@ -2063,10 +2376,12 @@ function updateSelectedImageEffects() {
 function duplicateSelected() {
   const item = findSelectedItem();
   if (!item) return;
-  const clone = { ...item, id: `item-${Date.now()}`, x: clamp(item.x + 5, 0, 100 - item.w), y: clamp(item.y + 5, 0, 100 - item.h) };
+  rememberHistory();
+  const clone = { ...JSON.parse(JSON.stringify(item)), id: `item-${Date.now()}-${Math.random().toString(16).slice(2)}`, x: clamp(item.x + 5, 0, 100 - item.w), y: clamp(item.y + 5, 0, 100 - item.h) };
   currentItems().push(clone);
   selectedItemId = clone.id;
   renderCanvas();
+  rememberHistory();
 }
 
 function deleteSelected() {
@@ -2077,7 +2392,7 @@ function deleteSelected() {
   renderCanvas();
 }
 
-function runPreflight() {
+function getPreflightWarnings() {
   const warnings = [];
   const items = currentItems();
   const isCard = currentProduct.category === "cards";
@@ -2092,13 +2407,20 @@ function runPreflight() {
       warnings.push(`${layerName(item)} extends outside the safe zone.`);
     }
   });
+  return [...new Set(warnings)];
+}
+
+function runPreflight() {
+  const warnings = getPreflightWarnings();
+  lastPreflightWarnings = warnings;
 
   const message = warnings.length
-    ? `Review before printing: ${[...new Set(warnings)].slice(0, 3).join(" ")}`
+    ? `Review before printing: ${warnings.slice(0, 3).join(" ")}`
     : "Print ready: all objects are inside the safe zone.";
   if (preflightResult) preflightResult.textContent = message;
   preflightResult?.classList.toggle("has-warning", Boolean(warnings.length));
   setStatus(message, Boolean(warnings.length));
+  renderEditorDrawer();
   return warnings;
 }
 
