@@ -2554,6 +2554,28 @@ textarea {
   max-width: 310px;
 }
 
+.ecuador-owned-badge {
+  display: inline-flex;
+  width: fit-content;
+  max-width: 100%;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px !important;
+  color: #fff !important;
+  font-size: 0.78rem !important;
+  font-weight: 950 !important;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.ecuador-owned-badge img {
+  width: 32px;
+  height: 20px;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.24);
+}
+
 .footer-contact p,
 .footer-why p {
   white-space: nowrap;
@@ -11257,7 +11279,8 @@ img {
   grid-template-columns: minmax(0, 0.9fr) minmax(520px, 1.1fr);
   gap: clamp(22px, 4vw, 58px);
   align-items: center;
-  padding: clamp(24px, 3vw, 38px) clamp(28px, 4vw, 68px) 18px;
+  min-height: 430px;
+  padding: clamp(26px, 3vw, 42px) clamp(28px, 4vw, 68px) 18px;
   background:
     radial-gradient(circle at 68% 38%, rgba(10, 104, 255, 0.18), transparent 24%),
     radial-gradient(circle at 84% 16%, rgba(255, 149, 211, 0.36), transparent 22%),
@@ -11377,7 +11400,7 @@ img {
 
 .printing-hero-art {
   position: relative;
-  min-height: 330px;
+  min-height: 360px;
 }
 
 .printing-hero-art > img {
@@ -11409,11 +11432,11 @@ img {
 }
 
 .printing-hero-art > .printing-hero-main-image {
-  left: 0;
-  top: 0;
+  left: -4%;
+  top: -12px;
   z-index: 2;
-  width: min(82%, 980px);
-  height: 318px;
+  width: min(92%, 1120px);
+  height: 382px;
   object-fit: contain;
   object-position: center;
   filter: drop-shadow(0 24px 28px rgba(6, 23, 58, 0.2));
@@ -11552,6 +11575,115 @@ img {
   box-shadow: 0 12px 28px rgba(6, 23, 58, 0.07);
 }
 
+.printing-member-catalog-banner {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto auto;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, #061b43, #081d4c 48%, #092f78);
+  box-shadow: 0 16px 34px rgba(6, 23, 58, 0.18);
+}
+
+.printing-member-catalog-banner img {
+  width: 56px;
+  filter: drop-shadow(0 10px 16px rgba(0, 0, 0, 0.25));
+}
+
+.printing-member-catalog-banner h2,
+.printing-member-catalog-banner p {
+  margin: 0;
+}
+
+.printing-member-catalog-banner h2 {
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.printing-member-catalog-banner h2::first-letter {
+  color: #ffc400;
+}
+
+.printing-member-catalog-banner p {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.printing-member-catalog-banner strong {
+  display: grid;
+  color: #fff;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.printing-member-catalog-banner strong span {
+  color: #ffc400;
+  font-size: 2.5rem;
+  line-height: 0.95;
+}
+
+.printing-member-catalog-banner a {
+  display: flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 0 18px;
+  color: #061b43;
+  background: #ffc400;
+  font-size: 0.78rem;
+  font-weight: 950;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.printing-free-shipping-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, #061b43, #0a315d);
+  box-shadow: 0 10px 24px rgba(6, 23, 58, 0.12);
+}
+
+.printing-free-shipping-strip strong {
+  color: #ffc400;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+.printing-free-shipping-strip span {
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.printing-free-shipping-strip em {
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  border-radius: 999px;
+  color: #22d3ee;
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.printing-free-shipping-strip small {
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
 .printing-category-panel {
   align-self: start;
   position: sticky;
@@ -11656,15 +11788,15 @@ img {
 .printing-product-card {
   overflow: hidden;
   display: grid;
-  grid-template-rows: 164px auto auto auto auto;
-  min-height: 300px;
+  grid-template-rows: 172px auto auto 1fr auto auto;
+  min-height: 390px;
   border-radius: 12px;
 }
 
 .printing-product-card img {
   width: 100%;
-  height: 164px;
-  padding: 8px;
+  height: 172px;
+  padding: 10px;
   object-fit: contain;
   object-position: center;
   box-sizing: border-box;
@@ -11674,8 +11806,7 @@ img {
 }
 
 .printing-product-card h2,
-.printing-product-card p,
-.printing-product-card strong {
+.printing-product-card p {
   margin: 0;
   padding-inline: 14px;
 }
@@ -11695,25 +11826,121 @@ img {
   line-height: 1.25;
 }
 
-.printing-product-card strong {
-  margin-top: 8px;
-  color: #061b43;
-  font-size: 1.05rem;
+.printing-card-prices {
+  display: grid;
+  gap: 4px;
+  margin: 10px 14px 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e2edf8;
 }
 
-.printing-product-card strong::before {
+.printing-card-prices span {
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  border-radius: 5px;
+  color: #0b7b2a;
+  background: #eaf8ee;
+  font-size: 0.58rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.printing-card-prices span::before {
+  content: "♥";
+  font-size: 0.65rem;
+}
+
+.printing-card-prices strong {
+  color: #07802a;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.printing-card-prices strong::before {
   content: "From";
   display: block;
   color: #52647d;
   font-size: 0.62rem;
-  line-height: 1;
+  line-height: 1.1;
+}
+
+.printing-card-prices small {
+  color: #64748b;
+  font-size: 0.67rem;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.printing-card-prices s {
+  color: #65768f;
+}
+
+.printing-card-prices em {
+  width: fit-content;
+  padding: 4px 7px;
+  border-radius: 4px;
+  color: #fff;
+  background: #0b7b2a;
+  font-style: normal;
+  font-size: 0.58rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.printing-card-shipping {
+  align-self: end;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  gap: 2px 8px;
+  align-items: center;
+  margin: 4px 14px 10px;
+  padding: 8px 10px;
+  border: 1px solid #dbe8f6;
+  border-radius: 7px;
+  color: #0b7b2a;
+  background: #f8fcff;
+  font-size: 0.66rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.printing-card-shipping::before {
+  content: "▣";
+  grid-row: 1 / span 2;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border-radius: 50%;
+  color: #075cff;
+  background: #eaf3ff;
+}
+
+.printing-card-shipping.local {
+  color: #07306b;
+}
+
+.printing-card-shipping.local::before {
+  content: "●";
+}
+
+.printing-card-shipping small {
+  grid-column: 2;
+  color: #23456f;
+  font-size: 0.56rem;
+  font-weight: 850;
+  text-transform: none;
 }
 
 .printing-product-card a {
-  justify-self: end;
+  justify-self: stretch;
   align-self: end;
   margin: 0 12px 12px;
   padding: 8px 10px;
+  text-align: center;
   border-radius: 6px;
   color: #075cff;
   background: #f2f7ff;
@@ -11911,8 +12138,8 @@ img {
   }
 
   .printing-hero-art > .printing-hero-main-image {
-    width: min(76%, 620px);
-    height: 270px;
+    width: min(86%, 720px);
+    height: 286px;
   }
 
   .printing-catalog-layout {
@@ -11933,6 +12160,14 @@ img {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .printing-member-catalog-banner {
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+  }
+
+  .printing-member-catalog-banner a {
+    grid-column: 2 / -1;
+  }
+
   .printing-fast-benefits {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -11945,6 +12180,7 @@ img {
 @media (max-width: 760px) {
   .printing-premium-hero {
     gap: 12px;
+    min-height: auto;
     padding: 18px 10px 14px;
   }
 
@@ -12008,9 +12244,9 @@ img {
   }
 
   .printing-hero-art > .printing-hero-main-image {
-    left: -3%;
+    left: -6%;
     top: 4px;
-    width: 72%;
+    width: 77%;
     height: 198px;
   }
 
@@ -12089,14 +12325,64 @@ img {
     gap: 8px;
   }
 
+  .printing-member-catalog-banner {
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .printing-member-catalog-banner img {
+    width: 40px;
+  }
+
+  .printing-member-catalog-banner h2 {
+    font-size: 1rem;
+  }
+
+  .printing-member-catalog-banner p {
+    font-size: 0.62rem;
+  }
+
+  .printing-member-catalog-banner strong {
+    grid-column: 1 / -1;
+    grid-template-columns: auto 1fr;
+    gap: 8px;
+    align-items: end;
+  }
+
+  .printing-member-catalog-banner strong span {
+    font-size: 1.8rem;
+  }
+
+  .printing-member-catalog-banner a {
+    grid-column: 1 / -1;
+    min-height: 36px;
+    font-size: 0.64rem;
+  }
+
+  .printing-free-shipping-strip {
+    gap: 6px 8px;
+    padding: 9px 10px;
+  }
+
+  .printing-free-shipping-strip strong {
+    font-size: 0.78rem;
+  }
+
+  .printing-free-shipping-strip span,
+  .printing-free-shipping-strip em,
+  .printing-free-shipping-strip small {
+    font-size: 0.56rem;
+  }
+
   .printing-product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 9px;
   }
 
   .printing-product-card {
-    grid-template-rows: 104px auto auto auto auto;
-    min-height: 218px;
+    grid-template-rows: 104px auto auto 1fr auto auto;
+    min-height: 292px;
   }
 
   .printing-product-card img {
@@ -12114,9 +12400,36 @@ img {
     font-size: 0.58rem;
   }
 
-  .printing-product-card strong {
-    padding-inline: 9px;
-    font-size: 0.86rem;
+  .printing-card-prices {
+    margin: 8px 9px 6px;
+  }
+
+  .printing-card-prices strong {
+    font-size: 0.92rem;
+  }
+
+  .printing-card-prices span,
+  .printing-card-prices small,
+  .printing-card-prices em {
+    font-size: 0.48rem;
+  }
+
+  .printing-card-shipping {
+    grid-template-columns: 18px minmax(0, 1fr);
+    gap: 1px 6px;
+    margin: 3px 8px 7px;
+    padding: 6px;
+    font-size: 0.48rem;
+  }
+
+  .printing-card-shipping::before {
+    width: 18px;
+    height: 18px;
+    font-size: 0.55rem;
+  }
+
+  .printing-card-shipping small {
+    font-size: 0.45rem;
   }
 
   .printing-product-card a {
