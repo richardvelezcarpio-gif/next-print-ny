@@ -14,9 +14,28 @@ create table if not exists public.business_records (
   due_date date,
   file_url text,
   created_by text,
+  payment_provider text default '',
+  payment_status text default '',
+  membership_status text default '',
+  subscription_status text default '',
+  stripe_subscription_id text,
+  stripe_customer_id text,
+  next_billing_date timestamptz,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.business_records
+  add column if not exists payment_provider text default '',
+  add column if not exists payment_status text default '',
+  add column if not exists membership_status text default '',
+  add column if not exists subscription_status text default '',
+  add column if not exists stripe_subscription_id text,
+  add column if not exists stripe_customer_id text,
+  add column if not exists next_billing_date timestamptz;
+
+create index if not exists business_records_payment_status_idx
+  on public.business_records(payment_status);
 
 alter table public.business_records enable row level security;
 

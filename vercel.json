@@ -5,6 +5,35 @@
       "destination": "/banner-designer/index.html"
     }
   ],
+  "headers": [
+    {
+      "source": "/print-products-editor.html",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/print-products-editor.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    },
+    {
+      "source": "/styles.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, max-age=0"
+        }
+      ]
+    }
+  ],
   "functions": {
     "api/chat.js": {
       "maxDuration": 10
@@ -28,6 +57,15 @@
       "maxDuration": 10
     },
     "api/member.js": {
+      "maxDuration": 10
+    },
+    "api/create-stripe-checkout-session.js": {
+      "maxDuration": 10
+    },
+    "api/create-stripe-subscription-session.js": {
+      "maxDuration": 10
+    },
+    "api/stripe-webhook.js": {
       "maxDuration": 10
     }
   }

@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 
 const COOKIE_ACCESS = "np_member_access";
 const COOKIE_REFRESH = "np_member_refresh";
-const MEMBERSHIP_PRICE = 30;
+const MEMBERSHIP_PRICE = 35;
 
 export default async function handler(req, res) {
   const action = memberAction(req);
@@ -164,7 +164,7 @@ async function membershipCheckout(req, res, user) {
   requireMethod(req, "POST");
   if (!hasPayPalConfig()) return res.status(500).json({ error: "PayPal is not configured." });
   const planId = clean(process.env.PAYPAL_MEMBERSHIP_PLAN_ID, 160);
-  if (!planId) return res.status(500).json({ error: "Add PAYPAL_MEMBERSHIP_PLAN_ID in Vercel to activate the $30 monthly membership." });
+  if (!planId) return res.status(500).json({ error: "Add PAYPAL_MEMBERSHIP_PLAN_ID in Vercel to activate the $35 monthly membership." });
   const subscription = await paypalFetch("/v1/billing/subscriptions", {
     method: "POST",
     body: JSON.stringify({

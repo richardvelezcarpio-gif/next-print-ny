@@ -63,7 +63,7 @@
               <p data-i18n="payment.copy">Use your order number to open checkout after we confirm your total.</p>
               <p class="payment-order-note">
                 <span data-i18n="payment.checkoutStatus">Checkout status</span>:
-                <strong data-i18n="payment.checkoutPending">PayPal checkout ready</strong>
+                <strong data-i18n="payment.checkoutPending">Secure checkout ready</strong>
               </p>
             </div>
             <form id="paymentCheckoutForm" class="payment-checkout-form">
@@ -75,11 +75,21 @@
                 Confirmed total
                 <input id="paymentAmountInput" name="amount" type="number" min="1" step="0.01" placeholder="499.00" required />
               </label>
+              <section class="stripe-checkout-panel compact">
+                <div>
+                  <span>Secure card and wallet checkout</span>
+                  <h2>Credit/Debit Card</h2>
+                  <p>Apple Pay and Google Pay appear automatically when available.</p>
+                </div>
+                <button id="paymentStripeButton" class="stripe-pay-button" type="button">Pay with card or wallet</button>
+                <small>Powered by Stripe Checkout.</small>
+              </section>
+
               <section class="embedded-paypal-panel compact">
                 <div>
                   <span>Secure embedded checkout</span>
-                  <h2>Pay with PayPal or card</h2>
-                  <p>Complete payment here without leaving this page.</p>
+                  <h2>Pay with PayPal</h2>
+                  <p>Use PayPal checkout if you prefer PayPal.</p>
                 </div>
                 <div id="paymentPayPalButtons" class="paypal-buttons-shell" aria-label="PayPal checkout buttons"></div>
                 <small>Debit or credit card appears when PayPal makes it available for this checkout.</small>
@@ -156,7 +166,8 @@
       </footer>
     </div>
     <script src="script.js?v=20260617-2325"></script>
+    <script src="stripe-checkout.js?v=20260627-stripe"></script>
     <script src="paypal-checkout.js?v=20260618-embedded"></script>
-    <script src="payments.js?v=20260618-embedded"></script>
+    <script src="payments.js?v=20260627-stripe"></script>
   </body>
 </html>

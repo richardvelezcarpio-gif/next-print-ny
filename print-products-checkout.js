@@ -6,6 +6,7 @@ const checkoutParams = new URLSearchParams(window.location.search);
 const checkoutStatus = checkoutParams.get("checkout");
 const returnedOrder = normalizeOrderNumber(checkoutParams.get("order"));
 const paypalToken = window.NextPrintPayPal?.paypalTokenFromParams(checkoutParams);
+const stripeSessionId = checkoutParams.get("session_id");
 
 const workspace = document.querySelector("#printCheckoutWorkspace");
 const missingPanel = document.querySelector("#printCheckoutMissing");
@@ -34,6 +35,7 @@ const memberCompareNode = document.querySelector("#printCheckoutMemberCompare");
 const memberPriceNode = document.querySelector("#printCheckoutMemberPrice");
 const regularPriceNode = document.querySelector("#printCheckoutRegularPrice");
 const savingsNode = document.querySelector("#printCheckoutSavings");
+const stripeButton = document.querySelector("#printStripeButton");
 
 const selection = loadJson(printSelectionKey);
 const files = loadJson(printFilesKey) || [];
@@ -49,6 +51,8 @@ if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
     setStatus,
     onSuccess: showPaidState,
   });
+} else if (checkoutStatus === "stripe-success" && returnedOrder && stripeSessionId) {
+  confirmStripeReturn(returnedOrder, stripeSessionId);
 } else if (checkoutStatus === "success" && returnedOrder) {
   showPaidState(returnedOrder);
 } else if (!selection?.product || !selection?.quantity || !selection?.totalPrice) {
@@ -75,6 +79,22 @@ checkoutForm?.addEventListener("submit", async (event) => {
   } catch (error) {
     setStatus(error.message || "Could not open checkout. Please try again.", true);
     submitButton.disabled = false;
+  }
+});
+
+stripeButton?.addEventListener("click", async () => {
+  stripeButton.disabled = true;
+  setStatus("Opening secure Stripe checkout...");
+
+  try {
+    if (!window.NextPrintStripe) {
+      throw new Error("Stripe checkout is not ready. Please refresh and try again.");
+    }
+    const checkoutData = await window.NextPrintStripe.createCheckout(await prepareCheckoutPayload());
+    window.NextPrintStripe.redirectToCheckout(checkoutData);
+  } catch (error) {
+    setStatus(error.message || "Could not open Stripe checkout. Please try again.", true);
+    stripeButton.disabled = false;
   }
 });
 
@@ -162,6 +182,18 @@ function showMissingState() {
   if (workspace) workspace.hidden = true;
   if (successPanel) successPanel.hidden = true;
   if (missingPanel) missingPanel.hidden = false;
+}
+
+async function confirmStripeReturn(orderNumber, sessionId) {
+  setStatus("Confirming Stripe payment...");
+  try {
+    if (!window.NextPrintStripe) throw new Error("Stripe checkout is not ready. Please refresh and try again.");
+    await window.NextPrintStripe.confirmCheckout({ orderNumber, sessionId });
+    showPaidState(orderNumber);
+  } catch (error) {
+    setStatus(error.message || "Could not confirm Stripe payment.", true);
+    renderCheckout(selection, files);
+  }
 }
 
 function updateFulfillmentFields() {

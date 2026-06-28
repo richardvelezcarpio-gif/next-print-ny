@@ -4497,6 +4497,62 @@ textarea {
   box-shadow: 0 14px 32px rgba(7, 27, 58, 0.11);
 }
 
+.stripe-checkout-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 18px;
+  border: 1px solid #c9e7f2;
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(235, 251, 255, 0.98)),
+    radial-gradient(circle at top left, rgba(19, 210, 223, 0.18), transparent 42%);
+  box-shadow: 0 14px 32px rgba(7, 27, 58, 0.1);
+}
+
+.stripe-checkout-panel.compact {
+  margin-top: 6px;
+}
+
+.stripe-checkout-panel span {
+  display: block;
+  color: #00bfd4;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stripe-checkout-panel h2 {
+  margin: 4px 0;
+  color: #061f49;
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+.stripe-checkout-panel p,
+.stripe-checkout-panel small {
+  margin: 0;
+  color: #607089;
+  line-height: 1.45;
+}
+
+.stripe-pay-button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: linear-gradient(135deg, #157cff, #13d2df);
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(21, 124, 255, 0.22);
+}
+
+.stripe-pay-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 .embedded-paypal-panel.compact {
   margin-top: 6px;
 }

@@ -8,7 +8,9 @@ const paymentOrder = normalizePaymentOrder(paymentParams.get("order"));
 const paymentAmount = normalizePaymentAmount(paymentParams.get("amount"));
 const paymentCheckoutStatus = paymentParams.get("checkout");
 const paymentPaypalToken = window.NextPrintPayPal?.paypalTokenFromParams(paymentParams);
+const paymentStripeSessionId = paymentParams.get("session_id");
 const paymentReturnPath = normalizeReturnPath(paymentParams.get("return"));
+const paymentStripeButton = document.querySelector("#paymentStripeButton");
 
 if (paymentOrder && paymentOrderNote) {
   paymentOrderNote.textContent = paymentOrder;
@@ -31,6 +33,8 @@ if (paymentCheckoutStatus === "paypal-return" && paymentOrder && paymentPaypalTo
       finishPayment(orderNumber);
     },
   });
+} else if (paymentCheckoutStatus === "stripe-success" && paymentOrder && paymentStripeSessionId) {
+  confirmStripePayment(paymentOrder, paymentStripeSessionId);
 } else if (paymentCheckoutStatus === "success" && paymentOrder) {
   setPaymentStatus("Payment received. Your order was updated.", "success");
 } else {
@@ -60,6 +64,19 @@ paymentCheckoutForm?.addEventListener("submit", async (event) => {
 
 paymentCheckoutForm?.addEventListener("input", () => {
   setPaymentStatus("Choose PayPal or card to pay securely.");
+});
+
+paymentStripeButton?.addEventListener("click", async () => {
+  paymentStripeButton.disabled = true;
+  setPaymentStatus("Opening secure Stripe checkout...");
+  try {
+    if (!window.NextPrintStripe) throw new Error("Stripe checkout is not ready. Please refresh and try again.");
+    const data = await window.NextPrintStripe.createCheckout(getPaymentPayload());
+    window.NextPrintStripe.redirectToCheckout(data);
+  } catch (error) {
+    setPaymentStatus(error.message || "Could not open Stripe checkout.", "error");
+    paymentStripeButton.disabled = false;
+  }
 });
 
 function getPaymentPayload() {
@@ -117,7 +134,19 @@ function finishPayment(orderNumber) {
     window.location.href = `${paymentReturnPath}${separator}order=${encodeURIComponent(orderNumber)}&checkout=success`;
     return;
   }
-  setPaymentStatus("PayPal payment received. Your order was updated.", "success");
+  setPaymentStatus("Payment received. Your order was updated.", "success");
+}
+
+async function confirmStripePayment(orderNumber, sessionId) {
+  setPaymentStatus("Confirming Stripe payment...");
+  try {
+    if (!window.NextPrintStripe) throw new Error("Stripe checkout is not ready. Please refresh and try again.");
+    await window.NextPrintStripe.confirmCheckout({ orderNumber, sessionId });
+    finishPayment(orderNumber);
+  } catch (error) {
+    setPaymentStatus(error.message || "Could not confirm Stripe payment.", "error");
+    mountPaymentButtons();
+  }
 }
 
 function setPaymentStatus(message, tone = "") {
