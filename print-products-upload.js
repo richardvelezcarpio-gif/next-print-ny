@@ -332,6 +332,7 @@ function productCopy(name) {
   if (value.includes("poster")) return "Vibrant posters for events, storefronts, promotions, announcements, and displays.";
   if (value.includes("invoice")) return "Professional invoice and form printing for organized business paperwork.";
   if (value.includes("brochure")) return "Folded brochures with clear information, strong presentation, and premium color.";
+  if (value.includes("backdrop")) return "Large branded backdrops for events, photos, stages, pop-ups, and displays.";
   if (value.includes("banner") || value.includes("vinyl")) return "Large format printing for storefronts, events, promotions, and brand visibility.";
   if (value.includes("yard")) return "Durable yard signs for campaigns, real estate, events, and local advertising.";
   return "Review your print order, compare member savings, and choose design online or file upload.";
@@ -347,6 +348,7 @@ function productAssets(name) {
   if (value.includes("invoice")) return ["assets/printing-premium-invoices.png", "assets/home-product-invoices.png", "assets/printing-premium-invoices.png"];
   if (value.includes("brochure")) return ["assets/printing-premium-brochures.png", "assets/printing-premium-brochures.png", "assets/catalog-flyers.png"];
   if (value.includes("retractable")) return ["assets/printing-premium-retractables.png", "assets/catalog-retractable-banners.png", "assets/signandbanners.png"];
+  if (value.includes("backdrop")) return ["assets/printing-premium-windowgraphics.png", "assets/catalog-banners.png", "assets/printing-banners-ai.webp"];
   if (value.includes("banner") || value.includes("vinyl")) return ["assets/printing-premium-banners.png", "assets/catalog-banners.png", "assets/printing-banners-ai.webp"];
   if (value.includes("yard")) return ["assets/catalog-yard-signs.png", "assets/printing-premium-banners.png", "assets/signandbanners.png"];
   if (value.includes("t-shirt") || value.includes("shirt")) return ["assets/printing-premium-tshirts.png", "assets/customtshirts.png", "assets/home-card-shirts.png"];
@@ -389,8 +391,8 @@ function normalizeOptions(options) {
 
 function deliveryNote(name) {
   return memberFreeShippingEligible(name)
-    ? "Ready in 3 business days. Free pickup in Brooklyn. Member free shipping on eligible products in the East USA."
-    : "Ready in 3 business days. Free pickup in Brooklyn. Shipping is calculated by size and delivery area.";
+    ? "Ready in 3 business days. Member free shipping on eligible products in the East USA."
+    : "Ready in 3 business days. Shipping is calculated by size and delivery area.";
 }
 
 function memberFreeShippingEligible(name) {

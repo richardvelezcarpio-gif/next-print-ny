@@ -135,10 +135,10 @@ if (params.get("customBanner") === "1") {
   productCatalog.unshift({
     id: "custom-banner",
     product: params.get("product") || `${material} ${width} ft x ${height} ft`,
-    label: material === "Window Vinyl" ? "Window Vinyl" : "Custom Banner",
+    label: material === "Backdrop Material" ? "Backdrop" : "Custom Banner",
     category: "banners",
     sizeLabel: `${width} ft x ${height} ft`,
-    trimLabel: material === "Window Vinyl" ? "Window vinyl - no banner treatment" : "Custom vinyl banner",
+    trimLabel: material === "Backdrop Material" ? "Backdrop display" : "Custom vinyl banner",
     width,
     height,
     memberPrices: [[quantity, memberPrice]],
@@ -1425,7 +1425,7 @@ function getEditorRedirectTarget() {
     return `print-products-upload.html?${params.toString()}`;
   }
 
-  if (/retractable/.test(requestedProduct) || /yard\s*signs?/.test(requestedProduct) || /\bbanners?\b/.test(requestedProduct)) {
+  if (/retractable/.test(requestedProduct) || /yard\s*signs?/.test(requestedProduct) || /backdrops?/.test(requestedProduct) || /\bbanners?\b/.test(requestedProduct)) {
     return bannerDesignerRedirect(requestedProduct);
   }
 
@@ -1444,6 +1444,10 @@ function bannerDesignerRedirect(requestedProduct) {
     params.set("product", "Retractable Banner");
     params.set("width", "3");
     params.set("height", "7");
+  } else if (/backdrops?/.test(normalized)) {
+    params.set("product", "Backdrop");
+    params.set("width", "5");
+    params.set("height", "8");
   } else if (/yard\s*signs?/.test(normalized)) {
     params.set("product", "Yard Sign");
     params.set("width", "1.5");

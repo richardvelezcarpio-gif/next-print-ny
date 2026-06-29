@@ -16,7 +16,6 @@ const paidTrackLink = document.querySelector("#printPaidTrackLink");
 const checkoutForm = document.querySelector("#printCheckoutForm");
 const statusNode = document.querySelector("#printCheckoutStatus");
 const addressFields = document.querySelector("#printAddressFields");
-const pickupNote = document.querySelector("#printPickupNote");
 const previewImage = document.querySelector("#printCheckoutPreview");
 const nameCard = document.querySelector("#printCheckoutNameCard");
 const nameCardTitle = document.querySelector("#printCheckoutNameTitle");
@@ -197,10 +196,8 @@ async function confirmStripeReturn(orderNumber, sessionId) {
 }
 
 function updateFulfillmentFields() {
-  const fulfillment = selectedFulfillment();
-  const needsAddress = fulfillment !== "pickup";
-  if (addressFields) addressFields.hidden = !needsAddress;
-  if (pickupNote) pickupNote.hidden = needsAddress;
+  const needsAddress = true;
+  if (addressFields) addressFields.hidden = false;
   addressFields?.querySelectorAll("input").forEach((input) => {
     const required = ["street", "city", "state", "zip"].includes(input.name);
     input.required = needsAddress && required;
@@ -217,7 +214,7 @@ function updateCheckoutTotals() {
     method: selectedFulfillment(),
     destination,
     isMember: memberActive,
-    subtotal: selection.totalPrice,
+    subtotal: effectiveOrderSubtotal(),
     quantity: selection.quantity,
   });
 
@@ -256,7 +253,7 @@ async function prepareCheckoutPayload() {
     email: clean(form.get("email")),
   };
   const fulfillment = selectedFulfillment();
-  const needsAddress = fulfillment !== "pickup";
+  const needsAddress = true;
   const address = needsAddress ? {
     street: clean(form.get("street")),
     apartment: clean(form.get("apartment")),
@@ -376,6 +373,12 @@ function selectedFulfillment() {
   return document.querySelector("input[name='fulfillment']:checked")?.value || "standard";
 }
 
+function effectiveOrderSubtotal() {
+  const memberPrice = Number(selection?.memberPrice || 0);
+  if (memberActive && Number.isFinite(memberPrice) && memberPrice > 0) return memberPrice;
+  return Number(selection?.totalPrice || 0);
+}
+
 function readDestination() {
   const form = checkoutForm ? new FormData(checkoutForm) : new FormData();
   return {
@@ -389,8 +392,6 @@ function readDestination() {
 }
 
 function fulfillmentLabel(value) {
-  if (value === "pickup") return "Store Pickup";
-  if (value === "local_delivery") return "Local Delivery";
   if (value === "express") return "Express Shipping";
   return "Standard Shipping";
 }

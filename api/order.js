@@ -1,4 +1,4 @@
-import { catalogPriceFor } from "../lib/printing-prices.js";
+import { catalogPriceFor, memberCatalogPriceFor } from "../lib/printing-prices.js";
 
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
@@ -12,18 +12,25 @@ export default async function handler(req, res) {
 
   const order = sanitizeOrder(req.body || {});
   const catalogPrice = catalogPriceFor(order.product, order.quantity, order.details);
+  const memberCatalogPrice = memberCatalogPriceFor(order.product, order.quantity, order.details);
 
   if (!order.name || !order.phone || !order.service || !order.details) {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
 
-  if (order.product && !catalogPrice) {
+  if (order.product && !catalogPrice && !memberCatalogPrice) {
     res.status(400).json({ error: "Invalid catalog product or quantity" });
     return;
   }
 
-  if (catalogPrice) order.budget = catalogPrice;
+  if (catalogPrice) {
+    const submittedAmount = parseMoney(order.budget);
+    const regularAmount = parseMoney(catalogPrice);
+    const memberAmount = parseMoney(memberCatalogPrice);
+    const minimumAmount = Math.min(...[regularAmount, memberAmount].filter((amount) => amount > 0));
+    order.budget = submittedAmount >= minimumAmount ? `$${submittedAmount.toFixed(2)}` : catalogPrice;
+  }
 
   const totalFileSize = order.files.reduce((total, file) => total + String(file.content || "").length, 0);
   if (totalFileSize > MAX_FILE_SIZE_BASE64) {

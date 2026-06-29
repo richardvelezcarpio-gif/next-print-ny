@@ -19,7 +19,7 @@
     profile("posters", "Posters", 4, "20 x 4 x 4", CATEGORY.OVERSIZE, true),
     profile("brochures", "Brochures", 6, "12 x 9 x 5", CATEGORY.HEAVY, true),
     profile("door-hangers", "Door Hangers", 5, "12 x 9 x 4", CATEGORY.STANDARD, true),
-    profile("window-graphics", "Window Graphics", 7, "24 x 6 x 6", CATEGORY.OVERSIZE, false),
+    profile("backdrops", "Backdrops", 12, "36 x 8 x 8", CATEGORY.HEAVY_OVERSIZE, false),
     profile("invoices", "Invoices", 6, "12 x 9 x 4", CATEGORY.HEAVY, false),
     profile("window-decals", "Window Decals", 5, "18 x 4 x 4", CATEGORY.OVERSIZE, false),
   ];
@@ -39,7 +39,8 @@
     ["poster", "posters"],
     ["brochure", "brochures"],
     ["door", "door-hangers"],
-    ["window graphic", "window-graphics"],
+    ["backdrop", "backdrops"],
+    ["window graphic", "backdrops"],
     ["window decal", "window-decals"],
     ["decal", "window-decals"],
     ["invoice", "invoices"],

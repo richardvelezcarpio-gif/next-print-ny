@@ -34,6 +34,13 @@ const productDetails = {
     hook: "Get seen from farther away. Banners are perfect for storefronts, events, sales and announcements.",
     benefits: ["Large and visible", "Good for indoor or outdoor use", "Reusable for repeated promotions"],
   },
+  backdrops: {
+    visual: "banners",
+    image: "assets/catalog-banners.png",
+    material: "Large-format backdrop graphics for stages, events, photo moments, pop-ups and branded displays.",
+    hook: "Create a clean branded background for events, photos, presentations and product launches.",
+    benefits: ["Large event display", "Great for photos and stages", "Professional brand presence"],
+  },
   hangers: {
     visual: "hangers",
     image: "assets/catalog-door-hangers.png",
@@ -70,6 +77,7 @@ const productSlugs = {
   stickers: "stickers",
   menus: "menus",
   banners: "banners",
+  backdrops: "backdrops",
   hangers: "door-hangers",
   retractable: "retractable-banners",
   yardSigns: "yard-signs",
@@ -88,7 +96,7 @@ const productTemplateContent = {
       ["Premium Cardstock", "Glossy or matte finish"],
       ["Front & Back", "Clean contact details"],
       ["Fast Reorders", "Easy repeat runs"],
-      ["Local Pickup", "Brooklyn service"],
+      ["Shipping", "Calculated at checkout"],
     ],
     perfectFor: ["Networking", "Front desks", "Deliveries", "Realtors", "Startups", "Local Shops"],
     sectionKicker: "Business materials",
@@ -206,6 +214,32 @@ const productTemplateContent = {
     ctaTitle: "Need help with a banner?",
     ctaCopy: "Tell us where the banner will go and we will help with size, material and finishing.",
     ctaButton: "Request Banner Help",
+  },
+  backdrops: {
+    kicker: "Event display",
+    titleTop: "Custom",
+    titleBottom: "Backdrops",
+    copy: "Create branded backgrounds for stages, photos, pop-ups, events and presentations.",
+    images: ["assets/catalog-banners.png", "assets/printing-banners-ai.webp"],
+    imageAlt: ["Backdrop display printing", "Large format backdrop"],
+    benefits: [
+      ["Large Sizes", "Event-ready widths"],
+      ["Photo Ready", "Clean brand background"],
+      ["Full Color", "Sharp display graphics"],
+      ["Professional Look", "Great for stages and booths"],
+    ],
+    perfectFor: ["Events", "Photo Booths", "Stages", "Pop-ups", "Launches", "Trade Shows"],
+    sectionKicker: "Backdrop printing",
+    sectionTitle: "Large branded backdrops for events and photos",
+    cards: [
+      ["Popular Uses", ["Photo moments", "Stage backgrounds", "Vendor booths"]],
+      ["Display Sizes", ["60x96", "96x96", "120x96", "144x96", "240x96"]],
+      ["Production", ["Full color", "Large format", "Event ready"]],
+    ],
+    steps: ["Choose backdrop size", "Upload or design artwork", "Confirm details", "Print and prepare"],
+    ctaTitle: "Need an event backdrop?",
+    ctaCopy: "Tell us the event date, size and artwork needs so we can prepare the right backdrop.",
+    ctaButton: "Request Backdrop Help",
   },
   hangers: {
     kicker: "Neighborhood marketing",
@@ -340,7 +374,7 @@ const printCatalogOverview = {
       title: "Business, Event and Everyday Printing",
       cards: [
         ["Business Materials", "Business cards\nFlyers and brochures\nPostcards and menus\nInvoices and forms"],
-        ["Signs and Display", "Banners and posters\nWindow vinyl\nYard signs\nCar signs and lettering"],
+        ["Signs and Display", "Banners and posters\nBackdrops\nYard signs\nCar signs and lettering"],
         ["Custom Products", "Stickers and labels\nT-shirts\nEmbroidery coordination\nSpecial print requests"]
       ],
       steps: [
@@ -377,7 +411,7 @@ const printCatalogOverview = {
       title: "Impresion para Negocios, Eventos y Cada Dia",
       cards: [
         ["Materiales Comerciales", "Tarjetas de negocio\nFlyers y folletos\nPostales y menus\nFacturas y formularios"],
-        ["Letreros y Exhibidores", "Banners y posters\nVinilo para ventanas\nYard signs\nRotulacion de autos"],
+        ["Letreros y Exhibidores", "Banners y posters\nBackdrops\nYard signs\nRotulacion de autos"],
         ["Productos Personalizados", "Stickers y etiquetas\nT-shirts\nCoordinacion de bordado\nPedidos especiales"]
       ],
       steps: [
@@ -391,11 +425,35 @@ const printCatalogOverview = {
   }
 };
 
-const yardSignPrices = Array.from({ length: 100 }, (_, index) => {
-  const quantity = index + 1;
-  const unitPrice = quantity <= 25 ? 40 : quantity <= 50 ? 35 : 30;
-  return [String(quantity), `$${(quantity * unitPrice).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`];
-});
+const bannerProducts = [
+  { name: "Banner 24x36", category: "banners", memberPrices: [["1", "$18.95"]], prices: [["1", "$23.95"]] },
+  { name: "Banner 48x24", category: "banners", memberPrices: [["1", "$23.50"]], prices: [["1", "$29.95"]] },
+  { name: "Banner 60x36", category: "banners", memberPrices: [["1", "$36.50"]], prices: [["1", "$45.95"]] },
+  { name: "Banner 72x24", category: "banners", memberPrices: [["1", "$44.99"]], prices: [["1", "$55.95"]] },
+  { name: "Banner 72x36", category: "banners", memberPrices: [["1", "$45.99"]], prices: [["1", "$57.95"]] },
+  { name: "Banner 72x48", category: "banners", memberPrices: [["1", "$47.19"]], prices: [["1", "$58.95"]] },
+  { name: "Banner 96x24", category: "banners", memberPrices: [["1", "$48.95"]], prices: [["1", "$60.95"]] },
+  { name: "Banner 96x36", category: "banners", memberPrices: [["1", "$58.99"]], prices: [["1", "$73.95"]] },
+  { name: "Banner 96x48", category: "banners", memberPrices: [["1", "$76.99"]], prices: [["1", "$95.95"]] },
+  { name: "Banner 120x36", category: "banners", memberPrices: [["1", "$82.99"]], prices: [["1", "$103.95"]] },
+  { name: "Banner 120x60", category: "banners", memberPrices: [["1", "$114.99"]], prices: [["1", "$143.95"]] },
+];
+
+const retractableProducts = [
+  { name: "Retractable Banner 22x80", category: "retractable", memberPrices: [["1", "$120.00"]], prices: [["1", "$149.95"]] },
+  { name: "Retractable Banner 33x80", category: "retractable", memberPrices: [["1", "$152.00"]], prices: [["1", "$189.95"]] },
+];
+
+const backdropProducts = [
+  { name: "Backdrop 60x96", category: "backdrops", memberPrices: [["1", "$107.99"]], prices: [["1", "$134.95"]] },
+  { name: "Backdrop 96x96", category: "backdrops", memberPrices: [["1", "$165.99"]], prices: [["1", "$207.95"]] },
+  { name: "Backdrop 120x96", category: "backdrops", memberPrices: [["1", "$204.99"]], prices: [["1", "$255.95"]] },
+  { name: "Backdrop 144x96", category: "backdrops", memberPrices: [["1", "$243.50"]], prices: [["1", "$304.95"]] },
+  { name: "Backdrop 240x96", category: "backdrops", memberPrices: [["1", "$399.49"]], prices: [["1", "$499.95"]] },
+];
+
+const yardSignPrices = [["1", "$33.95"], ["5", "$100.95"], ["10", "$180.95"], ["15", "$265.95"], ["20", "$353.95"], ["30", "$509.95"], ["40", "$677.95"], ["50", "$815.95"]];
+const yardSignMemberPrices = [["1", "$26.99"], ["5", "$80.99"], ["10", "$144.99"], ["15", "$212.99"], ["20", "$282.99"], ["30", "$407.99"], ["40", "$541.99"], ["50", "$652.99"]];
 
 const printingProducts = [
   { name: "Business Cards", category: "cards", memberPrices: [["100", "$25.75"], ["250", "$29.87"], ["500", "$31.93"], ["1000", "$42.28"], ["2500", "$85.50"], ["5000", "$116.40"], ["10000", "$254.40"]], prices: [["100", "$35.00"], ["250", "$45.00"], ["500", "$55.00"], ["1000", "$70.00"], ["2500", "$110.00"], ["5000", "$155.00"], ["10000", "$303.00"]] },
@@ -409,15 +467,12 @@ const printingProducts = [
   { name: "Stickers 4x4", category: "stickers", memberPrices: [["100", "$53.52"], ["250", "$94.72"], ["500", "$99.88"], ["1000", "$109.86"], ["2500", "$169.90"], ["5000", "$261.56"], ["10000", "$435.61"]], prices: [["100", "$65.00"], ["250", "$115.00"], ["500", "$123.00"], ["1000", "$133.00"], ["2500", "$207.00"], ["5000", "$322.00"], ["10000", "$542.00"]] },
   { name: "Menus 8.5x11", category: "menus", memberPrices: [["100", "$130.21"], ["250", "$147.74"], ["500", "$164.29"], ["1000", "$220.10"], ["2500", "$335.76"], ["5000", "$380.03"], ["10000", "$665.32"]], prices: [["100", "$160.00"], ["250", "$200.00"], ["500", "$280.00"], ["1000", "$370.00"], ["2500", "$550.00"], ["5000", "$596.00"], ["10000", "$890.00"]] },
   { name: "Menus 11x17", category: "menus", memberPrices: [["100", "$268.39"], ["250", "$363.72"], ["500", "$485.55"], ["1000", "$556.97"], ["2500", "$720.19"], ["5000", "$871.89"], ["10000", "$1,290.45"]], prices: [["100", "$333.00"], ["250", "$453.00"], ["500", "$606.00"], ["1000", "$696.00"], ["2500", "$904.00"], ["5000", "$1,096.00"], ["10000", "$1,622.00"]] },
-  { name: "Banner 2x4", category: "banners", prices: [["1", "$88.00"]] },
-  { name: "Banner 2x6", category: "banners", prices: [["1", "$120.00"]] },
-  { name: "Banner 3x6", category: "banners", prices: [["1", "$180.00"]] },
-  { name: "Banner 2x8", category: "banners", prices: [["1", "$221.33"]] },
-  { name: "Banner 2x10", category: "banners", prices: [["1", "$267.33"]] },
+  ...bannerProducts,
   { name: "Door Hangers 4x11", category: "hangers", memberPrices: [["100", "$110.90"], ["250", "$144.36"], ["500", "$166.35"], ["1000", "$184.16"], ["2500", "$367.43"], ["5000", "$412.48"], ["10000", "$813.31"]], prices: [["100", "$133.00"], ["250", "$174.00"], ["500", "$201.00"], ["1000", "$223.00"], ["2500", "$451.00"], ["5000", "$508.00"], ["10000", "$1,007.00"]] },
   { name: "Door Hangers 3.5x8.5", category: "hangers", memberPrices: [["100", "$83.64"], ["250", "$107.73"], ["500", "$123.40"], ["1000", "$134.96"], ["2500", "$269.86"], ["5000", "$301.98"], ["10000", "$594.31"]], prices: [["100", "$127.00"], ["250", "$166.00"], ["500", "$192.00"], ["1000", "$213.00"], ["2500", "$428.00"], ["5000", "$483.00"], ["10000", "$958.00"]] },
-  { name: "Retractable Banner", category: "retractable", prices: [["1", "$180.00"], ["2", "$360.00"], ["3", "$540.00"], ["4", "$720.00"], ["5", "$900.00"], ["6", "$1,080.00"], ["7", "$1,260.00"], ["8", "$1,440.00"], ["9", "$1,620.00"], ["10", "$1,800.00"]] },
-  { name: "Yard Sign", category: "yardSigns", prices: yardSignPrices },
+  ...retractableProducts,
+  ...backdropProducts,
+  { name: "Yard Sign", category: "yardSigns", memberPrices: yardSignMemberPrices, prices: yardSignPrices },
   { name: "Gildan G500 T-Shirt", category: "shirts", memberPrices: [["1", "$15.00"]], prices: [["1", "$35.00"]] },
 ];
 
@@ -430,10 +485,10 @@ const productGroups = [
     variants: ["Stickers round 2\"", "Stickers round 2.5\"", "Stickers 2x3.5", "Stickers 2x2", "Stickers 4x4"],
   },
   { name: "Menus", category: "menus", variants: ["Menus 8.5x11", "Menus 11x17"] },
-  { name: "Banners", category: "banners", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
-  { name: "Window Vinyl", category: "banners", materialPreset: "Window Vinyl", variants: ["Banner 2x4", "Banner 2x6", "Banner 3x6", "Banner 2x8", "Banner 2x10"] },
+  { name: "Banners", category: "banners", variants: bannerProducts.map((product) => product.name) },
+  { name: "Backdrops", category: "backdrops", variants: backdropProducts.map((product) => product.name) },
   { name: "Door Hangers", category: "hangers", variants: ["Door Hangers 4x11", "Door Hangers 3.5x8.5"] },
-  { name: "Retractable Banners", category: "retractable", stock: 10, variants: ["Retractable Banner"] },
+  { name: "Retractable Banners", category: "retractable", variants: retractableProducts.map((product) => product.name) },
   { name: "Yard Signs", category: "yardSigns", variants: ["Yard Sign"] },
   { name: "T-Shirts", category: "shirts", variants: ["Gildan G500 T-Shirt"] },
 ].map((group) => ({
@@ -560,12 +615,6 @@ productQuantity?.addEventListener("change", () => {
 
 [cardRoundedCorners, cardPrintedSide, cardPaperType, cardCoating, stickerFrontSide, stickerBackSide, stickerMaterial, menuFrontSide, menuBackSide, menuPaperStock, menuCoating, menuFolding, bannerFrontSide, bannerBackSide, bannerMaterial, bannerTreatment, hangerFrontSide, hangerBackSide, hangerPaperStock, hangerCoating, retractableDisplayOptions, retractableBannerStand, retractableFrontSide, retractableBackSide, retractableMaterial, retractablePanels, yardSignFrontSide, yardSignBackSide, yardSignMaterial, yardSignWire, yardSignGrommets].forEach((select) => {
   select?.addEventListener("change", () => {
-    if (select === bannerMaterial && bannerTreatment) {
-      const isWindowVinyl = bannerMaterial.value === "Window Vinyl";
-      bannerTreatment.disabled = isWindowVinyl;
-      if (isWindowVinyl) bannerTreatment.value = "Not available";
-      else if (bannerTreatment.value === "Not available") bannerTreatment.value = "None";
-    }
     updateSelectedPrice();
   });
 });
@@ -613,21 +662,6 @@ function renderProductGroup(groupName, options = {}) {
     productSize.innerHTML = selectedGroup.variants
       .map((variant) => `<option value="${escapeAttribute(variant.name)}">${escapeHtml(sizeLabel(variant.name, selectedGroup.name))}</option>`)
       .join("");
-  }
-
-  if (isCustomBannerGroup()) {
-    if (productKicker) productKicker.textContent = "Custom size";
-    const [width = "2", height = "4"] = String(selectedProduct.name).replace(/^Banner\s*/i, "").split("x");
-    if (bannerCustomWidth) bannerCustomWidth.value = Number(width) || 2;
-    if (bannerCustomHeight) bannerCustomHeight.value = Number(height) || 4;
-    if (bannerCustomQuantity) bannerCustomQuantity.value = "1";
-    if (bannerMaterial) bannerMaterial.value = selectedGroup.materialPreset || "13 oz. Standard Vinyl";
-    if (bannerTreatment) {
-      const isWindowVinyl = bannerMaterial?.value === "Window Vinyl";
-      bannerTreatment.disabled = isWindowVinyl;
-      bannerTreatment.value = isWindowVinyl ? "Not available" : "None";
-    }
-    selectedPrice = customBannerPrice();
   }
 
   renderQuantityOptions();
@@ -747,23 +781,24 @@ function renderProductOptions() {
   const isStickers = selectedGroup.category === "stickers";
   const isMenus = selectedGroup.category === "menus";
   const isBanners = selectedGroup.category === "banners";
+  const isBackdrops = selectedGroup.category === "backdrops";
   const isHangers = selectedGroup.category === "hangers";
   const isRetractable = selectedGroup.category === "retractable";
   const isYardSigns = selectedGroup.category === "yardSigns";
   const isTshirts = selectedGroup.category === "shirts";
   const hasCardOrFlyerConfiguration = isBusinessCards || isFlyers;
-  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isHangers || isRetractable || isYardSigns;
+  const hasConfiguration = hasCardOrFlyerConfiguration || isStickers || isMenus || isBanners || isBackdrops || isHangers || isRetractable || isYardSigns;
   if (productConfigurationOptions) productConfigurationOptions.hidden = !hasCardOrFlyerConfiguration;
   if (stickerConfigurationOptions) stickerConfigurationOptions.hidden = !isStickers;
   if (menuConfigurationOptions) menuConfigurationOptions.hidden = !isMenus;
-  if (bannerConfigurationOptions) bannerConfigurationOptions.hidden = !isBanners;
+  if (bannerConfigurationOptions) bannerConfigurationOptions.hidden = !(isBanners || isBackdrops);
   if (hangerConfigurationOptions) hangerConfigurationOptions.hidden = !isHangers;
   if (retractableConfigurationOptions) retractableConfigurationOptions.hidden = !isRetractable;
   if (yardSignConfigurationOptions) yardSignConfigurationOptions.hidden = !isYardSigns;
   if (roundedCornersField) roundedCornersField.hidden = !isBusinessCards;
-  if (bannerCustomSizeFields) bannerCustomSizeFields.hidden = !isBanners;
-  if (productSize?.closest("label")) productSize.closest("label").hidden = isBanners;
-  if (productQuantity?.closest("label")) productQuantity.closest("label").hidden = isBanners;
+  if (bannerCustomSizeFields) bannerCustomSizeFields.hidden = !isCustomBannerGroup();
+  if (productSize?.closest("label")) productSize.closest("label").hidden = isCustomBannerGroup();
+  if (productQuantity?.closest("label")) productQuantity.closest("label").hidden = isCustomBannerGroup();
   productOrderPanel?.classList.toggle("configured-product-mode", hasConfiguration);
   productOrderPanel?.classList.toggle("shirt-product-mode", isTshirts);
 }
@@ -782,7 +817,7 @@ function renderQuantityOptions() {
 }
 
 function isCustomBannerGroup() {
-  return selectedGroup?.category === "banners";
+  return Boolean(selectedGroup?.customSize);
 }
 
 function customBannerDimensions() {
@@ -972,11 +1007,11 @@ function updateSelectedPrice() {
         `Folding Option: ${menuFolding?.value || "Half Fold"}`
       );
     }
-    if (selectedGroup.category === "banners") {
+    if (selectedGroup.category === "banners" || selectedGroup.category === "backdrops") {
       configuration.push(
         `Front Side: ${bannerFrontSide?.value || "Full Color"}`,
         `Back Side: ${bannerBackSide?.value || "No Printing"}`,
-        `Material: ${bannerMaterial?.value || "13 oz. Standard Vinyl"}`,
+        `Material: ${selectedGroup.category === "backdrops" ? "Backdrop Material" : bannerMaterial?.value || "13 oz. Standard Vinyl"}`,
         `Treatment: ${bannerTreatment?.value || "None"}`
       );
     }
@@ -1036,14 +1071,16 @@ function updateSelectedPrice() {
     if (["cards", "flyers", "stickers", "menus", "hangers"].includes(selectedGroup.category)) {
       productOrderLink.href = `print-products-upload.html?${params.toString()}`;
       if (productUploadLink) productUploadLink.hidden = true;
-    } else if (selectedGroup.category === "banners") {
+    } else if (selectedGroup.category === "banners" || selectedGroup.category === "backdrops") {
       const banner = customBannerDimensions();
-      params.set("customBanner", "1");
-      params.set("width", banner.width);
-      params.set("height", banner.height);
-      params.set("quantity", banner.quantity);
-      params.set("material", bannerMaterial?.value || "13 oz. Standard Vinyl");
-      params.set("treatment", bannerTreatment?.value || "None");
+      if (isCustomBannerGroup()) {
+        params.set("customBanner", "1");
+        params.set("width", banner.width);
+        params.set("height", banner.height);
+        params.set("quantity", banner.quantity);
+        params.set("material", bannerMaterial?.value || "13 oz. Standard Vinyl");
+        params.set("treatment", bannerTreatment?.value || "None");
+      }
       productOrderLink.href = `print-products-upload.html?${params.toString()}`;
       if (productUploadLink) productUploadLink.hidden = true;
     } else if (selectedGroup.category === "retractable" || selectedGroup.category === "yardSigns") {
@@ -1061,9 +1098,10 @@ function sizeLabel(productName, groupName) {
   if (groupName === "Menus") return `${productName.replace(/^Menus\s*/i, "").replace(/x/i, " x ")} Take Out Menus`;
   if (groupName === "Banners") {
     const [width, height] = productName.replace(/^Banner\s*/i, "").split("x");
-    return `${Number(width) * 12} x ${Number(height) * 12}`;
+    return `${width} x ${height}`;
   }
-  if (groupName === "Retractable Banners") return '33.5" x 80"';
+  if (groupName === "Backdrops") return productName.replace(/^Backdrop\s*/i, "").replace(/x/i, " x ");
+  if (groupName === "Retractable Banners") return productName.replace(/^Retractable Banner\s*/i, "").replace(/x/i, " x ");
   if (groupName === "Yard Signs") return "18 x 24 inches";
   if (groupName === "T-Shirts") return "Gildan G500 Unisex Heavy Cotton";
   return productName.replace(/^Flyers\s*/i, "").replace(/^Stickers\s*/i, "").replace(/^Menus\s*/i, "").replace(/^Banner\s*/i, "").replace(/^Door Hangers\s*/i, "");
