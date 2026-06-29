@@ -8,13 +8,13 @@ import {
 import { markStripeOrderPaid } from "../lib/supabase-payments.js";
 
 export default async function handler(req, res) {
-  const action = stripeCheckoutAction(req);
-
   try {
+    const action = stripeCheckoutAction(req);
     if (action === "config") return handleConfig(req, res);
     if (action === "confirm") return confirmStripePayment(req, res);
     return createStripeCheckout(req, res);
   } catch (error) {
+    console.error("[stripe-checkout]", error);
     res.status(500).json({ error: error.message || "Stripe checkout error." });
   }
 }
