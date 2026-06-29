@@ -70,3 +70,5 @@ Test with a PayPal sandbox plan first, then switch to live credentials. Verify:
 6. Reordering a previous order
 
 Member-specific product prices can be added later without changing the authentication, dashboard, or saved-design structure.
+
+For local testing, run `npm run dev` so Vercel serves the `/api` functions. The static server (`npm run static`) can show the pages, but Stripe checkout cannot work there because the `/api` checkout functions are not running.
