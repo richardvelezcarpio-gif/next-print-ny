@@ -14,6 +14,9 @@
       if (!data?.error && [404, 405, 501].includes(response.status)) {
         throw new Error("Stripe checkout API is not running. Use Vercel dev or deploy the site to Vercel before testing payments.");
       }
+      if (!data?.error && text.includes("FUNCTION_INVOCATION_FAILED")) {
+        throw new Error("Stripe checkout server failed on Vercel. Check STRIPE_SECRET_KEY in Vercel Environment Variables and redeploy.");
+      }
       throw new Error(data?.error || `${fallbackMessage} HTTP ${response.status}.`);
     }
 
