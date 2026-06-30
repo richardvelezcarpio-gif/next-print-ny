@@ -11418,6 +11418,700 @@ img {
     font-size: 0.6rem;
   }
 }
+
+/* Home mobile visual pass - 2026-06-30 */
+@media (max-width: 760px) {
+  body.home-page,
+  body.home-page .page-shell {
+    background: #eef4fa;
+  }
+
+  body.home-page main {
+    display: block;
+  }
+
+  body.home-page .reseller-strip {
+    display: flex;
+    min-height: 24px;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 7px;
+    text-align: left;
+  }
+
+  body.home-page .reseller-strip div {
+    display: flex;
+    min-width: 0;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 4px;
+  }
+
+  body.home-page .reseller-strip strong {
+    flex: 0 0 auto;
+    font-size: 0.45rem;
+    line-height: 1;
+  }
+
+  body.home-page .reseller-strip span {
+    overflow: hidden;
+    font-size: 0.39rem;
+    line-height: 1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  body.home-page .reseller-strip a {
+    width: auto;
+    min-height: 16px;
+    padding: 0 7px;
+    border-radius: 3px;
+    font-size: 0.36rem;
+  }
+
+  body.home-page .top-nav.site-main-header {
+    display: grid;
+    grid-template-columns: 62px minmax(0, 1fr) auto;
+    min-height: 42px;
+    gap: 4px;
+    padding: 5px 6px;
+    border-bottom-width: 3px;
+  }
+
+  body.home-page .brand img {
+    width: 55px;
+    max-height: 30px;
+  }
+
+  body.home-page .top-nav .brand {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  body.home-page .menu-toggle {
+    display: none;
+  }
+
+  body.home-page .top-nav .menu,
+  body.home-page .top-nav .menu.open {
+    display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+    height: auto;
+    align-self: center;
+    align-items: center;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 3px;
+    margin: 0;
+  }
+
+  body.home-page .top-nav .menu a {
+    min-width: 0;
+    min-height: 20px;
+    flex: 1 1 0;
+    padding: 3px 2px;
+    border-radius: 3px;
+    font-size: 0.28rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .top-nav .nav-actions {
+    display: flex;
+    grid-column: 3;
+    grid-row: 1;
+    width: auto;
+    align-self: center;
+    align-items: center;
+    gap: 3px;
+  }
+
+  body.home-page .phone-pill {
+    min-height: 20px;
+    padding: 0 5px;
+    border-radius: 4px;
+    font-size: 0.34rem;
+  }
+
+  body.home-page .phone-pill::before {
+    display: none;
+  }
+
+  body.home-page .language-switch {
+    min-height: 20px;
+    gap: 1px;
+    padding: 1px;
+    border-radius: 4px;
+  }
+
+  body.home-page .language-switch button {
+    min-width: 16px;
+    height: 16px;
+    padding: 0;
+    border-radius: 3px;
+    font-size: 0.34rem;
+  }
+
+  body.home-page .np-member-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(100px, 0.64fr);
+    gap: 6px;
+    align-items: center;
+    min-height: 230px;
+    padding: 10px 8px 8px;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 84% 18%, rgba(21, 133, 255, 0.32), transparent 29%),
+      linear-gradient(135deg, #06173a 0%, #0a3470 68%, #0f83a5 100%);
+  }
+
+  body.home-page .np-member-copy {
+    display: grid;
+    min-width: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  body.home-page .np-stars {
+    margin: 0 0 5px;
+    font-size: 0.55rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .np-stars span {
+    display: inline;
+    font-size: 0.38rem;
+  }
+
+  body.home-page .np-member-copy h1 {
+    max-width: none;
+    font-size: clamp(1.55rem, 7.9vw, 2.05rem);
+    line-height: 0.94;
+  }
+
+  body.home-page .np-hero-lead {
+    max-width: 190px;
+    margin: 6px 0 7px;
+    font-size: 0.48rem;
+    line-height: 1.22;
+  }
+
+  body.home-page .np-member-art {
+    position: static;
+    width: 100%;
+    align-self: center;
+    justify-self: end;
+  }
+
+  body.home-page .np-member-art img {
+    width: min(100%, 155px);
+    transform: translateX(3px);
+  }
+
+  body.home-page .np-member-perks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 4px 5px;
+    max-width: 205px;
+    margin: 1px 0 7px;
+    padding-top: 0;
+  }
+
+  body.home-page .np-member-perks span {
+    min-height: 18px;
+    padding-left: 17px;
+    font-size: 0.34rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .np-member-perks span::before {
+    width: 13px;
+    height: 13px;
+    font-size: 0.42rem;
+  }
+
+  body.home-page .np-hero-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    max-width: 210px;
+  }
+
+  body.home-page .action-gradient,
+  body.home-page .outline-button {
+    min-height: 25px;
+    padding: 0 5px;
+    border-radius: 3px;
+    font-size: 0.33rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .action-gradient::before {
+    margin-right: 3px;
+  }
+
+  body.home-page .np-hero-price {
+    grid-template-columns: auto auto minmax(0, 1fr);
+    gap: 1px 5px;
+    max-width: 210px;
+    margin-top: 6px;
+  }
+
+  body.home-page .np-hero-price span {
+    font-size: 0.38rem;
+  }
+
+  body.home-page .np-hero-price strong {
+    font-size: 2.1rem;
+  }
+
+  body.home-page .np-hero-price small {
+    padding-bottom: 3px;
+    font-size: 0.52rem;
+  }
+
+  body.home-page .np-hero-price p {
+    padding-left: 6px;
+    border-left: 1px solid rgba(255, 255, 255, 0.28);
+    font-size: 0.36rem;
+    line-height: 1.18;
+  }
+
+  body.home-page .np-member-benefits {
+    display: none;
+  }
+
+  body.home-page .np-service-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 3px;
+    padding: 3px 4px 8px;
+    background: #06173a;
+  }
+
+  body.home-page .np-service-card {
+    border-radius: 3px;
+  }
+
+  body.home-page .np-service-card img {
+    height: 68px;
+    aspect-ratio: auto;
+    object-fit: cover;
+  }
+
+  body.home-page .np-service-card div {
+    min-height: 156px;
+    padding: 7px 6px 6px;
+  }
+
+  body.home-page .np-service-card h2 {
+    font-size: clamp(0.5rem, 3vw, 0.72rem);
+    line-height: 0.98;
+  }
+
+  body.home-page .np-service-card p {
+    margin: 4px 0 5px;
+    font-size: 0.37rem;
+    line-height: 1.2;
+  }
+
+  body.home-page .np-service-card ul {
+    gap: 2px;
+    margin-bottom: 5px;
+    font-size: 0.34rem;
+    line-height: 1.12;
+  }
+
+  body.home-page .np-service-card a {
+    min-height: 20px;
+    padding: 2px 3px;
+    border-radius: 2px;
+    font-size: 0.28rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .np-product-strip {
+    padding: 9px 6px 10px;
+    background: #fff;
+  }
+
+  body.home-page .section-title h2,
+  body.home-page .np-product-strip h2 {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    color: var(--navy);
+    font-size: 0.95rem;
+    line-height: 1;
+  }
+
+  body.home-page .section-title p {
+    margin-top: 2px;
+    font-size: 0.41rem;
+    line-height: 1.2;
+  }
+
+  body.home-page .np-product-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  body.home-page .np-product-row a {
+    min-height: 126px;
+    padding: 6px 5px;
+    border-radius: 4px;
+  }
+
+  body.home-page .np-product-row img {
+    height: 55px;
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+
+  body.home-page .np-product-row strong {
+    margin-top: 4px;
+    font-size: 0.43rem;
+    line-height: 1.08;
+    text-align: center;
+  }
+
+  body.home-page .np-product-row span {
+    display: block;
+    min-height: 0;
+    margin-top: 3px;
+    color: #536783;
+    font-size: 0.34rem;
+    line-height: 1.18;
+    text-align: center;
+  }
+
+  body.home-page .np-view-products {
+    width: min(100%, 205px);
+    min-height: 24px;
+    margin-top: 8px;
+    border-radius: 3px;
+    font-size: 0.38rem;
+  }
+
+  body.home-page .np-membership-band {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 5px;
+    padding: 7px 6px 8px;
+    background: #fff;
+  }
+
+  body.home-page .np-membership-card {
+    min-height: 176px;
+    padding: 10px 7px;
+    border-radius: 4px;
+  }
+
+  body.home-page .np-membership-card > span {
+    padding: 3px 6px;
+    font-size: 0.34rem;
+  }
+
+  body.home-page .np-membership-card h2 {
+    margin: 7px 0 3px;
+    font-size: 0.62rem;
+  }
+
+  body.home-page .np-membership-card strong {
+    font-size: 1.85rem;
+  }
+
+  body.home-page .np-membership-card small {
+    font-size: 0.48rem;
+  }
+
+  body.home-page .np-membership-card p {
+    margin: 4px 0;
+    font-size: 0.34rem;
+    line-height: 1.18;
+  }
+
+  body.home-page .np-membership-card a {
+    min-height: 22px;
+    margin-top: 5px;
+    border-radius: 3px;
+    font-size: 0.34rem;
+  }
+
+  body.home-page .np-benefit-list {
+    min-width: 0;
+    padding: 7px 7px 8px;
+    border-radius: 4px;
+  }
+
+  body.home-page .np-benefit-list .section-title h2 {
+    font-size: 0.68rem;
+  }
+
+  body.home-page .np-benefit-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px 6px;
+    margin-top: 6px;
+  }
+
+  body.home-page .np-benefit-list article {
+    grid-template-columns: 20px minmax(0, 1fr);
+    gap: 4px;
+    min-height: 32px;
+  }
+
+  body.home-page .np-benefit-list article strong {
+    width: 18px;
+    height: 18px;
+    font-size: 0.42rem;
+  }
+
+  body.home-page .np-benefit-list h3 {
+    font-size: 0.37rem;
+    line-height: 1.1;
+  }
+
+  body.home-page .np-benefit-list p {
+    font-size: 0.3rem;
+    line-height: 1.08;
+  }
+
+  body.home-page .np-ai-banner {
+    grid-template-columns: auto 1fr;
+    gap: 3px;
+    margin-top: 5px;
+    padding: 5px 6px;
+    border-radius: 3px;
+  }
+
+  body.home-page .np-ai-banner strong {
+    padding: 2px 5px;
+    border-radius: 2px;
+    font-size: 0.3rem;
+  }
+
+  body.home-page .np-ai-banner span {
+    font-size: 0.37rem;
+  }
+
+  body.home-page .np-ai-banner p {
+    grid-column: 1 / -1;
+    font-size: 0.31rem;
+    line-height: 1.1;
+  }
+
+  body.home-page .np-why-section {
+    padding: 5px 5px 7px;
+    background: #fff;
+  }
+
+  body.home-page .np-why-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  body.home-page .np-why-grid article {
+    padding: 5px 2px;
+  }
+
+  body.home-page .np-why-grid strong {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 3px;
+    font-size: 0.44rem;
+  }
+
+  body.home-page .np-why-grid h3 {
+    font-size: 0.3rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .np-why-grid p {
+    margin-top: 2px;
+    font-size: 0.25rem;
+    line-height: 1.08;
+  }
+
+  body.home-page .np-testimonials {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    padding: 0 5px 8px;
+    background: #fff;
+  }
+
+  body.home-page .np-testimonials article {
+    min-height: 76px;
+    padding: 6px 5px;
+    border-radius: 4px;
+  }
+
+  body.home-page .np-testimonials strong {
+    font-size: 0.38rem;
+  }
+
+  body.home-page .np-testimonials p {
+    margin: 3px 0;
+    font-size: 0.28rem;
+    line-height: 1.12;
+  }
+
+  body.home-page .np-testimonials span {
+    font-size: 0.27rem;
+    line-height: 1.08;
+  }
+
+  body.home-page .google-rating {
+    grid-template-columns: auto 1fr;
+    gap: 1px 4px;
+  }
+
+  body.home-page .google-rating b {
+    font-size: 1.35rem;
+  }
+
+  body.home-page .google-rating strong {
+    font-size: 0.85rem;
+  }
+
+  body.home-page .visit-grid {
+    display: grid;
+    grid-template-columns: 0.88fr 1.28fr 0.88fr;
+    gap: 5px;
+    padding: 0 5px 8px;
+    background: #fff;
+  }
+
+  body.home-page .tool-card {
+    padding: 7px 5px;
+    border-radius: 4px;
+  }
+
+  body.home-page .visit-card h2,
+  body.home-page .contact-card h2 {
+    margin-bottom: 4px;
+    font-size: 0.48rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .visit-card p {
+    margin: 4px 0;
+    font-size: 0.29rem;
+    line-height: 1.13;
+  }
+
+  body.home-page .visit-card a,
+  body.home-page .contact-card a {
+    min-height: 17px;
+    margin-top: 3px;
+    padding: 2px 3px;
+    border-radius: 2px;
+    font-size: 0.27rem;
+    line-height: 1.05;
+    overflow-wrap: anywhere;
+  }
+
+  body.home-page .map-frame {
+    min-height: 122px;
+    border-radius: 4px;
+  }
+
+  body.home-page .social-row {
+    gap: 3px;
+    margin-top: 5px;
+    font-size: 0.26rem;
+  }
+
+  body.home-page .social-row a {
+    width: 15px;
+    height: 15px;
+    font-size: 0.3rem;
+  }
+
+  body.home-page .footer {
+    padding: 0;
+    border-top: 3px solid #063f8f;
+  }
+
+  body.home-page .footer-container {
+    grid-template-columns: 1.15fr repeat(4, minmax(0, 1fr));
+    gap: 0;
+    padding: 8px 4px;
+  }
+
+  body.home-page .footer-brand,
+  body.home-page .footer-col:nth-child(2),
+  body.home-page .footer-col {
+    display: flex;
+  }
+
+  body.home-page .footer-col {
+    min-width: 0;
+    padding: 0 4px;
+    border-left: 1px solid rgba(217, 242, 255, 0.16);
+    text-align: center;
+  }
+
+  body.home-page .footer-brand {
+    border-left: 0;
+    text-align: left;
+  }
+
+  body.home-page .footer-logo {
+    width: 44px;
+    max-height: 22px;
+  }
+
+  body.home-page .footer h4 {
+    margin-bottom: 3px;
+    font-size: 0.34rem;
+    line-height: 1.05;
+  }
+
+  body.home-page .footer p,
+  body.home-page .footer a {
+    font-size: 0.27rem;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+
+  body.home-page .socials {
+    gap: 3px;
+    margin-top: 3px;
+  }
+
+  body.home-page .socials a {
+    width: 13px;
+    height: 13px;
+    font-size: 0.28rem;
+  }
+
+  body.home-page .footer-bottom {
+    padding: 5px 4px;
+    font-size: 0.28rem;
+  }
+}
+
+@media (max-width: 430px) {
+  body.home-page .top-nav.site-main-header {
+    grid-template-columns: 54px minmax(0, 1fr) auto;
+  }
+
+  body.home-page .top-nav .menu a {
+    font-size: 0.24rem;
+  }
+
+  body.home-page .phone-pill {
+    font-size: 0.3rem;
+  }
+
+  body.home-page .language-switch {
+    display: none;
+  }
+}
 /* Premium print products page - 2026-06-25 */
 .printing-page {
   background: #edf4fb;
