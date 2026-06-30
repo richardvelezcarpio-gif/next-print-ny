@@ -11556,11 +11556,17 @@ img {
 
   body.home-page .np-member-hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(100px, 0.64fr);
-    gap: 6px;
-    align-items: center;
-    min-height: 230px;
-    padding: 10px 8px 8px;
+    grid-template-columns: minmax(0, 1fr) minmax(112px, 0.58fr);
+    grid-template-areas:
+      "stars art"
+      "title art"
+      "lead art"
+      "actions actions"
+      "price perks";
+    gap: 8px 10px;
+    align-items: start;
+    min-height: 0;
+    padding: 14px 10px 16px;
     overflow: hidden;
     background:
       radial-gradient(circle at 84% 18%, rgba(21, 133, 255, 0.32), transparent 29%),
@@ -11568,113 +11574,132 @@ img {
   }
 
   body.home-page .np-member-copy {
-    display: grid;
-    min-width: 0;
-    position: relative;
-    z-index: 1;
+    display: contents;
   }
 
   body.home-page .np-stars {
-    margin: 0 0 5px;
-    font-size: 0.55rem;
+    grid-area: stars;
+    margin: 0;
+    font-size: 0.62rem;
     line-height: 1.05;
   }
 
   body.home-page .np-stars span {
-    display: inline;
-    font-size: 0.38rem;
+    display: block;
+    margin-top: 1px;
+    color: #fff;
+    font-size: 0.44rem;
+    line-height: 1.15;
   }
 
   body.home-page .np-member-copy h1 {
-    max-width: none;
-    font-size: clamp(1.55rem, 7.9vw, 2.05rem);
-    line-height: 0.94;
+    grid-area: title;
+    max-width: 295px;
+    font-size: clamp(1.95rem, 8.7vw, 2.75rem);
+    line-height: 0.92;
   }
 
   body.home-page .np-hero-lead {
-    max-width: 190px;
-    margin: 6px 0 7px;
-    font-size: 0.48rem;
-    line-height: 1.22;
+    grid-area: lead;
+    max-width: 210px;
+    margin: 0;
+    font-size: 0.62rem;
+    line-height: 1.24;
   }
 
   body.home-page .np-member-art {
-    position: static;
+    grid-area: art;
+    position: relative;
+    top: auto;
+    right: auto;
     width: 100%;
     align-self: center;
     justify-self: end;
+    z-index: 0;
   }
 
   body.home-page .np-member-art img {
-    width: min(100%, 155px);
-    transform: translateX(3px);
+    width: min(100%, 178px);
+    transform: translateX(2px);
   }
 
   body.home-page .np-member-perks {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 4px 5px;
-    max-width: 205px;
-    margin: 1px 0 7px;
+    grid-area: perks;
+    grid-template-columns: 1fr;
+    gap: 5px;
+    max-width: none;
+    margin: 0;
     padding-top: 0;
+    align-self: stretch;
   }
 
   body.home-page .np-member-perks span {
-    min-height: 18px;
-    padding-left: 17px;
-    font-size: 0.34rem;
-    line-height: 1.05;
+    min-height: 21px;
+    padding-left: 21px;
+    color: #eef7ff;
+    font-size: 0.43rem;
+    line-height: 1.12;
   }
 
   body.home-page .np-member-perks span::before {
-    width: 13px;
-    height: 13px;
-    font-size: 0.42rem;
+    width: 16px;
+    height: 16px;
+    font-size: 0.5rem;
   }
 
   body.home-page .np-hero-actions {
+    grid-area: actions;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 5px;
-    max-width: 210px;
+    gap: 8px;
+    max-width: none;
+    margin-top: 2px;
   }
 
   body.home-page .action-gradient,
   body.home-page .outline-button {
-    min-height: 25px;
-    padding: 0 5px;
-    border-radius: 3px;
-    font-size: 0.33rem;
-    line-height: 1.05;
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    font-size: 0.56rem;
+    line-height: 1.12;
   }
 
   body.home-page .action-gradient::before {
-    margin-right: 3px;
+    margin-right: 5px;
   }
 
   body.home-page .np-hero-price {
-    grid-template-columns: auto auto minmax(0, 1fr);
-    gap: 1px 5px;
-    max-width: 210px;
-    margin-top: 6px;
+    grid-area: price;
+    grid-template-columns: auto auto;
+    gap: 1px 6px;
+    max-width: none;
+    margin: 0;
+    padding: 8px 9px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    background: rgba(3, 20, 52, 0.34);
+    backdrop-filter: blur(8px);
   }
 
   body.home-page .np-hero-price span {
-    font-size: 0.38rem;
+    font-size: 0.45rem;
   }
 
   body.home-page .np-hero-price strong {
-    font-size: 2.1rem;
+    font-size: 2.45rem;
   }
 
   body.home-page .np-hero-price small {
-    padding-bottom: 3px;
-    font-size: 0.52rem;
+    padding-bottom: 5px;
+    font-size: 0.68rem;
   }
 
   body.home-page .np-hero-price p {
+    grid-column: 1 / -1;
     padding-left: 6px;
-    border-left: 1px solid rgba(255, 255, 255, 0.28);
-    font-size: 0.36rem;
+    border-left: 2px solid rgba(13, 199, 255, 0.5);
+    font-size: 0.43rem;
     line-height: 1.18;
   }
 
@@ -11764,6 +11789,10 @@ img {
     min-height: 126px;
     padding: 6px 5px;
     border-radius: 4px;
+  }
+
+  body.home-page .np-product-row .np-product-card:nth-child(7) {
+    display: none;
   }
 
   body.home-page .np-product-row img {
@@ -12037,7 +12066,7 @@ img {
   }
 
   body.home-page .footer-container {
-    grid-template-columns: 1.15fr repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0;
     padding: 8px 4px;
   }
@@ -12056,13 +12085,46 @@ img {
   }
 
   body.home-page .footer-brand {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+    padding: 0 0 7px;
+    border-bottom: 1px solid rgba(217, 242, 255, 0.16);
     border-left: 0;
-    text-align: left;
+    text-align: center;
   }
 
   body.home-page .footer-logo {
     width: 44px;
     max-height: 22px;
+  }
+
+  body.home-page .footer-brand > p:not(.ecuador-owned-badge),
+  body.home-page .footer-brand .socials {
+    display: none;
+  }
+
+  body.home-page .ecuador-owned-badge {
+    display: inline-flex !important;
+    width: auto;
+    max-width: none;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 4px;
+    margin: 0 !important;
+    font-size: 0.45rem !important;
+    letter-spacing: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  body.home-page .ecuador-owned-badge img {
+    width: 18px;
+    height: 12px;
+    flex: 0 0 auto;
   }
 
   body.home-page .footer h4 {
@@ -12098,6 +12160,39 @@ img {
 @media (max-width: 430px) {
   body.home-page .top-nav.site-main-header {
     grid-template-columns: 54px minmax(0, 1fr) auto;
+  }
+
+  body.home-page .np-member-hero {
+    grid-template-columns: minmax(0, 1fr) minmax(102px, 0.5fr);
+    gap: 7px 8px;
+    padding: 12px 8px 14px;
+  }
+
+  body.home-page .np-member-copy h1 {
+    font-size: clamp(1.68rem, 9.3vw, 2.35rem);
+  }
+
+  body.home-page .np-hero-lead {
+    max-width: 185px;
+    font-size: 0.54rem;
+  }
+
+  body.home-page .np-member-art img {
+    width: min(100%, 142px);
+  }
+
+  body.home-page .action-gradient,
+  body.home-page .outline-button {
+    min-height: 32px;
+    font-size: 0.48rem;
+  }
+
+  body.home-page .np-hero-price strong {
+    font-size: 2.05rem;
+  }
+
+  body.home-page .np-member-perks span {
+    font-size: 0.36rem;
   }
 
   body.home-page .top-nav .menu a {
