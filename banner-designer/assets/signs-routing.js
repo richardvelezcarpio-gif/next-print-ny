@@ -1,6 +1,86 @@
 (() => {
   const designerPath = "/banner-designer/designer";
   const productOptions = ["Banner", "Vinyl Banner", "Retractable Banner", "Yard Sign"];
+  const landingProductTargets = {
+    "vinyl banners": printProductEditorUrl({
+      product: "Banner 24x36",
+      quantity: "1",
+      price: "23.95",
+      memberPrice: "18.95",
+      details: [
+        "Product: Banner 24x36",
+        "Size: 24 x 36",
+        "Quantity: 1",
+        "Front Side: Full Color",
+        "Back Side: No Printing",
+        "Material: 13 oz. Standard Vinyl",
+        "Treatment: None",
+      ],
+    }),
+    "retractable banners": printProductEditorUrl({
+      product: "Retractable Banner 22x80",
+      quantity: "1",
+      price: "149.95",
+      memberPrice: "120.00",
+      details: [
+        "Product: Retractable Banner 22x80",
+        "Size: 22 x 80",
+        "Quantity: 1",
+        "Display Options: Stand + 1 Banner",
+        "Banner Stand: Standard Retractable",
+        "Front Side: Full Color",
+        "Back Side: No Printing",
+        "Material: 13 oz. Smooth Blockout Vinyl",
+        "Panels: 1 Panel",
+      ],
+    }),
+    "step & repeat": printProductEditorUrl({
+      product: "Backdrop 60x96",
+      quantity: "1",
+      price: "134.95",
+      memberPrice: "107.99",
+      details: [
+        "Product: Backdrop 60x96",
+        "Size: 60 x 96",
+        "Quantity: 1",
+        "Front Side: Full Color",
+        "Back Side: No Printing",
+        "Material: Backdrop Material",
+        "Treatment: None",
+      ],
+    }),
+    "window decals": printProductUploadUrl({
+      product: "Stickers 4x4",
+      quantity: "100",
+      price: "65.00",
+      memberPrice: "53.52",
+      details: [
+        "Product: Stickers 4x4",
+        "Size: 4 x 4",
+        "Quantity: 100",
+        "Front Side: Full Color",
+        "Back Side: No Printing",
+        "Material: Premium Sticker",
+        "Coating: Full Color",
+      ],
+    }),
+  };
+  const heroStartTarget = landingProductTargets["vinyl banners"];
+  const heroUploadTarget = printProductUploadUrl({
+    product: "Banner 24x36",
+    quantity: "1",
+    price: "23.95",
+    memberPrice: "18.95",
+    details: [
+      "Product: Banner 24x36",
+      "Size: 24 x 36",
+      "Quantity: 1",
+      "Front Side: Full Color",
+      "Back Side: No Printing",
+      "Material: 13 oz. Standard Vinyl",
+      "Treatment: None",
+    ],
+  });
   const defaultsByProduct = {
     Banner: { width: "4", height: "4" },
     "Vinyl Banner": { width: "4", height: "4" },
@@ -9,6 +89,25 @@
   };
   let appliedInitialRoute = false;
   let pendingFrame = 0;
+
+  function printProductEditorUrl(config) {
+    return printProductUrl("/print-products-editor.html", config);
+  }
+
+  function printProductUploadUrl(config) {
+    return printProductUrl("/print-products-upload.html", config);
+  }
+
+  function printProductUrl(path, config) {
+    const params = new URLSearchParams({
+      product: config.product,
+      quantity: config.quantity,
+      price: config.price,
+      memberPrice: config.memberPrice,
+      details: config.details.join("\n"),
+    });
+    return `${path}?${params.toString()}`;
+  }
 
   function isDesignerRoute() {
     return window.location.pathname.replace(/\/+$/, "") === designerPath;
@@ -124,6 +223,58 @@
     });
   }
 
+  function routeLandingButtons() {
+    document.querySelectorAll(".product-card").forEach((card) => {
+      const title = card.querySelector("h3")?.textContent.trim().toLowerCase();
+      const target = landingProductTargets[title];
+      const link = card.querySelector("a");
+
+      if (!target || !link) return;
+      link.href = target;
+      link.setAttribute("data-next-print-route", "new-print-product-flow");
+    });
+
+    const heroLinks = document.querySelectorAll(".hero-buttons a");
+    const startLink = heroLinks[0];
+    const uploadLink = heroLinks[1];
+
+    if (startLink) {
+      startLink.href = heroStartTarget;
+      startLink.setAttribute("data-next-print-route", "new-print-product-flow");
+    }
+
+    if (uploadLink) {
+      uploadLink.href = heroUploadTarget;
+      uploadLink.setAttribute("data-next-print-route", "new-print-product-flow");
+    }
+  }
+
+  function targetForLandingClick(event) {
+    const productCard = event.target.closest?.(".product-card");
+    if (productCard) {
+      const title = productCard.querySelector("h3")?.textContent.trim().toLowerCase();
+      return landingProductTargets[title] || "";
+    }
+
+    const heroLink = event.target.closest?.(".hero-buttons a");
+    if (!heroLink) return "";
+
+    const text = heroLink.textContent.trim().toLowerCase();
+    if (text.includes("upload")) return heroUploadTarget;
+    if (text.includes("start")) return heroStartTarget;
+    return "";
+  }
+
+  function handleLandingClick(event) {
+    const target = targetForLandingClick(event);
+    if (!target) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation?.();
+    window.location.href = target;
+  }
+
   function fitDesignerCanvas() {
     const wrapper = document.querySelector(".canvas-wrapper");
     const canvas = document.querySelector(".banner-canvas");
@@ -164,10 +315,12 @@
     pendingFrame = window.requestAnimationFrame(() => {
       syncDesignerRoute();
       fixFooterLinks();
+      routeLandingButtons();
       fitDesignerCanvas();
     });
   }
 
+  document.addEventListener("click", handleLandingClick, true);
   document.addEventListener("DOMContentLoaded", scheduleSync);
   window.addEventListener("resize", scheduleSync);
   new MutationObserver(scheduleSync).observe(document.documentElement, {
