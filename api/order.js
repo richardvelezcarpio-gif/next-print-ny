@@ -86,7 +86,7 @@ async function sendAdminOrderEmail(order, orderNumber, apiKey) {
     <p><strong>Teléfono:</strong> ${escapeHtml(order.phone)}</p>
     <p><strong>Email:</strong> ${escapeHtml(order.email || "No incluido")}</p>
     <p><strong>Entrega:</strong> ${escapeHtml(fulfillmentLabel(order, false))}</p>
-    ${order.fulfillment === "shipping" ? `<p><strong>Dirección:</strong> ${escapeHtml(formatAddress(order.address))}</p>` : ""}
+    ${requiresShippingAddress(order.fulfillment) ? `<p><strong>Dirección:</strong> ${escapeHtml(formatAddress(order.address))}</p>` : ""}
     <p><strong>Idioma:</strong> ${selectedLanguage}</p>
     <p><strong>Fecha del pedido:</strong> ${escapeHtml(order.orderDate || "No incluida")}</p>
     <p><strong>Fecha de entrega:</strong> ${escapeHtml(order.dueDate || "No incluida")}</p>
@@ -136,7 +136,7 @@ async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
       <p><strong>Customer:</strong> ${escapeHtml(order.name)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(order.phone)}</p>
       <p><strong>${isEnglish ? "Delivery option" : "Opción de entrega"}:</strong> ${escapeHtml(fulfillmentLabel(order, isEnglish))}</p>
-      ${order.fulfillment === "shipping" ? `<p><strong>${isEnglish ? "Shipping address" : "Dirección de envío"}:</strong> ${escapeHtml(formatAddress(order.address))}</p>` : ""}
+      ${requiresShippingAddress(order.fulfillment) ? `<p><strong>${isEnglish ? "Shipping address" : "Dirección de envío"}:</strong> ${escapeHtml(formatAddress(order.address))}</p>` : ""}
       <p><strong>${isEnglish ? "Order date" : "Fecha del pedido"}:</strong> ${escapeHtml(order.orderDate || (isEnglish ? "Not included" : "No incluida"))}</p>
       <p><strong>${isEnglish ? "Delivery date" : "Fecha de entrega"}:</strong> ${escapeHtml(order.dueDate || (isEnglish ? "Not included" : "No incluida"))}</p>
       <p><a href="${escapeHtml(invoiceUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Open invoice / receipt" : "Abrir invoice / recibo"}</a></p>
@@ -196,7 +196,7 @@ async function saveOrderRecord(order, orderNumber) {
     order.quantity ? `Quantity: ${order.quantity}` : "",
     `Details: ${order.details}`,
     order.fulfillment ? `Fulfillment: ${fulfillmentLabel(order)}` : "",
-    order.fulfillment === "shipping" ? `Shipping address: ${formatAddress(order.address)}` : "",
+    requiresShippingAddress(order.fulfillment) ? `Shipping address: ${formatAddress(order.address)}` : "",
     order.orderDate ? `Order date: ${order.orderDate}` : "",
     order.dueDate ? `Delivery date: ${order.dueDate}` : "",
     order.budget ? `Price: ${order.budget}` : "",
@@ -263,7 +263,7 @@ function sanitizeOrder(input) {
     name: clean(input.name, 120),
     phone: clean(input.phone, 80),
     email: clean(input.email, 120),
-    fulfillment: input.fulfillment === "pickup" ? "pickup" : input.fulfillment === "shipping" ? "shipping" : "",
+    fulfillment: normalizeFulfillment(input.fulfillment),
     address: sanitizeAddress(input.address || {}),
     files,
   };
@@ -280,9 +280,23 @@ function sanitizeAddress(input) {
 }
 
 function fulfillmentLabel(order, isEnglish = true) {
+  if (order.fulfillment === "standard") return isEnglish ? "Standard Shipping" : "Envío estándar";
+  if (order.fulfillment === "express") return isEnglish ? "Express Shipping" : "Envío express";
   if (order.fulfillment === "pickup") return isEnglish ? "Pickup store" : "Recogida en tienda";
   if (order.fulfillment === "shipping") return isEnglish ? "Shipping" : "Envío";
   return isEnglish ? "Not selected" : "No seleccionado";
+}
+
+function normalizeFulfillment(value) {
+  const fulfillment = String(value || "").toLowerCase();
+  if (fulfillment === "standard" || fulfillment === "express" || fulfillment === "pickup" || fulfillment === "shipping") {
+    return fulfillment;
+  }
+  return "";
+}
+
+function requiresShippingAddress(fulfillment) {
+  return fulfillment === "standard" || fulfillment === "express" || fulfillment === "shipping";
 }
 
 function formatAddress(address = {}) {
