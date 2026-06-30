@@ -14568,11 +14568,14 @@ img {
 @media (max-width: 760px) {
   body.printing-page .reseller-strip {
     display: flex;
-    min-height: 58px;
+    height: clamp(44px, 8vw, 58px);
+    min-height: 0;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: nowrap;
     gap: 12px;
     padding: 7px clamp(12px, 3.2vw, 32px);
+    overflow: hidden;
     text-align: left;
     background: linear-gradient(90deg, #061b43 0%, #07599e 58%, #08cbd5 100%);
   }
@@ -14584,12 +14587,16 @@ img {
     align-items: center;
     gap: 10px;
     justify-items: normal;
+    overflow: hidden;
   }
 
   body.printing-page .reseller-strip strong {
-    flex: 0 0 auto;
+    min-width: 0;
+    flex: 0 1 auto;
+    overflow: hidden;
     font-size: clamp(0.62rem, 2.65vw, 0.98rem);
     line-height: 1;
+    text-overflow: ellipsis;
     white-space: nowrap;
   }
 
@@ -14604,8 +14611,8 @@ img {
 
   body.printing-page .reseller-strip a {
     width: auto;
-    min-height: 39px;
-    flex: 0 0 clamp(116px, 20vw, 240px);
+    min-height: clamp(30px, 5.6vw, 39px);
+    flex: 0 0 clamp(88px, 20vw, 240px);
     border-radius: 7px;
     font-size: clamp(0.48rem, 1.95vw, 0.78rem);
   }
