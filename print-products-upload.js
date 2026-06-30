@@ -158,6 +158,7 @@ function renderOptionsForm() {
 }
 
 function optionRowsFor(displayProduct) {
+  const largeFormatGroup = selectedProduct ? largeFormatGroupFor(selectedProduct.group) : "";
   const rows = [
     {
       key: "Product",
@@ -177,16 +178,57 @@ function optionRowsFor(displayProduct) {
       value: String(currentQuantity),
       options: selectedProduct?.quantities?.map(String),
     },
-    { key: "Rounded Corners", label: "Rounded Corners", value: currentDetailsMap["Rounded Corners"] || "No", options: selectedProduct?.roundedCorners },
-    { key: "Printed Side", label: "Printed Side", value: currentDetailsMap["Printed Side"] || currentDetailsMap.Sides || currentDetailsMap["Front Side"] || "Front and Back", options: selectedProduct?.printedSides },
-    { key: "Paper Stock", label: "Paper Stock", value: currentDetailsMap["Paper Stock"] || currentDetailsMap["Paper Type"] || selectedProduct?.paperStock, options: selectedProduct?.paperStocks },
-    { key: "Coating", label: "Coating", value: currentDetailsMap.Coating || selectedProduct?.coating, options: selectedProduct?.coatings },
-    { key: "Folding Option", label: "Folding Option", value: currentDetailsMap["Folding Option"], options: selectedProduct?.foldingOptions },
+  ];
+
+  if (largeFormatGroup) {
+    rows.push(...largeFormatOptionRows(largeFormatGroup));
+  } else {
+    rows.push(
+      { key: "Rounded Corners", label: "Rounded Corners", value: currentDetailsMap["Rounded Corners"] || "No", options: selectedProduct?.roundedCorners },
+      { key: "Printed Side", label: "Printed Side", value: currentDetailsMap["Printed Side"] || currentDetailsMap.Sides || currentDetailsMap["Front Side"] || "Front and Back", options: selectedProduct?.printedSides },
+      { key: "Paper Stock", label: "Paper Stock", value: currentDetailsMap["Paper Stock"] || currentDetailsMap["Paper Type"] || selectedProduct?.paperStock, options: selectedProduct?.paperStocks },
+      { key: "Coating", label: "Coating", value: currentDetailsMap.Coating || selectedProduct?.coating, options: selectedProduct?.coatings },
+      { key: "Folding Option", label: "Folding Option", value: currentDetailsMap["Folding Option"], options: selectedProduct?.foldingOptions },
+    );
+  }
+
+  rows.push(
     { key: "Regular customer price", label: "Regular Customer Price", value: money(currentRetailPrice) },
     { key: "Member price", label: "Member Price", value: money(currentMemberPrice || currentRetailPrice) },
     { key: "Membership savings", label: "Membership Savings", value: money(currentSavings) },
-  ];
+  );
+
   return rows.filter((row) => row.value || row.options?.length);
+}
+
+function largeFormatOptionRows(group, map = currentDetailsMap) {
+  if (group === "retractable") {
+    return [
+      { key: "Display Options", label: "Display Options", value: map["Display Options"] || "Stand + 1 Banner", options: ["Stand + 1 Banner"] },
+      { key: "Banner Stand", label: "Banner Stand", value: map["Banner Stand"] || "Standard Retractable", options: ["Standard Retractable"] },
+      { key: "Front Side", label: "Front Side", value: map["Front Side"] || "Full Color", options: ["Full Color"] },
+      { key: "Back Side", label: "Back Side", value: map["Back Side"] || "No Printing", options: ["No Printing"] },
+      { key: "Material", label: "Material", value: map.Material || "13 oz. Smooth Blockout Vinyl", options: ["13 oz. Smooth Blockout Vinyl"] },
+      { key: "Panels", label: "Panels", value: map.Panels || "1 Panel", options: ["1 Panel"] },
+    ];
+  }
+
+  if (group === "yardSigns") {
+    return [
+      { key: "Front Side", label: "Front Side", value: map["Front Side"] || "Full Color", options: ["Full Color"] },
+      { key: "Back Side", label: "Back Side", value: map["Back Side"] || "No Printing", options: ["No Printing", "Full Color"] },
+      { key: "Material", label: "Material", value: map.Material || "4 mm Coroplast Board", options: ["4 mm Coroplast Board"] },
+      { key: "H-Wire", label: "H-Wire", value: map["H-Wire"] || 'XL 9 Gauge H-Wire (24" tall x 10" wide)', options: ['XL 9 Gauge H-Wire (24" tall x 10" wide)'] },
+      { key: "Grommets", label: "Grommets", value: map.Grommets || "None", options: ["None"] },
+    ];
+  }
+
+  return [
+    { key: "Front Side", label: "Front Side", value: map["Front Side"] || "Full Color", options: ["Full Color"] },
+    { key: "Back Side", label: "Back Side", value: map["Back Side"] || "No Printing", options: ["No Printing"] },
+    { key: "Material", label: "Material", value: map.Material || (group === "backdrops" ? "Backdrop Material" : "13 oz. Standard Vinyl"), options: [group === "backdrops" ? "Backdrop Material" : "13 oz. Standard Vinyl"] },
+    { key: "Treatment", label: "Treatment", value: map.Treatment || "None", options: ["None"] },
+  ];
 }
 
 function optionRowHtml(row) {
@@ -375,6 +417,15 @@ function serializeCurrentDetails() {
 
 function defaultDetailsFor(item) {
   if (!item) return {};
+  const largeFormatGroup = largeFormatGroupFor(item.group);
+  if (largeFormatGroup) {
+    const details = { Size: item.size };
+    largeFormatOptionRows(largeFormatGroup, {}).forEach((row) => {
+      details[row.key] = row.value || row.options?.[0] || "";
+    });
+    return details;
+  }
+
   return {
     Size: item.size,
     "Rounded Corners": item.roundedCorners?.[0] || "",
@@ -383,6 +434,14 @@ function defaultDetailsFor(item) {
     Coating: item.coating || item.coatings?.[0] || "",
     "Folding Option": item.foldingOptions?.[0] || "",
   };
+}
+
+function largeFormatGroupFor(group) {
+  if (group === "Banners") return "banners";
+  if (group === "Backdrops") return "backdrops";
+  if (group === "Retractable Banners") return "retractable";
+  if (group === "Yard Signs") return "yardSigns";
+  return "";
 }
 
 function normalizeOptions(options) {
@@ -436,6 +495,25 @@ function buildPriceCatalog() {
     ["Stickers 4x4", "Stickers", "4 x 4", [[100, 65, 53.52], [250, 115, 94.72], [500, 123, 99.88], [1000, 133, 109.86], [2500, 207, 169.9], [5000, 322, 261.56], [10000, 542, 435.61]], ["stickers", "4x4"], "Premium Sticker", "Full Color"],
     ["Menus 8.5x11", "Menus", "8.5 x 11", [[100, 160, 130.21], [250, 200, 147.74], [500, 280, 164.29], [1000, 370, 220.1], [2500, 550, 335.76], [5000, 596, 380.03], [10000, 890, 665.32]], ["menus", "8.5x11"], "14 pt. Cardstock", "High Gloss"],
     ["Menus 11x17", "Menus", "11 x 17", [[100, 333, 268.39], [250, 453, 363.72], [500, 606, 485.55], [1000, 696, 556.97], [2500, 904, 720.19], [5000, 1096, 871.89], [10000, 1622, 1290.45]], ["menus", "11x17"], "14 pt. Cardstock", "High Gloss"],
+    ["Banner 24x36", "Banners", "24 x 36", [[1, 23.95, 18.95]], ["banner", "banners", "24x36", "24 x 36"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 48x24", "Banners", "48 x 24", [[1, 29.95, 23.5]], ["banner", "banners", "48x24", "48 x 24"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 60x36", "Banners", "60 x 36", [[1, 45.95, 36.5]], ["banner", "banners", "60x36", "60 x 36"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 72x24", "Banners", "72 x 24", [[1, 55.95, 44.99]], ["banner", "banners", "72x24", "72 x 24"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 72x36", "Banners", "72 x 36", [[1, 57.95, 45.99]], ["banner", "banners", "72x36", "72 x 36"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 72x48", "Banners", "72 x 48", [[1, 58.95, 47.19]], ["banner", "banners", "72x48", "72 x 48"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 96x24", "Banners", "96 x 24", [[1, 60.95, 48.95]], ["banner", "banners", "96x24", "96 x 24"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 96x36", "Banners", "96 x 36", [[1, 73.95, 58.99]], ["banner", "banners", "96x36", "96 x 36"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 96x48", "Banners", "96 x 48", [[1, 95.95, 76.99]], ["banner", "banners", "96x48", "96 x 48"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 120x36", "Banners", "120 x 36", [[1, 103.95, 82.99]], ["banner", "banners", "120x36", "120 x 36"], "13 oz. Standard Vinyl", "None"],
+    ["Banner 120x60", "Banners", "120 x 60", [[1, 143.95, 114.99]], ["banner", "banners", "120x60", "120 x 60"], "13 oz. Standard Vinyl", "None"],
+    ["Retractable Banner 22x80", "Retractable Banners", "22 x 80", [[1, 149.95, 120]], ["retractable", "retractable banner", "22x80", "22 x 80"], "13 oz. Smooth Blockout Vinyl", "Stand + 1 Banner"],
+    ["Retractable Banner 33x80", "Retractable Banners", "33 x 80", [[1, 189.95, 152]], ["retractable", "retractable banner", "33x80", "33 x 80"], "13 oz. Smooth Blockout Vinyl", "Stand + 1 Banner"],
+    ["Backdrop 60x96", "Backdrops", "60 x 96", [[1, 134.95, 107.99]], ["backdrop", "backdrops", "60x96", "60 x 96"], "Backdrop Material", "None"],
+    ["Backdrop 96x96", "Backdrops", "96 x 96", [[1, 207.95, 165.99]], ["backdrop", "backdrops", "96x96", "96 x 96"], "Backdrop Material", "None"],
+    ["Backdrop 120x96", "Backdrops", "120 x 96", [[1, 255.95, 204.99]], ["backdrop", "backdrops", "120x96", "120 x 96"], "Backdrop Material", "None"],
+    ["Backdrop 144x96", "Backdrops", "144 x 96", [[1, 304.95, 243.5]], ["backdrop", "backdrops", "144x96", "144 x 96"], "Backdrop Material", "None"],
+    ["Backdrop 240x96", "Backdrops", "240 x 96", [[1, 499.95, 399.49]], ["backdrop", "backdrops", "240x96", "240 x 96"], "Backdrop Material", "None"],
+    ["Yard Sign", "Yard Signs", "18 x 24", [[1, 33.95, 26.99], [5, 100.95, 80.99], [10, 180.95, 144.99], [15, 265.95, 212.99], [20, 353.95, 282.99], [30, 509.95, 407.99], [40, 677.95, 541.99], [50, 815.95, 652.99]], ["yard sign", "yard signs", "18x24", "18 x 24"], "4 mm Coroplast Board", "Full Color"],
     ["Door Hangers 4x11", "Door Hangers", "4 x 11", [[100, 133, 110.9], [250, 174, 144.36], [500, 201, 166.35], [1000, 223, 184.16], [2500, 451, 367.43], [5000, 508, 412.48], [10000, 1007, 813.31]], ["door hangers", "4x11"], "14 pt. Cardstock", "High Gloss"],
     ["Door Hangers 3.5x8.5", "Door Hangers", "3.5 x 8.5", [[100, 127, 83.64], [250, 166, 107.73], [500, 192, 123.4], [1000, 213, 134.96], [2500, 428, 269.86], [5000, 483, 301.98], [10000, 958, 594.31]], ["door hangers", "3.5x8.5"], "14 pt. Cardstock", "High Gloss"],
     ["Poster 11x17", "Posters", "11 x 17", [[10, 55, 47.57], [20, 99, 83.11], [30, 141, 118.68], [40, 184, 154.2], [50, 227, 189.75]], ["poster", "11x17"], "Premium Poster", "Full Color"],

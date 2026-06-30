@@ -124,6 +124,8 @@ const productCatalog = [
   },
 ];
 
+productCatalog.push(...largeFormatEditorProducts());
+
 const params = new URLSearchParams(window.location.search);
 if (params.get("customBanner") === "1") {
   const width = clamp(Number(params.get("width") || 2), 1, 100);
@@ -1425,10 +1427,6 @@ function getEditorRedirectTarget() {
     return `print-products-upload.html?${params.toString()}`;
   }
 
-  if (/retractable/.test(requestedProduct) || /yard\s*signs?/.test(requestedProduct) || /backdrops?/.test(requestedProduct) || /\bbanners?\b/.test(requestedProduct)) {
-    return bannerDesignerRedirect(requestedProduct);
-  }
-
   if (/t-?\s*shirts?/.test(requestedProduct) || /gildan/.test(requestedProduct)) {
     return "tshirt.html";
   }
@@ -1436,29 +1434,105 @@ function getEditorRedirectTarget() {
   return "";
 }
 
-function bannerDesignerRedirect(requestedProduct) {
-  const normalized = String(requestedProduct || "").toLowerCase();
-  const params = new URLSearchParams();
+function largeFormatEditorProducts() {
+  const bannerRows = [
+    ["Banner 24x36", "24 x 36", 24, 36, 23.95, 18.95],
+    ["Banner 48x24", "48 x 24", 48, 24, 29.95, 23.5],
+    ["Banner 60x36", "60 x 36", 60, 36, 45.95, 36.5],
+    ["Banner 72x24", "72 x 24", 72, 24, 55.95, 44.99],
+    ["Banner 72x36", "72 x 36", 72, 36, 57.95, 45.99],
+    ["Banner 72x48", "72 x 48", 72, 48, 58.95, 47.19],
+    ["Banner 96x24", "96 x 24", 96, 24, 60.95, 48.95],
+    ["Banner 96x36", "96 x 36", 96, 36, 73.95, 58.99],
+    ["Banner 96x48", "96 x 48", 96, 48, 95.95, 76.99],
+    ["Banner 120x36", "120 x 36", 120, 36, 103.95, 82.99],
+    ["Banner 120x60", "120 x 60", 120, 60, 143.95, 114.99],
+  ].map(([product, sizeLabel, width, height, price, memberPrice]) => largeFormatProduct({
+    product,
+    sizeLabel,
+    width,
+    height,
+    price,
+    memberPrice,
+    category: "banners",
+    material: "13 oz. Standard Vinyl",
+    image: "assets/printing-premium-banners.png",
+  }));
 
-  if (/retractable/.test(normalized)) {
-    params.set("product", "Retractable Banner");
-    params.set("width", "3");
-    params.set("height", "7");
-  } else if (/backdrops?/.test(normalized)) {
-    params.set("product", "Backdrop");
-    params.set("width", "5");
-    params.set("height", "8");
-  } else if (/yard\s*signs?/.test(normalized)) {
-    params.set("product", "Yard Sign");
-    params.set("width", "1.5");
-    params.set("height", "2");
-  } else {
-    params.set("product", "Banner");
-    params.set("width", "4");
-    params.set("height", "4");
-  }
+  const retractableRows = [
+    ["Retractable Banner 22x80", "22 x 80", 22, 80, 149.95, 120],
+    ["Retractable Banner 33x80", "33 x 80", 33, 80, 189.95, 152],
+  ].map(([product, sizeLabel, width, height, price, memberPrice]) => largeFormatProduct({
+    product,
+    sizeLabel,
+    width,
+    height,
+    price,
+    memberPrice,
+    category: "retractable",
+    material: "13 oz. Smooth Blockout Vinyl",
+    treatment: "Stand + 1 Banner",
+    image: "assets/printing-premium-retractables.png",
+  }));
 
-  return `banner-designer/designer?${params.toString()}`;
+  const backdropRows = [
+    ["Backdrop 60x96", "60 x 96", 60, 96, 134.95, 107.99],
+    ["Backdrop 96x96", "96 x 96", 96, 96, 207.95, 165.99],
+    ["Backdrop 120x96", "120 x 96", 120, 96, 255.95, 204.99],
+    ["Backdrop 144x96", "144 x 96", 144, 96, 304.95, 243.5],
+    ["Backdrop 240x96", "240 x 96", 240, 96, 499.95, 399.49],
+  ].map(([product, sizeLabel, width, height, price, memberPrice]) => largeFormatProduct({
+    product,
+    sizeLabel,
+    width,
+    height,
+    price,
+    memberPrice,
+    category: "backdrops",
+    material: "Backdrop Material",
+    image: "assets/printing-premium-windowgraphics.png",
+  }));
+
+  const yardSign = largeFormatProduct({
+    product: "Yard Sign",
+    sizeLabel: "18 x 24",
+    width: 18,
+    height: 24,
+    price: 33.95,
+    memberPrice: 26.99,
+    category: "yard-signs",
+    material: "4 mm Coroplast Board",
+    image: "assets/catalog-yard-signs.png",
+  });
+  yardSign.prices = [[1, 33.95], [5, 100.95], [10, 180.95], [15, 265.95], [20, 353.95], [30, 509.95], [40, 677.95], [50, 815.95]];
+  yardSign.memberPrices = [[1, 26.99], [5, 80.99], [10, 144.99], [15, 212.99], [20, 282.99], [30, 407.99], [40, 541.99], [50, 652.99]];
+
+  return [...bannerRows, ...retractableRows, ...backdropRows, yardSign];
+}
+
+function largeFormatProduct({ product, sizeLabel, width, height, price, memberPrice, category, material, treatment = "None", image }) {
+  return {
+    id: slugifyProductId(product),
+    product,
+    label: product,
+    category,
+    sizeLabel,
+    trimLabel: "Large format print",
+    width,
+    height,
+    memberPrices: [[1, memberPrice]],
+    prices: [[1, price]],
+    image,
+    material,
+    treatment,
+  };
+}
+
+function slugifyProductId(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function findInitialProduct() {
@@ -1526,12 +1600,12 @@ function renderOptionFields() {
   if (!optionFields) return;
   const isCard = currentProduct.category === "cards";
   const isSticker = currentProduct.category === "stickers";
-  const isBanner = currentProduct.category === "banners";
+  const isLargeFormat = ["banners", "backdrops", "retractable", "yard-signs"].includes(currentProduct.category);
   optionFields.innerHTML = `
     ${isCard ? selectField("roundedCorners", "Rounded Corners", ["No", "Yes"], params.get("roundedCorners") || "No") : ""}
-    ${selectField("printedSide", "Printed Side", isBanner ? ["Front Only"] : ["Front and Back", "Front Only"], params.get("printedSide") || (isSticker || isBanner ? "Front Only" : "Front and Back"))}
-    ${selectField("paperType", isBanner ? "Material" : isSticker ? "Material" : "Paper Type", isBanner ? [currentProduct.material || "13 oz. Standard Vinyl"] : isSticker ? ["High Gloss White Outdoor Vinyl"] : ["14 pt. Cardstock", "100 lb. Gloss Text"], isBanner ? (currentProduct.material || "13 oz. Standard Vinyl") : params.get("paperType") || (isSticker ? "High Gloss White Outdoor Vinyl" : "14 pt. Cardstock"))}
-    ${selectField("coating", isBanner ? "Treatment" : "Coating", isBanner ? [currentProduct.treatment || "None"] : isSticker ? ["High Gloss"] : ["High Gloss", "Matte"], isBanner ? (currentProduct.treatment || "None") : params.get("coating") || "High Gloss")}
+    ${selectField("printedSide", "Printed Side", isLargeFormat ? ["Front Only"] : ["Front and Back", "Front Only"], params.get("printedSide") || (isSticker || isLargeFormat ? "Front Only" : "Front and Back"))}
+    ${selectField("paperType", isLargeFormat ? "Material" : isSticker ? "Material" : "Paper Type", isLargeFormat ? [currentProduct.material || "13 oz. Standard Vinyl"] : isSticker ? ["High Gloss White Outdoor Vinyl"] : ["14 pt. Cardstock", "100 lb. Gloss Text"], isLargeFormat ? (currentProduct.material || "13 oz. Standard Vinyl") : params.get("paperType") || (isSticker ? "High Gloss White Outdoor Vinyl" : "14 pt. Cardstock"))}
+    ${selectField("coating", isLargeFormat ? "Treatment" : "Coating", isLargeFormat ? [currentProduct.treatment || "None"] : isSticker ? ["High Gloss"] : ["High Gloss", "Matte"], isLargeFormat ? (currentProduct.treatment || "None") : params.get("coating") || "High Gloss")}
   `;
 }
 
@@ -2452,7 +2526,15 @@ function updateCompactSelection(price) {
   if (selectionCompact) selectionCompact.textContent = summary;
   if (studioOrder) studioOrder.textContent = summary;
   if (changeSelectionLink) {
-    const groupName = { cards: "Business Cards", flyers: "Flyers", stickers: "Stickers" }[currentProduct.category] || "Business Cards";
+    const groupName = {
+      cards: "Business Cards",
+      flyers: "Flyers",
+      stickers: "Stickers",
+      banners: "Banners",
+      backdrops: "Backdrops",
+      retractable: "Retractable Banners",
+      "yard-signs": "Yard Signs",
+    }[currentProduct.category] || "Business Cards";
     changeSelectionLink.href = `printing.html#${encodeURIComponent(groupName)}`;
     if (studioBack) studioBack.href = changeSelectionLink.href;
   }
