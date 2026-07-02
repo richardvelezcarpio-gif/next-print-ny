@@ -15675,3 +15675,695 @@ body.print-product-upload-premium-page {
     padding: 10px 8px;
   }
 }
+
+/* Mobile-only visual cleanup - 2026-07-02 */
+@media (max-width: 760px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .footer {
+    width: 100vw !important;
+    margin-right: calc(50% - 50vw) !important;
+    margin-left: calc(50% - 50vw) !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+  }
+
+  .footer-container {
+    display: grid !important;
+    grid-template-columns: 1.12fr 0.9fr 1fr 0.9fr 1fr !important;
+    gap: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 10px 6px 8px !important;
+    align-items: start !important;
+    box-sizing: border-box;
+  }
+
+  .footer-brand,
+  .footer-col,
+  .footer-col:nth-child(2) {
+    display: flex !important;
+  }
+
+  .footer-col,
+  .footer-col:first-child,
+  .footer-col:nth-child(2) {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    gap: 4px !important;
+    align-items: center !important;
+    padding: 0 4px !important;
+    border-top: 0 !important;
+    border-right: 0 !important;
+    border-left: 1px solid rgba(217, 242, 255, 0.18) !important;
+    text-align: center !important;
+  }
+
+  .footer-brand {
+    display: flex !important;
+    grid-column: auto !important;
+    flex-direction: column !important;
+    border-left: 0 !important;
+  }
+
+  .footer-logo {
+    width: 42px !important;
+    max-height: 22px !important;
+  }
+
+  .footer-brand > p:not(.ecuador-owned-badge) {
+    display: block !important;
+    margin: 0 !important;
+    font-size: 0.25rem !important;
+    line-height: 1.14 !important;
+  }
+
+  .ecuador-owned-badge {
+    display: inline-flex !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    margin: 0 !important;
+    font-size: 0.24rem !important;
+    line-height: 1.05 !important;
+    white-space: normal !important;
+  }
+
+  .ecuador-owned-badge img {
+    width: 12px !important;
+    height: 8px !important;
+    flex: 0 0 auto !important;
+  }
+
+  .footer .socials {
+    display: flex !important;
+    gap: 3px !important;
+    justify-content: center !important;
+    margin-top: 1px !important;
+  }
+
+  .footer .socials a {
+    width: 12px !important;
+    height: 12px !important;
+    min-height: 12px !important;
+    font-size: 0.24rem !important;
+  }
+
+  .footer h4 {
+    margin: 0 0 3px !important;
+    font-size: 0.34rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .footer p,
+  .footer a {
+    margin: 0 !important;
+    font-size: 0.27rem !important;
+    line-height: 1.12 !important;
+    overflow-wrap: anywhere !important;
+    word-break: normal !important;
+    white-space: normal !important;
+  }
+
+  .footer-bottom {
+    margin: 0 !important;
+    padding: 5px 4px 6px !important;
+    font-size: 0.28rem !important;
+    line-height: 1.1 !important;
+  }
+
+  body.printing-page .ecuador-card {
+    display: none !important;
+  }
+
+  body.printing-page .printing-reviews {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    padding: 0 8px 10px !important;
+  }
+
+  body.printing-page .printing-reviews article {
+    min-height: 104px !important;
+    padding: 10px 9px !important;
+    border-radius: 8px !important;
+  }
+
+  body.printing-page .printing-reviews h2 {
+    font-size: 0.68rem !important;
+    line-height: 1.12 !important;
+  }
+
+  body.printing-page .printing-reviews p,
+  body.printing-page .printing-reviews strong,
+  body.printing-page .printing-reviews span {
+    font-size: 0.52rem !important;
+    line-height: 1.18 !important;
+  }
+
+  body.printing-page .review-score strong {
+    font-size: 1.5rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-premium-page {
+    padding: 8px 0 18px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-breadcrumb {
+    gap: 4px !important;
+    margin: 0 0 5px !important;
+    padding: 0 8px !important;
+    font-size: 0.48rem !important;
+    line-height: 1.1 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-breadcrumb span::before,
+  body.print-product-upload-premium-page .print-upload-breadcrumb strong::before {
+    margin-right: 4px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-progress {
+    justify-content: space-between !important;
+    gap: 4px !important;
+    margin: 0 !important;
+    padding: 0 8px 7px !important;
+    overflow: visible !important;
+    font-size: 0.42rem !important;
+    line-height: 1.1 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-progress span {
+    flex: 1 1 0 !important;
+    gap: 3px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-progress span::before {
+    width: 13px !important;
+    height: 13px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-hero-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 7px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-product-panel {
+    order: 1 !important;
+    gap: 8px !important;
+    padding: 10px 10px 8px !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-gallery-card {
+    order: 2 !important;
+    gap: 7px !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-kicker,
+  body.print-product-upload-premium-page .print-upload-heading span {
+    font-size: 0.54rem !important;
+    line-height: 1.1 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-product-panel h1 {
+    font-size: clamp(1.8rem, 10vw, 2.45rem) !important;
+    line-height: 0.98 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-product-panel > p:not(.print-upload-kicker) {
+    font-size: 0.63rem !important;
+    line-height: 1.22 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-rating {
+    font-size: 0.58rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-feature-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    gap: 3px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-feature-row div {
+    gap: 2px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-feature-row span {
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 0.48rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-feature-row strong {
+    font-size: 0.44rem !important;
+    line-height: 1.05 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-feature-row small {
+    font-size: 0.37rem !important;
+    line-height: 1.05 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-price-compare {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-price-compare div {
+    gap: 3px !important;
+    padding: 8px 4px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-price-compare div + div {
+    border-top: 0 !important;
+    border-left: 1px solid #d9e8f7 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-price-compare span {
+    font-size: 0.42rem !important;
+    line-height: 1.05 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-price-compare strong {
+    font-size: 1.08rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-unlock {
+    padding: 8px 10px !important;
+    font-size: 0.58rem !important;
+    line-height: 1.15 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-badge {
+    top: 8px !important;
+    left: 8px !important;
+    padding: 6px 8px !important;
+    border-radius: 5px !important;
+    font-size: 0.45rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-product-image {
+    min-height: 138px !important;
+    border-radius: 6px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-product-image img {
+    width: min(82%, 280px) !important;
+    max-height: 134px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-thumbs {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-thumbs button {
+    height: 44px !important;
+    border-radius: 5px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-config-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 7px !important;
+    margin-top: 7px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-options-card,
+  body.print-product-upload-premium-page .print-upload-action-card,
+  body.print-product-upload-premium-page .print-upload-member-card,
+  body.print-product-upload-premium-page .print-upload-proof-row {
+    border-right: 0 !important;
+    border-left: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-options-card,
+  body.print-product-upload-premium-page .print-upload-action-card {
+    padding: 9px 10px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-heading h2 {
+    margin: 3px 0 !important;
+    font-size: 1rem !important;
+    line-height: 1.05 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-heading p {
+    margin-bottom: 8px !important;
+    font-size: 0.55rem !important;
+    line-height: 1.18 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-premium-details {
+    margin-bottom: 7px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-option-row,
+  body.print-product-upload-premium-page .print-upload-premium-details div {
+    grid-template-columns: minmax(92px, 0.45fr) minmax(0, 1fr) !important;
+    gap: 6px !important;
+    min-height: 29px !important;
+    padding: 4px 6px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-option-row span,
+  body.print-product-upload-premium-page .print-readonly-details dt,
+  body.print-product-upload-premium-page .print-readonly-details dd {
+    font-size: 0.48rem !important;
+    line-height: 1.1 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-option-row select,
+  body.print-product-upload-premium-page .print-upload-field-grid input {
+    min-height: 25px !important;
+    padding: 3px 6px !important;
+    border-radius: 4px !important;
+    font-size: 0.52rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-meta-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 5px !important;
+    margin-top: 7px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-meta-grid label {
+    gap: 3px !important;
+    font-size: 0.44rem !important;
+    line-height: 1.05 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-live-note {
+    margin-top: 7px !important;
+    font-size: 0.47rem !important;
+    line-height: 1.12 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-action-card {
+    gap: 6px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-action-card > span {
+    font-size: 0.48rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-action-card > strong {
+    font-size: 1.45rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-action-card > p,
+  body.print-product-upload-premium-page .print-upload-action-card small {
+    font-size: 0.48rem !important;
+    line-height: 1.18 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-action-card .action-gradient,
+  body.print-product-upload-premium-page .print-upload-action-card .outline-button {
+    min-height: 31px !important;
+    font-size: 0.5rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-divider {
+    gap: 7px !important;
+    font-size: 0.45rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-file-box {
+    padding: 8px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-file-box h3 {
+    margin-bottom: 3px !important;
+    font-size: 0.58rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-file-box p {
+    margin-bottom: 6px !important;
+    font-size: 0.43rem !important;
+    line-height: 1.12 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-drop {
+    min-height: 38px !important;
+    padding: 6px !important;
+    font-size: 0.48rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-member-card {
+    grid-template-columns: 0.62fr 1fr !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    padding: 9px 10px !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-member-card > div:last-child {
+    grid-column: 1 / -1 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-member-card h2 {
+    margin: 2px 0 !important;
+    font-size: 0.72rem !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-member-card p,
+  body.print-product-upload-premium-page .print-upload-member-card th,
+  body.print-product-upload-premium-page .print-upload-member-card td {
+    font-size: 0.42rem !important;
+    line-height: 1.12 !important;
+  }
+
+  body.print-product-upload-premium-page .print-upload-member-card th,
+  body.print-product-upload-premium-page .print-upload-member-card td {
+    padding: 5px 4px !important;
+  }
+
+  .print-checkout-page.shirt-checkout-page,
+  .shirt-checkout-page {
+    padding: 10px 8px 18px !important;
+  }
+
+  .shirt-checkout-intro {
+    margin-bottom: 8px !important;
+  }
+
+  .shirt-checkout-intro span {
+    font-size: 0.52rem !important;
+  }
+
+  .shirt-checkout-intro h1 {
+    margin: 3px 0 !important;
+    font-size: 1.55rem !important;
+    line-height: 1.02 !important;
+  }
+
+  .shirt-checkout-intro p {
+    font-size: 0.58rem !important;
+    line-height: 1.22 !important;
+  }
+
+  .shirt-checkout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .shirt-checkout-summary,
+  .shirt-checkout-card {
+    padding: 9px !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+  }
+
+  .shirt-checkout-preview {
+    min-height: 108px !important;
+    border-radius: 6px !important;
+  }
+
+  .shirt-checkout-preview img {
+    max-height: 100px !important;
+    object-fit: contain !important;
+  }
+
+  .shirt-checkout-total {
+    margin: 7px 0 !important;
+    padding: 8px !important;
+  }
+
+  .shirt-checkout-total span,
+  .shirt-checkout-summary dt,
+  .shirt-checkout-card label {
+    font-size: 0.5rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .shirt-checkout-total strong {
+    font-size: 1.25rem !important;
+  }
+
+  .print-checkout-cost-breakdown,
+  .print-shipping-message {
+    margin-bottom: 7px !important;
+    padding: 7px !important;
+    font-size: 0.52rem !important;
+  }
+
+  .print-checkout-cost-breakdown div,
+  .shirt-checkout-summary dd,
+  .shirt-checkout-items span {
+    font-size: 0.56rem !important;
+    line-height: 1.15 !important;
+  }
+
+  .shirt-checkout-summary dl {
+    gap: 4px !important;
+  }
+
+  .shirt-checkout-summary dl div {
+    grid-template-columns: 74px minmax(0, 1fr) !important;
+    gap: 6px !important;
+    padding: 5px 0 !important;
+  }
+
+  .shirt-checkout-card {
+    gap: 9px !important;
+  }
+
+  .shirt-checkout-card section {
+    gap: 7px !important;
+  }
+
+  .shirt-checkout-card h2,
+  .stripe-checkout-panel h2,
+  .embedded-paypal-panel h2 {
+    font-size: 0.74rem !important;
+    line-height: 1.1 !important;
+  }
+
+  .shirt-checkout-fields,
+  .shirt-checkout-fields.two,
+  .shirt-checkout-fields.address {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 7px !important;
+  }
+
+  .shirt-checkout-card section > label {
+    grid-column: 1 / -1 !important;
+  }
+
+  .shirt-checkout-card input {
+    min-height: 32px !important;
+    padding: 0 8px !important;
+    border-radius: 5px !important;
+    font-size: 0.66rem !important;
+  }
+
+  .shirt-fulfillment-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .shirt-fulfillment-options label {
+    min-height: 42px !important;
+    gap: 6px !important;
+    padding: 7px !important;
+  }
+
+  .shirt-fulfillment-options input {
+    width: 14px !important;
+    min-height: 14px !important;
+  }
+
+  .shirt-fulfillment-options span,
+  .shirt-fulfillment-options strong,
+  .stripe-checkout-panel p,
+  .stripe-checkout-panel small,
+  .embedded-paypal-panel p,
+  .embedded-paypal-panel small {
+    font-size: 0.5rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .stripe-checkout-panel,
+  .embedded-paypal-panel {
+    gap: 7px !important;
+    padding: 8px !important;
+    border-radius: 6px !important;
+  }
+
+  .stripe-pay-button,
+  .shirt-pay-button {
+    min-height: 34px !important;
+    font-size: 0.56rem !important;
+  }
+
+  body.print-products-editor-page .print-studio-header,
+  body.print-products-editor-page .print-order-hero {
+    padding: 8px 9px !important;
+  }
+
+  body.print-products-editor-page .print-order-hero h1 {
+    font-size: 1.45rem !important;
+  }
+
+  body.print-products-editor-page .print-order-hero p {
+    font-size: 0.56rem !important;
+  }
+
+  body.print-products-editor-page .print-editor-controls,
+  body.print-products-editor-page .print-bottom-panels {
+    gap: 8px !important;
+    padding: 8px !important;
+  }
+
+  body.print-products-editor-page .print-design-card,
+  body.print-products-editor-page .print-product-fields,
+  body.print-products-editor-page .edit-panel,
+  body.print-products-editor-page .print-order-summary,
+  body.print-products-editor-page .print-submit-card {
+    padding: 9px !important;
+  }
+
+  body.print-products-editor-page .print-canvas-frame {
+    min-height: 250px !important;
+    padding: 16px 10px !important;
+  }
+
+  .smart-order-form,
+  .order-form-section,
+  .payment-checkout-form,
+  .tracking-form,
+  .invoice-lookup form,
+  .upload-mini-fields {
+    gap: 8px !important;
+  }
+
+  .order-form-section,
+  .payment-checkout-form,
+  .tracking-form,
+  .invoice-lookup form {
+    padding: 12px !important;
+  }
+
+  .order-form-section input,
+  .order-form-section textarea,
+  .payment-checkout-form input,
+  .tracking-form input,
+  .upload-mini-fields input,
+  .upload-mini-fields textarea {
+    min-height: 34px !important;
+    font-size: 0.72rem !important;
+  }
+}
