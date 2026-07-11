@@ -4,6 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "build": "npm run seo:validate && node scripts/static-build.mjs",
+    "seo:fix": "node scripts/seo-maintenance.mjs --fix",
+    "seo:validate": "node scripts/seo-maintenance.mjs",
     "dev": "npx vercel dev --listen 4173",
     "start": "npx vercel dev --listen 4173",
     "static": "python3 -m http.server 4173"

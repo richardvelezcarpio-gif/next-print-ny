@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "nextprintnyc.com" }],
+      "destination": "https://www.nextprintnyc.com/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/banner-designer/designer",
@@ -6,6 +14,26 @@
     }
   ],
   "headers": [
+    {
+      "source": "/websites-demo/start/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/websites-demo/customize/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/websites-demo/summary/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/websites-demo/success/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
+    {
+      "source": "/websites-demo/portal/:path*",
+      "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }]
+    },
     {
       "source": "/print-products-editor.html",
       "headers": [
