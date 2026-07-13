@@ -1,5 +1,9 @@
 {
+  "devCommand": "python3 -m http.server $PORT",
   "functions": {
+    "api/project-portal.js": {
+      "maxDuration": 10
+    },
     "api/chat.js": {
       "maxDuration": 10
     },
@@ -24,5 +28,8 @@
     "api/supabase-debug.js": {
       "maxDuration": 10
     }
-  }
+  },
+  "rewrites": [
+    { "source": "/project/:token", "destination": "/project.html?token=:token" }
+  ]
 }

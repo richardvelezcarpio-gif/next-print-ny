@@ -5,20 +5,13 @@ const orderFileName = document.querySelector("#orderFileName");
 const orderStatus = document.querySelector("#orderStatus");
 const orderSuccess = document.querySelector("#orderSuccess");
 const orderNumber = document.querySelector("#orderNumber");
-const orderWhatsapp = document.querySelector("#orderWhatsapp");
 const orderTrackLink = document.querySelector("#orderTrackLink");
 const orderInvoiceLink = document.querySelector("#orderInvoiceLink");
-const orderZelleEmail = document.querySelector("#orderZelleEmail");
-const orderZelleNote = document.querySelector("#orderZelleNote");
-const orderCopyZelle = document.querySelector("#orderCopyZelle");
-const orderCopyNumber = document.querySelector("#orderCopyNumber");
-const orderPayZelle = document.querySelector("#orderPayZelle");
 const orderDateInput = document.querySelector("#orderDateInput");
 const deliveryDateInput = document.querySelector("#deliveryDateInput");
 const orderMaxFileSize = 4 * 1024 * 1024;
 const orderMaxTotalFileSize = 12 * 1024 * 1024;
 const localOrdersKey = "nextPrintRecentOrders";
-const zelleAccount = "2393337935";
 const tshirtFilesKey = "nextPrintTshirtFiles";
 const tshirtDetailsKey = "nextPrintTshirtDetails";
 
@@ -26,8 +19,6 @@ setAutomaticOrderDates();
 prefillOrderFromCatalog();
 showAttachedTshirtDesign();
 
-orderCopyZelle?.addEventListener("click", () => copyOrderValue(zelleAccount, orderCopyZelle, "zelle.copyEmail"));
-orderCopyNumber?.addEventListener("click", () => copyOrderValue(orderNumber.textContent, orderCopyNumber, "zelle.copyOrder"));
 
 orderFile?.addEventListener("change", () => {
   const files = Array.from(orderFile.files || []);
@@ -104,10 +95,6 @@ smartOrderForm?.addEventListener("submit", async (event) => {
     });
 
     orderNumber.textContent = data.orderNumber;
-    if (orderZelleEmail) orderZelleEmail.textContent = zelleAccount;
-    if (orderZelleNote) orderZelleNote.textContent = `Order ${data.orderNumber}`;
-    if (orderPayZelle) orderPayZelle.href = `payments.html?order=${encodeURIComponent(data.orderNumber)}`;
-    orderWhatsapp.href = data.whatsappUrl || orderWhatsapp.href;
     if (orderTrackLink) {
       orderTrackLink.href = `tracking.html?order=${encodeURIComponent(data.orderNumber)}`;
     }

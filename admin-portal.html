@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Estimates & Projects Admin | Next Print NY</title>
+  <link rel="stylesheet" href="project-portal.css">
+  <link rel="stylesheet" href="admin-notifications.css">
+</head>
+<body>
+  <header class="portal-header admin-header">
+    <a href="admin.html"><img src="assets/logo.png" alt="Next Print NY"></a>
+    <strong>Admin · Estimates & Projects</strong>
+    <nav class="admin-shortcuts" aria-label="Admin shortcuts">
+      <a href="#messages">Messages</a>
+      <a href="#notificationSettings">Notifications</a>
+    </nav>
+  </header>
+  <main class="portal">
+    <section class="portal-title">
+      <div><p class="eyebrow">PRIVATE ADMIN</p><h1>Estimates & payment verification</h1></div>
+      <button id="newEstimate" class="primary">New estimate</button>
+    </section>
+    <section id="messages" class="admin-message-anchor" aria-label="Messages"></section>
+    <section id="adminPortal" class="content-grid"><p>Loading admin projects…</p></section>
+    <section id="notificationSettings" class="notification-settings" aria-labelledby="notificationTitle">
+      <div class="section-heading"><div><p class="eyebrow">ADMIN ALERTS</p><h2 id="notificationTitle">Notification Settings</h2><p>Manage secure alerts for project activity.</p></div></div>
+      <div class="notification-grid">
+        <article class="notification-card">
+          <div class="notification-card__heading"><div><h3>Push Notifications</h3><p id="pushDetail">Checking browser and configuration…</p></div><span id="pushState" class="notification-state state-neutral" role="status">Not Connected</span></div>
+          <div class="notification-actions">
+            <button id="enableNotifications" class="primary">Enable Notifications</button>
+            <button id="disableNotifications" class="secondary" disabled>Disable Notifications</button>
+            <button id="reconnectNotifications" class="secondary">Reconnect</button>
+            <button id="testPush" class="secondary">Send Test Push</button>
+          </div>
+          <p class="notification-help">Alerts open the related Admin project or conversation. Sensitive payment details are never included.</p>
+          <p id="pushLastNotification" class="notification-help" hidden></p>
+        </article>
+        <article class="notification-card">
+          <div class="notification-card__heading"><div><h3>Email Notifications</h3><p id="emailDetail">Checking server configuration…</p></div><span id="emailState" class="notification-state state-neutral" role="status">Not Configured</span></div>
+          <div class="notification-actions"><button id="testEmail" class="primary">Send Test Email</button></div>
+          <dl id="emailTestMetadata" class="notification-metadata" hidden></dl>
+          <p class="notification-help">Tests are sent only to the configured administrative email address.</p>
+        </article>
+      </div>
+      <p id="notificationResult" class="notification-result" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+  <dialog id="estimateDialog"><form id="estimateForm"><button class="close" type="button" onclick="this.closest('dialog').close()">×</button><h2>New estimate</h2><label>Customer <input name="name" required></label><label>Contact <input name="contactName"></label><label>Email <input name="email" type="email"></label><label>Item <input name="item" value="Print service" required></label><label>Quantity <input name="quantity" type="number" min="1" value="1"></label><label>Unit price <input name="unitPrice" type="number" min="0" step=".01" required></label><label>Tax <select name="taxMode"><option value="no_tax">No Tax</option><option value="custom">Custom Tax</option><option value="tax_exempt">Tax Exempt</option></select></label><label>Shipping <input name="shipping" type="number" min="0" step=".01" value="0"></label><button class="primary">Create secure estimate</button><p id="estimateStatus"></p></form></dialog>
+  <script src="admin-portal.js"></script>
+</body>
+</html>

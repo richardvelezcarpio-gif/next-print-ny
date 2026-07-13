@@ -4,7 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 4173",
-    "start": "python3 -m http.server 4173"
+    "dev": "node scripts/local-dev.mjs",
+    "static": "python3 -m http.server 4173",
+    "start": "npm run static",
+    "build": "node scripts/static-build.mjs",
+    "generate:vapid": "node scripts/generate-vapid.mjs"
+  },
+  "dependencies": {
+    "web-push": "^3.6.7"
   }
 }

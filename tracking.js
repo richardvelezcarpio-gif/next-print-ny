@@ -7,20 +7,7 @@ const trackingCustomer = document.querySelector("#trackingCustomer");
 const trackingUpdated = document.querySelector("#trackingUpdated");
 const trackingAmountRow = document.querySelector("#trackingAmountRow");
 const trackingAmount = document.querySelector("#trackingAmount");
-const trackingWhatsapp = document.querySelector("#trackingWhatsapp");
-const trackingZelleEmail = document.querySelector("#trackingZelleEmail");
-const trackingZelleNote = document.querySelector("#trackingZelleNote");
-const trackingCopyZelle = document.querySelector("#trackingCopyZelle");
-const trackingCopyNumber = document.querySelector("#trackingCopyNumber");
-const trackingPayZelle = document.querySelector("#trackingPayZelle");
 const localOrdersKey = "nextPrintRecentOrders";
-const zelleAccount = "2393337935";
-
-trackingCopyZelle?.addEventListener("click", () => copyTrackingValue(zelleAccount, trackingCopyZelle, "zelle.copyEmail"));
-trackingCopyNumber?.addEventListener("click", () => {
-  const orderNumber = normalizeTrackingOrder(trackingInput?.value || trackingOrderTitle?.textContent || "");
-  copyTrackingValue(orderNumber, trackingCopyNumber, "zelle.copyOrder");
-});
 
 const trackingOrder = new URLSearchParams(window.location.search).get("order");
 if (trackingOrder && trackingInput) {
@@ -72,12 +59,6 @@ function renderTrackingResult(order) {
     trackingAmountRow.hidden = !amount;
     trackingAmount.textContent = amount ? money(amount) : "-";
   }
-  if (trackingZelleEmail) trackingZelleEmail.textContent = zelleAccount;
-  if (trackingZelleNote) trackingZelleNote.textContent = `Order ${order.orderNumber}`;
-  if (trackingPayZelle) trackingPayZelle.href = `payments.html?order=${encodeURIComponent(order.orderNumber)}`;
-  trackingWhatsapp.href = `https://wa.me/12393337935?text=${encodeURIComponent(
-    `Hello Next Print NY, I want to ask about order ${order.orderNumber}.`
-  )}`;
   updateTimeline(order.status);
   trackingResult.hidden = false;
 }

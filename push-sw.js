@@ -1,0 +1,2 @@
+self.addEventListener("push", event => { const data = event.data?.json() || {}; event.waitUntil(self.registration.showNotification("Next Print NY Web Chat", { body: data.preview || "New project activity", icon: "/assets/logo.png", data: { url: data.url || "/admin-portal.html" } })); });
+self.addEventListener("notificationclick", event => { event.notification.close(); event.waitUntil(clients.openWindow(event.notification.data?.url || "/admin-portal.html")); });
