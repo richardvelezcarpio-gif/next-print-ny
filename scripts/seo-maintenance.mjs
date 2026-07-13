@@ -24,7 +24,7 @@ const publicPages = {
 
 function htmlFiles(dir = root) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
-    if ([".git", "node_modules", "assets"].includes(entry.name)) return [];
+    if ([".git", ".vercel", "node_modules", "assets"].includes(entry.name)) return [];
     const full = path.join(dir, entry.name);
     if (entry.isDirectory() && full.startsWith(path.join(root, "websites-demo") + path.sep) && full !== path.join(root, "websites-demo")) return [];
     return entry.isDirectory() ? htmlFiles(full) : entry.name.endsWith(".html") ? [full] : [];
