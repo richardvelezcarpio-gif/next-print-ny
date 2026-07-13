@@ -67,7 +67,7 @@ loginForm?.addEventListener("submit", async (event) => {
 
   try {
     const body = Object.fromEntries(new FormData(loginForm));
-    const { response, data } = await fetchJson("/api/admin-login", {
+    const { response, data } = await fetchJson("/api/admin?action=login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -91,7 +91,7 @@ recordForm?.addEventListener("submit", async (event) => {
 
   try {
     const body = Object.fromEntries(new FormData(recordForm));
-    const { response, data } = await fetchJson("/api/business-records", {
+    const { response, data } = await fetchJson("/api/admin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -172,7 +172,7 @@ customOrderForm?.addEventListener("submit", async (event) => {
         }))
       ),
     };
-    const { response, data } = await fetchJson("/api/business-records", {
+    const { response, data } = await fetchJson("/api/admin", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -202,7 +202,7 @@ customOrderForm?.addEventListener("submit", async (event) => {
 });
 
 logoutButton?.addEventListener("click", async () => {
-  await fetch("/api/admin-logout", { method: "POST" });
+  await fetch("/api/admin?action=logout", { method: "POST" });
   dashboardView.hidden = true;
   loginView.hidden = false;
 });
@@ -262,7 +262,7 @@ kanbanBoard?.addEventListener("change", async (event) => {
 
 async function init() {
   try {
-    const { data } = await fetchJson("/api/admin-login");
+    const { data } = await fetchJson("/api/admin?action=login");
 
     if (data.authenticated) {
       showDashboard(data.email);
@@ -315,7 +315,7 @@ async function loadRecords() {
   refreshButton.disabled = true;
 
   try {
-    const { response, data } = await fetchJson("/api/business-records");
+    const { response, data } = await fetchJson("/api/admin");
 
     if (!response.ok) throw new Error(data.error || "No se pudieron cargar los registros");
     records = Array.isArray(data.records) ? data.records : [];
@@ -331,7 +331,7 @@ async function loadRecords() {
 }
 
 async function updateRecord(id, changes) {
-  const { response, data } = await fetchJson("/api/business-records", {
+  const { response, data } = await fetchJson("/api/admin", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ id, ...changes }),
@@ -347,7 +347,7 @@ async function updateRecord(id, changes) {
 }
 
 async function deleteRecord(id) {
-  const { response, data } = await fetchJson(`/api/business-records?id=${encodeURIComponent(id)}`, {
+  const { response, data } = await fetchJson(`/api/admin?id=${encodeURIComponent(id)}`, {
     method: "DELETE",
   });
 

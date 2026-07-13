@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 210" role="img" aria-labelledby="title desc">
+  <title id="title">Next Print NY</title>
+  <desc id="desc">Transparent footer logo for Next Print NY.</desc>
+  <defs>
+    <linearGradient id="footerLogoText" x1="0" x2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#7de9ff"/>
+      <stop offset="1" stop-color="#03bfe7"/>
+    </linearGradient>
+    <filter id="softGlow" x="-10%" y="-20%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#00122e" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <g filter="url(#softGlow)">
+    <g transform="translate(18 24)">
+      <path d="M11 35 C32 13 78 8 122 25 C92 25 68 40 57 64 C45 89 54 120 78 143 C45 131 19 108 8 80 C-2 55 0 45 11 35Z" fill="none" stroke="#7de9ff" stroke-width="10"/>
+      <path d="M45 22 C73 -7 130 3 168 31 C120 24 86 42 70 74 C57 102 64 137 96 162 C51 147 20 115 13 80 C8 54 22 35 45 22Z" fill="none" stroke="#03bfe7" stroke-width="7"/>
+      <path d="M82 16 C112 -2 153 11 183 36 C143 31 107 50 92 82 C80 107 86 137 114 160 C83 151 58 128 49 96 C40 62 54 33 82 16Z" fill="none" stroke="#ffffff" stroke-width="5"/>
+    </g>
+    <text x="205" y="91" font-family="Arial Black, Arial, sans-serif" font-size="62" font-style="italic" font-weight="900" fill="url(#footerLogoText)">Next Print NY.</text>
+    <text x="254" y="132" font-family="Arial, sans-serif" font-size="20" font-weight="900" letter-spacing="1.5" fill="#e8fbff">QUALITY PRINTS. ON TIME. EVERY TIME.</text>
+    <text x="318" y="171" font-family="Arial, sans-serif" font-size="20" font-weight="900" fill="#7de9ff">★★★★★</text>
+  </g>
+</svg>

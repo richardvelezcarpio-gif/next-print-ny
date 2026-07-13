@@ -1,12 +1,43 @@
-import { readdir } from "node:fs/promises";
-import { join } from "node:path";
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
+import fs from "node:fs";
+import path from "node:path";
+import process from "node:process";
+import { spawnSync } from "node:child_process";
 
-const execFileAsync = promisify(execFile);
-const root = new URL("..", import.meta.url).pathname;
-const files = [];
-async function walk(directory) { for (const entry of await readdir(directory, { withFileTypes: true })) { const path = join(directory, entry.name); if (["node_modules", ".git"].includes(entry.name)) continue; if (entry.isDirectory()) await walk(path); else if (path.endsWith(".js") || path.endsWith(".mjs")) files.push(path); } }
-await walk(root);
-await Promise.all(files.map(file => execFileAsync(process.execPath, ["--check", file])));
-console.log(`Static project build passed: ${files.length} JavaScript source files checked.`);
+const root = path.resolve(import.meta.dirname, "..");
+const sourceDirectories = ["api", "lib", "scripts", "src"];
+const rootScripts = fs.readdirSync(root)
+  .filter((name) => name.endsWith(".js"))
+  .map((name) => path.join(root, name));
+
+function javascriptFiles(directory) {
+  return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(directory, entry.name);
+    return entry.isDirectory() ? javascriptFiles(full) : /\.m?js$/.test(entry.name) ? [full] : [];
+  });
+}
+
+const scripts = [
+  ...rootScripts,
+  ...sourceDirectories.flatMap((directory) => javascriptFiles(path.join(root, directory))),
+];
+
+for (const file of scripts) {
+  const result = spawnSync(process.execPath, ["--check", file], { encoding: "utf8" });
+  if (result.status !== 0) {
+    process.stderr.write(result.stderr || result.stdout);
+    process.exit(result.status || 1);
+  }
+}
+
+for (const json of ["package.json", "vercel.json"]) {
+  JSON.parse(fs.readFileSync(path.join(root, json), "utf8"));
+}
+
+for (const required of ["index.html", "404.html", "robots.txt", "sitemap.xml", "assets/logo.png", "assets/logohero.png"]) {
+  if (!fs.existsSync(path.join(root, required))) {
+    console.error(`Missing required deployable file: ${required}`);
+    process.exit(1);
+  }
+}
+
+console.log(`Static project build passed: ${scripts.length} JavaScript source files have valid syntax and required deployable files are present.`);

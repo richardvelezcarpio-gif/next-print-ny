@@ -1,0 +1,654 @@
+/* Mobile-only treatment for the custom T-shirt order flow. */
+@media (max-width: 760px) {
+  body.tshirt-product-page {
+    overflow-x: hidden;
+    background: #eef3f9;
+  }
+
+  body.tshirt-product-page .page-shell {
+    width: 100%;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  body.tshirt-product-page .reseller-strip {
+    display: grid;
+    gap: 7px;
+    min-height: 104px;
+    padding: 13px 18px 12px;
+    text-align: center;
+    background: linear-gradient(90deg, #05275c 0%, #02bde6 100%);
+  }
+
+  body.tshirt-product-page .reseller-strip div {
+    display: grid;
+    justify-items: center;
+    gap: 6px;
+  }
+
+  body.tshirt-product-page .reseller-strip strong {
+    font-size: 0.78rem;
+    line-height: 1.1;
+  }
+
+  body.tshirt-product-page .reseller-strip span {
+    font-size: 0.66rem;
+    line-height: 1.25;
+  }
+
+  body.tshirt-product-page .reseller-strip a {
+    width: min(100%, 280px);
+    min-height: 32px;
+    justify-self: center;
+    border-radius: 7px;
+    font-size: 0.64rem;
+  }
+
+  body.tshirt-product-page .top-nav.site-main-header {
+    grid-template-columns: minmax(88px, 1fr) 42px minmax(138px, 1.45fr);
+    gap: 7px;
+    min-height: 72px;
+    padding: 9px 9px 11px;
+    border-bottom: 5px solid #05275c;
+  }
+
+  body.tshirt-product-page .top-nav .brand {
+    min-width: 0;
+  }
+
+  body.tshirt-product-page .top-nav .brand img {
+    width: 88px;
+  }
+
+  body.tshirt-product-page .menu-toggle {
+    grid-column: 2;
+    grid-row: 1;
+    display: grid;
+    align-content: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    border-radius: 9px;
+    background: #05275c;
+    box-shadow: 0 7px 16px rgba(5, 39, 92, 0.22);
+  }
+
+  body.tshirt-product-page .menu-toggle span {
+    width: 22px;
+    height: 3px;
+    margin: 3px 0;
+    background: #fff;
+  }
+
+  body.tshirt-product-page .top-nav .nav-actions {
+    grid-column: 3;
+    grid-row: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  body.tshirt-product-page .phone-pill {
+    min-height: 36px;
+    padding: 0 8px;
+    border-radius: 8px;
+    font-size: 0.58rem;
+  }
+
+  body.tshirt-product-page .language-switch {
+    min-height: 36px;
+    flex: 0 0 auto;
+    gap: 2px;
+    padding: 3px;
+  }
+
+  body.tshirt-product-page .language-switch button {
+    min-width: 26px;
+    height: 28px;
+    font-size: 0.58rem;
+  }
+
+  body.tshirt-product-page .top-nav .menu {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  body.tshirt-product-page .top-nav .menu.open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body.tshirt-product-page .top-nav .menu a {
+    min-height: 34px;
+    padding: 8px 6px;
+    font-size: 0.58rem;
+    line-height: 1;
+  }
+
+  body.tshirt-product-page .shirt-commerce-page {
+    padding: 0 0 26px;
+    background: #eef3f9;
+  }
+
+  body.tshirt-product-page .shirt-store-hero {
+    display: block;
+    min-height: 0;
+    padding: 21px 17px 13px;
+    text-align: left;
+    background:
+      radial-gradient(circle at 91% 11%, rgba(255, 88, 172, 0.31), transparent 28%),
+      radial-gradient(circle at 67% 20%, rgba(63, 111, 255, 0.18), transparent 30%),
+      linear-gradient(180deg, #ffffff 0%, #f7fbff 63%, #ebf8ff 100%);
+  }
+
+  body.tshirt-product-page .shirt-hero-copy {
+    max-width: none;
+  }
+
+  body.tshirt-product-page .breadcrumb {
+    margin: 0 0 6px;
+    color: #234368;
+    font-size: 0.73rem;
+    font-weight: 900;
+  }
+
+  body.tshirt-product-page .shirt-hero-copy > span {
+    color: #06b9d9;
+    font-size: 0.69rem;
+    font-weight: 900;
+  }
+
+  body.tshirt-product-page .shirt-hero-copy h1 {
+    max-width: 360px;
+    margin: 6px 0 10px;
+    font-size: clamp(2.02rem, 10.6vw, 3.05rem);
+    line-height: 0.92;
+  }
+
+  body.tshirt-product-page .shirt-hero-copy h1 span,
+  body.tshirt-product-page .shirt-hero-copy h1 strong {
+    white-space: normal;
+  }
+
+  body.tshirt-product-page .shirt-hero-copy h1 strong {
+    color: #147ee8;
+  }
+
+  body.tshirt-product-page .shirt-hero-copy > p {
+    max-width: 360px;
+    font-size: 0.88rem;
+    line-height: 1.35;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+    margin: 18px 0 15px;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row span {
+    min-height: 50px;
+    padding-left: 28px;
+    font-size: 0.5rem;
+    line-height: 1.1;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row span::before {
+    width: 20px;
+    height: 20px;
+    border-width: 1.5px;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row b,
+  body.tshirt-product-page .shirt-benefit-row small {
+    font-size: 0.5rem;
+    line-height: 1.05;
+  }
+
+  body.tshirt-product-page .shirt-hero-actions {
+    display: block;
+    max-width: 165px;
+  }
+
+  body.tshirt-product-page .shirt-hero-actions .action-gradient {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 5px;
+    font-size: 0.61rem;
+  }
+
+  body.tshirt-product-page .shirt-hero-actions .shirt-outline {
+    display: none;
+  }
+
+  body.tshirt-product-page .shirt-store-hero .np-rating {
+    margin: 8px 0 0;
+    color: #05275c;
+    font-size: 0.9rem;
+  }
+
+  body.tshirt-product-page .shirt-store-hero .np-rating span {
+    color: #53617a;
+    font-size: 0.66rem;
+  }
+
+  body.tshirt-product-page .shirt-hero-visual {
+    display: none;
+  }
+
+  body.tshirt-product-page .shirt-studio-card {
+    margin: 0;
+    padding: 12px 8px 0;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  body.tshirt-product-page .studio-heading h2 {
+    margin-bottom: 7px;
+    font-size: 0.83rem;
+    line-height: 1.1;
+  }
+
+  body.tshirt-product-page .studio-heading ol {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 0 12px;
+    font-size: 0.55rem;
+    line-height: 1.05;
+  }
+
+  body.tshirt-product-page .studio-heading li {
+    gap: 4px;
+  }
+
+  body.tshirt-product-page .studio-heading li span,
+  body.tshirt-product-page .builder-step-title span {
+    width: 17px;
+    height: 17px;
+    font-size: 0.58rem;
+  }
+
+  body.tshirt-product-page .shirt-studio-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel,
+  body.tshirt-product-page .shirt-live-stage,
+  body.tshirt-product-page .shirt-design-panel {
+    border-radius: 6px;
+    box-shadow: none;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
+    grid-template-rows: auto auto auto auto;
+    gap: 10px 12px;
+    padding: 12px 9px;
+    border-color: #dfe8f2;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel > .builder-step-title {
+    grid-column: 1 / -1;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel > .builder-select:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel > .builder-select:nth-of-type(2) {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel > section:nth-of-type(1) {
+    grid-column: 1;
+    grid-row: 4;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel > section:nth-of-type(2) {
+    grid-column: 2;
+    grid-row: 2 / span 3;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel > .shirt-price-guide {
+    display: none;
+  }
+
+  body.tshirt-product-page .builder-step-title {
+    gap: 6px;
+    font-size: 0.62rem;
+  }
+
+  body.tshirt-product-page .builder-select,
+  body.tshirt-product-page .shirt-design-panel label {
+    gap: 4px;
+    font-size: 0.57rem;
+  }
+
+  body.tshirt-product-page .builder-select select,
+  body.tshirt-product-page .shirt-design-panel select,
+  body.tshirt-product-page .shirt-design-panel input {
+    min-height: 31px;
+    padding: 0 7px;
+    border-radius: 5px;
+    font-size: 0.65rem;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel h2 {
+    margin: 0 0 6px;
+    font-size: 0.63rem;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-color-grid {
+    gap: 6px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-color-swatch {
+    width: 21px;
+    height: 21px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-color-swatch span {
+    width: 15px;
+    height: 15px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-quantity-matrix {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-size-qty {
+    min-height: 58px;
+    gap: 2px;
+    padding: 4px 2px;
+    border-radius: 5px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-size-code {
+    font-size: 0.67rem;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-size-price {
+    font-size: 0.54rem;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-size-qty input {
+    width: 38px;
+    min-height: 23px;
+    font-size: 0.66rem;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel #sizeNote {
+    font-size: 0.52rem;
+    line-height: 1.2;
+  }
+
+  body.tshirt-product-page .shirt-live-stage {
+    min-height: 0;
+    gap: 7px;
+    padding: 12px;
+    border: 0;
+    border-radius: 0;
+    background: #fff;
+  }
+
+  body.tshirt-product-page .shirt-live-stage #shirtCanvas {
+    width: 100%;
+    max-height: none;
+    aspect-ratio: 720 / 820;
+    border-radius: 6px;
+  }
+
+  body.tshirt-product-page .shirt-product-stage > p {
+    margin: 3px 0 0;
+    font-size: 0.75rem;
+  }
+
+  body.tshirt-product-page .shirt-print-note {
+    width: 100%;
+    padding: 9px;
+    border-radius: 6px;
+    font-size: 0.58rem;
+  }
+
+  body.tshirt-product-page .shirt-print-note strong {
+    font-size: 0.64rem;
+  }
+
+  body.tshirt-product-page .shirt-design-panel {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    align-items: start;
+    gap: 8px 10px;
+    padding: 10px;
+    border-color: #dfe8f2;
+  }
+
+  body.tshirt-product-page .shirt-design-panel > .builder-step-title,
+  body.tshirt-product-page .shirt-design-panel > section,
+  body.tshirt-product-page .shirt-design-panel > label,
+  body.tshirt-product-page .shirt-design-panel > .designer-inline-fields,
+  body.tshirt-product-page .shirt-design-panel > .designer-actions,
+  body.tshirt-product-page .shirt-design-panel > #designerStatus {
+    grid-column: 1;
+  }
+
+  body.tshirt-product-page .shirt-design-panel > .builder-step-title {
+    grid-row: 1;
+  }
+
+  body.tshirt-product-page .shirt-design-panel > .designer-order-box {
+    grid-column: 2;
+    grid-row: 1 / span 7;
+    gap: 6px;
+    padding: 10px;
+    font-size: 0.58rem;
+  }
+
+  body.tshirt-product-page .shirt-design-panel > #approveDesignOrder {
+    grid-column: 2;
+    grid-row: 8;
+    min-height: 34px;
+    padding: 6px;
+    border-radius: 5px;
+    font-size: 0.54rem;
+    line-height: 1.1;
+    text-align: center;
+  }
+
+  body.tshirt-product-page .shirt-design-panel h2 {
+    font-size: 0.62rem;
+  }
+
+  body.tshirt-product-page .shirt-design-panel section {
+    gap: 5px;
+  }
+
+  body.tshirt-product-page .shirt-design-panel .designer-side-tabs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  body.tshirt-product-page .shirt-design-panel .designer-side-tabs button,
+  body.tshirt-product-page .shirt-design-panel .single-print-toggle {
+    min-height: 30px;
+    padding: 4px 3px;
+    border-radius: 5px;
+    font-size: 0.52rem;
+    line-height: 1.08;
+  }
+
+  body.tshirt-product-page .shirt-design-panel .single-print-toggle {
+    margin-top: 5px;
+  }
+
+  body.tshirt-product-page .shirt-design-panel .designer-upload {
+    min-height: 51px;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 0.57rem;
+  }
+
+  body.tshirt-product-page .designer-inline-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  body.tshirt-product-page .shirt-design-panel .designer-actions {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+
+  body.tshirt-product-page .shirt-design-panel .designer-actions .outline-button {
+    min-height: 29px;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 0.54rem;
+  }
+
+  body.tshirt-product-page .designer-order-box #sideOrderSummary {
+    max-height: 76px;
+    gap: 4px;
+    font-size: 0.52rem;
+  }
+
+  body.tshirt-product-page .designer-order-box small {
+    font-size: 0.5rem;
+    line-height: 1.18;
+  }
+
+  body.tshirt-product-page .designer-order-box strong {
+    font-size: 0.9rem;
+  }
+
+  body.tshirt-product-page .shirt-why,
+  body.tshirt-product-page .shirt-reviews {
+    display: none;
+  }
+
+  body.tshirt-product-page .footer {
+    margin-top: 0;
+    padding: 19px 9px 0;
+    border-top: 4px solid #063f8f;
+  }
+
+  body.tshirt-product-page .footer-container {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+  }
+
+  body.tshirt-product-page .footer-brand,
+  body.tshirt-product-page .footer-col:nth-child(2) {
+    display: none;
+  }
+
+  body.tshirt-product-page .footer-col {
+    align-items: center;
+    min-height: 0;
+    padding: 0 7px;
+    border-top: 0;
+    border-left: 1px solid rgba(217, 242, 255, 0.2);
+    text-align: center;
+  }
+
+  body.tshirt-product-page .footer-col:nth-child(3) {
+    border-left: 0;
+  }
+
+  body.tshirt-product-page .footer-col h4 {
+    margin-bottom: 8px;
+    font-size: 0.75rem;
+    line-height: 1.05;
+  }
+
+  body.tshirt-product-page .footer-col p,
+  body.tshirt-product-page .footer-col a {
+    margin-bottom: 6px;
+    font-size: 0.59rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+
+  body.tshirt-product-page .footer-bottom {
+    margin-top: 14px;
+    padding: 11px 0 13px;
+    font-size: 0.56rem;
+  }
+}
+
+@media (max-width: 360px) {
+  body.tshirt-product-page .top-nav.site-main-header {
+    grid-template-columns: minmax(76px, 1fr) 38px minmax(124px, 1.4fr);
+    gap: 5px;
+    padding-inline: 7px;
+  }
+
+  body.tshirt-product-page .top-nav .brand img {
+    width: 80px;
+  }
+
+  body.tshirt-product-page .menu-toggle {
+    width: 37px;
+    height: 37px;
+  }
+
+  body.tshirt-product-page .phone-pill {
+    padding-inline: 6px;
+    font-size: 0.53rem;
+  }
+
+  body.tshirt-product-page .language-switch button {
+    min-width: 24px;
+    font-size: 0.53rem;
+  }
+
+  body.tshirt-product-page .shirt-hero-copy h1 {
+    font-size: clamp(1.9rem, 10.4vw, 2.4rem);
+  }
+
+  body.tshirt-product-page .shirt-benefit-row {
+    gap: 5px;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row span {
+    padding-left: 24px;
+    font-size: 0.46rem;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row span::before {
+    width: 18px;
+    height: 18px;
+  }
+
+  body.tshirt-product-page .shirt-benefit-row b,
+  body.tshirt-product-page .shirt-benefit-row small {
+    font-size: 0.46rem;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel {
+    gap: 9px;
+    padding-inline: 7px;
+  }
+
+  body.tshirt-product-page .shirt-builder-panel .shirt-size-qty input {
+    width: 34px;
+  }
+
+  body.tshirt-product-page .shirt-design-panel {
+    gap: 7px;
+    padding: 8px;
+  }
+}

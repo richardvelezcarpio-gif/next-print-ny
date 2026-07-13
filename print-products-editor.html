@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="This operational page is part of the secure Next Print NY customer and order workflow." />
+    <meta name="robots" content="noindex, follow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Print Products Editor | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260702-mobile-cleanup" />
+    <link rel="stylesheet" href="membership.css?v=20260622-membership" />
+    <link rel="stylesheet" href="full-wide.css?v=20260621-full-wide" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Anton&family=Bebas+Neue&family=Cinzel:wght@400;700&family=Lobster&family=Oswald:wght@400;700&family=Pacifico&family=Playfair+Display:wght@400;700;900&family=Poppins:wght@400;600;700;900&family=Righteous&display=swap" rel="stylesheet" />
+  </head>
+  <body class="print-products-editor-page">
+    <div class="page-shell print-editor-shell">
+      <section class="reseller-strip" aria-label="Reseller program">
+        <div>
+          <strong data-i18n="home.reseller.title">🔥 Reseller Program Available</strong>
+          <span data-i18n="home.reseller.copy">Get wholesale pricing and grow your own print business.</span>
+        </div>
+        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer" data-i18n="home.reseller.button">Apply for Wholesale</a>
+      </section>
+
+      <header class="top-nav site-main-header">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a href="printing.html#banners" data-i18n="home.nav.signs">Signs & Banners</a>
+          <a href="tshirt.html" data-i18n="home.nav.shirts">T-Shirts & Apparel</a>
+          <a class="active" href="printing.html" data-i18n="home.nav.products">Print Products</a>
+          <a href="websites-demo/" data-i18n="home.nav.websites">Websites</a>
+          <a href="tracking.html" data-i18n="tracking.nav">Track Order</a>
+          <a href="about.html" data-i18n="home.nav.about">About Us</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" class="active" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="print-editor-page">
+        <section class="print-studio-header" aria-label="Print studio controls" data-editor-version="premium-v3">
+          <a class="print-studio-brand" href="index.html" aria-label="Next Print NY home"><img src="assets/logo-clear.svg" alt="Next Print NY" /></a>
+          <a id="printStudioBack" class="print-studio-back" href="printing.html">← Back to Print Products</a>
+          <p id="printStudioOrder" class="print-studio-order">Premium Print Editor · Business Cards · 100 · $35.00</p>
+          <div class="print-studio-actions">
+            <a href="https://wa.me/12393337935?text=I%20need%20help%20with%20my%20print%20design" target="_blank" rel="noreferrer">Help</a>
+            <button id="printStudioSave" class="member-editor-save" type="button">Save to Dashboard</button>
+          </div>
+        </section>
+        <section class="print-order-hero">
+          <div>
+            <span>Fast online request</span>
+            <h1>Start your printing order.</h1>
+            <p>Choose your product, design front and back, select quantity and continue to secure checkout.</p>
+          </div>
+          <a class="outline-button print-whatsapp" href="https://wa.me/12393337935?text=I%20need%20help%20with%20a%20print%20product%20order" target="_blank" rel="noreferrer">WhatsApp</a>
+        </section>
+
+        <section class="desktop-print-editor-hero" aria-label="Print product editor overview">
+          <div class="desktop-editor-hero-copy">
+            <p class="desktop-editor-breadcrumb">Home &gt; Print Products</p>
+            <span id="printEditorHeroKicker">Business printing</span>
+            <h1 id="printEditorHeroTitle">Business<br /><strong>Cards</strong></h1>
+            <p id="printEditorHeroCopy">Make every introduction feel professional with sharp, durable business cards prepared for everyday handouts, deliveries and front desk use.</p>
+            <div class="desktop-editor-benefits">
+              <span>Premium cardstock</span>
+              <span>Front &amp; back</span>
+              <span>Fast reorders</span>
+              <span>Shipping available</span>
+            </div>
+            <button id="printEditorStart" type="button">Choose product</button>
+            <p class="desktop-editor-rating">★★★★★ <b>Trusted by local businesses and event teams</b></p>
+          </div>
+          <div class="desktop-editor-hero-art">
+            <div class="desktop-editor-art-card">
+              <img id="printEditorHeroImage" src="assets/printing-business-cards-ai.webp" alt="Business cards from Next Print NY" />
+            </div>
+            <div class="desktop-editor-perfect-for">
+              <strong>Perfect for</strong>
+              <span>Networking</span><span>Front desks</span><span>Deliveries</span><span>Realtors</span><span>Local shops</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="print-editor-workspace">
+          <aside class="print-editor-toolrail" aria-label="Desktop editor tools">
+            <button type="button" data-editor-tool="templates" aria-pressed="false"><span>▦</span>Templates</button>
+            <button type="button" data-editor-tool="backgrounds" aria-pressed="false"><span>◒</span>Backgrounds</button>
+            <button type="button" data-editor-tool="text" aria-pressed="false"><span>T</span>Text</button>
+            <button type="button" data-editor-tool="textfx" aria-pressed="false"><span>Fx</span>Text FX</button>
+            <button type="button" data-editor-tool="uploads" aria-pressed="false"><span>⇧</span>Uploads</button>
+            <button type="button" data-editor-tool="photos" aria-pressed="false"><span>▣</span>Photos</button>
+            <button type="button" data-editor-tool="crop" aria-pressed="false"><span>⌑</span>Crop</button>
+            <button type="button" data-editor-tool="elements" aria-pressed="false"><span>●</span>Elements</button>
+            <button type="button" data-editor-tool="shapes" aria-pressed="false"><span>◇</span>Shapes</button>
+            <button type="button" data-editor-tool="icons" aria-pressed="false"><span>★</span>Icons</button>
+            <button type="button" data-editor-tool="logos" aria-pressed="false"><span>NP</span>Logos</button>
+            <button type="button" data-editor-tool="qr" aria-pressed="false"><span>▦</span>QR Code</button>
+            <button type="button" data-editor-tool="layers" aria-pressed="false"><span>≡</span>Layers</button>
+            <button type="button" data-editor-tool="printstudio" aria-pressed="false"><span>✓</span>Print</button>
+            <button type="button" data-editor-tool="history" aria-pressed="false"><span>↶</span>History</button>
+            <button type="button" data-editor-tool="calculator" aria-pressed="false"><span>$</span>Calc</button>
+            <button type="button" data-editor-tool="mockups" aria-pressed="false"><span>▧</span>Mockups</button>
+            <button type="button" data-editor-tool="ai" aria-pressed="false"><span>✦</span>AI Tools</button>
+          </aside>
+
+          <aside class="print-editor-card print-editor-controls" hidden>
+            <div class="print-product-fields">
+              <h2>Product details</h2>
+              <label>
+                Product
+                <select id="printProductSelect"></select>
+              </label>
+              <label>
+                Size
+                <select id="printSizeSelect"></select>
+              </label>
+              <label>
+                Quantity
+                <select id="printQuantitySelect"></select>
+              </label>
+              <div id="printOptionFields" class="print-option-fields"></div>
+              <label>
+                Background color 1
+                <input id="printBgColor1" type="color" value="#dff8ff" />
+              </label>
+              <label>
+                Background color 2
+                <input id="printBgColor2" type="color" value="#ffffff" />
+              </label>
+            </div>
+
+            <div class="edit-panel">
+              <h3>Edit selected</h3>
+              <label>
+                Text
+                <input id="printSelectedText" type="text" value="Your Text Here" />
+              </label>
+              <label>
+                Font
+                <select id="printSelectedFont">
+                  <option>Arial</option>
+                  <option>Poppins</option>
+                  <option>Oswald</option>
+                  <option>Bebas Neue</option>
+                  <option>Anton</option>
+                  <option>Playfair Display</option>
+                  <option>Cinzel</option>
+                  <option>Abril Fatface</option>
+                  <option>Lobster</option>
+                  <option>Pacifico</option>
+                  <option>Righteous</option>
+                  <option>Impact</option>
+                  <option>Georgia</option>
+                  <option>Montserrat</option>
+                </select>
+              </label>
+              <label>
+                Font size
+                <input id="printSelectedSize" type="number" min="12" max="96" value="32" />
+              </label>
+              <label>
+                Color
+                <input id="printSelectedColor" type="color" value="#061a35" />
+              </label>
+              <button id="printDuplicateObject" class="secondary-btn" type="button">Duplicate Object</button>
+              <button id="printDeleteObject" class="danger-btn" type="button">Delete Object</button>
+            </div>
+          </aside>
+
+          <section class="print-editor-main">
+            <article class="print-editor-card print-design-card">
+              <div class="print-design-top">
+                <div>
+                  <span>Design area</span>
+                  <h2 id="printDesignSize">3.75 x 2.25 in</h2>
+                  <p id="printSelectionCompact" class="print-selection-compact"></p>
+                  <a id="printChangeSelection" class="print-change-selection" href="printing.html">Change choices</a>
+                </div>
+                <div class="print-object-toolbar" aria-label="Selected object controls">
+                  <label>
+                    Font
+                    <select id="printToolbarFont">
+                    <option>Arial</option>
+                    <option>Poppins</option>
+                    <option>Oswald</option>
+                    <option>Bebas Neue</option>
+                    <option>Anton</option>
+                    <option>Playfair Display</option>
+                    <option>Cinzel</option>
+                    <option>Abril Fatface</option>
+                    <option>Lobster</option>
+                    <option>Pacifico</option>
+                    <option>Righteous</option>
+                      <option>Impact</option>
+                      <option>Georgia</option>
+                      <option>Montserrat</option>
+                    </select>
+                  </label>
+                  <label>
+                    Color
+                    <input id="printToolbarColor" type="color" value="#061a35" />
+                  </label>
+                  <label>
+                    Font size
+                    <input id="printToolbarSize" type="number" min="12" max="96" value="32" />
+                  </label>
+                  <button id="printToolbarDelete" class="danger" type="button">Delete Object</button>
+                  <button id="printToolbarDuplicate" class="duplicate" type="button">Duplicate Object</button>
+                  <button id="printToolbarFlip" type="button">Flip</button>
+                  <button id="printToolbarRemoveBg" type="button">BG Remove</button>
+                  <button id="printToolbarBold" type="button">Bold</button>
+                  <button id="printToolbarItalic" type="button">Italic</button>
+                  <button id="printToolbarCurve" type="button">Curve</button>
+                  <button id="printToolbarOutline" type="button">Outline</button>
+                  <button id="printToolbarShadow" type="button">Shadow</button>
+                  <label class="image-control">Transparency <input id="printToolbarOpacity" type="range" min="10" max="100" value="100" /></label>
+                  <label class="image-control">Rotate <input id="printToolbarRotate" type="range" min="-180" max="180" value="0" /></label>
+                </div>
+                <div class="print-desktop-toolbar" aria-label="Canvas controls">
+                  <button type="button" data-canvas-action="undo" aria-label="Undo">Undo</button>
+                  <button type="button" data-canvas-action="redo" aria-label="Redo">Redo</button>
+                  <button type="button" data-canvas-action="align-left" aria-label="Align left">Left</button>
+                  <button type="button" data-canvas-action="align-center" aria-label="Align center">Center X</button>
+                  <button type="button" data-canvas-action="align-right" aria-label="Align right">Right</button>
+                  <button type="button" data-canvas-action="align-middle" aria-label="Align middle">Center Y</button>
+                  <button type="button" data-canvas-action="toggle-snap" aria-label="Toggle snap">Snap</button>
+                  <button type="button" data-canvas-action="zoom-out" aria-label="Zoom out">−</button>
+                  <button type="button" data-canvas-action="zoom-in" aria-label="Zoom in">+</button>
+                  <button type="button" data-canvas-action="center" aria-label="Center selected object">Center</button>
+                  <button type="button" data-canvas-action="toggle-guides" aria-label="Show or hide guides">Guides</button>
+                  <button id="printSaveDesign" class="save-btn" type="button">Save PNG</button>
+                  <button id="printSavePrint" class="save-btn print-ready-btn" type="button">Print 300 DPI</button>
+                </div>
+              </div>
+
+              <div id="printSideTabs" class="print-side-tabs" aria-label="Design side selector"></div>
+              <section id="printEditorDrawer" class="print-editor-drawer" aria-live="polite"></section>
+              <div class="print-canvas-frame">
+                <div id="printDesignCanvas" class="print-design-canvas" aria-label="Print product design canvas">
+                  <div class="print-bleed-line"><span>Bleed 3.75 x 2.25</span></div>
+                  <div class="print-trim-line"><span>Trim 3.50 x 2.00</span></div>
+                  <div class="print-safe-zone"><span>Safe Zone 3.25 x 1.75</span></div>
+                </div>
+              </div>
+            </article>
+
+            <div class="print-bottom-panels">
+              <article class="print-editor-card print-order-summary">
+                <h2>Order Summary</h2>
+                <dl>
+                  <div><dt>Product</dt><dd id="printSummaryProduct">Business Cards</dd></div>
+                  <div><dt>Size</dt><dd id="printSummarySize">3.75 x 2.25 in</dd></div>
+                  <div><dt>Quantity</dt><dd id="printSummaryQuantity">100</dd></div>
+                  <div><dt>Sides</dt><dd id="printSummarySides">Front and Back</dd></div>
+                </dl>
+                <div class="summary-total">
+                  <span>Total</span>
+                  <strong id="printSummaryTotal">$35.00</strong>
+                </div>
+                <div class="member-price-compare" aria-label="Member price comparison">
+                  <div><span>Member price</span><strong id="printSummaryMemberPrice">$25.75</strong></div>
+                  <div><span>Regular customer</span><strong id="printSummaryRegularPrice">$35.00</strong></div>
+                  <div><span>You save with membership</span><strong id="printSummarySavings">$9.25</strong></div>
+                </div>
+              </article>
+
+              <article class="print-editor-card print-submit-card">
+                <h2>Submit Order</h2>
+                <div class="how-box">
+                  <p>1. Design front and back</p>
+                  <p>2. Check quantity and price</p>
+                  <p>3. Continue to checkout</p>
+                  <p>4. Pay securely with PayPal</p>
+                </div>
+                <button id="printRunPreflight" class="preflight-btn" type="button">Check Print Ready</button>
+                <p id="printPreflightResult" class="order-status" aria-live="polite"></p>
+                <button id="printContinueCheckout" class="submit-btn" type="button">Continue to Checkout</button>
+                <p id="printEditorStatus" class="order-status" aria-live="polite"></p>
+              </article>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-container">
+          <section class="footer-col footer-brand">
+            <img class="footer-logo" src="assets/logo-clear.svg" alt="Next Print NY" />
+            <p>Printing, Signs, Banners & Custom Design Solutions for your business, events and brand.</p>
+            <p class="ecuador-owned-badge"><img src="assets/ecuador-flag.png" alt="Ecuador flag" /> Proudly Ecuadorian-Owned</p>
+            <div class="socials">
+              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+              <a href="mailto:nextprintny@gmail.com" aria-label="Email">✉</a>
+            </div>
+          </section>
+
+          <section class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="index.html">Main Site</a>
+            <a href="banner-designer/">Signs &amp; Banners</a>
+            <a href="banner-designer/designer">Banner Designer</a>
+            <a href="tshirt.html">T-Shirts &amp; Apparel</a>
+            <a href="printing.html">Print Products</a>
+            <a href="contact.html">Contact Us</a>
+          </section>
+
+          <section class="footer-col">
+            <h4>Services</h4>
+            <a href="printing.html#banners">Banners</a>
+            <a href="printing.html#banners">Vinyl Banners</a>
+            <a href="printing.html#retractable-banners">Retractable Banners</a>
+            <a href="printing.html#yard-signs">Yard Signs</a>
+            <a href="printing.html#stickers">Decals &amp; Stickers</a>
+            <a href="index.html#copies">Printing &amp; Copies</a>
+          </section>
+
+          <section class="footer-col footer-contact">
+            <h4>Contact</h4>
+            <p>☎ 239 333 7935</p>
+            <p>📍 Brooklyn, NY</p>
+            <p>🕘 Mon - Sat: 9AM - 7PM</p>
+            <p>✉ nextprintny@gmail.com</p>
+          </section>
+
+          <section class="footer-col footer-why">
+            <h4>Why Next Print NY?</h4>
+            <p>✔ High Quality Printing</p>
+            <p>✔ Fast Turnaround</p>
+            <p>✔ Competitive Pricing</p>
+            <p>✔ Excellent Customer Service</p>
+          </section>
+        </div>
+
+        <div class="footer-bottom">© 2026 Next Print NY. All Rights Reserved.</div>
+      </footer>
+    </div>
+    <script src="script.js?v=20260618-0720"></script>
+    <script src="print-products-editor.js?v=20260629-large-format-editor"></script>
+  </body>
+</html>

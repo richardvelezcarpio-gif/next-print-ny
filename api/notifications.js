@@ -1,5 +1,5 @@
 import webpush from "web-push";
-import { requireAdmin } from "./_admin-auth.js";
+import { requireAdmin } from "../lib/admin-auth.js";
 
 const table = "portal_push_subscriptions";
 const configured = () => Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);

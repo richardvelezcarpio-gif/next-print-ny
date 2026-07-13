@@ -1,9 +1,8 @@
-import { catalogPriceFor } from "./printing-prices.js";
+import { catalogPriceFor, memberCatalogPriceFor } from "../lib/printing-prices.js";
 
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
 const MAX_FILE_SIZE_BASE64 = 17 * 1024 * 1024;
-const ZELLE_ACCOUNT = "2393337935";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -13,18 +12,25 @@ export default async function handler(req, res) {
 
   const order = sanitizeOrder(req.body || {});
   const catalogPrice = catalogPriceFor(order.product, order.quantity, order.details);
+  const memberCatalogPrice = memberCatalogPriceFor(order.product, order.quantity, order.details);
 
   if (!order.name || !order.phone || !order.service || !order.details) {
     res.status(400).json({ error: "Missing required fields" });
     return;
   }
 
-  if (order.product && !catalogPrice) {
+  if (order.product && !catalogPrice && !memberCatalogPrice) {
     res.status(400).json({ error: "Invalid catalog product or quantity" });
     return;
   }
 
-  if (catalogPrice) order.budget = catalogPrice;
+  if (catalogPrice) {
+    const submittedAmount = parseMoney(order.budget);
+    const regularAmount = parseMoney(catalogPrice);
+    const memberAmount = parseMoney(memberCatalogPrice);
+    const minimumAmount = Math.min(...[regularAmount, memberAmount].filter((amount) => amount > 0));
+    order.budget = submittedAmount >= minimumAmount ? `$${submittedAmount.toFixed(2)}` : catalogPrice;
+  }
 
   const totalFileSize = order.files.reduce((total, file) => total + String(file.content || "").length, 0);
   if (totalFileSize > MAX_FILE_SIZE_BASE64) {
@@ -41,6 +47,7 @@ export default async function handler(req, res) {
     res.status(200).json({
       ok: true,
       orderNumber,
+      amount: parseMoney(order.budget),
       whatsappUrl: buildWhatsappUrl(order, orderNumber),
       saved: saveResult.saved,
       warning: [saveResult.warning, emailResult.warning].filter(Boolean).join(" | "),
@@ -78,12 +85,13 @@ async function sendAdminOrderEmail(order, orderNumber, apiKey) {
     <p><strong>Cliente:</strong> ${escapeHtml(order.name)}</p>
     <p><strong>Teléfono:</strong> ${escapeHtml(order.phone)}</p>
     <p><strong>Email:</strong> ${escapeHtml(order.email || "No incluido")}</p>
+    <p><strong>Entrega:</strong> ${escapeHtml(fulfillmentLabel(order, false))}</p>
+    ${requiresShippingAddress(order.fulfillment) ? `<p><strong>Dirección:</strong> ${escapeHtml(formatAddress(order.address))}</p>` : ""}
     <p><strong>Idioma:</strong> ${selectedLanguage}</p>
     <p><strong>Fecha del pedido:</strong> ${escapeHtml(order.orderDate || "No incluida")}</p>
     <p><strong>Fecha de entrega:</strong> ${escapeHtml(order.dueDate || "No incluida")}</p>
     <p><strong>Precio:</strong> ${escapeHtml(order.budget || "No incluido")}</p>
-    <p><strong>Zelle:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
-    <p><strong>Nota para pago:</strong> Order ${escapeHtml(orderNumber)}</p>
+    <p><strong>Número de orden:</strong> ${escapeHtml(orderNumber)}</p>
     <p><strong>Detalles:</strong></p>
     <p>${escapeHtml(order.details).replace(/\n/g, "<br>")}</p>
   `;
@@ -108,7 +116,6 @@ async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
   const isEnglish = order.language === "en";
   const trackUrl = `${baseUrl}/tracking.html?order=${encodeURIComponent(orderNumber)}`;
   const invoiceUrl = `${baseUrl}/invoice.html?order=${encodeURIComponent(orderNumber)}`;
-  const payUrl = `${baseUrl}/payments.html`;
   const subject = isEnglish
     ? `Next Print NY received your order ${orderNumber}`
     : `Next Print NY recibió tu orden ${orderNumber}`;
@@ -116,9 +123,6 @@ async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
   const intro = isEnglish
     ? "We received your request. Keep this order number for tracking and payment reference."
     : "Recibimos tu solicitud. Guarda este número para rastrear tu orden y usarlo como referencia de pago.";
-  const paymentCopy = isEnglish
-    ? "If we confirm a total or deposit, you can pay by Zelle using the information below."
-    : "Cuando confirmemos el total o depósito, puedes pagar por Zelle usando esta información.";
   const nextStep = isEnglish
     ? "We will review your request and contact you with the next step."
     : "Vamos a revisar tu solicitud y te contactaremos con el próximo paso.";
@@ -131,17 +135,12 @@ async function sendCustomerOrderEmail(order, orderNumber, apiKey, baseUrl) {
       <p><strong>Service:</strong> ${escapeHtml(order.service)}</p>
       <p><strong>Customer:</strong> ${escapeHtml(order.name)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(order.phone)}</p>
+      <p><strong>${isEnglish ? "Delivery option" : "Opción de entrega"}:</strong> ${escapeHtml(fulfillmentLabel(order, isEnglish))}</p>
+      ${requiresShippingAddress(order.fulfillment) ? `<p><strong>${isEnglish ? "Shipping address" : "Dirección de envío"}:</strong> ${escapeHtml(formatAddress(order.address))}</p>` : ""}
       <p><strong>${isEnglish ? "Order date" : "Fecha del pedido"}:</strong> ${escapeHtml(order.orderDate || (isEnglish ? "Not included" : "No incluida"))}</p>
       <p><strong>${isEnglish ? "Delivery date" : "Fecha de entrega"}:</strong> ${escapeHtml(order.dueDate || (isEnglish ? "Not included" : "No incluida"))}</p>
-      <div style="border-left:4px solid #03bfe7;background:#f2fcff;padding:14px 16px;margin:18px 0">
-        <h3 style="margin:0 0 8px;color:#05275c">Zelle</h3>
-        <p style="margin:0 0 6px">${paymentCopy}</p>
-        <p style="margin:0"><strong>${isEnglish ? "Send to" : "Enviar a"}:</strong> ${escapeHtml(ZELLE_ACCOUNT)}</p>
-        <p style="margin:0"><strong>${isEnglish ? "Note" : "Nota"}:</strong> Order ${escapeHtml(orderNumber)}</p>
-      </div>
       <p><a href="${escapeHtml(invoiceUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Open invoice / receipt" : "Abrir invoice / recibo"}</a></p>
       <p><a href="${escapeHtml(trackUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Track your order" : "Rastrear tu orden"}</a></p>
-      <p><a href="${escapeHtml(payUrl)}" style="color:#05275c;font-weight:bold">${isEnglish ? "Payment instructions" : "Instrucciones de pago"}</a></p>
       <p>${nextStep}</p>
       <p style="color:#66708a">Next Print NY<br />239 333 7935</p>
     </div>
@@ -196,6 +195,8 @@ async function saveOrderRecord(order, orderNumber) {
     order.product ? `Product: ${order.product}` : "",
     order.quantity ? `Quantity: ${order.quantity}` : "",
     `Details: ${order.details}`,
+    order.fulfillment ? `Fulfillment: ${fulfillmentLabel(order)}` : "",
+    requiresShippingAddress(order.fulfillment) ? `Shipping address: ${formatAddress(order.address)}` : "",
     order.orderDate ? `Order date: ${order.orderDate}` : "",
     order.dueDate ? `Delivery date: ${order.dueDate}` : "",
     order.budget ? `Price: ${order.budget}` : "",
@@ -262,8 +263,50 @@ function sanitizeOrder(input) {
     name: clean(input.name, 120),
     phone: clean(input.phone, 80),
     email: clean(input.email, 120),
+    fulfillment: normalizeFulfillment(input.fulfillment),
+    address: sanitizeAddress(input.address || {}),
     files,
   };
+}
+
+function sanitizeAddress(input) {
+  return {
+    street: clean(input.street, 180),
+    apartment: clean(input.apartment, 80),
+    city: clean(input.city, 100),
+    state: clean(input.state, 30),
+    zip: clean(input.zip, 30),
+  };
+}
+
+function fulfillmentLabel(order, isEnglish = true) {
+  if (order.fulfillment === "standard") return isEnglish ? "Standard Shipping" : "Envío estándar";
+  if (order.fulfillment === "express") return isEnglish ? "Express Shipping" : "Envío express";
+  if (order.fulfillment === "pickup") return isEnglish ? "Pickup store" : "Recogida en tienda";
+  if (order.fulfillment === "shipping") return isEnglish ? "Shipping" : "Envío";
+  return isEnglish ? "Not selected" : "No seleccionado";
+}
+
+function normalizeFulfillment(value) {
+  const fulfillment = String(value || "").toLowerCase();
+  if (fulfillment === "standard" || fulfillment === "express" || fulfillment === "pickup" || fulfillment === "shipping") {
+    return fulfillment;
+  }
+  return "";
+}
+
+function requiresShippingAddress(fulfillment) {
+  return fulfillment === "standard" || fulfillment === "express" || fulfillment === "shipping";
+}
+
+function formatAddress(address = {}) {
+  return [
+    address.street,
+    address.apartment,
+    [address.city, address.state, address.zip].filter(Boolean).join(" "),
+  ]
+    .filter(Boolean)
+    .join(", ");
 }
 
 function buildOrderNumber() {

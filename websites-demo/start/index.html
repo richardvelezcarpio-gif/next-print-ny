@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="This operational page is part of the secure Next Print NY customer and order workflow." />
+    <meta name="robots" content="noindex, follow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start Your Website | Next Print NY</title>
+    <link rel="stylesheet" href="/websites-demo/sales.css?v=20260621-sales-funnel" />
+  </head>
+  <body class="website-form-page">
+    <main class="form-shell">
+      <div class="form-brand"><a href="/websites-demo/"><img src="/assets/logo-clear.svg" alt="Next Print NY" /></a><a href="/websites-demo/#plans">Back to plans</a></div>
+      <section class="form-card">
+        <p class="eyebrow">Step 1 of 3</p>
+        <h1>Start your website project.</h1>
+        <p>Share the essentials first. After your secure payment, you can add pages, content, files and every project detail in your private project portal.</p>
+        <div id="planSummary" class="plan-summary" aria-live="polite"></div>
+        <form id="websiteStartForm">
+          <div class="form-grid">
+            <label>Business name<input name="businessName" required autocomplete="organization" /></label>
+            <label>Contact name<input name="contactName" required autocomplete="name" /></label>
+            <label>Phone<input name="phone" required inputmode="tel" autocomplete="tel" /></label>
+            <label>Email<input name="email" required type="email" autocomplete="email" /></label>
+            <label class="full">Business type<select name="businessCategory"><option value="">Choose one</option><option>Local service business</option><option>Retail or online store</option><option>Restaurant or food business</option><option>Construction or home services</option><option>Print shop or creative business</option><option>Other</option></select></label>
+            <fieldset><legend>Payment choice</legend><div class="payment-choice"><label><input type="radio" name="payment" value="full" /> Pay in full</label><label><input type="radio" name="payment" value="monthly" /> Pay monthly</label></div></fieldset>
+            <label class="full">What should your website help you accomplish?<textarea name="projectDetails" placeholder="Examples: get more calls, show services, take bookings, sell products..." required></textarea></label>
+          </div>
+          <button class="form-submit" type="submit">Continue to secure payment</button>
+          <p id="formStatus" class="form-status" role="status"></p>
+        </form>
+      </section>
+    </main>
+    <script src="/websites-demo/start/start.js?v=20260621-sales-funnel"></script>
+  </body>
+</html>

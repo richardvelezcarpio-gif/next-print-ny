@@ -7,7 +7,16 @@ const trackingCustomer = document.querySelector("#trackingCustomer");
 const trackingUpdated = document.querySelector("#trackingUpdated");
 const trackingAmountRow = document.querySelector("#trackingAmountRow");
 const trackingAmount = document.querySelector("#trackingAmount");
+const trackingWhatsapp = document.querySelector("#trackingWhatsapp");
+const trackingPaymentNote = document.querySelector("#trackingPaymentNote");
+const trackingCopyNumber = document.querySelector("#trackingCopyNumber");
+const trackingPaymentLink = document.querySelector("#trackingPaymentLink");
 const localOrdersKey = "nextPrintRecentOrders";
+
+trackingCopyNumber?.addEventListener("click", () => {
+  const orderNumber = normalizeTrackingOrder(trackingInput?.value || trackingOrderTitle?.textContent || "");
+  copyTrackingValue(orderNumber, trackingCopyNumber, "payment.copyOrder");
+});
 
 const trackingOrder = new URLSearchParams(window.location.search).get("order");
 if (trackingOrder && trackingInput) {
@@ -59,6 +68,11 @@ function renderTrackingResult(order) {
     trackingAmountRow.hidden = !amount;
     trackingAmount.textContent = amount ? money(amount) : "-";
   }
+  if (trackingPaymentNote) trackingPaymentNote.textContent = order.orderNumber;
+  if (trackingPaymentLink) trackingPaymentLink.href = buildPaymentUrl(order.orderNumber, amount);
+  trackingWhatsapp.href = `https://wa.me/12393337935?text=${encodeURIComponent(
+    `Hello Next Print NY, I want to ask about order ${order.orderNumber}.`
+  )}`;
   updateTimeline(order.status);
   trackingResult.hidden = false;
 }
@@ -80,6 +94,12 @@ function setTrackingStatus(text, tone = "") {
   trackingStatus.className = `tracking-status ${tone}`.trim();
 }
 
+function buildPaymentUrl(orderNumber, amount) {
+  const params = new URLSearchParams({ order: orderNumber });
+  if (amount) params.set("amount", String(amount));
+  return `payments.html?${params.toString()}`;
+}
+
 async function copyTrackingValue(value, button, labelKey) {
   const text = String(value || "").trim();
   if (!text || !button) return;
@@ -95,7 +115,7 @@ async function copyTrackingValue(value, button, labelKey) {
     input.remove();
   }
 
-  button.textContent = getTrackingText("zelle.copied", "Copied");
+  button.textContent = getTrackingText("payment.copied", "Copied");
   window.setTimeout(() => {
     button.textContent = getTrackingText(labelKey, button.textContent);
   }, 1300);
@@ -108,17 +128,15 @@ function getTrackingText(key, fallback) {
       "tracking.loading": "Buscando orden...",
       "tracking.local": "Mostrando tu confirmación local. Actualizaremos el estado en vivo pronto.",
       "tracking.notFound": "No encontramos la orden. Revisa el número o contáctanos.",
-      "zelle.copyEmail": "Copiar teléfono de Zelle",
-      "zelle.copyOrder": "Copiar número de orden",
-      "zelle.copied": "Copiado",
+      "payment.copyOrder": "Copiar número de orden",
+      "payment.copied": "Copiado",
     },
     en: {
       "tracking.loading": "Checking order...",
       "tracking.local": "Showing your local order confirmation. We will update the live status soon.",
       "tracking.notFound": "Order not found. Check the number or contact us.",
-      "zelle.copyEmail": "Copy Zelle phone",
-      "zelle.copyOrder": "Copy order number",
-      "zelle.copied": "Copied",
+      "payment.copyOrder": "Copy order number",
+      "payment.copied": "Copied",
     },
   };
 

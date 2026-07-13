@@ -1,0 +1,207 @@
+/* Mobile-only presentation for the website plans. */
+@media (max-width: 760px) {
+  .pricing-page {
+    min-height: 0;
+    padding: 20px 10px 16px;
+    background: #eef4fb;
+  }
+
+  .pricing-container {
+    width: 100%;
+    max-width: none;
+  }
+
+  .pricing-header {
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .pricing-header span {
+    font-size: 0.45rem;
+    letter-spacing: 0.07em;
+  }
+
+  .pricing-header h1 {
+    margin: 5px 0 6px;
+    font-size: 1.05rem;
+    line-height: 1.08;
+  }
+
+  .pricing-header p {
+    max-width: 320px;
+    margin: 0 auto;
+    font-size: 0.46rem;
+    line-height: 1.35;
+  }
+
+  .pricing-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .pricing-card {
+    min-width: 0;
+    padding: 8px;
+    border-radius: 5px;
+    box-shadow: 0 6px 16px rgba(7, 27, 51, 0.1);
+  }
+
+  .pricing-card.popular {
+    border-width: 1.5px;
+  }
+
+  .popular-badge {
+    align-self: flex-start;
+    margin-bottom: 6px;
+    padding: 3px 5px;
+    border-radius: 99px;
+    font-size: 0.34rem;
+    line-height: 1;
+  }
+
+  .pricing-card h2 {
+    font-size: 0.67rem;
+    line-height: 1.05;
+  }
+
+  .plan-description {
+    min-height: 39px;
+    margin: 5px 0 8px;
+    font-size: 0.4rem;
+    line-height: 1.22;
+  }
+
+  .payment-options {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .price-box {
+    gap: 3px;
+    padding: 7px;
+    border-radius: 4px;
+  }
+
+  .price-box span {
+    font-size: 0.34rem;
+  }
+
+  .price-box h3 {
+    font-size: 0.82rem;
+  }
+
+  .price-box p,
+  .price-box small {
+    font-size: 0.36rem;
+    line-height: 1.15;
+  }
+
+  .price-box strong {
+    font-size: 0.5rem;
+  }
+
+  .select-plan-btn {
+    min-height: 20px;
+    margin-top: 3px;
+    padding: 3px 2px;
+    border-radius: 4px;
+    font-size: 0.34rem;
+    line-height: 1.05;
+  }
+
+  .pricing-card ul {
+    gap: 4px;
+    margin-top: auto;
+  }
+
+  .pricing-card li {
+    font-size: 0.39rem;
+    line-height: 1.18;
+  }
+
+  .pricing-card li:before {
+    margin-right: 3px;
+  }
+
+  .pricing-addons {
+    grid-template-columns: minmax(0, 1.22fr) minmax(0, 0.78fr);
+    gap: 8px;
+    margin-top: 12px;
+    padding: 11px;
+    border-radius: 5px;
+  }
+
+  .pricing-addons span {
+    font-size: 0.35rem;
+    letter-spacing: 0.06em;
+  }
+
+  .pricing-addons h2 {
+    margin: 4px 0;
+    font-size: 0.67rem;
+    line-height: 1.1;
+  }
+
+  .pricing-addons p {
+    font-size: 0.38rem;
+    line-height: 1.25;
+  }
+
+  .addon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .addon-grid article {
+    padding: 7px;
+    border-radius: 4px;
+  }
+
+  .addon-grid strong {
+    margin-top: 4px;
+    font-size: 0.67rem;
+  }
+
+  .addon-grid small {
+    margin-top: 3px;
+    font-size: 0.34rem;
+    line-height: 1.15;
+  }
+
+  .pricing-page + .footer {
+    margin-top: 0 !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .pricing-page {
+    padding-inline: 7px;
+  }
+
+  .pricing-grid {
+    gap: 4px;
+  }
+
+  .pricing-card {
+    padding: 6px;
+  }
+
+  .pricing-card h2 {
+    font-size: 0.62rem;
+  }
+
+  .plan-description,
+  .pricing-card li {
+    font-size: 0.36rem;
+  }
+
+  .price-box {
+    padding: 5px;
+  }
+
+  .pricing-addons {
+    gap: 5px;
+    padding: 8px;
+  }
+}

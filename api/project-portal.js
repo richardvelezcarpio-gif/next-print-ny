@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { requireAdmin } from "./_admin-auth.js";
+import { requireAdmin } from "../lib/admin-auth.js";
 
 const TABLES = { customers: "portal_customers", estimates: "portal_estimates", items: "portal_estimate_items", projects: "portal_projects", files: "portal_files", messages: "portal_messages", payments: "portal_payments" };
 const DEMO_TOKEN = "np_demo_8xK29mQa72";

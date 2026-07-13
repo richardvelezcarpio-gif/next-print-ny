@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="This operational page is part of the secure Next Print NY customer and order workflow." />
+    <meta name="robots" content="noindex, follow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Banner Checkout | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260702-mobile-cleanup" />
+    <link rel="stylesheet" href="full-wide.css?v=20260621-full-wide" />
+  </head>
+  <body>
+    <div class="page-shell shirt-commerce-shell">
+      <section class="reseller-strip" aria-label="Reseller program">
+        <div>
+          <strong data-i18n="home.reseller.title">🔥 Reseller Program Available</strong>
+          <span data-i18n="home.reseller.copy">Get wholesale pricing and grow your own print business.</span>
+        </div>
+        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer" data-i18n="home.reseller.button">Apply for Wholesale</a>
+      </section>
+
+      <header class="top-nav site-main-header">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html" data-i18n="home.nav.home">Home</a>
+          <a class="active" href="banner-designer/" data-i18n="home.nav.signs">Signs & Banners</a>
+          <a href="tshirt.html" data-i18n="home.nav.shirts">T-Shirts & Apparel</a>
+          <a href="printing.html" data-i18n="home.nav.products">Print Products</a>
+          <a href="websites-demo/" data-i18n="home.nav.websites">Websites</a>
+          <a href="tracking.html" data-i18n="tracking.nav">Track Order</a>
+          <a href="about.html" data-i18n="home.nav.about">About Us</a>
+        </nav>
+        <div class="nav-actions">
+          <a class="phone-pill" href="tel:+12393337935">239 333 7935</a>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" class="active" data-lang="en">EN</button>
+            <button type="button" data-lang="es">ES</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="shirt-checkout-page print-checkout-page">
+        <section class="shirt-checkout-shell">
+          <article class="shirt-checkout-intro">
+            <span>Secure banner checkout</span>
+            <h1>Finish your banner order</h1>
+            <p>Confirm your contact and delivery details, then pay securely with PayPal.</p>
+          </article>
+
+          <section id="bannerCheckoutSuccess" class="shirt-checkout-success" hidden>
+            <span>Payment received</span>
+            <h2>Thank you. Your banner order is paid.</h2>
+            <p>Your order number is <strong id="bannerPaidOrderNumber">NP-000000</strong>. We saved it in the Next Print NY admin.</p>
+            <div>
+              <a class="action-gradient" id="bannerPaidTrackLink" href="tracking.html">Track order</a>
+              <a class="outline-button" href="banner-designer/designer">Start another banner</a>
+            </div>
+          </section>
+
+          <section id="bannerCheckoutMissing" class="shirt-checkout-missing" hidden>
+            <h2>No banner design found</h2>
+            <p>Please design your banner first.</p>
+            <a class="action-gradient" href="banner-designer/designer">Open banner designer</a>
+          </section>
+
+          <section id="bannerCheckoutWorkspace" class="shirt-checkout-grid">
+            <aside class="shirt-checkout-summary">
+              <div class="shirt-checkout-preview print-checkout-preview">
+                <img id="bannerCheckoutPreview" alt="Banner design preview" />
+              </div>
+              <div class="shirt-checkout-total">
+                <span>Total due today</span>
+                <strong id="bannerCheckoutTotal">$0.00</strong>
+              </div>
+              <dl>
+                <div>
+                  <dt>Product</dt>
+                  <dd id="bannerCheckoutProduct">Banner</dd>
+                </div>
+                <div>
+                  <dt>Size</dt>
+                  <dd id="bannerCheckoutSize">8 ft x 2 ft</dd>
+                </div>
+                <div>
+                  <dt>Square Feet</dt>
+                  <dd id="bannerCheckoutSqft">16.00</dd>
+                </div>
+                <div>
+                  <dt>Quantity</dt>
+                  <dd id="bannerCheckoutQty">1</dd>
+                </div>
+              </dl>
+              <div id="bannerCheckoutItems" class="shirt-checkout-items"></div>
+            </aside>
+
+            <form id="bannerCheckoutForm" class="shirt-checkout-card">
+              <section>
+                <h2>Customer information</h2>
+                <div class="shirt-checkout-fields two">
+                  <label>
+                    Full name
+                    <input name="name" type="text" autocomplete="name" required />
+                  </label>
+                  <label>
+                    Phone
+                    <input name="phone" type="tel" autocomplete="tel" required />
+                  </label>
+                </div>
+                <label>
+                  Email
+                  <input name="email" type="email" autocomplete="email" required />
+                </label>
+              </section>
+
+              <section>
+                <h2>Delivery option</h2>
+                <div class="shirt-fulfillment-options">
+                  <label>
+                    <input type="radio" name="fulfillment" value="shipping" checked />
+                    <span><strong>Shipping</strong> Send to my address</span>
+                  </label>
+                  <label>
+                    <input type="radio" name="fulfillment" value="pickup" />
+                    <span><strong>Pickup store</strong> Pick up at Next Print NY</span>
+                  </label>
+                </div>
+                <div id="bannerAddressFields" class="shirt-checkout-fields address">
+                  <label>
+                    Street address
+                    <input name="street" type="text" autocomplete="street-address" required />
+                  </label>
+                  <label>
+                    Apt / Suite
+                    <input name="apartment" type="text" autocomplete="address-line2" />
+                  </label>
+                  <label>
+                    City
+                    <input name="city" type="text" autocomplete="address-level2" required />
+                  </label>
+                  <label>
+                    State
+                    <input name="state" type="text" autocomplete="address-level1" maxlength="2" value="NY" required />
+                  </label>
+                  <label>
+                    ZIP code
+                    <input name="zip" type="text" autocomplete="postal-code" required />
+                  </label>
+                </div>
+                <p id="bannerPickupNote" class="shirt-pickup-note" hidden>Pickup at Next Print NY. We will confirm the pickup time after payment.</p>
+              </section>
+
+              <section class="embedded-paypal-panel">
+                <div>
+                  <span>Secure embedded checkout</span>
+                  <h2>Pay with PayPal or card</h2>
+                  <p>Complete payment here without leaving this page.</p>
+                </div>
+                <div id="bannerPayPalButtons" class="paypal-buttons-shell" aria-label="PayPal checkout buttons"></div>
+                <small>Debit or credit card appears when PayPal makes it available for this checkout.</small>
+              </section>
+
+              <button id="bannerPayFallback" class="action-gradient shirt-pay-button" type="submit" hidden>Open backup PayPal checkout</button>
+              <p id="bannerCheckoutStatus" class="order-status" aria-live="polite"></p>
+            </form>
+          </section>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-container">
+          <section class="footer-col footer-brand">
+            <img class="footer-logo" src="assets/logo-clear.svg" alt="Next Print NY" />
+            <p>Printing, Signs, Banners & Custom Design Solutions for your business, events and brand.</p>
+            <p class="ecuador-owned-badge"><img src="assets/ecuador-flag.png" alt="Ecuador flag" /> Proudly Ecuadorian-Owned</p>
+            <div class="socials">
+              <a href="https://www.facebook.com/" target="_blank" rel="noreferrer" aria-label="Facebook">f</a>
+              <a href="https://www.instagram.com/" target="_blank" rel="noreferrer" aria-label="Instagram">◎</a>
+              <a href="mailto:nextprintny@gmail.com" aria-label="Email">✉</a>
+            </div>
+          </section>
+
+          <section class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="index.html">Main Site</a>
+            <a href="banner-designer/">Signs &amp; Banners</a>
+            <a href="banner-designer/designer">Banner Designer</a>
+            <a href="tshirt.html">T-Shirts &amp; Apparel</a>
+            <a href="printing.html">Print Products</a>
+            <a href="contact.html">Contact Us</a>
+          </section>
+
+          <section class="footer-col">
+            <h4>Services</h4>
+            <a href="printing.html#banners">Banners</a>
+            <a href="printing.html#banners">Vinyl Banners</a>
+            <a href="printing.html#banners">Retractable Banners</a>
+            <a href="printing.html#banners">Yard Signs</a>
+            <a href="printing.html">Decals &amp; Stickers</a>
+            <a href="index.html#copies">Printing &amp; Copies</a>
+          </section>
+
+          <section class="footer-col footer-contact">
+            <h4>Contact</h4>
+            <p>☎ 239 333 7935</p>
+            <p>📍 Brooklyn, NY</p>
+            <p>🕘 Mon - Sat: 9AM - 7PM</p>
+            <p>✉ nextprintny@gmail.com</p>
+          </section>
+
+          <section class="footer-col footer-why">
+            <h4>Why Next Print NY?</h4>
+            <p>✔ High Quality Printing</p>
+            <p>✔ Fast Turnaround</p>
+            <p>✔ Competitive Pricing</p>
+            <p>✔ Excellent Customer Service</p>
+          </section>
+        </div>
+
+        <div class="footer-bottom">© 2026 Next Print NY. All Rights Reserved.</div>
+      </footer>
+    </div>
+    <script src="script.js?v=20260618-0720"></script>
+    <script src="paypal-checkout.js?v=20260618-embedded"></script>
+    <script src="banner-checkout.js?v=20260618-embedded"></script>
+  </body>
+</html>
