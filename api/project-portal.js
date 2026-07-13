@@ -82,7 +82,7 @@ async function publicProject(req, res) {
   if (!configured()) return token === DEMO_TOKEN ? res.status(200).json(demoPayload()) : res.status(503).json({ error: "Portal is being configured" });
   try {
     const project = await one(`${TABLES.projects}?secure_token=eq.${encodeURIComponent(token)}&select=*`);
-    if (!project) return res.status(404).json({ error: "Project portal not found" });
+    if (!project) return token === DEMO_TOKEN ? res.status(200).json(demoPayload()) : res.status(404).json({ error: "Project portal not found" });
     const [estimate, customer, items, files, messages, payments] = await Promise.all([
       one(`${TABLES.estimates}?id=eq.${project.estimate_id}&select=*`),
       one(`${TABLES.customers}?id=eq.${project.customer_id}&select=*`),
