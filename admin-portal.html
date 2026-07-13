@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="project-portal.css">
   <link rel="stylesheet" href="admin-notifications.css">
   <link rel="stylesheet" href="estimate-builder.css">
+  <link rel="stylesheet" href="project-chat.css">
 </head>
 <body>
   <header class="portal-header admin-header">
@@ -44,6 +45,7 @@
       </form>
     </section>
   </main>
-  <script src="admin-portal.js"></script><script src="estimate-builder.js"></script>
+  <dialog id="adminChatModal" class="project-chat"><section><header><div><p class="eyebrow">ADMIN CONVERSATION</p><h2 id="adminChatTitle">Project messages</h2><span>Replies are saved to this project only.</span></div><button class="close" type="button" data-close-admin-chat aria-label="Close messages">×</button></header><div id="adminChatMessages" class="chat-messages" aria-live="polite"></div><form id="adminChatForm"><textarea name="message" maxlength="2000" placeholder="Reply to customer…" aria-label="Reply to customer"></textarea><div><span id="adminChatStatus" role="status"></span><button class="primary" type="submit">Send Reply</button></div></form></section></dialog>
+  <script src="admin-portal.js"></script><script src="estimate-builder.js"></script><script src="admin-chat.js"></script>
 </body>
 </html>

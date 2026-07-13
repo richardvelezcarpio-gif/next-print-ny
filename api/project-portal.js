@@ -5,6 +5,7 @@ import { requireAdmin } from "../lib/admin-auth.js";
 const TABLES = { customers: "portal_customers", estimates: "portal_estimates", items: "portal_estimate_items", projects: "portal_projects", files: "portal_files", messages: "portal_messages", payments: "portal_payments" };
 const DEMO_TOKEN = "np_demo_8xK29mQa72";
 const PUSH_SUBSCRIPTIONS = "portal_push_subscriptions";
+const demoMessages = [];
 
 export default async function handler(req, res) {
   try {
@@ -15,6 +16,7 @@ export default async function handler(req, res) {
     if (req.method === "POST" && action === "payment") return reportPayment(req, res);
     if (req.method === "POST" && action === "decision") return updateCustomerDecision(req, res);
     if (req.method === "POST" && action === "message") return postMessage(req, res);
+    if (req.method === "POST" && action === "admin-message") return postAdminMessage(req, res);
     if (req.method === "POST" && action === "estimate") return createEstimate(req, res);
     if (req.method === "POST" && action === "verify-payment") return verifyPayment(req, res);
     res.status(405).json({ error: "Method not allowed" });
@@ -118,10 +120,27 @@ async function postMessage(req, res) {
   const project = configured() ? await one(`${TABLES.projects}?secure_token=eq.${encodeURIComponent(token)}&select=*`) : token === DEMO_TOKEN ? demoPayload().project : null;
   if (!project) return res.status(404).json({ error: "Project portal not found" });
   const message = { project_id: project.id, sender_role: "customer", body, read_at: null };
-  if (!configured()) return res.status(200).json({ message: { ...message, id: "demo-message", created_at: new Date().toISOString() }, demo: true });
+  if (!configured()) { const saved = { ...message, id: `demo-customer-${Date.now()}`, created_at: new Date().toISOString() }; demoMessages.push(saved); return res.status(200).json({ message: saved, demo: true }); }
   const saved = await insert(TABLES.messages, message);
   await notifyAdmin(`New portal message: ${project.project_number}`, body.slice(0, 180));
   res.status(200).json({ message: saved });
+}
+
+async function postAdminMessage(req, res) {
+  if (!requireAdmin(req, res)) return;
+  const projectId = clean(req.body?.projectId, 80);
+  const token = safeToken(req.body?.token);
+  const body = clean(req.body?.body, 2000);
+  if ((!projectId && !token) || !body) return res.status(400).json({ error: "Project and message are required" });
+  if (!configured()) {
+    if (projectId !== "demo-project" && token !== DEMO_TOKEN) return res.status(404).json({ error: "Project not found" });
+    const message = { id: `demo-admin-${Date.now()}`, project_id: "demo-project", sender_role: "admin", body, created_at: new Date().toISOString() };
+    demoMessages.push(message);
+    return res.status(200).json({ message, demo: true });
+  }
+  const project = await one(`${TABLES.projects}?${token ? `secure_token=eq.${encodeURIComponent(token)}` : `id=eq.${encodeURIComponent(projectId)}`}&select=id`);
+  if (!project) return res.status(404).json({ error: "Project not found" });
+  return res.status(200).json({ message: await insert(TABLES.messages, { project_id: project.id, sender_role: "admin", body, read_at: null }) });
 }
 
 async function adminList(req, res) {
@@ -197,4 +216,4 @@ async function many(path) { return request(path); }
 async function insert(table, body) { const data = await request(table, { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify(body) }); return data[0]; }
 async function patch(table, id, body) { return request(`${table}?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify(body) }); }
 async function notifyAdmin(subject, text) { if (!process.env.RESEND_API_KEY) return; await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: process.env.RESEND_FROM_EMAIL || "Next Print NY <onboarding@resend.dev>", to: "nextprintny@gmail.com", subject, text }) }); }
-function demoPayload() { const estimate = { id: "demo-estimate", estimate_number: "NP-2026-00125", status: "sent", tax_mode: "no_tax", tax_amount: 0, shipping_amount: 25, installation_amount: 0, additional_fees: 0, discount_amount: 0, deposit_required: 600, estimate_date: "2026-07-13", expiration_date: "2026-08-12", project_title: "Brand Visibility Campaign", project_description: "Premium print materials designed for a cohesive launch campaign.", project_details: "Materials: 16pt card stock, premium vinyl and aluminum hardware.\nColors: Full color CMYK.\nFinishing: Gloss finish, hemming and grommets.\nProduction time: 7–10 business days.", terms: "A 50% deposit starts production. Artwork approval is required before printing. Final balance is due before delivery." }; const project = { id: "demo-project", estimate_id: estimate.id, customer_id: "demo-customer", project_number: estimate.estimate_number, secure_token: DEMO_TOKEN, status: "sent", payment_status: "unpaid" }; const items = [{ id: "1", title: "Business Cards", description: "16pt card stock, full color, 2 sides", quantity: 1000, unit: "pcs", unit_price: .45, discount: 0, taxable: false }, { id: "2", title: "Flyers", description: "Gloss finish, 8.5 × 11 in", quantity: 500, unit: "pcs", unit_price: .17, discount: 0, taxable: false }, { id: "3", title: "Vinyl Banner", description: "13oz vinyl, hemmed and grommets", quantity: 1, unit: "each", unit_price: 75, discount: 0, taxable: false }, { id: "4", title: "Retractable Banner Stand", description: "Premium pull-up aluminum stand", quantity: 1, unit: "each", unit_price: 120, discount: 0, taxable: false }, { id: "5", title: "Design & production", description: "Custom setup and finishing", quantity: 1, unit: "service", unit_price: 1087.5, discount: 0, taxable: false }]; return { project, estimate, customer: { id: "demo-customer", name: "Bright Ideas Marketing", contact_name: "Jordan Smith", email: "jsmith@brightideas.com", phone: "", billing_address: "" }, items, files: [{ id: "f1", name: "Project Mockup.pdf", source: "next_print", status: "proof_ready", size_bytes: 2500000 }, { id: "f2", name: "Logo_BrightIdeas.png", source: "customer", status: "received", size_bytes: 1200000 }], messages: [{ id: "m1", sender_role: "admin", body: "Thank you for reviewing your estimate. How can we help today?", created_at: new Date().toISOString() }], payments: [] }; }
+function demoPayload() { const estimate = { id: "demo-estimate", estimate_number: "NP-2026-00125", status: "sent", tax_mode: "no_tax", tax_amount: 0, shipping_amount: 25, installation_amount: 0, additional_fees: 0, discount_amount: 0, deposit_required: 600, estimate_date: "2026-07-13", expiration_date: "2026-08-12", project_title: "Brand Visibility Campaign", project_description: "Premium print materials designed for a cohesive launch campaign.", project_details: "Materials: 16pt card stock, premium vinyl and aluminum hardware.\nColors: Full color CMYK.\nFinishing: Gloss finish, hemming and grommets.\nProduction time: 7–10 business days.", terms: "A 50% deposit starts production. Artwork approval is required before printing. Final balance is due before delivery." }; const project = { id: "demo-project", estimate_id: estimate.id, customer_id: "demo-customer", project_number: estimate.estimate_number, secure_token: DEMO_TOKEN, status: "sent", payment_status: "unpaid" }; const items = [{ id: "1", title: "Business Cards", description: "16pt card stock, full color, 2 sides", quantity: 1000, unit: "pcs", unit_price: .45, discount: 0, taxable: false }, { id: "2", title: "Flyers", description: "Gloss finish, 8.5 × 11 in", quantity: 500, unit: "pcs", unit_price: .17, discount: 0, taxable: false }, { id: "3", title: "Vinyl Banner", description: "13oz vinyl, hemmed and grommets", quantity: 1, unit: "each", unit_price: 75, discount: 0, taxable: false }, { id: "4", title: "Retractable Banner Stand", description: "Premium pull-up aluminum stand", quantity: 1, unit: "each", unit_price: 120, discount: 0, taxable: false }, { id: "5", title: "Design & production", description: "Custom setup and finishing", quantity: 1, unit: "service", unit_price: 1087.5, discount: 0, taxable: false }]; return { project, estimate, customer: { id: "demo-customer", name: "Bright Ideas Marketing", contact_name: "Jordan Smith", email: "jsmith@brightideas.com", phone: "", billing_address: "" }, items, files: [{ id: "f1", name: "Project Mockup.pdf", source: "next_print", status: "proof_ready", size_bytes: 2500000 }, { id: "f2", name: "Logo_BrightIdeas.png", source: "customer", status: "received", size_bytes: 1200000 }], messages: [{ id: "m1", sender_role: "admin", body: "Thank you for reviewing your estimate. How can we help today?", created_at: new Date().toISOString() }, ...demoMessages], payments: [] }; }

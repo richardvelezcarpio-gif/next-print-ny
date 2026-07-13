@@ -8,11 +8,13 @@
   <link rel="icon" href="/assets/logo.png">
   <link rel="stylesheet" href="/project-portal.css">
   <link rel="stylesheet" href="/project-estimate.css">
+  <link rel="stylesheet" href="/project-chat.css">
 </head>
 <body>
   <header class="portal-header"><a href="/"><img src="/assets/logo.png" alt="Next Print NY"></a><div><button id="langEn" type="button">EN</button><button id="langEs" type="button">ES</button></div></header>
   <main id="portal" class="portal" aria-live="polite"><p class="loading">Loading secure portal…</p></main>
   <dialog id="depositModal"><form id="depositForm" method="dialog"><button class="close" value="cancel" aria-label="Close">×</button><img src="/assets/logo.png" alt="Next Print NY"><p class="eyebrow">SECURE DEPOSIT REQUEST</p><h2>Report your deposit payment</h2><dl id="depositDetails"></dl><p>Submit your payment confirmation for manual verification by Next Print NY. Payment instructions are available only through your approved secure project workflow.</p><label>Confirmation or reference number <input id="paymentReference" maxlength="100" placeholder="Optional"></label><label>Payment screenshot <input id="paymentProof" type="file" accept="image/png,image/jpeg,image/webp"></label><button class="primary" id="depositSubmit" value="submit">I Sent My Deposit Payment</button><p id="paymentStatus"></p></form></dialog>
+  <dialog id="chatModal" class="project-chat"><section><header><div><p class="eyebrow">PROJECT CONVERSATION</p><h2>Messages with Next Print NY</h2><span>Written communication only.</span></div><button class="close" type="button" data-close-chat aria-label="Close messages">×</button></header><div id="chatMessages" class="chat-messages" aria-live="polite"></div><form id="chatForm"><textarea name="message" maxlength="2000" placeholder="Write a message…" aria-label="Message"></textarea><div><span id="chatStatus" role="status"></span><button class="primary" type="submit">Send</button></div></form></section></dialog>
   <script src="/project-portal.js"></script>
 </body>
 </html>
