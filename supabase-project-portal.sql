@@ -20,3 +20,6 @@ create table if not exists public.portal_push_subscriptions (id uuid primary key
 alter table public.portal_push_subscriptions enable row level security;
 grant all privileges on public.portal_push_subscriptions to service_role;
 create policy "service role portal push subscriptions" on public.portal_push_subscriptions for all to service_role using (true) with check (true);
+alter table public.portal_customers add column if not exists phone text, add column if not exists billing_address text;
+alter table public.portal_estimates add column if not exists project_title text, add column if not exists project_description text, add column if not exists project_details text, add column if not exists estimate_date date, add column if not exists expiration_date date, add column if not exists discount_amount numeric not null default 0, add column if not exists installation_amount numeric not null default 0, add column if not exists additional_fees numeric not null default 0, add column if not exists deposit_required numeric not null default 0, add column if not exists terms text, add column if not exists internal_notes text;
+alter table public.portal_estimate_items add column if not exists unit text, add column if not exists discount numeric not null default 0, add column if not exists taxable boolean not null default false;

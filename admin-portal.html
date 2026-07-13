@@ -7,48 +7,43 @@
   <title>Estimates & Projects Admin | Next Print NY</title>
   <link rel="stylesheet" href="project-portal.css">
   <link rel="stylesheet" href="admin-notifications.css">
+  <link rel="stylesheet" href="estimate-builder.css">
 </head>
 <body>
   <header class="portal-header admin-header">
     <a href="admin.html"><img src="assets/logo.png" alt="Next Print NY"></a>
     <strong>Admin · Estimates & Projects</strong>
-    <nav class="admin-shortcuts" aria-label="Admin shortcuts">
-      <a href="#messages">Messages</a>
-      <a href="#notificationSettings">Notifications</a>
-    </nav>
+    <nav class="admin-shortcuts" aria-label="Admin shortcuts"><a href="#messages">Messages</a><a href="#notificationSettings">Notifications</a></nav>
   </header>
-  <main class="portal">
-    <section class="portal-title">
-      <div><p class="eyebrow">PRIVATE ADMIN</p><h1>Estimates & payment verification</h1></div>
-      <button id="newEstimate" class="primary">New estimate</button>
+  <main class="portal admin-shell">
+    <section id="adminDashboard">
+      <section class="portal-title"><div><p class="eyebrow">PRIVATE ADMIN</p><h1>Estimates & payment verification</h1></div><button id="newEstimate" class="primary">New estimate</button></section>
+      <section id="messages" class="admin-message-anchor" aria-label="Messages"></section>
+      <section id="adminPortal" class="content-grid"><p>Loading admin projects…</p></section>
+      <section id="notificationSettings" class="notification-settings" aria-labelledby="notificationTitle">
+        <div class="section-heading"><div><p class="eyebrow">ADMIN ALERTS</p><h2 id="notificationTitle">Notification Settings</h2><p>Manage secure alerts for project activity.</p></div></div>
+        <div class="notification-grid">
+          <article class="notification-card"><div class="notification-card__heading"><div><h3>Push Notifications</h3><p id="pushDetail">Checking browser and configuration…</p></div><span id="pushState" class="notification-state state-neutral" role="status">Not Connected</span></div><div class="notification-actions"><button id="enableNotifications" class="primary">Enable Notifications</button><button id="disableNotifications" class="secondary" disabled>Disable Notifications</button><button id="reconnectNotifications" class="secondary">Reconnect</button><button id="testPush" class="secondary">Send Test Push</button></div><p class="notification-help">Alerts open the related Admin project or conversation. Sensitive payment details are never included.</p><p id="pushLastNotification" class="notification-help" hidden></p></article>
+          <article class="notification-card"><div class="notification-card__heading"><div><h3>Email Notifications</h3><p id="emailDetail">Checking server configuration…</p></div><span id="emailState" class="notification-state state-neutral" role="status">Not Configured</span></div><div class="notification-actions"><button id="testEmail" class="primary">Send Test Email</button></div><dl id="emailTestMetadata" class="notification-metadata" hidden></dl><p class="notification-help">Tests are sent only to the configured administrative email address.</p></article>
+        </div><p id="notificationResult" class="notification-result" role="status" aria-live="polite"></p>
+      </section>
     </section>
-    <section id="messages" class="admin-message-anchor" aria-label="Messages"></section>
-    <section id="adminPortal" class="content-grid"><p>Loading admin projects…</p></section>
-    <section id="notificationSettings" class="notification-settings" aria-labelledby="notificationTitle">
-      <div class="section-heading"><div><p class="eyebrow">ADMIN ALERTS</p><h2 id="notificationTitle">Notification Settings</h2><p>Manage secure alerts for project activity.</p></div></div>
-      <div class="notification-grid">
-        <article class="notification-card">
-          <div class="notification-card__heading"><div><h3>Push Notifications</h3><p id="pushDetail">Checking browser and configuration…</p></div><span id="pushState" class="notification-state state-neutral" role="status">Not Connected</span></div>
-          <div class="notification-actions">
-            <button id="enableNotifications" class="primary">Enable Notifications</button>
-            <button id="disableNotifications" class="secondary" disabled>Disable Notifications</button>
-            <button id="reconnectNotifications" class="secondary">Reconnect</button>
-            <button id="testPush" class="secondary">Send Test Push</button>
-          </div>
-          <p class="notification-help">Alerts open the related Admin project or conversation. Sensitive payment details are never included.</p>
-          <p id="pushLastNotification" class="notification-help" hidden></p>
-        </article>
-        <article class="notification-card">
-          <div class="notification-card__heading"><div><h3>Email Notifications</h3><p id="emailDetail">Checking server configuration…</p></div><span id="emailState" class="notification-state state-neutral" role="status">Not Configured</span></div>
-          <div class="notification-actions"><button id="testEmail" class="primary">Send Test Email</button></div>
-          <dl id="emailTestMetadata" class="notification-metadata" hidden></dl>
-          <p class="notification-help">Tests are sent only to the configured administrative email address.</p>
-        </article>
-      </div>
-      <p id="notificationResult" class="notification-result" role="status" aria-live="polite"></p>
+
+    <section id="estimateBuilder" class="estimate-builder" hidden aria-labelledby="builderTitle">
+      <header class="builder-header"><div><button id="backToEstimates" class="text-action" type="button">← Back to estimates</button><p class="eyebrow">NEXT PRINT NY · ESTIMATE BUILDER</p><h1 id="builderTitle">Create a professional estimate</h1><p>Build a secure, customer-ready estimate without exposing internal notes.</p></div><div class="builder-actions"><button id="previewEstimate" class="secondary" type="button">Preview Estimate</button><button id="downloadEstimate" class="secondary" type="button">Download PDF</button><button id="copySecureLink" class="secondary" type="button" disabled>Copy Secure Link</button><button id="sendEstimate" class="primary" type="button">Send Estimate</button></div></header>
+      <form id="estimateBuilderForm" novalidate>
+        <div class="builder-layout"><div class="builder-main">
+          <section class="builder-card"><div class="builder-card__title"><div><p class="eyebrow">CUSTOMER</p><h2>Customer & project</h2></div><span class="status-pill">Draft</span></div><div class="field-grid three"><label>Customer / Company<input name="customerName" required placeholder="Bright Ideas Marketing"></label><label>Contact Person<input name="contactName" placeholder="Jordan Smith"></label><label>Email<input name="email" type="email" placeholder="client@company.com"></label><label>Phone<input name="phone" type="tel" placeholder="(000) 000-0000"></label><label class="span-two">Billing Address<input name="billingAddress" placeholder="Street, city, state, ZIP"></label><label>Project Title<input name="projectTitle" required placeholder="Brand Visibility Campaign"></label><label>Estimate Number<input name="estimateNumber" readonly></label><label>Estimate Date<input name="estimateDate" type="date"></label><label>Expiration Date<input name="expirationDate" type="date"></label></div></section>
+
+          <section class="builder-card"><div class="builder-card__title"><div><p class="eyebrow">ITEMS & SERVICES</p><h2>Line items</h2></div><button id="addItem" class="secondary compact" type="button">+ Add Item</button></div><div class="item-table-wrap"><table class="item-table"><thead><tr><th>Product / Service</th><th>Description</th><th>Qty</th><th>Unit</th><th>Unit Price</th><th>Discount</th><th>Taxable</th><th>Line Total</th><th></th></tr></thead><tbody id="estimateItems"></tbody></table></div></section>
+
+          <section class="builder-card"><div class="builder-card__title"><div><p class="eyebrow">PROJECT DETAILS</p><h2>Production brief</h2></div></div><div class="builder-tabs" role="tablist"><button class="is-active" type="button" data-builder-tab="details">Project Details</button><button type="button" data-builder-tab="files">Files & Photos</button><button type="button" data-builder-tab="terms">Terms & Conditions</button><button type="button" data-builder-tab="notes">Notes</button><button type="button" data-builder-tab="history">History</button></div><div class="builder-tab-panel is-active" data-builder-panel="details"><div class="field-grid two"><label class="span-two">Scope<textarea name="projectDescription" rows="3" placeholder="Describe the customer-facing scope."></textarea></label><label>Measurements<input name="measurements" placeholder="e.g. 8.5 × 11 in"></label><label>Materials<input name="materials" placeholder="e.g. 16pt card stock"></label><label>Colors<input name="colors" placeholder="e.g. Full color CMYK"></label><label>Finishing<input name="finishing" placeholder="e.g. Gloss, hemming"></label><label>Installation<input name="installationDetails" placeholder="e.g. Included / not required"></label><label>Production Time<input name="productionTime" placeholder="e.g. 7–10 business days"></label></div></div><div class="builder-tab-panel" data-builder-panel="files"><label class="file-drop"><input id="estimateFiles" type="file" accept="image/jpeg,image/png,image/webp,application/pdf,image/svg+xml" multiple><strong>Drop files here or click to upload</strong><span>JPG, PNG, WEBP, PDF or SVG · files stay private until a secure project is created.</span></label><div id="filePreviewList" class="file-preview-list"></div></div><div class="builder-tab-panel" data-builder-panel="terms"><label>Customer terms<textarea name="terms" rows="8" placeholder="Visible to the customer in their secure portal."></textarea></label></div><div class="builder-tab-panel" data-builder-panel="notes"><label>Internal notes <span class="internal-tag">Admin only</span><textarea name="internalNotes" rows="8" placeholder="Never shared with the customer."></textarea></label></div><div class="builder-tab-panel" data-builder-panel="history"><div class="history-empty"><strong>New estimate</strong><span>History begins when this estimate is saved or sent.</span></div></div></section>
+        </div>
+        <aside class="builder-sidebar"><section class="builder-card summary-card"><p class="eyebrow">SUMMARY</p><h2>Estimate total</h2><dl id="estimateSummary"></dl><label>Discount<input name="discountAmount" type="number" min="0" step="0.01" value="0"></label><label>Tax Mode<select name="taxMode"><option value="no_tax">No Tax</option><option value="custom">Custom Tax</option><option value="tax_exempt">Tax Exempt</option></select></label><label>Tax<input name="taxAmount" type="number" min="0" step="0.01" value="0"></label><label>Shipping<input name="shipping" type="number" min="0" step="0.01" value="0"></label><label>Installation<input name="installation" type="number" min="0" step="0.01" value="0"></label><label>Additional Fees<input name="additionalFees" type="number" min="0" step="0.01" value="0"></label><label>Deposit Required<input name="depositRequired" type="number" min="0" step="0.01" value="0"></label><button id="saveDraft" class="primary builder-save" type="submit">Save Draft</button><p id="estimateBuilderStatus" class="builder-status" role="status"></p></section></aside>
+        </div>
+      </form>
     </section>
   </main>
-  <dialog id="estimateDialog"><form id="estimateForm"><button class="close" type="button" onclick="this.closest('dialog').close()">×</button><h2>New estimate</h2><label>Customer <input name="name" required></label><label>Contact <input name="contactName"></label><label>Email <input name="email" type="email"></label><label>Item <input name="item" value="Print service" required></label><label>Quantity <input name="quantity" type="number" min="1" value="1"></label><label>Unit price <input name="unitPrice" type="number" min="0" step=".01" required></label><label>Tax <select name="taxMode"><option value="no_tax">No Tax</option><option value="custom">Custom Tax</option><option value="tax_exempt">Tax Exempt</option></select></label><label>Shipping <input name="shipping" type="number" min="0" step=".01" value="0"></label><button class="primary">Create secure estimate</button><p id="estimateStatus"></p></form></dialog>
-  <script src="admin-portal.js"></script>
+  <script src="admin-portal.js"></script><script src="estimate-builder.js"></script>
 </body>
 </html>

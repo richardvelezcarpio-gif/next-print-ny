@@ -14,7 +14,7 @@ const controls = {
 let notificationConfig = { pushConfigured: false, emailConfigured: false, publicKey: "" };
 let registration;
 
-document.querySelector("#newEstimate").onclick = () => estimateDialog.showModal();
+if (estimateDialog) document.querySelector("#newEstimate").onclick = () => estimateDialog.showModal();
 const esc = (value = "") => String(value).replace(/[&<>"']/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
 const isPushSupported = () => "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 const setResult = (message, error = false) => { notificationResult.textContent = message; notificationResult.classList.toggle("is-error", error); };
@@ -139,7 +139,8 @@ async function loadAdmin() {
   document.querySelectorAll(".verify").forEach(button => button.onclick = () => verify(button.dataset.payment));
 }
 async function verify(paymentId) { const response = await fetch("/api/project-portal?action=verify-payment", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ paymentId }) }); if (!response.ok) return alert("Verification failed."); loadAdmin(); }
-document.querySelector("#estimateForm").onsubmit = async event => { event.preventDefault(); const form = new FormData(event.currentTarget); const payload = Object.fromEntries(form.entries()); const response = await fetch("/api/project-portal?action=create", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); const result = await response.json(); document.querySelector("#estimateStatus").textContent = response.ok ? `Created ${result.estimateNumber}.` : result.error; if (response.ok) { event.currentTarget.reset(); estimateDialog.close(); loadAdmin(); } };
+const legacyEstimateForm = document.querySelector("#estimateForm");
+if (legacyEstimateForm) legacyEstimateForm.onsubmit = async event => { event.preventDefault(); const form = new FormData(event.currentTarget); const payload = Object.fromEntries(form.entries()); const response = await fetch("/api/project-portal?action=estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) }); const result = await response.json(); document.querySelector("#estimateStatus").textContent = response.ok ? `Created ${result.estimate?.estimate_number || "estimate"}.` : result.error; if (response.ok) { event.currentTarget.reset(); estimateDialog.close(); loadAdmin(); } };
 controls.enable.onclick = () => enablePush(); controls.disable.onclick = disablePush; controls.reconnect.onclick = () => enablePush(true); controls.testPush.onclick = sendTestPush; controls.testEmail.onclick = sendTestEmail;
 const conversationId = new URLSearchParams(location.search).get("conversation");
 if (conversationId) setResult(`Conversation ${conversationId} is selected. Open Messages to reply.`);
