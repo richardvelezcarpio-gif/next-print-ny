@@ -77,18 +77,23 @@ async function publicProject(req, res) {
   const token = safeToken(req.query?.token);
   if (!token) return res.status(404).json({ error: "Project portal not found" });
   if (!configured()) return token === DEMO_TOKEN ? res.status(200).json(demoPayload()) : res.status(503).json({ error: "Portal is being configured" });
-  const project = await one(`${TABLES.projects}?secure_token=eq.${encodeURIComponent(token)}&select=*`);
-  if (!project) return res.status(404).json({ error: "Project portal not found" });
-  const [estimate, customer, items, files, messages, payments] = await Promise.all([
-    one(`${TABLES.estimates}?id=eq.${project.estimate_id}&select=*`),
-    one(`${TABLES.customers}?id=eq.${project.customer_id}&select=*`),
-    many(`${TABLES.items}?estimate_id=eq.${project.estimate_id}&order=position.asc`),
-    many(`${TABLES.files}?project_id=eq.${project.id}&order=created_at.desc`),
-    many(`${TABLES.messages}?project_id=eq.${project.id}&order=created_at.asc`),
-    many(`${TABLES.payments}?project_id=eq.${project.id}&order=created_at.desc`),
-  ]);
-  if (!estimate || !customer) return res.status(404).json({ error: "Project portal not found" });
-  res.status(200).json({ project, estimate, customer, items, files, messages, payments, zelle: ZELLE });
+  try {
+    const project = await one(`${TABLES.projects}?secure_token=eq.${encodeURIComponent(token)}&select=*`);
+    if (!project) return res.status(404).json({ error: "Project portal not found" });
+    const [estimate, customer, items, files, messages, payments] = await Promise.all([
+      one(`${TABLES.estimates}?id=eq.${project.estimate_id}&select=*`),
+      one(`${TABLES.customers}?id=eq.${project.customer_id}&select=*`),
+      many(`${TABLES.items}?estimate_id=eq.${project.estimate_id}&order=position.asc`),
+      many(`${TABLES.files}?project_id=eq.${project.id}&order=created_at.desc`),
+      many(`${TABLES.messages}?project_id=eq.${project.id}&order=created_at.asc`),
+      many(`${TABLES.payments}?project_id=eq.${project.id}&order=created_at.desc`),
+    ]);
+    if (!estimate || !customer) return res.status(404).json({ error: "Project portal not found" });
+    return res.status(200).json({ project, estimate, customer, items, files, messages, payments, zelle: ZELLE });
+  } catch {
+    if (token === DEMO_TOKEN) return res.status(200).json(demoPayload());
+    return res.status(503).json({ error: "Portal is being configured" });
+  }
 }
 
 async function reportPayment(req, res) {
