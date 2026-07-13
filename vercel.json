@@ -16,6 +16,10 @@
     {
       "source": "/project/:token",
       "destination": "/project.html?token=:token"
+    },
+    {
+      "source": "/api/notifications",
+      "destination": "/api/project-portal?endpoint=notifications"
     }
   ],
   "headers": [
@@ -69,9 +73,6 @@
   ],
   "functions": {
     "api/project-portal.js": {
-      "maxDuration": 10
-    },
-    "api/notifications.js": {
       "maxDuration": 10
     },
     "api/chat.js": {

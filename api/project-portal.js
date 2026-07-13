@@ -1,13 +1,16 @@
 import crypto from "node:crypto";
+import webpush from "web-push";
 import { requireAdmin } from "../lib/admin-auth.js";
 
 const TABLES = { customers: "portal_customers", estimates: "portal_estimates", items: "portal_estimate_items", projects: "portal_projects", files: "portal_files", messages: "portal_messages", payments: "portal_payments" };
 const DEMO_TOKEN = "np_demo_8xK29mQa72";
 const ZELLE = { recipientName: "Richard Velez", recipientNumber: "(239) 333-7935" };
+const PUSH_SUBSCRIPTIONS = "portal_push_subscriptions";
 
 export default async function handler(req, res) {
   try {
     const action = String(req.query?.action || req.body?.action || "");
+    if (req.query?.endpoint === "notifications") return notificationHandler(req, res);
     if (req.method === "GET" && action === "admin") return adminList(req, res);
     if (req.method === "GET") return publicProject(req, res);
     if (req.method === "POST" && action === "payment") return reportPayment(req, res);
@@ -18,6 +21,56 @@ export default async function handler(req, res) {
   } catch (error) {
     res.status(500).json({ error: "Portal request failed" });
   }
+}
+
+async function notificationHandler(req, res) {
+  const session = requireAdmin(req, res);
+  if (!session) return;
+  const action = String(req.query?.action || req.body?.action || "status");
+  if (req.method === "GET") return res.status(200).json({ pushConfigured: pushReady(), emailConfigured: emailReady(), publicKey: process.env.VAPID_PUBLIC_KEY || "", connected: false });
+  if (action === "subscribe") return subscribePush(req, res, session);
+  if (action === "unsubscribe") return unsubscribePush(req, res);
+  if (action === "test-push") return sendTestPush(req, res, session);
+  if (action === "test-email") return sendTestEmail(res);
+  return res.status(400).json({ error: "Unknown notification action" });
+}
+
+async function subscribePush(req, res, session) {
+  const subscription = req.body?.subscription;
+  if (!subscription?.endpoint || !subscription?.keys?.p256dh || !subscription?.keys?.auth) return res.status(400).json({ error: "Invalid push subscription" });
+  if (!configured()) return res.status(503).json({ error: "Supabase is not configured" });
+  const rows = await many(`${PUSH_SUBSCRIPTIONS}?endpoint=eq.${encodeURIComponent(subscription.endpoint)}&select=id`);
+  if (rows[0]) return res.status(200).json({ connected: true, duplicate: true });
+  await request(PUSH_SUBSCRIPTIONS, { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify({ admin_email: session.email, endpoint: subscription.endpoint, subscription }) });
+  return res.status(201).json({ connected: true });
+}
+
+async function unsubscribePush(req, res) {
+  const endpoint = String(req.body?.endpoint || "");
+  if (!endpoint) return res.status(400).json({ error: "Endpoint required" });
+  if (configured()) await request(`${PUSH_SUBSCRIPTIONS}?endpoint=eq.${encodeURIComponent(endpoint)}`, { method: "DELETE" });
+  return res.status(200).json({ connected: false });
+}
+
+async function sendTestPush(req, res, session) {
+  if (!pushReady()) return res.status(503).json({ error: "VAPID is not configured" });
+  if (!configured()) return res.status(503).json({ error: "Supabase is not configured" });
+  webpush.setVapidDetails("mailto:nextprintny@gmail.com", process.env.VAPID_PUBLIC_KEY, process.env.VAPID_PRIVATE_KEY);
+  const rows = await many(`${PUSH_SUBSCRIPTIONS}?admin_email=eq.${encodeURIComponent(session.email)}&select=*`);
+  let sent = 0;
+  for (const row of rows) {
+    try { await webpush.sendNotification(row.subscription, JSON.stringify({ preview: "Test notification from Next Print NY", url: "/admin-portal.html" })); sent += 1; }
+    catch (error) { if ([404, 410].includes(error.statusCode)) await request(`${PUSH_SUBSCRIPTIONS}?id=eq.${row.id}`, { method: "DELETE" }); }
+  }
+  return res.status(200).json({ sent, lastNotificationAt: new Date().toISOString() });
+}
+
+async function sendTestEmail(res) {
+  if (!emailReady()) return res.status(503).json({ error: "Email notifications are not configured" });
+  const recipient = process.env.ADMIN_NOTIFICATION_EMAIL || "nextprintny@gmail.com";
+  const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: process.env.RESEND_FROM_EMAIL, to: recipient, subject: "Next Print NY — Test notification", html: "<p>Next Print NY Web Chat notification test.</p>" }) });
+  const body = await response.json();
+  return res.status(response.ok ? 200 : 502).json({ sent: response.ok, id: body.id || null, recipient, subject: "Next Print NY — Test notification" });
 }
 
 async function publicProject(req, res) {
@@ -98,9 +151,11 @@ async function verifyPayment(req, res) {
 }
 
 function configured() { return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY); }
+function pushReady() { return Boolean(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY); }
+function emailReady() { return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL); }
 function safeToken(value) { const token = String(value || ""); return /^np_[A-Za-z0-9_-]{10,80}$/.test(token) ? token : ""; }
 function clean(value, max) { return String(value || "").replace(/[<>]/g, "").trim().slice(0, max); }
-async function request(path, options = {}) { const response = await fetch(`${String(process.env.SUPABASE_URL).replace(/\/$/, "")}/rest/v1/${path}`, { ...options, headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": "application/json", ...(options.headers || {}) } }); if (!response.ok) throw new Error("Database request failed"); return response.json(); }
+async function request(path, options = {}) { const response = await fetch(`${String(process.env.SUPABASE_URL).replace(/\/$/, "")}/rest/v1/${path}`, { ...options, headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": "application/json", ...(options.headers || {}) } }); if (!response.ok) throw new Error("Database request failed"); return response.status === 204 ? [] : response.json(); }
 async function one(path) { const data = await request(path); return data[0] || null; }
 async function many(path) { return request(path); }
 async function insert(table, body) { const data = await request(table, { method: "POST", headers: { Prefer: "return=representation" }, body: JSON.stringify(body) }); return data[0]; }
