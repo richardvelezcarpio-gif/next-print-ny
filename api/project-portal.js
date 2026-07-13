@@ -6,6 +6,7 @@ const TABLES = { customers: "portal_customers", estimates: "portal_estimates", i
 const DEMO_TOKEN = "np_demo_8xK29mQa72";
 const PUSH_SUBSCRIPTIONS = "portal_push_subscriptions";
 const demoMessages = [];
+const PUBLIC_PORTAL_ORIGIN = "https://www.nextprintnyc.com";
 
 export default async function handler(req, res) {
   try {
@@ -168,6 +169,7 @@ async function createEstimate(req, res) {
   const input = req.body || {};
   if (!configured()) return res.status(503).json({ error: "Supabase configuration is required to create estimates" });
   const customerData = { name: clean(input.customer?.name, 120), contact_name: clean(input.customer?.contactName, 120), email: clean(input.customer?.email, 160), phone: clean(input.customer?.phone, 50), billing_address: clean(input.customer?.billingAddress, 600) };
+  if (input.status === "sent" && !validEmail(customerData.email)) return res.status(400).json({ error: "A valid customer email is required before sending an estimate" });
   const existingProject = clean(input.projectId, 80) ? await one(`${TABLES.projects}?id=eq.${encodeURIComponent(clean(input.projectId, 80))}&select=*`) : null;
   if (clean(input.projectId, 80) && !existingProject) return res.status(404).json({ error: "Estimate project not found" });
   const customer = existingProject ? (await patch(TABLES.customers, existingProject.customer_id, customerData))[0] : await insert(TABLES.customers, customerData);
@@ -188,7 +190,12 @@ async function createEstimate(req, res) {
   const project = existingProject ? (await patch(TABLES.projects, existingProject.id, { project_number: number, status: projectStatus }))[0] : await insert(TABLES.projects, { estimate_id: estimate.id, customer_id: customer.id, project_number: number, secure_token: `np_${crypto.randomBytes(18).toString("base64url")}`, status: projectStatus, payment_status: "unpaid" });
   const files = Array.isArray(input.files) ? input.files.slice(0, 12) : [];
   if (!existingProject) await Promise.all(files.map((file) => insert(TABLES.files, { project_id: project.id, source: "next_print", name: clean(file.name, 180), size_bytes: Math.max(0, Number(file.size) || 0), status: "received" })));
-  res.status(201).json({ customer, estimate, project, portalUrl: `/project/${project.secure_token}` });
+  const portalUrl = `/project/${project.secure_token}`;
+  const saved = { saved: true, customer, estimate, project, portalUrl };
+  if (input.status !== "sent") return res.status(201).json({ ...saved, email: { sent: false, skipped: true } });
+  const email = await sendEstimateEmail({ customer, estimate, items, project, portalUrl });
+  if (!email.sent) return res.status(502).json({ ...saved, email, error: "Estimate saved, but the email could not be sent. Copy the secure link and send it manually." });
+  return res.status(201).json({ ...saved, email });
 }
 
 async function verifyPayment(req, res) {
@@ -206,10 +213,34 @@ async function verifyPayment(req, res) {
 function configured() { return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY); }
 function pushReady() { return Boolean(process.env.VAPID_PUBLIC_KEY && process.env.VAPID_PRIVATE_KEY); }
 function emailReady() { return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM_EMAIL); }
+function validEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "")); }
 function safeToken(value) { const token = String(value || ""); return /^np_[A-Za-z0-9_-]{10,80}$/.test(token) ? token : ""; }
 function money(value) { return Math.max(0, Number(value) || 0); }
 function safeDate(value) { const date = String(value || ""); return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : null; }
 function clean(value, max) { return String(value || "").replace(/[<>]/g, "").trim().slice(0, max); }
+function html(value) { return String(value || "").replace(/[&<>\"]/g, character => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[character]); }
+function estimateTotal(estimate, items) { return Math.max(0, items.reduce((total, item) => total + (Math.max(1, Number(item.quantity) || 1) * money(item.unit_price) * (1 - Math.min(100, Math.max(0, Number(item.discount) || 0)) / 100)), 0) - money(estimate.discount_amount) + money(estimate.tax_amount) + money(estimate.shipping_amount) + money(estimate.installation_amount) + money(estimate.additional_fees)); }
+async function sendEstimateEmail({ customer, estimate, items, project, portalUrl }) {
+  if (!emailReady()) return { sent: false, error: "Email delivery is not configured. Configure RESEND_FROM_EMAIL." };
+  const secureUrl = `${PUBLIC_PORTAL_ORIGIN}${portalUrl}`;
+  const total = estimateTotal(estimate, items).toLocaleString("en-US", { style: "currency", currency: "USD" });
+  const deposit = money(estimate.deposit_required);
+  const subject = `Next Print NY — Estimate ${estimate.estimate_number}: ${estimate.project_title || project.project_number}`;
+  const recipientName = customer.contact_name || customer.name || "there";
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: process.env.RESEND_FROM_EMAIL,
+      to: customer.email,
+      subject,
+      html: `<p>Hello ${html(recipientName)},</p><p>Your estimate for <strong>${html(estimate.project_title || project.project_number)}</strong> is ready to review.</p><p><strong>Estimate:</strong> ${html(estimate.estimate_number)}<br><strong>Total:</strong> ${html(total)}${deposit ? `<br><strong>Deposit required:</strong> ${html(deposit.toLocaleString("en-US", { style: "currency", currency: "USD" }))}` : ""}${estimate.expiration_date ? `<br><strong>Expires:</strong> ${html(estimate.expiration_date)}` : ""}</p><p><a href="${html(secureUrl)}">Review your secure estimate</a></p><p>Thank you,<br>Next Print NY</p>`
+    })
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || !body.id) return { sent: false, error: "Resend could not confirm email delivery." };
+  return { sent: true, id: body.id, recipient: customer.email, subject };
+}
 async function request(path, options = {}) { const response = await fetch(`${String(process.env.SUPABASE_URL).replace(/\/$/, "")}/rest/v1/${path}`, { ...options, headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": "application/json", ...(options.headers || {}) } }); if (!response.ok) throw new Error("Database request failed"); return response.status === 204 ? [] : response.json(); }
 async function one(path) { const data = await request(path); return data[0] || null; }
 async function many(path) { return request(path); }
@@ -217,3 +248,5 @@ async function insert(table, body) { const data = await request(table, { method:
 async function patch(table, id, body) { return request(`${table}?id=eq.${encodeURIComponent(id)}`, { method: "PATCH", headers: { Prefer: "return=representation" }, body: JSON.stringify(body) }); }
 async function notifyAdmin(subject, text) { if (!process.env.RESEND_API_KEY) return; await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" }, body: JSON.stringify({ from: process.env.RESEND_FROM_EMAIL || "Next Print NY <onboarding@resend.dev>", to: "nextprintny@gmail.com", subject, text }) }); }
 function demoPayload() { const estimate = { id: "demo-estimate", estimate_number: "NP-2026-00125", status: "sent", tax_mode: "no_tax", tax_amount: 0, shipping_amount: 25, installation_amount: 0, additional_fees: 0, discount_amount: 0, deposit_required: 600, estimate_date: "2026-07-13", expiration_date: "2026-08-12", project_title: "Brand Visibility Campaign", project_description: "Premium print materials designed for a cohesive launch campaign.", project_details: "Materials: 16pt card stock, premium vinyl and aluminum hardware.\nColors: Full color CMYK.\nFinishing: Gloss finish, hemming and grommets.\nProduction time: 7–10 business days.", terms: "A 50% deposit starts production. Artwork approval is required before printing. Final balance is due before delivery." }; const project = { id: "demo-project", estimate_id: estimate.id, customer_id: "demo-customer", project_number: estimate.estimate_number, secure_token: DEMO_TOKEN, status: "sent", payment_status: "unpaid" }; const items = [{ id: "1", title: "Business Cards", description: "16pt card stock, full color, 2 sides", quantity: 1000, unit: "pcs", unit_price: .45, discount: 0, taxable: false }, { id: "2", title: "Flyers", description: "Gloss finish, 8.5 × 11 in", quantity: 500, unit: "pcs", unit_price: .17, discount: 0, taxable: false }, { id: "3", title: "Vinyl Banner", description: "13oz vinyl, hemmed and grommets", quantity: 1, unit: "each", unit_price: 75, discount: 0, taxable: false }, { id: "4", title: "Retractable Banner Stand", description: "Premium pull-up aluminum stand", quantity: 1, unit: "each", unit_price: 120, discount: 0, taxable: false }, { id: "5", title: "Design & production", description: "Custom setup and finishing", quantity: 1, unit: "service", unit_price: 1087.5, discount: 0, taxable: false }]; return { project, estimate, customer: { id: "demo-customer", name: "Bright Ideas Marketing", contact_name: "Jordan Smith", email: "jsmith@brightideas.com", phone: "", billing_address: "" }, items, files: [{ id: "f1", name: "Project Mockup.pdf", source: "next_print", status: "proof_ready", size_bytes: 2500000 }, { id: "f2", name: "Logo_BrightIdeas.png", source: "customer", status: "received", size_bytes: 1200000 }], messages: [{ id: "m1", sender_role: "admin", body: "Thank you for reviewing your estimate. How can we help today?", created_at: new Date().toISOString() }, ...demoMessages], payments: [] }; }
+
+export { sendEstimateEmail, validEmail };

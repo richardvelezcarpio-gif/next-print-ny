@@ -1,25 +1,170 @@
 create extension if not exists pgcrypto;
-create table if not exists public.portal_customers (id uuid primary key default gen_random_uuid(), name text not null, contact_name text, email text, created_at timestamptz not null default now());
-create table if not exists public.portal_estimates (id uuid primary key default gen_random_uuid(), estimate_number text unique not null, customer_id uuid references public.portal_customers(id) on delete cascade, status text not null default 'sent', tax_mode text not null default 'no_tax' check (tax_mode in ('no_tax','custom','tax_exempt')), tax_amount numeric not null default 0, shipping_amount numeric not null default 0, notes text, created_at timestamptz not null default now());
-create table if not exists public.portal_estimate_items (id uuid primary key default gen_random_uuid(), estimate_id uuid not null references public.portal_estimates(id) on delete cascade, position integer not null default 0, title text not null, description text, quantity numeric not null default 1, unit_price numeric not null default 0);
-create table if not exists public.portal_projects (id uuid primary key default gen_random_uuid(), estimate_id uuid not null references public.portal_estimates(id) on delete cascade, customer_id uuid not null references public.portal_customers(id), project_number text not null, secure_token text unique not null, status text not null default 'sent', payment_status text not null default 'unpaid', created_at timestamptz not null default now());
-create table if not exists public.portal_files (id uuid primary key default gen_random_uuid(), project_id uuid not null references public.portal_projects(id) on delete cascade, source text not null check (source in ('next_print','customer')), name text not null, storage_path text, size_bytes bigint default 0, status text not null default 'received', version integer not null default 1, created_at timestamptz not null default now());
-create table if not exists public.portal_messages (id uuid primary key default gen_random_uuid(), project_id uuid not null references public.portal_projects(id) on delete cascade, sender_role text not null check (sender_role in ('admin','customer')), body text not null, read_at timestamptz, created_at timestamptz not null default now());
-create table if not exists public.portal_payments (id uuid primary key default gen_random_uuid(), project_id uuid not null references public.portal_projects(id) on delete cascade, estimate_id uuid not null references public.portal_estimates(id), method text not null check (method in ('zelle')), amount numeric not null check (amount > 0), status text not null default 'pending_verification' check (status in ('pending_verification','paid','rejected')), reference text, proof_name text, proof_data_url text, submitted_at timestamptz not null default now(), verified_at timestamptz, created_at timestamptz not null default now());
-alter table public.portal_customers enable row level security; alter table public.portal_estimates enable row level security; alter table public.portal_estimate_items enable row level security; alter table public.portal_projects enable row level security; alter table public.portal_files enable row level security; alter table public.portal_messages enable row level security; alter table public.portal_payments enable row level security;
-grant usage on schema public to service_role; grant all privileges on all tables in schema public to service_role;
-create policy "service role portal customers" on public.portal_customers for all to service_role using (true) with check (true);
-create policy "service role portal estimates" on public.portal_estimates for all to service_role using (true) with check (true);
-create policy "service role portal items" on public.portal_estimate_items for all to service_role using (true) with check (true);
-create policy "service role portal projects" on public.portal_projects for all to service_role using (true) with check (true);
-create policy "service role portal files" on public.portal_files for all to service_role using (true) with check (true);
-create policy "service role portal messages" on public.portal_messages for all to service_role using (true) with check (true);
-create policy "service role portal payments" on public.portal_payments for all to service_role using (true) with check (true);
-insert into storage.buckets (id,name,public) values ('project-assets','project-assets',false) on conflict (id) do nothing;
-create table if not exists public.portal_push_subscriptions (id uuid primary key default gen_random_uuid(), admin_email text not null, endpoint text unique not null, subscription jsonb not null, created_at timestamptz not null default now(), updated_at timestamptz not null default now());
+
+create table if not exists public.portal_customers (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  contact_name text,
+  email text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.portal_estimates (
+  id uuid primary key default gen_random_uuid(),
+  estimate_number text unique not null,
+  customer_id uuid references public.portal_customers(id) on delete cascade,
+  status text not null default 'sent',
+  tax_mode text not null default 'no_tax' check (tax_mode in ('no_tax', 'custom', 'tax_exempt')),
+  tax_amount numeric not null default 0,
+  shipping_amount numeric not null default 0,
+  notes text,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.portal_estimate_items (
+  id uuid primary key default gen_random_uuid(),
+  estimate_id uuid not null references public.portal_estimates(id) on delete cascade,
+  position integer not null default 0,
+  title text not null,
+  description text,
+  quantity numeric not null default 1,
+  unit_price numeric not null default 0
+);
+
+create table if not exists public.portal_projects (
+  id uuid primary key default gen_random_uuid(),
+  estimate_id uuid not null references public.portal_estimates(id) on delete cascade,
+  customer_id uuid not null references public.portal_customers(id),
+  project_number text not null,
+  secure_token text unique not null,
+  status text not null default 'sent',
+  payment_status text not null default 'unpaid',
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.portal_files (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.portal_projects(id) on delete cascade,
+  source text not null check (source in ('next_print', 'customer')),
+  name text not null,
+  storage_path text,
+  size_bytes bigint default 0,
+  status text not null default 'received',
+  version integer not null default 1,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.portal_messages (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.portal_projects(id) on delete cascade,
+  sender_role text not null check (sender_role in ('admin', 'customer')),
+  body text not null,
+  read_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.portal_payments (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references public.portal_projects(id) on delete cascade,
+  estimate_id uuid not null references public.portal_estimates(id),
+  method text not null check (method in ('zelle')),
+  amount numeric not null check (amount > 0),
+  status text not null default 'pending_verification' check (status in ('pending_verification', 'paid', 'rejected')),
+  reference text,
+  proof_name text,
+  proof_data_url text,
+  submitted_at timestamptz not null default now(),
+  verified_at timestamptz,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists public.portal_push_subscriptions (
+  id uuid primary key default gen_random_uuid(),
+  admin_email text not null,
+  endpoint text unique not null,
+  subscription jsonb not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+insert into storage.buckets (id, name, public)
+values ('project-assets', 'project-assets', false)
+on conflict (id) do nothing;
+
+alter table public.portal_customers
+  add column if not exists phone text,
+  add column if not exists billing_address text;
+
+alter table public.portal_estimates
+  add column if not exists project_title text,
+  add column if not exists project_description text,
+  add column if not exists project_details text,
+  add column if not exists estimate_date date,
+  add column if not exists expiration_date date,
+  add column if not exists discount_amount numeric not null default 0,
+  add column if not exists installation_amount numeric not null default 0,
+  add column if not exists additional_fees numeric not null default 0,
+  add column if not exists deposit_required numeric not null default 0,
+  add column if not exists terms text,
+  add column if not exists internal_notes text;
+
+alter table public.portal_estimate_items
+  add column if not exists unit text,
+  add column if not exists discount numeric not null default 0,
+  add column if not exists taxable boolean not null default false;
+
+alter table public.portal_customers enable row level security;
+alter table public.portal_estimates enable row level security;
+alter table public.portal_estimate_items enable row level security;
+alter table public.portal_projects enable row level security;
+alter table public.portal_files enable row level security;
+alter table public.portal_messages enable row level security;
+alter table public.portal_payments enable row level security;
 alter table public.portal_push_subscriptions enable row level security;
-grant all privileges on public.portal_push_subscriptions to service_role;
-create policy "service role portal push subscriptions" on public.portal_push_subscriptions for all to service_role using (true) with check (true);
-alter table public.portal_customers add column if not exists phone text, add column if not exists billing_address text;
-alter table public.portal_estimates add column if not exists project_title text, add column if not exists project_description text, add column if not exists project_details text, add column if not exists estimate_date date, add column if not exists expiration_date date, add column if not exists discount_amount numeric not null default 0, add column if not exists installation_amount numeric not null default 0, add column if not exists additional_fees numeric not null default 0, add column if not exists deposit_required numeric not null default 0, add column if not exists terms text, add column if not exists internal_notes text;
-alter table public.portal_estimate_items add column if not exists unit text, add column if not exists discount numeric not null default 0, add column if not exists taxable boolean not null default false;
+
+grant usage on schema public to service_role;
+grant all privileges on table public.portal_customers to service_role;
+grant all privileges on table public.portal_estimates to service_role;
+grant all privileges on table public.portal_estimate_items to service_role;
+grant all privileges on table public.portal_projects to service_role;
+grant all privileges on table public.portal_files to service_role;
+grant all privileges on table public.portal_messages to service_role;
+grant all privileges on table public.portal_payments to service_role;
+grant all privileges on table public.portal_push_subscriptions to service_role;
+
+drop policy if exists "service role portal customers" on public.portal_customers;
+create policy "service role portal customers"
+  on public.portal_customers for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal estimates" on public.portal_estimates;
+create policy "service role portal estimates"
+  on public.portal_estimates for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal items" on public.portal_estimate_items;
+create policy "service role portal items"
+  on public.portal_estimate_items for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal projects" on public.portal_projects;
+create policy "service role portal projects"
+  on public.portal_projects for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal files" on public.portal_files;
+create policy "service role portal files"
+  on public.portal_files for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal messages" on public.portal_messages;
+create policy "service role portal messages"
+  on public.portal_messages for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal payments" on public.portal_payments;
+create policy "service role portal payments"
+  on public.portal_payments for all to service_role using (true) with check (true);
+
+drop policy if exists "service role portal push subscriptions" on public.portal_push_subscriptions;
+create policy "service role portal push subscriptions"
+  on public.portal_push_subscriptions for all to service_role using (true) with check (true);
+
+drop policy if exists "service role project assets" on storage.objects;
+create policy "service role project assets"
+  on storage.objects for all to service_role
+  using (bucket_id = 'project-assets')
+  with check (bucket_id = 'project-assets');

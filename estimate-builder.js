@@ -12,6 +12,7 @@
   let files = [];
   let portalUrl = "";
   let savedProjectId = "";
+  let isSaving = false;
   const money = value => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(Number(value) || 0);
   const input = (name, value, type = "text", extra = "") => `<input data-item="${name}" type="${type}" value="${String(value ?? "").replace(/\"/g, "&quot;")}" ${extra}>`;
   const nextNumber = () => `NP-${new Date().getFullYear()}-${String(Date.now()).slice(-5)}`;
@@ -44,12 +45,30 @@
     return { action: "estimate", status: statusOverride, projectId: savedProjectId, customer: { name: form.elements.customerName.value, contactName: form.elements.contactName.value, email: form.elements.email.value, phone: form.elements.phone.value, billingAddress: form.elements.billingAddress.value }, estimateNumber: form.elements.estimateNumber.value, estimateDate: form.elements.estimateDate.value, expirationDate: form.elements.expirationDate.value, project, items: getItems(), discountAmount: form.elements.discountAmount.value, taxMode: form.elements.taxMode.value, taxAmount: form.elements.taxAmount.value, shipping: form.elements.shipping.value, installation: form.elements.installation.value, additionalFees: form.elements.additionalFees.value, depositRequired: form.elements.depositRequired.value, terms: form.elements.terms.value, internalNotes: form.elements.internalNotes.value, files: files.map(file => ({ name: file.name, size: file.size, type: file.type })) };
   }
   async function saveEstimate(statusOverride = "draft") {
-    if (!form.reportValidity()) return;
+    if (isSaving || !form.reportValidity()) return;
+    isSaving = true;
+    const sendButton = document.querySelector("#sendEstimate");
+    if (statusOverride === "sent") sendButton.disabled = true;
     status.textContent = statusOverride === "sent" ? "Sending estimate…" : "Saving draft…";
-    const response = await fetch("/api/project-portal?action=estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload(statusOverride)) });
-    const result = await response.json().catch(() => ({}));
-    if (!response.ok) { status.textContent = result.error || "The estimate could not be saved."; status.classList.add("is-error"); return; }
-    portalUrl = result.portalUrl || portalUrl; savedProjectId = result.project?.id || savedProjectId; secureLink.disabled = !portalUrl; status.classList.remove("is-error"); status.textContent = statusOverride === "sent" ? "Estimate sent. Secure link is ready." : "Draft saved. Secure link is ready.";
+    try {
+      const response = await fetch("/api/project-portal?action=estimate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload(statusOverride)) });
+      const result = await response.json().catch(() => ({}));
+      portalUrl = result.portalUrl || portalUrl; savedProjectId = result.project?.id || savedProjectId; secureLink.disabled = !portalUrl;
+      if (statusOverride === "sent" && result.saved && !result.email?.sent) {
+        status.textContent = "Estimate saved, but the email could not be sent. Copy the secure link and send it manually.";
+        status.classList.add("is-error");
+        return;
+      }
+      if (!response.ok) { status.textContent = result.error || "The estimate could not be saved."; status.classList.add("is-error"); return; }
+      status.classList.remove("is-error");
+      status.textContent = statusOverride === "sent" && result.email?.sent ? "Estimate emailed. Secure link is ready." : "Draft saved. Secure link is ready.";
+    } catch {
+      status.textContent = "The estimate could not be saved.";
+      status.classList.add("is-error");
+    } finally {
+      isSaving = false;
+      if (statusOverride === "sent") sendButton.disabled = false;
+    }
   }
   document.querySelector("#newEstimate").onclick = () => { dashboard.hidden = true; builder.hidden = false; resetBuilder(); window.scrollTo({ top: 0, behavior: "smooth" }); };
   document.querySelector("#backToEstimates").onclick = () => { builder.hidden = true; dashboard.hidden = false; };
