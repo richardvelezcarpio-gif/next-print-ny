@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Visual design proof review prototype for Next Print NY." />
+    <meta name="robots" content="noindex, follow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Church Directional Signs — Design Proof | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260702-mobile-cleanup" />
+    <link rel="stylesheet" href="full-wide.css?v=20260621-full-wide" />
+    <link rel="stylesheet" href="design-approval.css" />
+  </head>
+  <body class="design-approval-page">
+    <div class="page-shell">
+      <section class="reseller-strip" aria-label="Reseller program">
+        <div><strong>🔥 Reseller Program Available</strong><span>Get wholesale pricing and grow your own print business.</span></div>
+        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer">Apply for Wholesale</a>
+      </section>
+      <header class="top-nav site-main-header">
+        <a class="brand" href="index.html" aria-label="Next Print NY home"><img src="assets/logo.png" alt="Next Print NY" /></a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html">Home</a><a href="printing.html#banners">Signs &amp; Banners</a><a href="tshirt.html">T-Shirts &amp; Apparel</a><a href="printing.html">Print Products</a><a href="websites-demo/">Websites</a><a href="tracking.html">Track Order</a><a href="about.html">About Us</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="design-chat-button" type="button" aria-label="Chat with Next Print NY">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 18.4 3 21l1.2-5.1A8.2 8.2 0 0 1 3 11.6C3 6.9 7 3 12 3s9 3.9 9 8.6-4 8.5-9 8.5c-1.7 0-3.3-.4-4.8-1.1Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg>
+            <span>Chat With Us</span>
+          </button>
+          <div class="language-switch" aria-label="Change language"><button type="button" class="active">EN</button><button type="button">ES</button></div>
+        </div>
+      </header>
+
+      <main class="approval-main proof-detail-main">
+        <a class="back-to-projects" href="design-approval.html"><span aria-hidden="true">←</span> Back to Projects</a>
+        <section class="proof-project-header">
+          <div>
+            <p class="approval-eyebrow" id="proofProjectEyebrow">Design Proof</p>
+            <h1 id="proofProjectName">Loading project…</h1>
+            <p>Review each design sample and choose an approval response.</p>
+          </div>
+          <span class="status-badge status-pending" id="proofProjectStatus"><i></i>Pending Review</span>
+        </section>
+
+        <section class="proof-project-summary" aria-label="Project information">
+          <article><span>Customer</span><strong id="proofCustomerName">—</strong><small id="proofCustomerEmail">—</small></article>
+          <article><span>Product / Service</span><strong id="proofProductService">—</strong><small>Design proof review</small></article>
+          <article><span>Order Number</span><strong id="proofOrderNumber">—</strong><small id="proofSampleCount">0 design samples</small></article>
+          <article><span>Due Date</span><strong id="proofDueDate">—</strong><small>Production after approval</small></article>
+        </section>
+
+        <section class="proof-notes" id="proofNotesSection" hidden>
+          <span aria-hidden="true">i</span><div><strong>Notes from Next Print NY</strong><p id="proofCustomerNotes"></p></div>
+        </section>
+
+        <section class="samples-section">
+          <div class="samples-heading"><div><p class="approval-eyebrow" id="proofSamplesLabel">Design Samples</p><h2>Review Your Proofs</h2></div><span id="proofResponseInstruction">Choose one response per project</span></div>
+          <p class="proof-load-message" id="proofLoadMessage" role="status" aria-live="polite"></p>
+          <div class="sample-card-grid" id="proofSamplesGrid"></div>
+        </section>
+
+        <section class="response-history-section" id="proofHistorySection" hidden>
+          <div class="samples-heading"><div><p class="approval-eyebrow">Response History</p><h2>Project Activity</h2></div><span id="proofCurrentState">Current status</span></div>
+          <div class="response-history-list" id="proofResponseHistory"></div>
+        </section>
+      </main>
+    </div>
+    <script src="script.js?v=20260617-1800"></script>
+    <script src="design-project-demo.js"></script>
+  </body>
+</html>

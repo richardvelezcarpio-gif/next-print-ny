@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta name="description" content="Visual design approval portal prototype for Next Print NY." />
+    <meta name="robots" content="noindex, follow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Proof Approval | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="styles.css?v=20260702-mobile-cleanup" />
+    <link rel="stylesheet" href="full-wide.css?v=20260621-full-wide" />
+    <link rel="stylesheet" href="design-approval.css" />
+  </head>
+  <body class="design-approval-page">
+    <div class="page-shell">
+      <section class="reseller-strip" aria-label="Reseller program">
+        <div>
+          <strong>🔥 Reseller Program Available</strong>
+          <span>Get wholesale pricing and grow your own print business.</span>
+        </div>
+        <a href="https://wa.me/12393337935?text=I%20want%20to%20apply%20for%20the%20Next%20Print%20NY%20reseller%20program" target="_blank" rel="noreferrer">Apply for Wholesale</a>
+      </section>
+
+      <header class="top-nav site-main-header">
+        <a class="brand" href="index.html" aria-label="Next Print NY home">
+          <img src="assets/logo.png" alt="Next Print NY" />
+        </a>
+        <button class="menu-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+          <span></span><span></span><span></span>
+        </button>
+        <nav id="menu" class="menu" aria-label="Main navigation">
+          <a href="index.html">Home</a>
+          <a href="printing.html#banners">Signs &amp; Banners</a>
+          <a href="tshirt.html">T-Shirts &amp; Apparel</a>
+          <a href="printing.html">Print Products</a>
+          <a href="websites-demo/">Websites</a>
+          <a href="tracking.html">Track Order</a>
+          <a href="about.html">About Us</a>
+        </nav>
+        <div class="nav-actions">
+          <button class="design-chat-button" type="button" aria-label="Chat with Next Print NY">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.2 18.4 3 21l1.2-5.1A8.2 8.2 0 0 1 3 11.6C3 6.9 7 3 12 3s9 3.9 9 8.6-4 8.5-9 8.5c-1.7 0-3.3-.4-4.8-1.1Z"/><path d="M8 11.5h.01M12 11.5h.01M16 11.5h.01"/></svg>
+            <span>Chat With Us</span>
+          </button>
+          <div class="language-switch" aria-label="Change language">
+            <button type="button" class="active">EN</button>
+            <button type="button">ES</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="approval-main">
+        <section class="approval-hero approval-hero-compact">
+          <div>
+            <h1>Design Proof Approval</h1>
+            <p>Upload your designs, add project details and send to your customer for approval.</p>
+          </div>
+        </section>
+
+        <section class="approval-create-grid" aria-label="Create design proof">
+          <article class="approval-card project-details-card">
+            <div class="approval-card-heading compact-card-heading">
+              <span class="approval-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 3v3m10-3v3M5 9h14M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Zm3 8h2v2H9zm4 0h2v2h-2z"/></svg></span>
+              <div><h2>Project Details</h2></div>
+            </div>
+            <form class="project-details-form" id="designProjectForm" novalidate>
+              <label><span>Project Name <b>*</b></span><input id="projectName" name="projectName" type="text" maxlength="160" placeholder="Example: Church Directional Signs" required /></label>
+              <label><span>Customer Name <b>*</b></span><input id="customerName" name="customerName" type="text" maxlength="160" placeholder="Enter customer name" required /></label>
+              <label><span>Customer Email <b>*</b></span><input id="customerEmail" name="customerEmail" type="email" maxlength="254" placeholder="Enter customer email" required /></label>
+              <label><span>Product / Service <b>*</b></span><input id="productService" name="productService" type="text" maxlength="160" placeholder="Example: Aluminum Sign" required /></label>
+              <label><span>Order Number</span><input id="orderNumber" name="orderNumber" type="text" maxlength="100" placeholder="Example: NP-2026-001" /></label>
+              <label><span>Due Date <em>(Optional)</em></span><input id="dueDate" name="dueDate" type="date" /></label>
+              <label class="form-field-wide"><span>Notes for Customer <em>(Optional)</em></span><textarea id="customerNotes" name="customerNotes" maxlength="3000" rows="4" placeholder="Add any instructions or notes the customer should see..."></textarea></label>
+            </form>
+          </article>
+
+          <article class="approval-card upload-card">
+            <div class="approval-card-heading compact-card-heading">
+              <span class="approval-line-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 9h14v11H5zM8 9V7a4 4 0 0 1 8 0v2m-4 3v5m0-5-2 2m2-2 2 2"/></svg></span>
+              <div><h2>Upload Designs / Samples</h2></div>
+            </div>
+            <div class="drop-zone" id="designDropZone" tabindex="0" role="button" aria-label="Select design samples">
+              <span class="upload-glyph" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>
+              </span>
+              <h3>Drag and drop your files here</h3>
+              <p>or</p>
+              <button type="button" class="browse-button" id="browseDesignFiles">Browse Files</button>
+              <input id="designFileInput" type="file" accept=".jpg,.jpeg,.png,.pdf,image/jpeg,image/png,application/pdf" multiple hidden />
+              <small>Supports: JPG, PNG, PDF<br />Max file size: 25MB per file</small>
+            </div>
+            <div class="selected-files" id="selectedDesignFiles" aria-live="polite"></div>
+          </article>
+        </section>
+
+        <section class="approval-projects-section">
+          <div class="projects-heading">
+            <div><h2>Your Projects &amp; Proofs</h2><p>Manage all your design approvals in one place.</p></div>
+            <div class="projects-toolbar">
+              <label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg><input id="projectSearch" type="search" placeholder="Search project or customer..." /></label>
+              <button id="saveDesignProject" type="button"><span aria-hidden="true">＋</span> <span class="save-project-label">New Project</span></button>
+            </div>
+          </div>
+          <p class="design-save-message" id="designSaveMessage" role="status" aria-live="polite"></p>
+          <div class="projects-table-wrap">
+            <table class="projects-table">
+              <thead><tr><th>Preview</th><th>Project</th><th>Customer</th><th>Order #</th><th>Samples</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead>
+              <tbody id="designProjectsBody"><tr><td colspan="8" class="projects-empty-state">Loading projects…</td></tr></tbody>
+            </table>
+          </div>
+          <section class="admin-response-panel" id="adminResponsePanel" hidden aria-live="polite">
+            <div class="admin-response-heading">
+              <div><span>Project Response History</span><h3 id="adminResponseProjectName">Project</h3></div>
+              <button id="closeAdminResponsePanel" type="button" aria-label="Close project history">×</button>
+            </div>
+            <div class="admin-response-summary" id="adminResponseSummary"></div>
+            <div class="response-history-list" id="adminResponseHistory"></div>
+            <button class="reopen-project-button" id="reopenDesignProject" type="button">Reopen Project</button>
+            <p class="design-save-message" id="adminResponseMessage" role="status"></p>
+          </section>
+          <p class="projects-security-note">♙ &nbsp; All customer responses are secure and only visible to your team.</p>
+        </section>
+      </main>
+    </div>
+    <script src="script.js?v=20260617-1800"></script>
+    <script src="design-approval.js"></script>
+  </body>
+</html>
