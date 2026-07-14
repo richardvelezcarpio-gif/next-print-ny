@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta name="description" content="This operational page is part of the secure Next Print NY customer and order workflow." />
+    <meta name="robots" content="noindex, follow" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin | Next Print NY</title>
+    <link rel="icon" href="assets/logo.png" />
+    <link rel="stylesheet" href="admin.css?v=20260604-1350" />
+  </head>
+  <body>
+    <main class="admin-shell">
+      <section id="loginView" class="login-view">
+        <form id="loginForm" class="login-panel">
+          <img src="assets/logo.png" alt="Next Print NY" />
+          <h1>Acceso privado</h1>
+          <label>
+            Email
+            <input name="email" type="email" autocomplete="email" placeholder="tu@email.com" />
+          </label>
+          <label>
+            Contraseña
+            <input name="password" type="password" autocomplete="current-password" required />
+          </label>
+          <button type="submit">Entrar al negocio</button>
+          <p id="loginStatus" class="status-text" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section id="dashboardView" class="dashboard-view" hidden>
+        <aside class="admin-sidebar">
+          <a class="admin-brand" href="index.html">
+            <img src="assets/logo.png" alt="Next Print NY" />
+          </a>
+          <nav class="admin-tabs" aria-label="Admin sections">
+            <button class="active" type="button" data-filter="all">Todo</button>
+            <button type="button" data-filter="order">Pedidos</button>
+            <button type="button" data-filter="income">Ingresos</button>
+            <button type="button" data-filter="expense">Gastos</button>
+            <button type="button" data-filter="inventory">Inventario</button>
+            <button type="button" data-filter="customer">Clientes</button>
+            <button type="button" data-filter="document">Documentos</button>
+          </nav>
+          <button id="logoutButton" class="logout-button" type="button">Salir</button>
+        </aside>
+
+        <section class="admin-main">
+          <header class="admin-header">
+            <div>
+              <span id="sessionEmail" class="eyebrow"></span>
+              <h1>Control del negocio</h1>
+            </div>
+            <div class="admin-header-actions">
+              <a href="order.html" target="_blank" rel="noreferrer">Nueva orden</a>
+              <a href="tracking.html" target="_blank" rel="noreferrer">Tracking</a>
+              <a href="payments.html" target="_blank" rel="noreferrer">Checkout</a>
+              <a href="admin-portal.html">Estimates &amp; Projects</a>
+              <a href="design-approval.html">Design Approval</a>
+              <a href="index.html" target="_blank" rel="noreferrer">Ver web</a>
+              <button id="refreshButton" type="button">Actualizar</button>
+            </div>
+          </header>
+
+          <section class="metric-grid" aria-label="Resumen">
+            <article>
+              <span>Pedidos abiertos</span>
+              <strong id="openOrders">0</strong>
+            </article>
+            <article>
+              <span>Ingresos</span>
+              <strong id="incomeTotal">$0.00</strong>
+            </article>
+            <article>
+              <span>Gastos</span>
+              <strong id="expenseTotal">$0.00</strong>
+            </article>
+            <article>
+              <span>Balance</span>
+              <strong id="balanceTotal">$0.00</strong>
+            </article>
+          </section>
+
+          <section class="custom-order-panel" aria-label="Orden custom privada">
+            <div class="records-header">
+              <div>
+                <span class="eyebrow">Solo para el dueño</span>
+                <h2>Orden custom privada</h2>
+              </div>
+              <span>Invoice automático</span>
+            </div>
+            <form id="customOrderForm" class="custom-order-form">
+              <div class="field-row">
+                <label>
+                  Nombre del cliente
+                  <input name="customer_name" type="text" autocomplete="name" required />
+                </label>
+                <label>
+                  Teléfono
+                  <input name="customer_phone" type="tel" autocomplete="tel" required />
+                </label>
+              </div>
+              <div class="field-row">
+                <label>
+                  Email del cliente
+                  <input name="customer_email" type="email" autocomplete="email" />
+                </label>
+                <label>
+                  Fecha de entrega
+                  <input id="customDueDate" name="due_date" type="date" />
+                </label>
+              </div>
+              <div class="field-row">
+                <label>
+                  Servicio o producto custom
+                  <input name="title" type="text" required placeholder="Ej: Custom banner, diseño especial, paquete completo" />
+                </label>
+                <label>
+                  Cantidad
+                  <input name="quantity" type="number" min="1" step="1" required value="1" placeholder="1" />
+                </label>
+              </div>
+              <div class="field-row single-field">
+                <label>
+                  Precio custom
+                  <input name="amount" type="number" min="0" step="0.01" required placeholder="0.00" />
+                </label>
+              </div>
+              <label>
+                Indicaciones del pedido
+                <textarea name="description" rows="5" required placeholder="Medidas, colores, material, cantidades, dirección, instrucciones especiales..."></textarea>
+              </label>
+              <label>
+                Notas internas
+                <textarea name="internal_notes" rows="3" placeholder="Notas para ti: depósito, conversación, fecha prometida, proveedor, etc."></textarea>
+              </label>
+              <label class="custom-file-drop">
+                <input id="customOrderFiles" name="files" type="file" multiple />
+                <span>Subir archivos del pedido</span>
+                <small id="customOrderFileName">PDF, JPG, PNG o archivos de diseño. Opcional.</small>
+              </label>
+              <label class="checkbox-line">
+                <input name="send_invoice" type="checkbox" checked />
+                Enviar invoice al email del cliente al guardar
+              </label>
+              <button type="submit">Crear orden custom</button>
+              <div id="customOrderActions" class="custom-order-actions" hidden></div>
+              <p id="customOrderStatus" class="status-text" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="kanban-panel" aria-label="Tablero de pedidos">
+            <div class="records-header">
+              <div>
+                <span class="eyebrow">Flujo de trabajo</span>
+                <h2>Tablero de pedidos</h2>
+              </div>
+              <span id="kanbanCount">0 pedidos</span>
+            </div>
+            <div id="kanbanBoard" class="kanban-board"></div>
+          </section>
+
+          <section class="workspace-grid">
+            <form id="recordForm" class="record-form">
+              <h2>Nuevo registro</h2>
+              <div class="field-row">
+                <label>
+                  Tipo
+                  <select name="type" required>
+                    <option value="order">Pedido</option>
+                    <option value="income">Ingreso</option>
+                    <option value="expense">Gasto</option>
+                    <option value="inventory">Inventario</option>
+                    <option value="customer">Cliente</option>
+                    <option value="document">Documento</option>
+                  </select>
+                </label>
+                <label>
+                  Estado
+                  <select name="status">
+                    <option value="new">Nuevo</option>
+                    <option value="in_progress">En proceso</option>
+                    <option value="waiting">Esperando</option>
+                    <option value="paid">Pagado</option>
+                    <option value="completed">Completado</option>
+                    <option value="cancelled">Cancelado</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                Título
+                <input name="title" type="text" required placeholder="Ej: 500 business cards" />
+              </label>
+              <div class="field-row">
+                <label>
+                  Cliente
+                  <input name="customer_name" type="text" autocomplete="name" />
+                </label>
+                <label>
+                  Teléfono
+                  <input name="customer_phone" type="tel" autocomplete="tel" />
+                </label>
+              </div>
+              <div class="field-row">
+                <label>
+                  Email
+                  <input name="customer_email" type="email" autocomplete="email" />
+                </label>
+                <label>
+                  Fecha
+                  <input name="due_date" type="date" />
+                </label>
+              </div>
+              <div class="field-row">
+                <label>
+                  Monto
+                  <input name="amount" type="number" min="0" step="0.01" placeholder="0.00" />
+                </label>
+                <label>
+                  Cantidad
+                  <input name="quantity" type="number" min="0" step="1" placeholder="0" />
+                </label>
+              </div>
+              <label>
+                Link de archivo
+                <input name="file_url" type="url" placeholder="https://..." />
+              </label>
+              <label>
+                Detalles
+                <textarea name="description" rows="4" placeholder="Notas del pedido, pago, gasto o documento"></textarea>
+              </label>
+              <label class="checkbox-line">
+                <input name="send_invoice" type="checkbox" checked />
+                Enviar invoice/recibo al cliente si hay email
+              </label>
+              <button type="submit">Guardar registro</button>
+              <p id="recordStatus" class="status-text" aria-live="polite"></p>
+            </form>
+
+            <section class="records-panel">
+              <div class="records-header">
+                <h2>Movimientos</h2>
+                <span id="recordCount">0 registros</span>
+              </div>
+              <div id="recordsList" class="records-list"></div>
+            </section>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script src="admin.js?v=20260604-1350"></script>
+  </body>
+</html>

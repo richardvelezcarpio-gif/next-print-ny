@@ -10,6 +10,10 @@
   ],
   "rewrites": [
     {
+      "source": "/admin.html",
+      "destination": "/admin-live.html"
+    },
+    {
       "source": "/banner-designer/designer",
       "destination": "/banner-designer/index.html"
     },
