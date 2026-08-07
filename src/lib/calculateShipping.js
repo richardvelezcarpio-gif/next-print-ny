@@ -3,7 +3,6 @@
   const rules = root.NextPrintShippingRules || safeRequire("./shippingRules.js");
 
   const TAX_RATE = 0.08875;
-  const LOCAL_DELIVERY_FEE = 18;
   const STANDARD_RATES = {
     STANDARD: { base: 8, perLb: 1.1 },
     HEAVY: { base: 14, perLb: 1.4 },
@@ -29,7 +28,7 @@
   } = {}) {
     const profile = profiles.getShippingProfile(productId || productName) || defaultProfile(productName);
     const normalizedMethod = normalizeMethod(method);
-    const normalizedQuantity = Math.max(1, Number(quantity) || 1);
+    const normalizedQuantity = Math.max(1, Number.parseInt(quantity, 10) || 1);
     const normalizedSubtotal = roundMoney(subtotal);
     const state = rules.normalizeState(destination.state);
     const freeShippingApplied = rules.isMemberFreeShippingEligible({
@@ -39,16 +38,13 @@
       state,
     });
 
-    let available = true;
-    let unavailableReason = "";
+    const destinationError = validateDestination(destination);
+    let available = !destinationError;
+    let unavailableReason = destinationError;
     let shippingCost = 0;
 
-    if (normalizedMethod === rules.SHIPPING_METHODS.PICKUP) {
+    if (!available) {
       shippingCost = 0;
-    } else if (normalizedMethod === rules.SHIPPING_METHODS.LOCAL_DELIVERY) {
-      available = rules.isLocalDeliveryEligible(destination);
-      unavailableReason = available ? "" : "Local Delivery is only available in Brooklyn or Queens.";
-      shippingCost = available ? LOCAL_DELIVERY_FEE : 0;
     } else if (freeShippingApplied) {
       shippingCost = 0;
     } else {
@@ -84,15 +80,15 @@
 
   function approximateCarrierRate(profile, quantity) {
     const rate = STANDARD_RATES[profile.shippingCategory] || STANDARD_RATES.STANDARD;
+    const safeWeight = Number(profile.baseWeightLb);
+    if (!Number.isFinite(safeWeight) || safeWeight <= 0) return 0;
     const packageMultiplier = Math.max(1, Math.ceil(quantity / 5000));
-    const estimatedWeight = Math.max(profile.baseWeightLb, profile.baseWeightLb * packageMultiplier);
+    const estimatedWeight = Math.max(safeWeight, safeWeight * packageMultiplier);
     return rate.base + estimatedWeight * rate.perLb;
   }
 
   function normalizeMethod(method) {
     const value = String(method || "").toLowerCase();
-    if (value === "pickup") return rules.SHIPPING_METHODS.PICKUP;
-    if (value === "local" || value === "local_delivery" || value === "local-delivery") return rules.SHIPPING_METHODS.LOCAL_DELIVERY;
     if (value === "express") return rules.SHIPPING_METHODS.EXPRESS;
     return rules.SHIPPING_METHODS.STANDARD;
   }
@@ -105,8 +101,6 @@
       baseWeightLb: 5,
       boxSize: "12 x 9 x 4",
       shippingCategory: "STANDARD",
-      allowPickup: true,
-      allowLocalDelivery: true,
       allowStandardShipping: true,
       allowExpressShipping: true,
       freeShippingEligible: false,
@@ -118,6 +112,17 @@
     return Math.round((Number.isFinite(amount) ? amount : 0) * 100) / 100;
   }
 
+  function validateDestination(destination = {}) {
+    const street = String(destination.street || "").trim();
+    const city = String(destination.city || "").trim();
+    const state = rules.normalizeState(destination.state);
+    const zip = String(destination.zip || "").trim().match(/^\d{5}(?:-\d{4})?$/);
+    const country = String(destination.country || "US").trim().toUpperCase();
+    if (!street || !city || !state || !zip) return "Enter a valid street address, city, state, and ZIP code.";
+    if (country !== "US" && country !== "USA" && country !== "UNITED STATES") return "Shipping is currently available only within the United States.";
+    return "";
+  }
+
   function safeRequire(path) {
     try {
       if (typeof require === "function") return require(path);
@@ -127,7 +132,6 @@
 
   const api = {
     TAX_RATE,
-    LOCAL_DELIVERY_FEE,
     calculateShipping,
   };
 

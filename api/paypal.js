@@ -7,6 +7,7 @@ import {
   sanitizeCheckoutInput,
   verifyPayPalWebhook,
 } from "../lib/paypal.js";
+import { getOrderForPayment } from "../lib/supabase-payments.js";
 
 const TABLE = "business_records";
 const SUPPORT_EMAIL = "nextprintny@gmail.com";
@@ -52,7 +53,7 @@ function handlePayPalConfig(req, res) {
     enabled: Boolean(clientId),
     clientId,
     currency: "USD",
-    environment: process.env.PAYPAL_ENV === "live" ? "live" : "sandbox",
+    environment: process.env.PAYPAL_ENVIRONMENT === "live" ? "live" : "sandbox",
   });
 }
 
@@ -70,19 +71,15 @@ async function createPayPalOrder(req, res) {
   }
 
   const checkout = sanitizeCheckoutInput(req.body || {});
-  const amount = moneyToPayPalValue(checkout.amount);
 
   if (!checkout.orderNumber) {
     res.status(400).json({ error: "Order number is required." });
     return;
   }
 
-  if (!amount) {
-    res.status(400).json({ error: "A valid checkout amount is required." });
-    return;
-  }
-
   try {
+    const pendingOrder = await getOrderForPayment(checkout.orderNumber);
+    const amount = pendingOrder.amount;
     const returnUrl = buildReturnUrl(req, checkout.successPath, {
       checkout: "paypal-return",
       order: checkout.orderNumber,
@@ -165,6 +162,12 @@ async function capturePayPalOrder(req, res) {
   }
 
   try {
+    const pendingOrder = await getOrderForPayment(orderNumber);
+    const paypalOrder = await paypalFetch(`/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}`);
+    const unit = paypalOrder.purchase_units?.[0] || {};
+    if (unit.custom_id !== orderNumber || unit.amount?.currency_code !== "USD" || unit.amount?.value !== pendingOrder.amount) {
+      return res.status(400).json({ error: "PayPal order does not match the stored Next Print NY order." });
+    }
     const capture = await paypalFetch(`/v2/checkout/orders/${encodeURIComponent(paypalOrderId)}/capture`, {
       method: "POST",
       body: "{}",

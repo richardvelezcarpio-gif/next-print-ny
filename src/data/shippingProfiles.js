@@ -54,8 +54,6 @@
       baseWeightLb,
       boxSize,
       shippingCategory,
-      allowPickup: true,
-      allowLocalDelivery: true,
       allowStandardShipping: true,
       allowExpressShipping: true,
       freeShippingEligible,

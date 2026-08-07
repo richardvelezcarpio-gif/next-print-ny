@@ -15,7 +15,6 @@ const paidTrackLink = document.querySelector("#shirtPaidTrackLink");
 const checkoutForm = document.querySelector("#shirtCheckoutForm");
 const statusNode = document.querySelector("#shirtCheckoutStatus");
 const addressFields = document.querySelector("#shirtAddressFields");
-const pickupNote = document.querySelector("#shirtPickupNote");
 const previewImage = document.querySelector("#shirtCheckoutPreview");
 const totalNode = document.querySelector("#shirtCheckoutTotal");
 const quantityNode = document.querySelector("#shirtCheckoutQty");
@@ -65,9 +64,6 @@ checkoutForm?.addEventListener("submit", async (event) => {
 checkoutForm?.addEventListener("input", resetPreparedCheckout);
 checkoutForm?.addEventListener("change", resetPreparedCheckout);
 
-document.querySelectorAll("input[name='fulfillment']").forEach((input) => {
-  input.addEventListener("change", updateFulfillmentFields);
-});
 
 function renderCheckout(orderSelection, orderFiles) {
   if (workspace) workspace.hidden = false;
@@ -110,10 +106,8 @@ function showMissingState() {
 }
 
 function updateFulfillmentFields() {
-  const fulfillment = document.querySelector("input[name='fulfillment']:checked")?.value || "shipping";
-  const isShipping = fulfillment === "shipping";
-  if (addressFields) addressFields.hidden = !isShipping;
-  if (pickupNote) pickupNote.hidden = isShipping;
+  const isShipping = true;
+  if (addressFields) addressFields.hidden = false;
   addressFields?.querySelectorAll("input").forEach((input) => {
     const required = ["street", "city", "state", "zip"].includes(input.name);
     input.required = isShipping && required;
@@ -134,7 +128,7 @@ async function prepareCheckoutPayload() {
     phone: clean(form.get("phone")),
     email: clean(form.get("email")),
   };
-  const fulfillment = form.get("fulfillment") === "pickup" ? "pickup" : "shipping";
+  const fulfillment = "shipping";
   const address = fulfillment === "shipping" ? {
     street: clean(form.get("street")),
     apartment: clean(form.get("apartment")),
@@ -189,7 +183,7 @@ async function prepareCheckoutPayload() {
     source: "tshirt-checkout",
     paymentOption: "Full payment",
     plan: "Custom T-Shirts",
-    fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
+    fulfillment: "Shipping",
     shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
     description: details,
     successPath: `/shirt-checkout.html?order=${encodeURIComponent(orderNumber)}`,

@@ -24,13 +24,10 @@ export default async function handler(req, res) {
     return;
   }
 
-  if (catalogPrice) {
-    const submittedAmount = parseMoney(order.budget);
-    const regularAmount = parseMoney(catalogPrice);
-    const memberAmount = parseMoney(memberCatalogPrice);
-    const minimumAmount = Math.min(...[regularAmount, memberAmount].filter((amount) => amount > 0));
-    order.budget = submittedAmount >= minimumAmount ? `$${submittedAmount.toFixed(2)}` : catalogPrice;
-  }
+  const pricing = calculateServerTotal(order, catalogPrice);
+  if (!pricing.available) return res.status(400).json({ error: pricing.error });
+  order.budget = `$${pricing.total.toFixed(2)}`;
+  order.shipping = pricing;
 
   const totalFileSize = order.files.reduce((total, file) => total + String(file.content || "").length, 0);
   if (totalFileSize > MAX_FILE_SIZE_BASE64) {
@@ -41,15 +38,24 @@ export default async function handler(req, res) {
   const orderNumber = buildOrderNumber();
 
   try {
-    const emailResult = await sendOrderEmails(order, orderNumber, req);
     const saveResult = await saveOrderRecord(order, orderNumber);
+    if (!saveResult.saved) throw new Error(saveResult.warning || "Could not persist order before payment.");
+    let emailResult = { warning: "" };
+    try {
+      emailResult = await sendOrderEmails(order, orderNumber, req);
+    } catch (emailError) {
+      emailResult = { warning: `Order saved; notification email failed: ${emailError.message}` };
+    }
 
     res.status(200).json({
       ok: true,
       orderNumber,
       amount: parseMoney(order.budget),
+      subtotal: pricing.subtotal,
+      shipping: pricing.shipping,
+      tax: pricing.tax,
       whatsappUrl: buildWhatsappUrl(order, orderNumber),
-      saved: saveResult.saved,
+      saved: true,
       warning: [saveResult.warning, emailResult.warning].filter(Boolean).join(" | "),
     });
   } catch (error) {
@@ -200,6 +206,9 @@ async function saveOrderRecord(order, orderNumber) {
     order.orderDate ? `Order date: ${order.orderDate}` : "",
     order.dueDate ? `Delivery date: ${order.dueDate}` : "",
     order.budget ? `Price: ${order.budget}` : "",
+    order.shipping ? `Server subtotal: $${order.shipping.subtotal.toFixed(2)}` : "",
+    order.shipping ? `Shipping (${order.shipping.weight} lb): $${order.shipping.shipping.toFixed(2)}` : "",
+    order.shipping ? `Tax: $${order.shipping.tax.toFixed(2)}` : "",
     order.files.length ? `Files: ${order.files.map((file) => file.name).join(", ")}` : "",
   ]
     .filter(Boolean)
@@ -207,7 +216,7 @@ async function saveOrderRecord(order, orderNumber) {
 
   const record = {
     type: "order",
-    status: "new",
+    status: "pending_payment",
     title: `${orderNumber} - ${order.service}`,
     customer_name: order.name,
     customer_phone: order.phone,
@@ -276,24 +285,55 @@ function sanitizeAddress(input) {
     city: clean(input.city, 100),
     state: clean(input.state, 30),
     zip: clean(input.zip, 30),
+    country: clean(input.country || "US", 30),
   };
 }
 
 function fulfillmentLabel(order, isEnglish = true) {
   if (order.fulfillment === "standard") return isEnglish ? "Standard Shipping" : "Envío estándar";
   if (order.fulfillment === "express") return isEnglish ? "Express Shipping" : "Envío express";
-  if (order.fulfillment === "pickup") return isEnglish ? "Pickup store" : "Recogida en tienda";
   if (order.fulfillment === "shipping") return isEnglish ? "Shipping" : "Envío";
   return isEnglish ? "Not selected" : "No seleccionado";
 }
 
 function normalizeFulfillment(value) {
   const fulfillment = String(value || "").toLowerCase();
-  if (fulfillment === "standard" || fulfillment === "express" || fulfillment === "pickup" || fulfillment === "shipping") {
+  if (fulfillment === "standard" || fulfillment === "express" || fulfillment === "shipping") {
     return fulfillment;
   }
   return "";
 }
+
+function calculateServerTotal(order, catalogPrice) {
+  const street = order.address.street;
+  const city = order.address.city;
+  const state = String(order.address.state || "").trim().toUpperCase();
+  const zipMatch = String(order.address.zip || "").trim().match(/^(\d{5})(?:-\d{4})?$/);
+  const country = String(order.address.country || "US").trim().toUpperCase();
+  if (!street || !city || !/^[A-Z]{2}$/.test(state) || !zipMatch) return { available: false, error: "Enter a valid street address, city, state, and ZIP code." };
+  if (!["US", "USA", "UNITED STATES"].includes(country)) return { available: false, error: "Shipping is currently available only within the United States." };
+  const subtotal = parseMoney(catalogPrice);
+  if (!(subtotal > 0)) return { available: false, error: "This product or quantity does not have a valid server price." };
+  const profile = shippingProfile(order.product);
+  if (!profile) return { available: false, error: "This product does not have a valid shipping weight." };
+  const multiplier = Math.max(1, Math.ceil(order.quantity / 5000));
+  const weight = profile.weight * multiplier;
+  const shipping = roundMoney(profile.base + weight * profile.perLb + (order.fulfillment === "express" ? profile.express : 0));
+  const tax = roundMoney(subtotal * 0.08875);
+  return { available: true, zip: zipMatch[1], subtotal, weight, shipping, tax, total: roundMoney(subtotal + shipping + tax), method: order.fulfillment || "standard" };
+}
+
+function shippingProfile(product) {
+  const name = String(product || "").toLowerCase();
+  if (/business card|sticker/.test(name)) return { weight: 2, base: 8, perLb: 1.1, express: 18 };
+  if (/flyer|door hanger/.test(name)) return { weight: 5, base: 8, perLb: 1.1, express: 18 };
+  if (/menu|brochure|invoice/.test(name)) return { weight: 6, base: 14, perLb: 1.4, express: 24 };
+  if (/banner|backdrop|yard sign|poster/.test(name)) return { weight: 12, base: 28, perLb: 2.2, express: 45 };
+  if (/t-shirt/.test(name)) return { weight: 3, base: 8, perLb: 1.1, express: 18 };
+  return null;
+}
+
+function roundMoney(value) { return Math.round(Number(value) * 100) / 100; }
 
 function requiresShippingAddress(fulfillment) {
   return fulfillment === "standard" || fulfillment === "express" || fulfillment === "shipping";

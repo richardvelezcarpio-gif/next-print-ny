@@ -15,7 +15,6 @@ const paidTrackLink = document.querySelector("#bannerPaidTrackLink");
 const checkoutForm = document.querySelector("#bannerCheckoutForm");
 const statusNode = document.querySelector("#bannerCheckoutStatus");
 const addressFields = document.querySelector("#bannerAddressFields");
-const pickupNote = document.querySelector("#bannerPickupNote");
 const previewImage = document.querySelector("#bannerCheckoutPreview");
 const totalNode = document.querySelector("#bannerCheckoutTotal");
 const productNode = document.querySelector("#bannerCheckoutProduct");
@@ -67,9 +66,6 @@ checkoutForm?.addEventListener("submit", async (event) => {
 checkoutForm?.addEventListener("input", resetPreparedCheckout);
 checkoutForm?.addEventListener("change", resetPreparedCheckout);
 
-document.querySelectorAll("input[name='fulfillment']").forEach((input) => {
-  input.addEventListener("change", updateFulfillmentFields);
-});
 
 function renderCheckout(orderSelection, orderFiles) {
   if (workspace) workspace.hidden = false;
@@ -117,10 +113,8 @@ function showMissingState() {
 }
 
 function updateFulfillmentFields() {
-  const fulfillment = document.querySelector("input[name='fulfillment']:checked")?.value || "shipping";
-  const isShipping = fulfillment === "shipping";
-  if (addressFields) addressFields.hidden = !isShipping;
-  if (pickupNote) pickupNote.hidden = isShipping;
+  const isShipping = true;
+  if (addressFields) addressFields.hidden = false;
   addressFields?.querySelectorAll("input").forEach((input) => {
     const required = ["street", "city", "state", "zip"].includes(input.name);
     input.required = isShipping && required;
@@ -141,7 +135,7 @@ async function prepareCheckoutPayload() {
     phone: clean(form.get("phone")),
     email: clean(form.get("email")),
   };
-  const fulfillment = form.get("fulfillment") === "pickup" ? "pickup" : "shipping";
+  const fulfillment = "shipping";
   const address = fulfillment === "shipping" ? {
     street: clean(form.get("street")),
     apartment: clean(form.get("apartment")),
@@ -196,7 +190,7 @@ async function prepareCheckoutPayload() {
     source: "banner-checkout",
     paymentOption: "Full payment",
     plan: selection.label || selection.product,
-    fulfillment: fulfillment === "pickup" ? "Pickup store" : "Shipping",
+    fulfillment: "Shipping",
     shippingAddress: fulfillment === "shipping" ? formatAddress(address) : "",
     description: details,
     successPath: `/banner-checkout.html?order=${encodeURIComponent(orderNumber)}`,

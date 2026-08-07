@@ -5,7 +5,7 @@ import {
   retrieveStripeSession,
   stripePublicConfig,
 } from "../lib/stripe.js";
-import { markStripeOrderPaid } from "../lib/supabase-payments.js";
+import { getOrderForPayment, markStripeOrderPaid } from "../lib/supabase-payments.js";
 
 export default async function handler(req, res) {
   try {
@@ -26,7 +26,8 @@ function handleConfig(req, res) {
 
 async function createStripeCheckout(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
-  const session = await createOneTimeCheckoutSession(req, req.body || {});
+  const pendingOrder = await getOrderForPayment(req.body?.orderNumber);
+  const session = await createOneTimeCheckoutSession(req, { ...(req.body || {}), amount: pendingOrder.amount, currency: "USD" });
   res.status(200).json({
     ok: true,
     provider: "stripe",

@@ -2594,7 +2594,9 @@ textarea {
   margin-top: 64px;
   padding: 26px 30px 0;
   color: #eefbff;
-  background: #05275c;
+  /* Keep the public footer uniformly branded at every breakpoint. */
+  background-color: #05275c;
+  background-image: none;
   border-top: 1px solid rgba(125, 233, 255, 0.22);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }

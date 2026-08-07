@@ -1,7 +1,10 @@
 import { clean } from "../lib/paypal.js";
-import { retrieveStripeSession } from "../lib/stripe.js";
+import Stripe from "stripe";
+import { retrieveStripePaymentIntent, retrieveStripeSession } from "../lib/stripe.js";
 import {
   markStripeOrderPaid,
+  markStripeOrderFailed,
+  markStripeOrderRefunded,
   normalizeMembershipStatus,
   updateStripeSubscription,
   upsertStripeMembership,
@@ -9,18 +12,26 @@ import {
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
+  if (!process.env.STRIPE_WEBHOOK_SECRET || !process.env.STRIPE_SECRET_KEY) {
+    return res.status(503).json({ error: "Stripe webhook verification is not configured." });
+  }
 
   try {
-    const event = normalizeEvent(req.body);
-    if (!event?.type) return res.status(400).json({ error: "Stripe event type is required." });
+    const signature = req.headers["stripe-signature"];
+    if (!signature) return res.status(400).json({ error: "Stripe signature is required." });
+    const rawBody = await readRawBody(req);
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    let event;
+    try {
+      event = stripe.webhooks.constructEvent(rawBody, signature, process.env.STRIPE_WEBHOOK_SECRET);
+    } catch (error) {
+      return res.status(400).json({ error: `Invalid Stripe signature: ${error.message}` });
+    }
 
     const result = await processStripeEvent(event);
     res.status(200).json({
       received: true,
-      verified: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
-      note: process.env.STRIPE_WEBHOOK_SECRET
-        ? "Signature verification can be enabled when raw body parsing is configured."
-        : "STRIPE_WEBHOOK_SECRET not set; event accepted for future-ready processing.",
+      verified: true,
       eventType: event.type,
       ...result,
     });
@@ -35,7 +46,7 @@ async function processStripeEvent(event) {
   if (event.type === "checkout.session.completed") {
     if (object.mode === "payment") {
       const session = object.payment_status ? object : await retrieveStripeSession(object.id);
-      const result = await markStripeOrderPaid({ orderNumber: session.metadata?.orderNumber, session });
+      const result = await markStripeOrderPaid({ orderNumber: session.metadata?.orderNumber, session, eventId: event.id });
       return { payment: true, saved: result.saved, warning: result.warning || "" };
     }
 
@@ -62,6 +73,19 @@ async function processStripeEvent(event) {
     }
   }
 
+  if (event.type === "payment_intent.payment_failed") {
+    const result = await markStripeOrderFailed({ orderNumber: object.metadata?.orderNumber, paymentIntent: object, eventId: event.id });
+    return { paymentFailed: true, saved: result.saved, warning: result.warning || "" };
+  }
+
+  if (event.type === "charge.refunded") {
+    const paymentIntent = typeof object.payment_intent === "object"
+      ? object.payment_intent
+      : await retrieveStripePaymentIntent(object.payment_intent);
+    const result = await markStripeOrderRefunded({ orderNumber: paymentIntent?.metadata?.orderNumber || object.metadata?.orderNumber, charge: object, paymentIntent, eventId: event.id });
+    return { refunded: true, saved: result.saved, warning: result.warning || "" };
+  }
+
   if (String(event.type || "").startsWith("customer.subscription.")) {
     const result = await updateStripeSubscription(object);
     return { membership: true, saved: result.saved, warning: result.warning || "" };
@@ -70,7 +94,14 @@ async function processStripeEvent(event) {
   return { ignored: true };
 }
 
-function normalizeEvent(body) {
-  if (typeof body === "string") return JSON.parse(body || "{}");
-  return body || {};
+export const config = { api: { bodyParser: false } };
+
+function readRawBody(req) {
+  if (Buffer.isBuffer(req.body)) return Promise.resolve(req.body);
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    req.on("data", (chunk) => chunks.push(Buffer.from(chunk)));
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", reject);
+  });
 }
