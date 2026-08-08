@@ -2,13 +2,16 @@
   "name": "next-print-ny-website",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "npm@11.13.0",
   "type": "module",
   "scripts": {
     "build": "npm run seo:validate && node scripts/static-build.mjs",
     "seo:fix": "node scripts/seo-maintenance.mjs --fix",
     "seo:validate": "node scripts/seo-maintenance.mjs",
-    "dev": "npx vercel dev --listen 4173",
-    "start": "npx vercel dev --listen 4173",
+    "dev": "python3 -m http.server 5173",
+    "dev:vercel-runtime": "python3 -m http.server ${PORT:-5173}",
+    "dev:vercel": "npx vercel dev --local --listen 4173",
+    "start": "npm run dev",
     "static": "python3 -m http.server 4173",
     "generate:vapid": "node scripts/generate-vapid.mjs"
   },
