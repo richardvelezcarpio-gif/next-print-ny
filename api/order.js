@@ -1,4 +1,5 @@
 import { catalogPriceFor, memberCatalogPriceFor } from "../lib/printing-prices.js";
+import { randomUUID } from "node:crypto";
 
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
@@ -36,27 +37,23 @@ export default async function handler(req, res) {
   }
 
   const orderNumber = buildOrderNumber();
+  const internalOrderId = randomUUID();
 
   try {
-    const saveResult = await saveOrderRecord(order, orderNumber);
+    const saveResult = await saveOrderRecord(order, orderNumber, internalOrderId);
     if (!saveResult.saved) throw new Error(saveResult.warning || "Could not persist order before payment.");
-    let emailResult = { warning: "" };
-    try {
-      emailResult = await sendOrderEmails(order, orderNumber, req);
-    } catch (emailError) {
-      emailResult = { warning: `Order saved; notification email failed: ${emailError.message}` };
-    }
 
     res.status(200).json({
       ok: true,
       orderNumber,
-      amount: parseMoney(order.budget),
+      internalOrderId: saveResult.internalOrderId,
+      amount: pricing.total,
       subtotal: pricing.subtotal,
       shipping: pricing.shipping,
       tax: pricing.tax,
       whatsappUrl: buildWhatsappUrl(order, orderNumber),
       saved: true,
-      warning: [saveResult.warning, emailResult.warning].filter(Boolean).join(" | "),
+      warning: saveResult.warning || "",
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -190,7 +187,7 @@ async function sendResendEmail(apiKey, message) {
   return response.json();
 }
 
-async function saveOrderRecord(order, orderNumber) {
+async function saveOrderRecord(order, orderNumber, internalOrderId) {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     return { saved: false, warning: "Supabase not configured" };
   }
@@ -216,17 +213,38 @@ async function saveOrderRecord(order, orderNumber) {
 
   const record = {
     type: "order",
-    status: "pending_payment",
+    // `status` is a legacy business_records field whose existing database check accepts
+    // `new`; payment_status is the dedicated payment state introduced by the migration.
+    status: "new",
+    payment_status: "pending_payment",
+    payment_provider: "paypal",
+    internal_order_id: internalOrderId,
+    order_number: orderNumber,
+    currency: "USD",
     title: `${orderNumber} - ${order.service}`,
     customer_name: order.name,
     customer_phone: order.phone,
     customer_email: order.email,
     description,
-    amount: parseMoney(order.budget),
+    subtotal: order.shipping.subtotal,
+    shipping_amount: order.shipping.shipping,
+    tax_amount: order.shipping.tax,
+    amount: order.shipping.total,
+    delivery_address: {
+      street: order.address.street,
+      apartment: order.address.apartment,
+      city: order.address.city,
+      state: order.address.state,
+      zip: order.address.zip,
+      normalized_zip: order.shipping.zip,
+      country: "US",
+    },
     quantity: order.quantity,
     due_date: order.dueDate || null,
     file_url: "",
     created_by: "website-order",
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
   };
 
   const baseUrl = String(process.env.SUPABASE_URL).replace(/\/$/, "");
@@ -247,7 +265,9 @@ async function saveOrderRecord(order, orderNumber) {
     return { saved: false, warning: data || "Could not save order" };
   }
 
-  return { saved: true, warning: "" };
+  // The server generated this UUID and submitted it in the insert, so a minimal response
+  // avoids a large PostgREST representation while preserving the exact payment reference.
+  return { saved: true, warning: "", internalOrderId };
 }
 
 function sanitizeOrder(input) {
@@ -353,7 +373,7 @@ function buildOrderNumber() {
   const now = new Date();
   const date = now.toISOString().slice(2, 10).replace(/-/g, "");
   const time = now.toISOString().slice(11, 19).replace(/:/g, "");
-  return `NP-${date}-${time}`;
+  return `NP-${date}-${time}-${randomUUID().slice(0, 6).toUpperCase()}`;
 }
 
 function parseMoney(value) {

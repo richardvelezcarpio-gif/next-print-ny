@@ -68,11 +68,11 @@
     return data;
   }
 
-  async function captureCheckout(orderNumber, paypalOrderId) {
+  async function captureCheckout(internalOrderId, paypalOrderId) {
     const response = await fetch("/api/paypal?action=capture", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ orderNumber, paypalOrderId }),
+      body: JSON.stringify({ internalOrderId, paypalOrderId }),
     });
     const data = await response.json();
 
@@ -83,12 +83,12 @@
     return data;
   }
 
-  async function captureReturn({ orderNumber, paypalOrderId, setStatus, onSuccess, onError }) {
-    if (!orderNumber || !paypalOrderId) return false;
+  async function captureReturn({ internalOrderId, orderNumber, paypalOrderId, setStatus, onSuccess, onError }) {
+    if (!internalOrderId || !paypalOrderId) return false;
 
     try {
       setStatus?.("Confirming PayPal payment...");
-      const data = await captureCheckout(orderNumber, paypalOrderId);
+      const data = await captureCheckout(internalOrderId, paypalOrderId);
 
       onSuccess?.(orderNumber, data);
     } catch (error) {
@@ -136,9 +136,10 @@
         },
         async onApprove(data) {
           const orderNumber = activeCheckout?.orderNumber || activeCheckout?.order || "";
+          const internalOrderId = activeCheckout?.internalOrderId || "";
           const paypalOrderId = data.orderID || activeCheckout?.id;
           setStatus?.("Confirming PayPal payment...");
-          const capture = await captureCheckout(orderNumber, paypalOrderId);
+          const capture = await captureCheckout(internalOrderId, paypalOrderId);
           setStatus?.("Payment received. Thank you.");
           onSuccess?.(orderNumber, capture);
         },

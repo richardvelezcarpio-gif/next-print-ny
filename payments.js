@@ -5,6 +5,7 @@ const paymentAmountInput = document.querySelector("#paymentAmountInput");
 const paymentStatus = document.querySelector("#paymentStatus");
 const paymentParams = new URLSearchParams(window.location.search);
 const paymentOrder = normalizePaymentOrder(paymentParams.get("order"));
+const paymentInternalOrderId = paymentParams.get("internal") || "";
 const paymentAmount = normalizePaymentAmount(paymentParams.get("amount"));
 const paymentCheckoutStatus = paymentParams.get("checkout");
 const paymentPaypalToken = window.NextPrintPayPal?.paypalTokenFromParams(paymentParams);
@@ -26,6 +27,7 @@ if (paymentAmount && paymentAmountInput) {
 
 if (paymentCheckoutStatus === "paypal-return" && paymentOrder && paymentPaypalToken) {
   window.NextPrintPayPal.captureReturn({
+    internalOrderId: paymentInternalOrderId,
     orderNumber: paymentOrder,
     paypalOrderId: paymentPaypalToken,
     setStatus: (message, isError) => setPaymentStatus(message, isError ? "error" : "success"),

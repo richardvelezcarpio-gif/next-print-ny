@@ -5,6 +5,7 @@ const bannerDetailsKey = "nextBannerOrderDetails";
 const params = new URLSearchParams(window.location.search);
 const checkoutStatus = params.get("checkout");
 const returnedOrder = normalizeOrderNumber(params.get("order"));
+const returnedInternalOrderId = params.get("internal") || "";
 const paypalToken = window.NextPrintPayPal?.paypalTokenFromParams(params);
 
 const workspace = document.querySelector("#bannerCheckoutWorkspace");
@@ -30,6 +31,7 @@ let preparedCheckoutPayload = null;
 
 if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
   window.NextPrintPayPal.captureReturn({
+    internalOrderId: returnedInternalOrderId,
     orderNumber: returnedOrder,
     paypalOrderId: paypalToken,
     setStatus,
@@ -182,6 +184,7 @@ async function prepareCheckoutPayload() {
 
   const orderNumber = orderData.orderNumber;
   preparedCheckoutPayload = {
+    internalOrderId: orderData.internalOrderId,
     orderNumber,
     itemName: selection.label || selection.product,
     amount: orderData.amount || selection.totalPrice,

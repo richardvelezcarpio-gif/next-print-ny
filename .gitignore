@@ -4,3 +4,6 @@ outputs/
 work/
 *.log
 .vercel
+.env
+.env.*
+!.env.example

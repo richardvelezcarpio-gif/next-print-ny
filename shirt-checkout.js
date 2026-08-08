@@ -5,6 +5,7 @@ const detailsKey = "nextPrintTshirtDetails";
 const checkoutParams = new URLSearchParams(window.location.search);
 const checkoutStatus = checkoutParams.get("checkout");
 const returnedOrder = normalizeOrderNumber(checkoutParams.get("order"));
+const returnedInternalOrderId = checkoutParams.get("internal") || "";
 const paypalToken = window.NextPrintPayPal?.paypalTokenFromParams(checkoutParams);
 
 const workspace = document.querySelector("#shirtCheckoutWorkspace");
@@ -28,6 +29,7 @@ let preparedCheckoutPayload = null;
 
 if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
   window.NextPrintPayPal.captureReturn({
+    internalOrderId: returnedInternalOrderId,
     orderNumber: returnedOrder,
     paypalOrderId: paypalToken,
     setStatus,
@@ -175,6 +177,7 @@ async function prepareCheckoutPayload() {
 
   const orderNumber = orderData.orderNumber;
   preparedCheckoutPayload = {
+    internalOrderId: orderData.internalOrderId,
     orderNumber,
     itemName: `Custom T-Shirts - ${selection.totalQuantity} shirt${selection.totalQuantity === 1 ? "" : "s"}`,
     amount: orderData.amount || selection.totalPrice,

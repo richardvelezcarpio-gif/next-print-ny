@@ -5,6 +5,7 @@ const printDetailsKey = "nextPrintProductDetails";
 const checkoutParams = new URLSearchParams(window.location.search);
 const checkoutStatus = checkoutParams.get("checkout");
 const returnedOrder = normalizeOrderNumber(checkoutParams.get("order"));
+const returnedInternalOrderId = checkoutParams.get("internal") || "";
 const paypalToken = window.NextPrintPayPal?.paypalTokenFromParams(checkoutParams);
 const stripeSessionId = checkoutParams.get("session_id");
 
@@ -45,6 +46,7 @@ let memberActive = false;
 
 if (checkoutStatus === "paypal-return" && returnedOrder && paypalToken) {
   window.NextPrintPayPal.captureReturn({
+    internalOrderId: returnedInternalOrderId,
     orderNumber: returnedOrder,
     paypalOrderId: paypalToken,
     setStatus,
@@ -316,6 +318,7 @@ async function prepareCheckoutPayload() {
 
   const orderNumber = orderData.orderNumber;
   preparedCheckoutPayload = {
+    internalOrderId: orderData.internalOrderId,
     orderNumber,
     itemName: `${selection.label || selection.product} - ${selection.quantity}`,
     amount: orderData.amount || currentTotals.total,
