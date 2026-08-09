@@ -1409,6 +1409,14 @@
   }
 }
 
+/* Keep Signs/Banners routes and catalog links available, but remove this item from public header navigation. */
+#menu a[data-i18n="home.nav.signs"],
+#menu a[href*="banner-designer"],
+#menu a[href*="printing.html#banners"],
+.portal-nav a[href*="printing.html#banners"] {
+  display: none !important;
+}
+
 * {
   box-sizing: border-box;
 }
