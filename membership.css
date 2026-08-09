@@ -22,3 +22,8 @@
     min-width: 0;
   }
 }
+
+/* Keep Membership aligned with the approved site-wide footer color. */
+.member-footer {
+  background: #05275c;
+}
