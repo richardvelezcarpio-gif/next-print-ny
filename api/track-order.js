@@ -1,4 +1,5 @@
 const TABLE = "business_records";
+import { normalizeSupabaseUrl } from "../lib/supabase-url.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -31,18 +32,22 @@ export default async function handler(req, res) {
     const response = await supabaseFetch(`${TABLE}?${query.toString()}`);
     const records = await response.json();
 
-    if (!response.ok) {
-      res.status(response.status).json({ error: records?.message || "Could not track order" });
-      return;
-    }
+    const outcome = trackingLookupOutcome(orderNumber, response.ok, records);
+    res.status(outcome.status).json(outcome.body);
+  } catch (error) {
+    const outcome = trackingFailureOutcome();
+    res.status(outcome.status).json(outcome.body);
+  }
+}
 
-    if (!Array.isArray(records) || !records.length) {
-      res.status(404).json({ error: "Order not found" });
-      return;
-    }
+export function trackingLookupOutcome(orderNumber, responseOk, records) {
+  if (!responseOk) return trackingFailureOutcome();
+  if (!Array.isArray(records) || !records.length) return { status: 404, body: { error: "Order not found" } };
 
-    const record = records[0];
-    res.status(200).json({
+  const record = records[0];
+  return {
+    status: 200,
+    body: {
       order: {
         orderNumber,
         title: publicTitle(record.title, orderNumber),
@@ -58,14 +63,16 @@ export default async function handler(req, res) {
         updatedAt: record.updated_at || record.created_at || "",
         description: publicDescription(record.description),
       },
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+    },
+  };
+}
+
+export function trackingFailureOutcome() {
+  return { status: 500, body: { error: "Tracking service is temporarily unavailable." } };
 }
 
 async function supabaseFetch(path) {
-  const baseUrl = String(process.env.SUPABASE_URL || "").replace(/\/$/, "");
+  const baseUrl = normalizeSupabaseUrl(process.env.SUPABASE_URL);
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
@@ -84,7 +91,7 @@ async function supabaseFetch(path) {
   }
 }
 
-function normalizeOrderNumber(value) {
+export function normalizeOrderNumber(value) {
   return String(value || "")
     .replace(/[^a-zA-Z0-9-]/g, "")
     .trim()

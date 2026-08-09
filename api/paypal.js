@@ -21,6 +21,7 @@ import {
   EMAIL_ATTEMPT_MARKER,
   paidEmailWasAttempted,
 } from "../lib/paypal-paid-email.js";
+import { normalizeSupabaseUrl } from "../lib/supabase-url.js";
 
 const TABLE = "business_records";
 const SUPPORT_EMAIL = "nextprintny@gmail.com";
@@ -335,7 +336,7 @@ function escapeHtml(value) { return String(value || "").replace(/&/g, "&amp;").r
 function publicError(error, fallback) { const message = String(error?.message || fallback); return message.includes("SUPABASE") || message.includes("Bearer") ? fallback : message; }
 
 async function supabaseFetch(path, options = {}) {
-  const baseUrl = String(process.env.SUPABASE_URL || "").replace(/\/$/, "");
+  const baseUrl = normalizeSupabaseUrl(process.env.SUPABASE_URL);
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
