@@ -1,5 +1,5 @@
 const TABLE = "business_records";
-import { normalizeSupabaseUrl } from "../lib/supabase-url.js";
+import { normalizeSupabaseSecret, normalizeSupabaseUrl } from "../lib/supabase-url.js";
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
@@ -73,7 +73,7 @@ export function trackingFailureOutcome() {
 
 async function supabaseFetch(path) {
   const baseUrl = normalizeSupabaseUrl(process.env.SUPABASE_URL);
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = normalizeSupabaseSecret(process.env.SUPABASE_SERVICE_ROLE_KEY);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
 

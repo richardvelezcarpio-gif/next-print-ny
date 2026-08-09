@@ -1,6 +1,6 @@
 import { catalogPriceFor, memberCatalogPriceFor } from "../lib/printing-prices.js";
 import { randomUUID } from "node:crypto";
-import { normalizeSupabaseUrl } from "../lib/supabase-url.js";
+import { normalizeSupabaseSecret, normalizeSupabaseUrl } from "../lib/supabase-url.js";
 
 const TO_EMAIL = "nextprintny@gmail.com";
 const DEFAULT_FROM_EMAIL = "Next Print NY <onboarding@resend.dev>";
@@ -249,7 +249,7 @@ async function saveOrderRecord(order, orderNumber, internalOrderId) {
   };
 
   const baseUrl = normalizeSupabaseUrl(process.env.SUPABASE_URL);
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  const key = normalizeSupabaseSecret(process.env.SUPABASE_SERVICE_ROLE_KEY);
   const response = await fetch(`${baseUrl}/rest/v1/business_records`, {
     method: "POST",
     headers: {

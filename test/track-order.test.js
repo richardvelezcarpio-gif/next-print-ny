@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { isValidSupabaseUrl, normalizeSupabaseUrl } from "../lib/supabase-url.js";
+import { isValidSupabaseUrl, normalizeSupabaseSecret, normalizeSupabaseUrl } from "../lib/supabase-url.js";
 import { normalizeOrderNumber, trackingFailureOutcome, trackingLookupOutcome } from "../api/track-order.js";
 
 test("empty tracking input is rejected before querying Supabase", () => {
@@ -31,4 +31,8 @@ test("Supabase URL normalization removes accidental angle brackets", () => {
   assert.equal(normalizeSupabaseUrl(wrapped), "https://example.supabase.co");
   assert.equal(isValidSupabaseUrl(wrapped), true);
   assert.equal(isValidSupabaseUrl("<not-a-url>"), false);
+});
+
+test("Supabase secret normalization removes accidental angle brackets", () => {
+  assert.equal(normalizeSupabaseSecret("<sb_secret_example>"), "sb_secret_example");
 });
