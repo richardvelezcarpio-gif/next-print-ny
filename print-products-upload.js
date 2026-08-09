@@ -57,6 +57,11 @@ if (!product || (!selectedProduct && (!Number.isFinite(totalPrice) || totalPrice
 }
 
 fileInput?.addEventListener("change", updateFileLabel);
+document.addEventListener("nextprintlanguagechange", () => {
+  // Re-rendering uses the existing internal selection state. It changes only
+  // display labels, so language switches cannot alter the checkout payload.
+  if (selectedProduct || product) renderUploadOrder();
+});
 
 continueButton?.addEventListener("click", async () => {
   if (!product && !selectedProduct) return;
@@ -116,11 +121,11 @@ function renderUploadOrder() {
 
   if (workspace) workspace.hidden = false;
   if (missingPanel) missingPanel.hidden = true;
-  if (titleNode) titleNode.textContent = displayProduct;
-  if (crumbNode) crumbNode.textContent = displayProduct;
-  if (optionsTitleNode) optionsTitleNode.textContent = `Customize your ${displayProduct}`;
-  if (optionCountNode) optionCountNode.textContent = selectedProduct?.sizeOptions?.length > 1 ? `${selectedProduct.sizeOptions.length} size options` : "Selected size option";
-  if (subtitleNode) subtitleNode.textContent = productCopy(displayProduct);
+  if (titleNode) titleNode.textContent = labelFor(displayProduct);
+  if (crumbNode) crumbNode.textContent = labelFor(displayProduct);
+  if (optionsTitleNode) optionsTitleNode.textContent = `${labelFor("Customize your")} ${labelFor(displayProduct)}`;
+  if (optionCountNode) optionCountNode.textContent = selectedProduct?.sizeOptions?.length > 1 ? `${selectedProduct.sizeOptions.length} ${labelFor("size options")}` : labelFor("Selected size option");
+  if (subtitleNode) subtitleNode.textContent = labelFor(productCopy(displayProduct));
   if (orderDateNode) orderDateNode.value = orderDate;
   if (dueDateNode) dueDateNode.value = dueDate;
   if (priceNode) priceNode.value = money(currentRetailPrice);
@@ -130,7 +135,7 @@ function renderUploadOrder() {
   if (savingsNode) savingsNode.textContent = money(currentSavings);
   if (tableRetailNode) tableRetailNode.textContent = money(currentRetailPrice);
   if (tableMemberNode) tableMemberNode.textContent = money(displayPrice);
-  if (deliveryNoteNode) deliveryNoteNode.textContent = deliveryNote(displayProduct);
+  if (deliveryNoteNode) deliveryNoteNode.textContent = labelFor(deliveryNote(displayProduct));
   if (imageNode) imageNode.src = assetSet[0];
   if (thumbOneNode) thumbOneNode.src = assetSet[0];
   if (thumbTwoNode) thumbTwoNode.src = assetSet[1];
@@ -237,14 +242,14 @@ function optionRowHtml(row) {
   if (options.length > 1) {
     return `
       <label class="print-upload-option-row">
-        <span>${escapeHtml(row.label)}</span>
+        <span>${escapeHtml(labelFor(row.label))}</span>
         <select data-option-key="${escapeHtml(row.key)}">
-          ${options.map((option) => `<option value="${escapeHtml(option)}"${String(option) === String(value) ? " selected" : ""}>${escapeHtml(option)}</option>`).join("")}
+          ${options.map((option) => `<option value="${escapeHtml(option)}"${String(option) === String(value) ? " selected" : ""}>${escapeHtml(labelFor(option))}</option>`).join("")}
         </select>
       </label>
     `;
   }
-  return `<div><span>${escapeHtml(row.label)}</span><strong>${escapeHtml(value)}</strong></div>`;
+  return `<div><span>${escapeHtml(labelFor(row.label))}</span><strong>${escapeHtml(labelFor(value))}</strong></div>`;
 }
 
 function handleOptionChange(event) {
@@ -284,30 +289,30 @@ function updateFileLabel() {
   if (!fileText || !fileInput) return;
   const files = Array.from(fileInput.files || []);
   if (!files.length) {
-    fileText.textContent = "No file selected";
+    fileText.textContent = labelFor("No file selected");
     return;
   }
   fileText.textContent = files.length === 1
     ? files[0].name
-    : `${files.length} files selected`;
+    : `${files.length} ${labelFor("files selected")}`;
 }
 
 async function readSelectedFiles(fileList) {
   const files = Array.from(fileList || []);
   if (files.length > 6) {
-    throw new Error("Please upload 6 files or fewer.");
+    throw new Error(labelFor("Please upload 6 files or fewer."));
   }
 
   const maxFileSize = 6 * 1024 * 1024;
   const maxTotalSize = 12 * 1024 * 1024;
   const totalSize = files.reduce((total, file) => total + file.size, 0);
   if (totalSize > maxTotalSize) {
-    throw new Error("Files are too large together. Please keep the upload under 12MB.");
+    throw new Error(labelFor("Files are too large together. Please keep the upload under 12MB."));
   }
 
   return Promise.all(files.map(async (file) => {
     if (file.size > maxFileSize) {
-      throw new Error(`${file.name} is too large. Please keep each file under 6MB.`);
+      throw new Error(`${file.name} ${labelFor("is too large. Please keep each file under 6MB.")}`);
     }
 
     return {
@@ -321,7 +326,7 @@ function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(String(reader.result || "").split(",").pop() || "");
-    reader.onerror = () => reject(new Error(`Could not read ${file.name}.`));
+    reader.onerror = () => reject(new Error(`${labelFor("Could not read")} ${file.name}.`));
     reader.readAsDataURL(file);
   });
 }
@@ -597,8 +602,12 @@ function cleanFileName(value) {
 
 function setStatus(message, isError = false) {
   if (!statusNode) return;
-  statusNode.textContent = message;
+  statusNode.textContent = labelFor(message);
   statusNode.classList.toggle("error", isError);
+}
+
+function labelFor(value) {
+  return window.NextPrintI18n?.t(String(value)) || String(value);
 }
 
 function escapeHtml(value) {

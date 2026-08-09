@@ -45,7 +45,7 @@
           <a href="printing.html#banners" data-i18n="home.nav.signs">Signs & Banners</a>
           <a href="tshirt.html" data-i18n="home.nav.shirts">T-Shirts & Apparel</a>
           <a class="active" href="printing.html" data-i18n="home.nav.products">Print Products</a>
-          <a href="websites-demo/" data-i18n="home.nav.websites">Websites</a>
+          <a href="https://www.nextstudio.agency/" target="_blank" rel="noopener noreferrer" data-i18n="home.nav.websites">Websites</a>
           <a href="tracking.html" data-i18n="tracking.nav">Track Order</a>
           <a href="about.html" data-i18n="home.nav.about">About Us</a>
         </nav>
@@ -102,19 +102,19 @@
         <section id="premiumCatalog" class="printing-catalog-layout" aria-label="Print product catalog">
           <aside class="printing-category-panel">
             <h2>Shop by Category</h2>
-            <a class="active" href="#business-cards">Business Cards</a>
-            <a href="#flyers">Flyers</a>
-            <a href="#stickers">Stickers &amp; Labels</a>
-            <a href="#menus">Menus</a>
-            <a href="#banners">Banners</a>
-            <a href="#yard-signs">Yard Signs</a>
-            <a href="#shirts">T-Shirts &amp; Apparel</a>
-            <a href="#posters">Posters</a>
-            <a href="#brochures">Brochures</a>
-            <a href="#door-hangers">Door Hangers</a>
-            <a href="#retractables">Retractable Banners</a>
-            <a href="#backdrops">Backdrops</a>
-            <a href="#premiumCatalog">View All Products</a>
+            <a class="active" href="print-products-upload.html?product=Business%20Cards&amp;quantity=100&amp;price=35.00&amp;memberPrice=25.75">Business Cards</a>
+            <a href="print-products-upload.html?product=Flyers%204x6&amp;quantity=100&amp;price=41.00&amp;memberPrice=28.84">Flyers</a>
+            <a href="print-products-upload.html?product=Stickers%20round%202%22&amp;quantity=100&amp;price=52.00&amp;memberPrice=42.25">Stickers &amp; Labels</a>
+            <a href="print-products-upload.html?product=Menus%208.5x11&amp;quantity=100&amp;price=160.00&amp;memberPrice=130.21">Menus</a>
+            <a href="print-products-upload.html?product=Banner%2024x36&amp;quantity=1&amp;price=23.95&amp;memberPrice=18.95">Banners</a>
+            <a href="print-products-upload.html?product=Yard%20Sign&amp;quantity=1&amp;price=33.95&amp;memberPrice=26.99">Yard Signs</a>
+            <a href="tshirt.html">T-Shirts &amp; Apparel</a>
+            <a href="print-products-upload.html?product=Poster%2011x17&amp;quantity=10&amp;price=55.00&amp;memberPrice=47.57">Posters</a>
+            <a href="print-products-upload.html?product=Brochures%208.5x11&amp;quantity=100&amp;price=140.00&amp;memberPrice=109.29">Brochures</a>
+            <a href="print-products-upload.html?product=Door%20Hangers%204x11&amp;quantity=100&amp;price=133.00&amp;memberPrice=110.90">Door Hangers</a>
+            <a href="print-products-upload.html?product=Retractable%20Banner%2022x80&amp;quantity=1&amp;price=149.95&amp;memberPrice=120.00">Retractable Banners</a>
+            <a href="print-products-upload.html?product=Backdrop%2060x96&amp;quantity=1&amp;price=134.95&amp;memberPrice=107.99">Backdrops</a>
+            <a href="printing.html">View All Products</a>
             <div class="printing-quote-box">
               <h3>Need a custom quote?</h3>
               <p>Bulk pricing, custom sizes and special requests available.</p>
@@ -342,6 +342,24 @@
         const menu = document.querySelector("#menu");
           const search = document.querySelector("#printingSearch") || document.querySelector(".printing-search-row input");
           const cards = Array.from(document.querySelectorAll(".printing-product-card"));
+
+          cards.forEach((card) => {
+            const destination = card.querySelector('a[href]')?.getAttribute("href");
+            if (!destination) return;
+
+            const makeLink = (element, className) => {
+              if (!element || element.parentElement?.tagName === "A") return;
+              const link = document.createElement("a");
+              link.className = className;
+              link.href = destination;
+              link.setAttribute("aria-label", `Choose ${element.textContent.trim() || element.alt || "product"}`);
+              element.before(link);
+              link.append(element);
+            };
+
+            makeLink(card.querySelector(":scope > img"), "product-card-image-link");
+            makeLink(card.querySelector(":scope > h2"), "product-card-title-link");
+          });
 
           search?.addEventListener("input", () => {
             const term = search.value.trim().toLowerCase();

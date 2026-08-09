@@ -151,7 +151,7 @@ const translations = {
     "home.nav.websites": "Websites",
     "home.reseller.title": "🔥 Programa de revendedores disponible",
     "home.reseller.copy": "Obtén precios al por mayor y haz crecer tu propio negocio de impresión.",
-    "home.reseller.button": "Aplicar para wholesale",
+    "home.reseller.button": "Solicitar precio mayorista",
     "home.hero.title1": "Haz que tu negocio",
     "home.hero.title2": "se vea profesional",
     "home.hero.copy": "Letreros, banners, camisetas, copias por volumen y materiales de marketing fabricados en Brooklyn, NY.",
@@ -498,6 +498,12 @@ const translations = {
     "tracking.status.completed": "Completada",
     "tracking.whatsapp": "Preguntar por WhatsApp",
     "quick.call": "Llamar",
+    "floatingWhatsapp.title": "¿Necesitas algo personalizado?",
+    "floatingWhatsapp.copy": "Escríbeme por WhatsApp. Los precios pueden variar según el trabajo.",
+    "floatingWhatsapp.note": "Solo mensajes de texto. Respondo rápido.",
+    "floatingWhatsapp.button": "Escríbeme",
+    "floatingWhatsapp.close": "Cerrar asistencia por WhatsApp",
+    "floatingWhatsapp.open": "Abrir asistencia por WhatsApp",
     "quick.whatsapp": "WhatsApp",
     "quick.order": "Orden",
     "quick.track": "Rastrear",
@@ -984,6 +990,12 @@ const translations = {
     "tracking.status.completed": "Completed",
     "tracking.whatsapp": "Ask on WhatsApp",
     "quick.call": "Call",
+    "floatingWhatsapp.title": "Need something custom?",
+    "floatingWhatsapp.copy": "Message me on WhatsApp. Prices may vary by project.",
+    "floatingWhatsapp.note": "Text messages only. I respond quickly.",
+    "floatingWhatsapp.button": "Message Me",
+    "floatingWhatsapp.close": "Close WhatsApp assistance",
+    "floatingWhatsapp.open": "Open WhatsApp assistance",
     "quick.whatsapp": "WhatsApp",
     "quick.order": "Order",
     "quick.track": "Track",
@@ -1040,6 +1052,145 @@ const fallbackAnswers = {
 let currentLanguage = localStorage.getItem("preferredLanguage") || "en";
 let customerMemory = loadCustomerMemory();
 let conversationHistory = loadConversationHistory();
+
+/* Presentation-only copy for pages that predate data-i18n attributes. */
+const presentationTranslations = {
+  es: {
+    "Printing Made Simple.": "Imprimir nunca fue tan fácil.",
+    "Professional printing, signs and apparel for New York businesses.": "Impresión profesional, letreros y ropa para negocios de Nueva York.",
+    "Trusted by 500+ Business Owners": "La confianza de más de 500 negocios",
+    "Wholesale Pricing": "Precios mayoristas", "Save Hundreds Every Year": "Ahorra cientos cada año", "One-Click Reordering": "Reordenar con un clic", "Store Your Designs Forever": "Guarda tus diseños para siempre",
+    "Join Membership": "Únete a la membresía", "Order Without Membership": "Ordenar sin membresía", "Starting at only": "Desde solo", "/month": "/mes", "Cancel anytime.": "Cancela cuando quieras.", "No contract.": "Sin contrato.",
+    "Exclusive Member Pricing": "Precios exclusivos para miembros", "Special prices on all eligible products.": "Precios especiales en productos elegibles.", "Professional Online Editors": "Editores profesionales en línea", "Powerful tools included with your membership.": "Herramientas potentes incluidas con tu membresía.", "Free Shipping Fast Coast Orders*": "Envío gratis en pedidos de la Costa Este*", "On eligible products.": "En productos elegibles.", "Store & Organize Your Files": "Guarda y organiza tus archivos", "Access your designs anytime, anywhere.": "Accede a tus diseños en cualquier momento.", "One Membership. Unlimited Savings.": "Una membresía. Ahorros ilimitados.", "More savings. More growth.": "Más ahorro. Más crecimiento.",
+    "Signs & Banners": "Letreros y banners", "High quality large format printing that gets you noticed.": "Impresión de gran formato de alta calidad para destacar.", "Yard Signs": "Letreros de jardín", "Banners": "Banners", "Backdrops": "Fondos", "Retractable Banners": "Banners retráctiles", "Design Banners Online": "Diseña banners en línea", "Custom T-Shirts": "Camisetas personalizadas", "Design Your Shirts": "Diseña tus camisetas", "Everything You Can Print": "Todo lo que puedes imprimir", "Upload Files & Order": "Sube archivos y ordena",
+    "Print Products": "Productos impresos", "Made To Impress": "que impresionan", "High quality printing for your business or personal needs.": "Impresión de alta calidad para tu negocio o necesidades personales.", "Business Cards": "Tarjetas de presentación", "Flyers": "Volantes", "Stickers & Labels": "Stickers y etiquetas", "Posters": "Pósteres", "Door Hangers": "Colgadores de puerta", "View All Print Products": "Ver todos los productos impresos",
+    "Print Products Made To Impress": "Productos impresos que impresionan", "Shop by Category": "Comprar por categoría", "Choose Product": "Elegir producto", "Choose product": "Elegir producto", "Member Price": "Precio de miembro", "Regular price": "Precio regular", "Free Shipping": "Envío gratis", "Shipping": "Envío", "Calculated at checkout": "Calculado al finalizar la compra",
+    "No print product selected": "No se seleccionó un producto impreso", "Please choose a print product first.": "Primero elige un producto impreso.", "Selected Product": "Producto seleccionado", "Choose Options": "Elige opciones", "Design Online": "Diseñar en línea", "Checkout": "Finalizar compra", "Print & Delivery": "Impresión y entrega", "Premium Quality": "Calidad premium", "Your total": "Tu total", "Upload print-ready file": "Sube un archivo listo para imprimir", "Choose file": "Elegir archivo", "No file selected": "Ningún archivo seleccionado", "Continue to Checkout": "Continuar al pago", "Order date": "Fecha del pedido", "Delivery date": "Fecha de entrega", "Total today": "Total de hoy",
+    "Finish your print order": "Finaliza tu pedido de impresión", "Confirm your contact and delivery details, then pay securely with card, wallet, or PayPal.": "Confirma tus datos de contacto y envío; después paga de forma segura con PayPal.", "No print product design found": "No se encontró un diseño de producto impreso", "Please design or choose a print product first.": "Primero diseña o elige un producto impreso.", "Track order": "Rastrear pedido", "Start another print order": "Iniciar otro pedido de impresión", "Customer information": "Información del cliente", "Delivery option": "Opción de envío", "Standard Shipping": "Envío estándar", "Express Shipping": "Envío exprés", "Calculated by weight": "Calculado por peso", "Faster delivery + extra charge": "Entrega más rápida + cargo adicional", "Street address": "Dirección", "Apt / Suite": "Apartamento / Suite", "City": "Ciudad", "State": "Estado", "ZIP code": "Código postal", "Full name": "Nombre completo", "Subtotal": "Subtotal", "Tax": "Impuesto", "Total due today": "Total a pagar hoy", "Product": "Producto", "Size": "Tamaño", "Quantity": "Cantidad", "Sides": "Lados", "Pay with PayPal": "Pagar con PayPal", "Use PayPal checkout if you prefer PayPal.": "Usa PayPal si lo prefieres.", "Preparing checkout...": "Preparando el pago...", "Could not prepare checkout. Please try again.": "No se pudo preparar el pago. Inténtalo de nuevo.",
+    "Quick Links": "Enlaces rápidos", "Main Site": "Sitio principal", "Banner Designer": "Diseñador de banners", "Contact Us": "Contáctanos", "Services": "Servicios", "Vinyl Banners": "Banners de vinilo", "Decals & Stickers": "Calcomanías y stickers", "Printing & Copies": "Impresión y copias", "Contact": "Contacto", "Why Next Print NY?": "¿Por qué Next Print NY?", "High Quality Printing": "Impresión de alta calidad", "Fast Turnaround": "Entrega rápida", "Competitive Pricing": "Precios competitivos", "Excellent Customer Service": "Excelente servicio al cliente", "Proudly Ecuadorian-Owned": "Orgullosamente ecuatoriano", "Printing, Signs, Banners & Custom Design Solutions for your business, events and brand.": "Impresión, letreros, banners y soluciones de diseño para tu negocio, eventos y marca."
+  }
+};
+Object.assign(translations.en, Object.fromEntries(Object.keys(presentationTranslations.es).map((key) => [key, key])));
+Object.assign(translations.es, presentationTranslations.es);
+const salesFlowResidualCopy = {
+  "Premium DTF printing for any event, business or organization.": "Impresión DTF premium para cualquier evento, negocio u organización.",
+  "Business Uniforms": "Uniformes de negocio", "Team & Sports Apparel": "Ropa para equipos y deportes", "Custom Transfers": "Transferencias personalizadas",
+  "Fast, affordable printing for your business or personal needs.": "Impresión rápida y económica para tu negocio o necesidades personales.", "Flyers & Menus": "Volantes y menús", "Posters & Door Hangers": "Pósteres y colgadores de puerta",
+  "Premium cards that leave a lasting impression.": "Tarjetas premium que dejan una impresión duradera.", "Eye-catching flyers to promote your business.": "Volantes atractivos para promocionar tu negocio.", "Custom stickers and labels for every need.": "Stickers y etiquetas personalizadas para cada necesidad.", "Professional invoices and forms to keep you organized.": "Facturas y formularios profesionales para mantenerte organizado.", "High quality tickets for events, raffles and more.": "Boletos de alta calidad para eventos, rifas y más.", "Vibrant posters to grab attention anywhere.": "Pósteres vibrantes que atraen miradas en cualquier lugar.", "Custom door hangers that get noticed.": "Colgadores de puerta personalizados que destacan.",
+  "Best Value": "Mejor valor", "JOIN NEXT PRINT NY MEMBERSHIP": "ÚNETE A LA MEMBRESÍA DE NEXT PRINT NY", "Save hundreds every year with exclusive member pricing.": "Ahorra cientos cada año con precios exclusivos para miembros.", "Happy Members": "Miembros satisfechos", "UNLOCK MEMBER BENEFITS": "DESBLOQUEA BENEFICIOS DE MEMBRESÍA", "More savings. More tools. More growth for your business.": "Más ahorro. Más herramientas. Más crecimiento para tu negocio.", "Use advanced tools to create stunning designs.": "Usa herramientas avanzadas para crear diseños increíbles.", "Reorder 1 Click": "Reordenar con un clic", "Reorder your favorite items in just one click.": "Reordena tus artículos favoritos con un solo clic.", "Get special member-only prices on all products.": "Obtén precios exclusivos para miembros en todos los productos.", "Order History & Tracking": "Historial y seguimiento de pedidos", "View your order history and track every step.": "Ve tu historial y sigue cada paso.", "Permanent Design Storage": "Almacenamiento permanente de diseños", "Save and access your project anytime.": "Guarda y accede a tu proyecto en cualquier momento.", "Artwork & File Library": "Biblioteca de arte y archivos", "Store and organize your artwork securely.": "Guarda y organiza tu arte de forma segura.", "New": "Nuevo", "AI Design Assistant": "Asistente de diseño con IA", "Get design ideas, resize and enhance your projects with AI.": "Obtén ideas, redimensiona y mejora tus proyectos con IA.",
+  "Same Day Printing": "Impresión el mismo día", "Most orders ready in 2-4 hours.": "La mayoría de los pedidos están listos en 2-4 horas.", "Wholesale Prices": "Precios mayoristas", "Save more with our reseller program.": "Ahorra más con nuestro programa de revendedores.", "No Minimum Orders": "Sin pedidos mínimos", "Order only what you need.": "Ordena solo lo que necesitas.", "Local Pickup": "Recogida local", "Convenient pickup in Brooklyn, NY.": "Recogida conveniente en Brooklyn, NY.", "AI Assistant 24/7": "Asistente de IA 24/7", "Get answers and support anytime.": "Obtén respuestas y ayuda en cualquier momento.", "Real Human Support": "Soporte humano real", "We are here to help you succeed.": "Estamos aquí para ayudarte a tener éxito.",
+  "Excellent quality and super fast service. They always deliver on time!": "Excelente calidad y servicio muy rápido. Siempre entregan a tiempo.", "Best printing service in Brooklyn. The membership saves me a lot!": "El mejor servicio de impresión en Brooklyn. ¡La membresía me ahorra mucho!", "Amazing customer service and high quality work every time.": "Increíble servicio al cliente y trabajo de alta calidad siempre.", "reviews on Google": "reseñas en Google",
+  "High quality printing for your business, events and everyday needs. Choose a product below to get started.": "Impresión de alta calidad para tu negocio, eventos y necesidades diarias. Elige un producto para comenzar.", "Top materials": "Materiales de primera", "Get it when you need it": "Listo cuando lo necesitas", "Save more with membership": "Ahorra más con la membresía", "Start Your Order": "Comienza tu pedido", "Upload Your File": "Sube tu archivo", "Trusted by businesses in NY": "La confianza de negocios en NY"
+};
+Object.assign(translations.en, Object.fromEntries(Object.keys(salesFlowResidualCopy).map((key) => [key, key])));
+Object.assign(translations.es, salesFlowResidualCopy);
+/*
+ * Presentation labels for the print-product configurator.  The configurator
+ * deliberately keeps these English source strings as its internal option
+ * values, because they are serialized into the existing order payload.  This
+ * map is used only for text shown to the customer.
+ */
+const printUploadOptionLabels = {
+  "Product": "Producto", "Size": "Tamaño", "Quantity": "Cantidad",
+  "Rounded Corners": "Esquinas redondeadas", "Printed Side": "Lado impreso",
+  "Paper Stock": "Tipo de papel", "Paper Type": "Tipo de papel", "Coating": "Acabado",
+  "Folding Option": "Opción de plegado", "Regular Customer Price": "Precio regular",
+  "Member Price": "Precio de miembro", "Membership Savings": "Ahorro de membresía",
+  "Display Options": "Opciones de exhibición", "Banner Stand": "Soporte para banner",
+  "Front Side": "Lado frontal", "Back Side": "Lado posterior", "Material": "Material",
+  "Panels": "Paneles", "H-Wire": "Soporte en H", "Grommets": "Ojales", "Treatment": "Tratamiento",
+  "No": "No", "Yes": "Sí", "None": "Ninguno", "Front and Back": "Frente y reverso",
+  "Front Only": "Solo frente", "Full Color": "A todo color", "No Printing": "Sin impresión",
+  "High Gloss": "Brillo alto", "Matte": "Mate", "No Coating": "Sin acabado",
+  "Tri-fold": "Tríptico", "Half-fold": "Doble pliegue", "No Fold": "Sin pliegue",
+  "14 pt. Cardstock": "Cartulina de 14 pt", "Premium Sticker": "Sticker premium",
+  "Premium Poster": "Póster premium", "Gloss Text": "Papel text brillante",
+  "13 oz. Standard Vinyl": "Vinilo estándar de 13 oz", "13 oz. Smooth Blockout Vinyl": "Vinilo blockout liso de 13 oz",
+  "4 mm Coroplast Board": "Cartón Coroplast de 4 mm", "Backdrop Material": "Material para fondo",
+  "Stand + 1 Banner": "Soporte + 1 banner", "Standard Retractable": "Retráctil estándar",
+  "1 Panel": "1 panel", 'XL 9 Gauge H-Wire (24" tall x 10" wide)': 'Soporte en H XL calibre 9 (24" alto x 10" ancho)',
+  "Customize your": "Personaliza tu", "size options": "opciones de tamaño", "Selected size option": "Opción de tamaño seleccionada",
+  "No file selected": "Ningún archivo seleccionado", "files selected": "archivos seleccionados",
+  "Preparing checkout...": "Preparando el pago...", "Could not prepare checkout. Please try again.": "No se pudo preparar el pago. Inténtalo de nuevo.",
+  "Please upload 6 files or fewer.": "Sube 6 archivos o menos.",
+  "Files are too large together. Please keep the upload under 12MB.": "Los archivos juntos son demasiado grandes. Mantén la carga por debajo de 12 MB.",
+  "is too large. Please keep each file under 6MB.": "es demasiado grande. Mantén cada archivo por debajo de 6 MB.",
+  "Could not read": "No se pudo leer", "Ready in 3 business days. Member free shipping on eligible products in the East USA.": "Listo en 3 días hábiles. Envío gratis para miembros en productos elegibles del este de EE. UU.",
+  "Ready in 3 business days. Shipping is calculated by size and delivery area.": "Listo en 3 días hábiles. El envío se calcula según el tamaño y el área de entrega.",
+  "Make the first impression feel professional with sharp cards, premium finish, and fast local service.": "Da una primera impresión profesional con tarjetas nítidas, acabado premium y servicio local rápido.",
+  "Promote events, specials, and services with full color flyers that are ready to share.": "Promociona eventos, ofertas y servicios con volantes a todo color listos para compartir.",
+  "Custom stickers and labels for packaging, branding, giveaways, and daily business needs.": "Stickers y etiquetas personalizados para empaque, marca, regalos y necesidades diarias de tu negocio.",
+  "Clean, full color menus for restaurants, takeout, cafes, and food service promotions.": "Menús limpios a todo color para restaurantes, comida para llevar, cafés y promociones de alimentos.",
+  "Door hangers designed to get noticed in neighborhoods, buildings, and local campaigns.": "Colgadores de puerta diseñados para destacar en vecindarios, edificios y campañas locales.",
+  "Vibrant posters for events, storefronts, promotions, announcements, and displays.": "Pósteres vibrantes para eventos, escaparates, promociones, anuncios y exhibiciones.",
+  "Professional invoice and form printing for organized business paperwork.": "Impresión profesional de facturas y formularios para documentos empresariales organizados.",
+  "Folded brochures with clear information, strong presentation, and premium color.": "Folletos plegados con información clara, presentación sólida y color premium.",
+  "Large branded backdrops for events, photos, stages, pop-ups, and displays.": "Fondos de gran formato con marca para eventos, fotos, escenarios, pop-ups y exhibiciones.",
+  "Large format printing for storefronts, events, promotions, and brand visibility.": "Impresión de gran formato para escaparates, eventos, promociones y visibilidad de marca.",
+  "Durable yard signs for campaigns, real estate, events, and local advertising.": "Letreros de jardín duraderos para campañas, bienes raíces, eventos y publicidad local.",
+  "Review your print order, compare member savings, and choose design online or file upload.": "Revisa tu pedido de impresión, compara los ahorros de membresía y elige diseño en línea o carga de archivo.",
+  "Business Cards": "Tarjetas de presentación", "Flyers": "Volantes", "Stickers": "Stickers", "Menus": "Menús", "Banners": "Banners", "Backdrops": "Fondos", "Retractable Banners": "Banners retráctiles", "Yard Signs": "Letreros de jardín", "Door Hangers": "Colgadores de puerta", "Posters": "Pósteres", "Brochures": "Folletos", "Bookmarks": "Separadores",
+};
+Object.assign(translations.en, Object.fromEntries(Object.keys(printUploadOptionLabels).map((key) => [key, key])));
+Object.assign(translations.es, printUploadOptionLabels);
+/* Remaining visible sales-flow copy. This stays in the same central runtime
+ * dictionary; it never changes product, option, order, or payment values. */
+const salesFlowDomCopy = {
+  "Invoices & Forms": "Facturas y formularios", "Tickets": "Boletos",
+  "Join Next Print NY Membership": "Únete a la membresía de Next Print NY",
+  "Unlock Member Benefits": "Desbloquea beneficios de membresía",
+  "APLICAR PARA WHOLESALE": "SOLICITAR PRECIO MAYORISTA",
+  "WHOLESALE": "MAYORISTA",
+  "JOIN NEXT PRINT NY MEMBERSHIP": "ÚNETE A LA MEMBRESÍA DE NEXT PRINT NY",
+  "★★★★★ 500+ Happy Members": "★★★★★ Más de 500 miembros satisfechos",
+  "UNLOCK MEMBER BENEFITS": "DESBLOQUEA BENEFICIOS DE MEMBRESÍA",
+  "500+ reviews on Google": "Más de 500 reseñas en Google",
+  "T-Shirts & Apparel": "Camisetas y ropa",
+  "INVOICES & FORMS": "FACTURAS Y FORMULARIOS", "TICKETS": "BOLETOS",
+  "✔ High Quality Printing": "✔ Impresión de alta calidad", "✔ Fast Turnaround": "✔ Entrega rápida",
+  "© 2026 Next Print NY. All Rights Reserved.": "© 2026 Next Print NY. Todos los derechos reservados.",
+  "Home  ›  Print Products": "Inicio  ›  Productos impresos", "PRINT PRODUCTS": "PRODUCTOS IMPRESOS",
+  "G ★★★★★ 4.9 (500+ reviews) La confianza de negocios en NY": "G ★★★★★ 4.9 (más de 500 reseñas) La confianza de negocios en NY",
+  "Members Save More": "Los miembros ahorran más", "Exclusive pricing": "Precios exclusivos", "Free shipping": "Envío gratis", "Save your designs": "Guarda tus diseños",
+  "Happy Customers": "Clientes satisfechos", "Google Reviews": "Reseñas de Google", "Orders Printed": "Pedidos impresos", "Satisfaction Guaranteed": "Satisfacción garantizada",
+  "View All Products": "Ver todos los productos", "NEED A CUSTOM QUOTE?": "¿NECESITAS UNA COTIZACIÓN PERSONALIZADA?",
+  "Bulk pricing, custom sizes and special requests available.": "Precios por volumen, tamaños personalizados y solicitudes especiales disponibles.", "REQUEST A QUOTE": "SOLICITAR COTIZACIÓN",
+  "BECOME A NEXT PRINT MEMBER & SAVE BIG!": "¡HAZTE MIEMBRO DE NEXT PRINT Y AHORRA MÁS!", "Members save with exclusive pricing, free shipping on select products, priority support and easy reorders.": "Los miembros ahorran con precios exclusivos, envío gratis en productos seleccionados, soporte prioritario y reordenes fáciles.",
+  "ONLY": "SOLO", "BECOME A MEMBER": "HAZTE MIEMBRO", "ON SELECT PRODUCTS": "EN PRODUCTOS SELECCIONADOS", "EAST COAST USA": "COSTA ESTE DE EE. UU.",
+  "Applies to: Business Cards, Flyers, Stickers, Menus, Posters, Brochures and Door Hangers": "Aplica a: tarjetas de presentación, volantes, stickers, menús, pósteres, folletos y colgadores de puerta",
+  "REGULAR PRICE": "PRECIO REGULAR", "SAVE": "AHORRA", "FREE SHIPPING": "ENVÍO GRATIS", "East Coast USA": "Costa Este de EE. UU.", "SHIPPING": "ENVÍO",
+  "Beautiful menus that showcase your brand.": "Menús atractivos que muestran tu marca.", "Durable banners for any event or occasion.": "Banners duraderos para cualquier evento u ocasión.", "High quality signs to get noticed.": "Letreros de alta calidad para destacar.", "Portable, professional and easy to setup.": "Portátil, profesional y fácil de instalar.", "Custom printed apparel for any occasion.": "Ropa personalizada impresa para cualquier ocasión.", "Professional brochures that tell your story.": "Folletos profesionales que cuentan tu historia.", "Branded backgrounds for events, photos and displays.": "Fondos con tu marca para eventos, fotos y exhibiciones.",
+  "Free Design Help": "Ayuda de diseño gratis", "Our team is here to help you succeed.": "Nuestro equipo está aquí para ayudarte a tener éxito.", "Shipping Available": "Envío disponible", "Shipping calculated by product size and destination.": "El envío se calcula según el tamaño del producto y el destino.", "Save more with reseller program.": "Ahorra más con el programa de revendedores.", "Secure Checkout": "Pago seguro", "Your payment information is safe.": "Tu información de pago está segura.", "Save More with Membership": "Ahorra más con la membresía", "Access exclusive member pricing, save your designs, reorder in one click and more.": "Accede a precios exclusivos de miembro, guarda tus diseños, reordena con un clic y más.", "What Our Customers Say": "Lo que dicen nuestros clientes", "500+ Google Reviews": "Más de 500 reseñas de Google",
+  "🔥 RESELLER PROGRAM AVAILABLE": "🔥 PROGRAMA DE REVENDEDORES DISPONIBLE", "Get wholesale pricing and grow your own print business.": "Obtén precios al por mayor y haz crecer tu propio negocio de impresión.", "APPLY FOR RESELLER": "SOLICITAR COMO REVENDEDOR", "HOME": "INICIO", "TRACK ORDER": "RASTREAR ORDEN", "ABOUT US": "NOSOTROS", "Home": "Inicio",
+  "1 Choose Options": "1 Elige opciones", "2 Design Online": "2 Diseña en línea", "3 Checkout": "3 Finalizar compra", "4 Print & Delivery": "4 Impresión y entrega", "Ready when you need it": "Listo cuando lo necesitas", "Member Pricing": "Precios de miembro", "Save every order": "Ahorra en cada pedido", "RETAIL PRICE": "PRECIO REGULAR", "YOU SAVE": "TÚ AHORRAS", "Unlock exclusive pricing and save more with membership.": "Desbloquea precios exclusivos y ahorra más con la membresía.", "CUSTOMIZE YOUR ORDER": "PERSONALIZA TU PEDIDO", "These choices came from the product page. Price updates automatically from the selected product and quantity.": "Estas opciones vienen de la página del producto. El precio se actualiza automáticamente según el producto y la cantidad seleccionados.",
+  "Order date": "Fecha del pedido", "Delivery date": "Fecha de entrega", "Total today": "Total de hoy", "↻ PRICE AND MEMBERSHIP SAVINGS UPDATE FROM YOUR SELECTED PRODUCT OPTIONS.": "↻ EL PRECIO Y EL AHORRO DE MEMBRESÍA SE ACTUALIZAN SEGÚN LAS OPCIONES SELECCIONADAS.", "PDF, JPG, PNG, AI, PSD, EPS, SVG, or ZIP files accepted.": "Se aceptan archivos PDF, JPG, PNG, AI, PSD, EPS, SVG o ZIP.", "Secure checkout. PayPal, cards, and shipping options continue on the next page.": "Pago seguro. PayPal y las opciones de envío continúan en la siguiente página.", "Members save more": "Los miembros ahorran más", "Join Next Print NY Membership and save on every reorder.": "Únete a la membresía de Next Print NY y ahorra en cada reorden.", "WITHOUT MEMBERSHIP": "SIN MEMBRESÍA", "WITH MEMBERSHIP": "CON MEMBRESÍA", "Price": "Precio", "File Upload": "Carga de archivo", "Upload every time": "Sube cada vez", "Saved for reorder": "Guardado para reordenar", "Design Storage": "Almacenamiento de diseños", "Not available": "No disponible", "Unlimited storage": "Almacenamiento ilimitado", "Exclusive Discounts": "Descuentos exclusivos", "Standard process": "Proceso estándar", "Member-only pricing": "Precios exclusivos para miembros", "Exclusive pricing, saved designs, faster reorders, and priority support.": "Precios exclusivos, diseños guardados, reordenes más rápidas y soporte prioritario.", "Most orders ready fast.": "La mayoría de los pedidos están listos rápidamente.", "Save more with membership.": "Ahorra más con la membresía.", "Your information is safe.": "Tu información está segura.", "Your one-stop shop for printing, websites, and marketing solutions in Brooklyn, NY.": "Tu tienda integral de impresión y soluciones de marketing en Brooklyn, NY.", "✔ Member Pricing": "✔ Precios de miembro",
+  "SECURE PRINT PRODUCTS CHECKOUT": "PAGO SEGURO DE PRODUCTOS IMPRESOS", "PROUDLY ECUADORIAN-OWNED": "ORGULLOSAMENTE ECUATORIANO", "🕘 Mon - Sat: 9AM - 7PM": "🕘 Lun - sáb: 9 a. m. - 7 p. m."
+  ,"NEED A CUSTOM QUOTE?": "¿NECESITAS UNA COTIZACIÓN PERSONALIZADA?", "REQUEST A QUOTE": "SOLICITAR COTIZACIÓN", "BECOME A NEXT PRINT MEMBER & SAVE BIG!": "¡HAZTE MIEMBRO DE NEXT PRINT Y AHORRA MÁS!", "ONLY": "SOLO", "BECOME A MEMBER": "HAZTE MIEMBRO", "ON SELECT PRODUCTS": "EN PRODUCTOS SELECCIONADOS", "SAVE": "AHORRA", "FREE SHIPPING": "ENVÍO GRATIS", "SHIPPING": "ENVÍO", "Need a custom quote?": "¿Necesitas una cotización personalizada?", "Request a Quote": "Solicitar cotización", "Become a Next Print Member & Save Big!": "¡Hazte miembro de Next Print y ahorra más!", "Become a Member": "Hazte miembro", "On select products": "En productos seleccionados", "Search products": "Buscar productos", "Lowest Price": "Precio más bajo", "Save": "Ahorra", "Vibrant posters that grab attention.": "Pósteres vibrantes que atraen miradas.", "“Excellent quality and super fast service. They always deliver on time!”": "“Excelente calidad y servicio muy rápido. Siempre entregan a tiempo.”", "“Best printing service in Brooklyn. The membership saves me a lot!”": "“El mejor servicio de impresión en Brooklyn. ¡La membresía me ahorra mucho!”", "“Amazing customer service and high quality work every time.”": "“Increíble servicio al cliente y trabajo de alta calidad siempre.”"
+};
+Object.assign(translations.en, Object.fromEntries(Object.keys(salesFlowDomCopy).map((key) => [key, key])));
+Object.assign(translations.es, salesFlowDomCopy);
+const i18nTextOriginals = new WeakMap();
+let applyingPresentationTranslations = false;
+function applyPresentationTranslations(root = document.body) {
+  if (!root) return;
+  applyingPresentationTranslations = true;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    const original = i18nTextOriginals.get(node) ?? node.nodeValue;
+    i18nTextOriginals.set(node, original);
+    // HTML indentation often becomes part of a text node. Match labels on
+    // their trimmed content while restoring the original surrounding space.
+    const leading = original.match(/^\s*/)?.[0] || "";
+    const trailing = original.match(/\s*$/)?.[0] || "";
+    const content = original.trim();
+    const translated = translations[currentLanguage]?.[original]
+      || translations[currentLanguage]?.[content]
+      || original;
+    node.nodeValue = translated === original ? original : `${leading}${translated}${trailing}`;
+  }
+  applyingPresentationTranslations = false;
+}
 
 function t(key) {
   return translations[currentLanguage][key] || translations.es[key] || key;
@@ -1220,14 +1371,23 @@ function applyLanguage(language) {
     element.setAttribute("placeholder", t(key));
   });
 
+  ["aria-label", "title", "alt"].forEach((attribute) => {
+    document.querySelectorAll(`[data-i18n-${attribute}]`).forEach((element) => {
+      element.setAttribute(attribute, t(element.getAttribute(`data-i18n-${attribute}`)));
+    });
+  });
+
   languageButtons.forEach((button) => {
     const isActive = button.dataset.lang === currentLanguage;
     button.classList.toggle("active", isActive);
     button.setAttribute("aria-pressed", String(isActive));
+    button.textContent = button.dataset.lang === "en" ? "🇺🇸 EN" : "🇪🇨 ES";
   });
 
   updateChatWelcome();
   updateUploadLanguageState();
+  applyPresentationTranslations();
+  document.dispatchEvent(new CustomEvent("nextprintlanguagechange", { detail: { language: currentLanguage } }));
 }
 
 menuToggle?.addEventListener("click", () => {
@@ -1271,6 +1431,44 @@ function createQuickActionBar() {
     </a>
   `;
   document.body.appendChild(bar);
+}
+
+function createFloatingWhatsApp() {
+  if (document.querySelector(".floating-whatsapp")) return;
+
+  const message = "Hi! I need help with a custom print project.";
+  const sessionKey = "nextPrintFloatingWhatsAppCollapsed";
+  const panel = document.createElement("aside");
+  panel.className = "floating-whatsapp";
+  panel.setAttribute("aria-live", "polite");
+  panel.innerHTML = `
+    <button class="floating-whatsapp-close" type="button" data-i18n-aria-label="floatingWhatsapp.close" aria-label="Close WhatsApp assistance">×</button>
+    <img class="floating-whatsapp-photo" src="assets/whatsapp-richard.png" alt="" />
+    <div class="floating-whatsapp-copy">
+      <strong data-i18n="floatingWhatsapp.title">Need something custom?</strong>
+      <span data-i18n="floatingWhatsapp.copy">Message me on WhatsApp. Prices may vary by project.</span>
+      <small data-i18n="floatingWhatsapp.note">Text messages only. I respond quickly.</small>
+      <a href="https://wa.me/12393337935?text=${encodeURIComponent(message)}" target="_blank" rel="noopener noreferrer" data-i18n="floatingWhatsapp.button">Message Me</a>
+    </div>
+  `;
+  const launcher = document.createElement("button");
+  launcher.className = "floating-whatsapp-launcher";
+  launcher.type = "button";
+  launcher.hidden = true;
+  launcher.setAttribute("data-i18n-aria-label", "floatingWhatsapp.open");
+  launcher.setAttribute("aria-label", "Open WhatsApp assistance");
+  launcher.innerHTML = '<span aria-hidden="true">WA</span>';
+
+  const setCollapsed = (collapsed) => {
+    panel.hidden = collapsed;
+    launcher.hidden = !collapsed;
+    sessionStorage.setItem(sessionKey, collapsed ? "true" : "false");
+  };
+  panel.querySelector(".floating-whatsapp-close")?.addEventListener("click", () => setCollapsed(true));
+  launcher.addEventListener("click", () => setCollapsed(false));
+  document.body.appendChild(panel);
+  document.body.appendChild(launcher);
+  setCollapsed(sessionStorage.getItem(sessionKey) === "true");
 }
 
 function addMessage(text, type, shouldSave = true) {
@@ -1592,5 +1790,15 @@ function toLocalDateValue(date) {
 }
 
 createQuickActionBar();
+createFloatingWhatsApp();
 applyLanguage(customerMemory.language || currentLanguage);
 renderConversationHistory();
+
+window.NextPrintI18n = { t, getLanguage: () => currentLanguage, applyLanguage, applyPresentationTranslations };
+new MutationObserver((records) => {
+  if (applyingPresentationTranslations || currentLanguage !== "es") return;
+  records.forEach((record) => record.addedNodes.forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) applyPresentationTranslations(node.parentElement);
+    else if (node.nodeType === Node.ELEMENT_NODE) applyPresentationTranslations(node);
+  }));
+}).observe(document.body, { childList: true, subtree: true });

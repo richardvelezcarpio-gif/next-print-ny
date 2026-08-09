@@ -14,6 +14,7 @@
     "start": "npm run dev",
     "static": "python3 -m http.server 4173",
     "generate:vapid": "node scripts/generate-vapid.mjs",
+    "i18n:audit": "node scripts/i18n-sales-audit.mjs",
     "test": "node --test"
   },
   "dependencies": {
