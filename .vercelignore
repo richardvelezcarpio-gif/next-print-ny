@@ -1,0 +1,5 @@
+# Retired placeholder source documents remain in Git for audit history.
+# Excluding them from the deploy allows their explicit 410 function routes to respond.
+blog.html
+support.html
+digital-signature.html

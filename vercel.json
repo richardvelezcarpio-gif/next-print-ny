@@ -19,27 +19,27 @@
       "permanent": true
     },
     {
-      "source": "/websites-demo/start/:path*",
+      "source": "/websites-demo/start/",
       "destination": "https://www.nextstudio.agency/",
       "permanent": true
     },
     {
-      "source": "/websites-demo/customize/:path*",
+      "source": "/websites-demo/customize/",
       "destination": "https://www.nextstudio.agency/",
       "permanent": true
     },
     {
-      "source": "/websites-demo/pricing/:path*",
+      "source": "/websites-demo/pricing/",
       "destination": "https://www.nextstudio.agency/",
       "permanent": true
     },
     {
-      "source": "/websites-demo/summary/:path*",
+      "source": "/websites-demo/summary/",
       "destination": "https://www.nextstudio.agency/",
       "permanent": true
     },
     {
-      "source": "/websites-demo/templates/:path*",
+      "source": "/websites-demo/templates/",
       "destination": "https://www.nextstudio.agency/",
       "permanent": true
     }
