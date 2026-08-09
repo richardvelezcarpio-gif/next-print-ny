@@ -7,19 +7,14 @@ const origin = "https://www.nextprintnyc.com";
 const socialImage = `${origin}/assets/logohero.png`;
 
 const publicPages = {
-  "index.html": ["Next Print NY | Printing, Signs, Banners & Websites", "Next Print NY provides professional printing, custom signs, banners, business cards, flyers, websites and marketing solutions for businesses in New York.", "/"],
-  "printing.html": ["Printing Services in New York | Next Print NY", "Professional business cards, flyers, menus, stickers and commercial printing services from Next Print NY in Brooklyn, New York.", "/printing.html"],
-  "tshirt.html": ["Custom T-Shirts & Apparel Printing | Next Print NY", "Order custom T-shirts and printed apparel for businesses, events and organizations from Next Print NY in Brooklyn.", "/tshirt.html"],
-  "services.html": ["Business Services in Brooklyn | Next Print NY", "Explore printing, signs, apparel, websites and business support services available from Next Print NY in Brooklyn.", "/services.html"],
+  "index.html": ["Printing Services in New York | Next Print NY", "Professional printing for business cards, flyers, banners, signs, custom apparel and more in New York. Order online with Next Print NY.", "/"],
+  "printing.html": ["Printing Products in New York | Next Print NY", "Professional business cards, flyers, menus, stickers, banners and commercial printing products from Next Print NY in Brooklyn, New York.", "/printing.html"],
+  "tshirt.html": ["Custom T-Shirt Printing in New York | Next Print NY", "Custom T-shirt printing and apparel for businesses, events and organizations in New York from Next Print NY.", "/tshirt.html"],
+  "services.html": ["Printing & Business Services in New York | Next Print NY", "Professional printing, signage, apparel and business services for New York businesses from Next Print NY.", "/services.html"],
   "consulting-agent.html": ["Business Consulting Services | Next Print NY", "Get practical guidance for business paperwork, registrations and day-to-day administrative needs from Next Print NY.", "/consulting-agent.html"],
   "multiservices.html": ["Business Multiservices in Brooklyn | Next Print NY", "Access document, translation, DMV, E-ZPass and business support services from Next Print NY in Brooklyn.", "/multiservices.html"],
-  "about.html": ["About Next Print NY | Brooklyn Printing Company", "Learn about Next Print NY and our printing, signs, apparel, website and business support services in Brooklyn, New York.", "/about.html"],
   "contact.html": ["Contact Next Print NY | Printing Services in New York", "Contact Next Print NY at 1510 Gates Ave in Brooklyn for printing, signs, custom apparel, websites and business services.", "/contact.html"],
-  "testimonials.html": ["Customer Testimonials | Next Print NY", "Read customer experiences with Next Print NY printing, signs, apparel and business services in Brooklyn, New York.", "/testimonials.html"],
   "membership.html": ["Printing Membership for Businesses | Next Print NY", "Save designs, organize files, review orders and access member pricing with the Next Print NY business printing membership.", "/membership.html"],
-  "privacy.html": ["Privacy Policy | Next Print NY", "Read the Next Print NY privacy policy for information about how website and customer information is handled.", "/privacy.html"],
-  "terms.html": ["Terms of Service | Next Print NY", "Review the terms that apply when using the Next Print NY website, printing services and online ordering tools.", "/terms.html"],
-  "websites-demo/index.html": ["Business Websites & Software | Next Print NY", "Professional websites, online stores, CRM systems and business automation solutions from Next Print NY.", "/websites-demo/"],
 };
 
 function htmlFiles(dir = root) {
