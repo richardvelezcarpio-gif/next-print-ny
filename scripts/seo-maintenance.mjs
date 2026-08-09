@@ -15,6 +15,12 @@ const publicPages = {
   "multiservices.html": ["Business Multiservices in Brooklyn | Next Print NY", "Access document, translation, DMV, E-ZPass and business support services from Next Print NY in Brooklyn.", "/multiservices.html"],
   "contact.html": ["Contact Next Print NY | Printing Services in New York", "Contact Next Print NY at 1510 Gates Ave in Brooklyn for printing, signs, custom apparel, websites and business services.", "/contact.html"],
   "membership.html": ["Printing Membership for Businesses | Next Print NY", "Save designs, organize files, review orders and access member pricing with the Next Print NY business printing membership.", "/membership.html"],
+  "business-cards.html": ["Business Card Printing in New York | Next Print NY", "Custom business card printing in New York for professionals and businesses. Choose your options and start your order online with Next Print NY.", "/business-cards.html"],
+  "flyers.html": ["Flyer Printing in New York | Next Print NY", "Professional flyer printing for business promotions, events, restaurants and local marketing in New York.", "/flyers.html"],
+  "banners.html": ["Custom Banner Printing in New York | Next Print NY", "Custom vinyl banner printing for storefronts, events, sales and announcements in New York.", "/banners.html"],
+  "stickers.html": ["Custom Sticker Printing in New York | Next Print NY", "Custom stickers and labels for packaging, products, events and local brands in New York.", "/stickers.html"],
+  "menus.html": ["Menu Printing in New York | Next Print NY", "Professional menu printing for restaurants, cafes, food trucks and takeout service in New York.", "/menus.html"],
+  "yard-signs.html": ["Custom Yard Sign Printing in New York | Next Print NY", "Custom weather-resistant yard signs for real estate, events, contractors and local promotions in New York.", "/yard-signs.html"],
 };
 
 function htmlFiles(dir = root) {

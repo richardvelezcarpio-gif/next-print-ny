@@ -1169,6 +1169,95 @@ const salesFlowDomCopy = {
 };
 Object.assign(translations.en, Object.fromEntries(Object.keys(salesFlowDomCopy).map((key) => [key, key])));
 Object.assign(translations.es, salesFlowDomCopy);
+
+/* SEO product landings use the same preferredLanguage system as the public site. */
+const productLandingTranslations = {
+  "Business Printing": "Impresión comercial", "Local Marketing": "Marketing local", "Large Format Printing": "Impresión de gran formato", "Labels and Packaging": "Etiquetas y empaques", "Restaurant Printing": "Impresión para restaurantes", "Outdoor Signs": "Letreros exteriores", "Promotional Printing": "Impresión promocional", "Trade Show Display": "Exhibición para ferias",
+  "Professional Business Card Printing": "Impresión profesional de tarjetas de presentación", "Make Your First Impression Count.": "Haz que tu primera impresión cuente.", "Sharp, professional business cards for meetings, front desks, deliveries and everyday customer handoffs in New York.": "Tarjetas de presentación nítidas y profesionales para reuniones, recepciones, entregas y atención diaria al cliente en Nueva York.",
+  "Professional Flyer Printing": "Impresión profesional de volantes", "Put Your Business in Their Hands.": "Pon tu negocio en sus manos.", "Full-color flyers for business promotions, events, restaurants, grand openings and local marketing campaigns.": "Volantes a todo color para promociones, eventos, restaurantes, inauguraciones y campañas de marketing local.",
+  "Custom Banner Printing": "Impresión de banners personalizados", "Get Your Business Seen.": "Haz que tu negocio se vea.", "Durable vinyl banners for storefronts, events, sales, announcements and high-visibility local promotions.": "Banners de vinilo duraderos para vitrinas, eventos, ofertas, anuncios y promociones locales de alta visibilidad.",
+  "Custom Stickers & Labels": "Stickers y etiquetas personalizados", "Make Your Brand Stick.": "Haz que tu marca se quede.", "Custom stickers and labels for product packaging, bags, boxes, cups, giveaways and everyday brand visibility.": "Stickers y etiquetas para empaques, bolsas, cajas, vasos, regalos y visibilidad diaria de tu marca.",
+  "Professional Menu Printing": "Impresión profesional de menús", "Make Every Dish Look Better.": "Haz que cada plato luzca mejor.", "Clear, full-color menus for restaurants, cafes, food trucks, catering and takeout service in New York.": "Menús claros y a todo color para restaurantes, cafeterías, food trucks, catering y servicio para llevar en Nueva York.",
+  "Custom Yard Signs": "Letreros de jardín personalizados", "Get Seen From the Street.": "Hazte ver desde la calle.", "Weather-resistant outdoor signs for real estate, contractors, events, campaigns and neighborhood promotions.": "Letreros exteriores resistentes al clima para bienes raíces, contratistas, eventos, campañas y promociones de barrio.",
+  "Professional Poster Printing": "Impresión profesional de pósteres", "Make Your Message Impossible to Miss.": "Haz que tu mensaje sea imposible de ignorar.", "Vibrant full-color posters for promotions, events, storefront displays and local marketing in New York.": "Pósteres vibrantes a todo color para promociones, eventos, exhibiciones en vitrinas y marketing local en Nueva York.",
+  "Retractable Banner Printing": "Impresión de banners retráctiles", "Stand Tall. Get Noticed.": "Destaca. Hazte notar.", "Portable pull-up displays with a printed banner and stand for events, offices, presentations and pop-ups.": "Exhibiciones portátiles con banner impreso y soporte para eventos, oficinas, presentaciones y pop-ups.",
+  "Professional Brochure Printing": "Impresión profesional de folletos", "Tell Your Story. Beautifully Printed.": "Cuenta tu historia. Impresa con belleza.", "Professional brochures for services, business introductions, local marketing and detailed product information.": "Folletos profesionales para servicios, presentaciones de negocio, marketing local e información detallada de productos.",
+  "Starting at": "Desde", "Start Your Order": "Comienza tu pedido", "Print Products": "Productos impresos", "Home": "Inicio", "Why Next Print NY": "Por qué Next Print NY", "Next Print NY ·": "Next Print NY ·",
+  "Business cards built for everyday introductions": "Tarjetas pensadas para presentaciones diarias", "Professional presentation": "Presentación profesional", "Front and back printing": "Impresión por ambos lados", "Ready for repeat orders": "Listas para pedidos repetidos", "Available business card options": "Opciones disponibles de tarjetas", "Paper stock": "Tipo de papel", "Print setup": "Configuración de impresión",
+  "Handouts that help your promotion travel": "Volantes que llevan tu promoción más lejos", "Full color": "A todo color", "Popular sizes": "Tamaños populares", "Built for quantity": "Preparados para cantidad", "Great for local marketing": "Ideales para marketing local", "Business promotions": "Promociones comerciales", "Events and openings": "Eventos e inauguraciones", "Restaurants": "Restaurantes",
+  "Large-format printing for big announcements": "Impresión de gran formato para anuncios importantes", "Vinyl material": "Material de vinilo", "Visible messaging": "Mensaje visible", "Finishing options": "Opciones de acabado", "Where banners work best": "Dónde funcionan mejor los banners", "Storefronts": "Vitrinas", "Events": "Eventos", "Sales and announcements": "Ofertas y anuncios",
+  "Turn ordinary packaging into a branded touchpoint": "Convierte un empaque común en un punto de contacto de marca", "Popular shapes": "Formas populares", "Bulk-friendly": "Ideal para volumen", "Useful for brands and local businesses": "Útiles para marcas y negocios locales", "Product labels": "Etiquetas de producto", "Daily promotion": "Promoción diaria",
+  "Menus designed for clear choices": "Menús diseñados para elegir con claridad", "Food service ready": "Listos para servicio de comida", "Folding options": "Opciones de doblado", "Built for restaurants and service lists": "Hechos para restaurantes y listas de servicio", "Restaurants and cafes": "Restaurantes y cafeterías", "Food trucks": "Food trucks", "Catering and takeout": "Catering y comida para llevar",
+  "Outdoor signs for local visibility": "Letreros exteriores para visibilidad local", "Weather-resistant coroplast": "Coroplast resistente al clima", "H-wire stake": "Estaca de alambre H", "Useful for local campaigns": "Útiles para campañas locales", "Real estate": "Bienes raíces", "Contractors": "Contratistas", "Events and promotions": "Eventos y promociones",
+  "Posters that earn attention": "Pósteres que ganan atención", "Full-color graphics": "Gráficos a todo color", "11 x 17 active option": "Opción activa 11 x 17", "Promotion ready": "Listos para promoción", "Made for messages worth displaying": "Hechos para mensajes que merecen mostrarse", "Retail displays": "Exhibiciones comerciales", "Community promotion": "Promoción comunitaria",
+  "A professional display that travels easily": "Una exhibición profesional que viaja fácilmente", "Stand included": "Soporte incluido", "22 x 80 option": "Opción 22 x 80", "Full-color display": "Exhibición a todo color", "Built for professional spaces": "Hechos para espacios profesionales", "Trade shows": "Ferias comerciales", "Offices and lobbies": "Oficinas y recepciones", "Presentations": "Presentaciones",
+  "More room for the story behind your business": "Más espacio para la historia de tu negocio", "8.5 x 11 format": "Formato 8.5 x 11", "Tri-fold option": "Opción de tríptico", "Gloss text stock": "Papel texturado brillante", "Give customers something useful to keep": "Dale a tus clientes algo útil para guardar", "Service information": "Información de servicios", "Business introductions": "Presentaciones de negocio", "Local marketing": "Marketing local"
+};
+Object.assign(translations.en, Object.fromEntries(Object.keys(productLandingTranslations).map((key) => [key, key])));
+Object.assign(translations.es, productLandingTranslations);
+
+/* Detail copy for the six public SEO landings. These remain presentation-only;
+   product values and transactional query parameters stay unchanged. */
+const productLandingDetailTranslations = {
+  "Give customers clear contact details and a polished first impression.": "Da a tus clientes datos de contacto claros y una primera impresión profesional.",
+  "Use both sides for your brand, services, appointment details or promotion.": "Usa ambos lados para tu marca, servicios, detalles de citas o promoción.",
+  "Keep a dependable format for networking, deliveries and customer visits.": "Mantén un formato confiable para networking, entregas y visitas de clientes.",
+  "3.75 x 2.25 inches with bleed.": "3.75 x 2.25 pulgadas con sangrado.",
+  "14 pt. cardstock with high gloss coating.": "Cartulina de 14 pt. con acabado de alto brillo.",
+  "Front and back printing; rounded corners can be selected in the order flow.": "Impresión por ambos lados; puedes seleccionar esquinas redondeadas durante el pedido.",
+  "Make your contact details easy to keep": "Haz que sea fácil guardar tus datos de contacto",
+  "Start with the verified business card configuration, then upload artwork or continue through the existing print order flow.": "Comienza con la configuración verificada de tarjetas, luego sube tu arte o continúa con el flujo de pedido existente.",
+
+  "Make offers, events and services easier to notice.": "Haz que las ofertas, eventos y servicios sean más fáciles de notar.",
+  "Choose from the active 4x6, 5x7 and 8.5x11 flyer options.": "Elige entre las opciones activas de volantes 4x6, 5x7 y 8.5x11.",
+  "Prepare a print run for handouts, counters, mailers or neighborhood outreach.": "Prepara una tirada para folletos, mostradores, correo o alcance en tu vecindario.",
+  "Share sales, new services and limited-time offers.": "Comparte ofertas, nuevos servicios y promociones por tiempo limitado.",
+  "Promote a grand opening, community event or special date.": "Promociona una inauguración, evento comunitario o fecha especial.",
+  "Present menus, delivery offers and local specials.": "Presenta menús, ofertas de entrega y especiales locales.",
+  "Start with a flyer format people can take with them": "Comienza con un formato de volante que las personas puedan llevarse",
+  "Select the current 4x6 flyer configuration and continue through the existing upload flow.": "Selecciona la configuración actual de volante 4x6 y continúa con el flujo de carga existente.",
+
+  "Use the active 13 oz. standard vinyl option for your banner order.": "Usa la opción activa de vinilo estándar de 13 oz. para tu pedido de banners.",
+  "Make promotions, directions and storefront messages easier to see.": "Haz que las promociones, indicaciones y mensajes de vitrina sean más fáciles de ver.",
+  "Confirm grommets, treatment and production details in the existing flow.": "Confirma ojales, tratamiento y detalles de producción en el flujo existente.",
+  "Announce offers, openings and services from the street.": "Anuncia ofertas, inauguraciones y servicios desde la calle.",
+  "Guide guests, promote sponsors or build a branded event space.": "Guía a los invitados, promociona patrocinadores o crea un espacio de evento con tu marca.",
+  "Give campaigns a format designed for visibility.": "Dale a tus campañas un formato diseñado para llamar la atención.",
+  "Choose a banner size and finish for your space": "Elige un tamaño y acabado de banner para tu espacio",
+  "Start with the active 24x36 banner configuration or continue to the existing banner order flow.": "Comienza con la configuración activa de banner 24x36 o continúa con el flujo de pedido existente.",
+
+  "Active sticker choices include round, square and rectangle options.": "Las opciones activas de stickers incluyen formatos redondos, cuadrados y rectangulares.",
+  "Present logos, product names and simple instructions clearly.": "Presenta logos, nombres de productos e instrucciones sencillas con claridad.",
+  "Prepare labels for repeat packaging, events and giveaways.": "Prepara etiquetas para empaques repetidos, eventos y obsequios.",
+  "Use stickers on bags, boxes, jars and packaging.": "Usa stickers en bolsas, cajas, frascos y empaques.",
+  "Add a branded detail to handouts, cups and giveaways.": "Agrega un detalle de marca a folletos, vasos y obsequios.",
+  "Keep your logo visible wherever customers take your product.": "Mantén tu logo visible dondequiera que tus clientes lleven tu producto.",
+  "Choose a sticker format for your next run": "Elige un formato de sticker para tu próxima tirada",
+  "Start with the verified round 2-inch sticker configuration and upload your artwork in the existing order flow.": "Comienza con la configuración verificada de sticker redondo de 2 pulgadas y sube tu arte en el flujo de pedido existente.",
+
+  "Present dishes, prices, specials and service details in a readable format.": "Presenta platos, precios, especiales y detalles de servicio en un formato fácil de leer.",
+  "Full color printing": "Impresión a todo color",
+  "Use photos, categories and brand colors to support your service.": "Usa fotos, categorías y colores de marca para apoyar tu servicio.",
+  "Confirm the active folding and finish options during your order.": "Confirma las opciones activas de doblado y acabado durante tu pedido.",
+  "Make menu items and pricing easy to scan.": "Haz que los platos y precios sean fáciles de consultar.",
+  "Food trucks": "Camiones de comida",
+  "Provide a compact menu for busy service.": "Ofrece un menú compacto para un servicio con mucho movimiento.",
+  "Share packages, specials and ordering information.": "Comparte paquetes, especiales e información para ordenar.",
+  "Start your menu print order": "Comienza tu pedido de impresión de menús",
+  "Begin with the active 8.5x11 menu configuration, then continue with artwork and order details.": "Comienza con la configuración activa de menú 8.5x11 y continúa con el arte y los detalles del pedido.",
+
+  "18 x 24 inches": "18 x 24 pulgadas",
+  "Use the active standard yard sign size for street-level messaging.": "Usa el tamaño estándar activo de letrero de jardín para mensajes a nivel de calle.",
+  "4 mm coroplast board supports outdoor display.": "El panel de coroplast de 4 mm permite exhibición en exteriores.",
+  "The active configuration includes a sturdy H-wire stake.": "La configuración activa incluye una resistente estaca de alambre H.",
+  "Show listings, open houses and agent information.": "Muestra propiedades, casas abiertas e información de agentes.",
+  "Keep your service, phone number and message visible on site.": "Mantén tu servicio, teléfono y mensaje visibles en el lugar.",
+  "Direct visitors or promote a neighborhood event.": "Dirige a los visitantes o promociona un evento del vecindario.",
+  "Put your message where customers can see it": "Pon tu mensaje donde los clientes puedan verlo",
+  "Begin with the current yard sign configuration and continue with artwork and printing details.": "Comienza con la configuración actual de letrero de jardín y continúa con el arte y detalles de impresión."
+};
+Object.assign(translations.en, Object.fromEntries(Object.keys(productLandingDetailTranslations).map((key) => [key, key])));
+Object.assign(translations.es, productLandingDetailTranslations);
 const i18nTextOriginals = new WeakMap();
 let applyingPresentationTranslations = false;
 function applyPresentationTranslations(root = document.body) {

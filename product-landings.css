@@ -1,0 +1,38 @@
+/* Commercial SEO product landings. Transactional configuration stays in the existing order flow. */
+.product-landing-page { background: #f6f9ff; color: #092b63; }
+.product-landing { width: min(1180px, calc(100% - 40px)); margin: 0 auto; padding: 30px 0 76px; }
+.product-breadcrumb { color: #60718e; font-size: .92rem; margin: 0 0 20px; }
+.product-breadcrumb a { color: #0a62d8; text-decoration: none; }
+.product-hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, .92fr); align-items: center; gap: clamp(28px, 5vw, 78px); padding: clamp(28px, 5vw, 70px); border-radius: 28px; background: linear-gradient(135deg, #06285c, #0c4fa9); color: #fff; box-shadow: 0 24px 56px rgba(5, 39, 92, .19); }
+.product-eyebrow { margin: 0 0 10px; color: #72e4ff; font-size: .77rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.product-hero h1 { max-width: 680px; margin: 0; font-size: clamp(2.35rem, 5vw, 4.5rem); line-height: .98; letter-spacing: -.045em; }
+.product-hook { margin: 18px 0 8px; font-size: clamp(1.25rem, 2vw, 1.7rem); font-weight: 800; color: #bdeeff; }
+.product-intro { max-width: 620px; margin: 0; color: #e5efff; font-size: 1.05rem; line-height: 1.65; }
+.product-price { display: flex; gap: 10px; align-items: baseline; margin: 25px 0 20px; font-weight: 700; }
+.product-price strong { font-size: clamp(1.75rem, 3vw, 2.5rem); }
+.product-cta { display: inline-flex; align-items: center; justify-content: center; min-height: 50px; padding: 0 23px; border-radius: 12px; background: #16c4df; color: #05275c; font-weight: 900; letter-spacing: .02em; text-decoration: none; }
+.product-cta:hover, .product-cta:focus-visible { background: #fff; outline: 3px solid #bdeeff; outline-offset: 3px; }
+.product-hero-visual { min-height: 310px; padding: 18px; border-radius: 20px; background: #fff; display: grid; place-items: center; }
+.product-hero-visual img { display: block; width: 100%; max-height: 400px; object-fit: contain; object-position: center; }
+.product-section { margin-top: 58px; }
+.product-section h2 { margin: 0 0 11px; font-size: clamp(1.65rem, 3vw, 2.45rem); line-height: 1.1; }
+.product-section > p { margin: 0 0 22px; color: #51627f; line-height: 1.65; }
+.product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.product-panel { min-height: 165px; padding: 24px; border: 1px solid #d9e6f8; border-radius: 18px; background: #fff; box-shadow: 0 10px 28px rgba(12, 47, 94, .06); }
+.product-panel h3 { margin: 0 0 10px; font-size: 1.05rem; }
+.product-panel p, .product-panel li { color: #52637c; line-height: 1.55; }
+.product-panel ul { margin: 0; padding-left: 20px; }
+.product-final { margin-top: 58px; padding: clamp(28px, 5vw, 52px); border-radius: 24px; background: #e9f8fc; text-align: center; }
+.product-final p { max-width: 700px; margin: 10px auto 22px; color: #405574; line-height: 1.65; }
+.product-landing-footer { padding: 24px 20px; background: #05275c; color: #e9f5ff; text-align: center; }
+.product-landing-footer a { color: #fff; }
+@media (min-width: 600px) and (max-width: 900px) {
+  .product-landing-page .top-nav { display: flex; align-items: center; min-height: 88px; padding: 12px 22px; gap: 12px; }
+  .product-landing-page .brand { flex: 0 0 116px; }
+  .product-landing-page .brand img { max-width: 116px; }
+  .product-landing-page .menu { display: flex !important; flex: 1 1 auto; width: auto; flex-direction: row; align-items: center; justify-content: center; gap: 6px; }
+  .product-landing-page .menu a { padding: 10px 8px; font-size: .67rem; line-height: 1.05; }
+  .product-landing-page .nav-actions { flex: 0 0 auto; width: auto; margin: 0; }
+  .product-landing-page .language-switch button { min-width: 56px; padding: 10px 7px; font-size: .72rem; }
+}
+@media (max-width: 780px) { .product-landing { width: min(100% - 28px, 680px); padding-top: 18px; } .product-hero { grid-template-columns: 1fr; padding: 28px 22px; border-radius: 20px; } .product-hero-visual { min-height: 230px; } .product-grid { grid-template-columns: 1fr; } .product-section { margin-top: 42px; } }
